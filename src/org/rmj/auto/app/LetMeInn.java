@@ -1,6 +1,8 @@
-package org.rmj.auto.app.views;
+package org.rmj.auto.app;
 
+import javafx.application.Application;
 import org.rmj.appdriver.GRider;
+import org.rmj.auto.app.views.Autoapp;
 
 public class LetMeInn {
     public static void main(String [] args){
@@ -13,11 +15,16 @@ public class LetMeInn {
         }
         System.setProperty("sys.default.path.config", path);
         
-        GRider instance = new GRider();
+        GRider oApp = new GRider();
         
-        if (!instance.logUser("AutoApp", "M001111122")){
-            System.err.println(instance.getMessage() + instance.getErrMsg());
+        if (!oApp.logUser("AutoApp", "M001111122")){
+            System.err.println(oApp.getMessage() + oApp.getErrMsg());
             System.exit(1);
         }
+        
+          Autoapp instance = new Autoapp();
+          instance.setGRider(oApp);
+
+          Application.launch(instance.getClass());
     }
 }

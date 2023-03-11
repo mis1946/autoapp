@@ -124,7 +124,7 @@
                                                       <Font name="Arial Bold" size="12.0" />
                                                    </font>
                                                 </Label>
-                                                <TextField fx:id="txtField01" prefHeight="25.0" prefWidth="187.0" promptText="Search: F3" GridPane.columnIndex="1" />
+                                                <TextField fx:id="txtField01" promptText="Search: F3" GridPane.columnIndex="1" />
                                                 <Label text="CLIENT NAME" GridPane.columnIndex="3">
                                                    <font>
                                                       <Font name="Arial Bold" size="12.0" />
@@ -162,7 +162,7 @@
                                                          <children>
                                                             <Label id="LabelDesc" stylesheets="@../css/FrameStyle.css" text="Customer Type" />
                                                             <Label id="LabelDesc" stylesheets="@../css/FrameStyle.css" text="Company Name" GridPane.rowIndex="1" />
-                                                            <ComboBox fx:id="comboBox18" prefHeight="25.0" prefWidth="162.0" GridPane.columnIndex="1" />
+                                                            <ComboBox fx:id="comboBox18" prefHeight="24.0" prefWidth="130.0" GridPane.columnIndex="1" />
                                                             <TextField fx:id="txtField16" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1" />
                                                             <TextField fx:id="txtField29" promptText="Search: F3" GridPane.columnIndex="5" GridPane.rowIndex="1" />
                                                             <Label id="LabelDesc" stylesheets="@../css/FrameStyle.css" text="Business Style" GridPane.columnIndex="4" GridPane.rowIndex="1" />
@@ -331,13 +331,13 @@
                                                                                                 </AnchorPane>
                                                                                                 <AnchorPane style="-fx-border-color: orange; -fx-border-radius: 5;">
                                                                                                    <children>
-                                                                                                      <TableView layoutX="7.0" layoutY="7.0" prefHeight="100.0" prefWidth="400.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
+                                                                                                      <TableView fx:id="tblAddress" layoutX="7.0" layoutY="7.0" onMouseClicked="#tblAddress_Clicked" prefHeight="100.0" prefWidth="400.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
                                                                                                          <columns>
-                                                                                                            <TableColumn maxWidth="30.0" minWidth="30.0" prefWidth="30.0" text="Row" />
-                                                                                                            <TableColumn maxWidth="70.0" minWidth="70.0" prefWidth="70.0" text="Type" />
-                                                                                                            <TableColumn maxWidth="65.0" minWidth="65.0" prefWidth="65.0" text="House No." />
-                                                                                                            <TableColumn maxWidth="307.0" minWidth="260.0" prefWidth="301.0" text="Address" />
-                                                                                                            <TableColumn maxWidth="70.0" minWidth="40.0" prefWidth="40.0" text="Active" />
+                                                                                                            <TableColumn fx:id="addrindex01" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" text="Row" />
+                                                                                                            <TableColumn fx:id="addrindex02" maxWidth="70.0" minWidth="70.0" prefWidth="70.0" text="Active" />
+                                                                                                            <TableColumn fx:id="addrindex03" maxWidth="70.0" minWidth="70.0" prefWidth="70.0" text="House No." />
+                                                                                                            <TableColumn fx:id="addrindex04" maxWidth="300.0" minWidth="300.0" prefWidth="300.0" text="Address" />
+                                                                                                            <TableColumn fx:id="addrindex05" maxWidth="70.0" minWidth="70.0" prefWidth="70.0" text="Zip Code" />
                                                                                                          </columns>
                                                                                                       </TableView>
                                                                                                    </children>
@@ -404,15 +404,11 @@
                                                                                                 </AnchorPane>
                                                                                                 <AnchorPane style="-fx-border-color: orange; -fx-border-radius: 5;">
                                                                                                    <children>
-                                                                                                      <TableView prefHeight="150.0" prefWidth="480.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
+                                                                                                      <TableView fx:id="tblContact" onMouseClicked="#tblContact_Clicked" prefHeight="150.0" prefWidth="480.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
                                                                                                          <columns>
-                                                                                                            <TableColumn maxWidth="30.0" minWidth="30.0" prefWidth="30.0" text="Row" />
-                                                                                                            <TableColumn maxWidth="70.0" minWidth="70.0" prefWidth="70.0" text="Ownership" />
-                                                                                                            <TableColumn maxWidth="130.0" minWidth="130.0" prefWidth="130.0" text="Contact No" />
-                                                                                                            <TableColumn maxWidth="90.0" minWidth="90.0" prefWidth="90.0" text="Entered By" />
-                                                                                                            <TableColumn maxWidth="100.0" minWidth="100.0" prefWidth="100.0" text="Entered Date" />
-                                                                                                            <TableColumn maxWidth="90.0" minWidth="90.0" prefWidth="90.0" text="Edit By" />
-                                                                                                            <TableColumn maxWidth="100.0" minWidth="100.0" prefWidth="100.0" text="Edit Date" />
+                                                                                                            <TableColumn fx:id="contindex01" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" text="Row" />
+                                                                                                            <TableColumn fx:id="contindex02" maxWidth="70.0" minWidth="70.0" prefWidth="70.0" text="Ownership" />
+                                                                                                            <TableColumn fx:id="contindex03" maxWidth="130.0" minWidth="130.0" prefWidth="130.0" text="Contact No" />
                                                                                                          </columns>
                                                                                                       </TableView>
                                                                                                    </children>
@@ -472,11 +468,11 @@
                                                                                                 </AnchorPane>
                                                                                                 <AnchorPane style="-fx-border-color: orange; -fx-border-radius: 5;">
                                                                                                    <children>
-                                                                                                      <TableView prefHeight="155.0" prefWidth="480.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
+                                                                                                      <TableView fx:id="tblEmail" onMouseClicked="#tblEmail_Clicked" prefHeight="155.0" prefWidth="480.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
                                                                                                          <columns>
-                                                                                                            <TableColumn maxWidth="30.0" minWidth="30.0" prefWidth="30.0" text="Row" />
-                                                                                                            <TableColumn maxWidth="103.0" minWidth="70.0" prefWidth="103.0" text="Ownership" />
-                                                                                                            <TableColumn maxWidth="200.0" minWidth="167.0" prefWidth="167.0" text="Email Address" />
+                                                                                                            <TableColumn fx:id="emadindex01" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" text="Row" />
+                                                                                                            <TableColumn fx:id="emadindex02" maxWidth="103.0" minWidth="70.0" prefWidth="103.0" text="Ownership" />
+                                                                                                            <TableColumn fx:id="emadindex03" maxWidth="200.0" minWidth="167.0" prefWidth="167.0" text="Email Address" />
                                                                                                          </columns>
                                                                                                       </TableView>
                                                                                                    </children>
@@ -521,23 +517,23 @@
                                                                                                          </rowConstraints>
                                                                                                          <children>
                                                                                                             <Label id="LabelDesc" stylesheets="@../css/FrameStyle.css" text="Active" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                                                                                                            <RadioButton fx:id="radiobtn06SocN" mnemonicParsing="false" text="No" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                                                                                                            <RadioButton fx:id="radiobtn05SocN" mnemonicParsing="false" text="No" GridPane.columnIndex="3" GridPane.rowIndex="2" />
                                                                                                             <Label id="LabelDesc" stylesheets="@../css/FrameStyle.css" text="Account" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                                                                                             <TextField fx:id="txtField03Socm" GridPane.columnIndex="2" GridPane.columnSpan="4" GridPane.rowIndex="1" />
                                                                                                             <Label id="LabelDesc" layoutX="33.0" layoutY="71.0" stylesheets="@../css/FrameStyle.css" text="Social Type" GridPane.columnIndex="1" />
                                                                                                             <ComboBox fx:id="comboBox04Socm" prefWidth="156.0" GridPane.columnIndex="2" GridPane.columnSpan="3" />
-                                                                                                            <RadioButton fx:id="radiobtn06SocY" mnemonicParsing="false" text="Yes" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                                                                                                            <RadioButton fx:id="radiobtn05SocY" mnemonicParsing="false" text="Yes" GridPane.columnIndex="2" GridPane.rowIndex="2" />
                                                                                                          </children>
                                                                                                       </GridPane>
                                                                                                    </children>
                                                                                                 </AnchorPane>
                                                                                                 <AnchorPane style="-fx-border-color: orange; -fx-border-radius: 5;">
                                                                                                    <children>
-                                                                                                      <TableView prefHeight="155.0" prefWidth="480.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
+                                                                                                      <TableView fx:id="tblSocMed" onMouseClicked="#tblSocMed_Clicked" prefHeight="155.0" prefWidth="480.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
                                                                                                          <columns>
-                                                                                                            <TableColumn maxWidth="30.0" minWidth="30.0" prefWidth="30.0" text="Row" />
-                                                                                                            <TableColumn maxWidth="124.0" minWidth="70.0" prefWidth="124.0" text="Social Type" />
-                                                                                                            <TableColumn maxWidth="200.0" minWidth="146.0" prefWidth="146.0" text="Account" />
+                                                                                                            <TableColumn fx:id="socmindex01" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" text="Row" />
+                                                                                                            <TableColumn fx:id="socmindex02" maxWidth="124.0" minWidth="70.0" prefWidth="124.0" text="Social Type" />
+                                                                                                            <TableColumn fx:id="socmindex03" maxWidth="200.0" minWidth="146.0" prefWidth="146.0" text="Account" />
                                                                                                          </columns>
                                                                                                       </TableView>
                                                                                                    </children>
@@ -565,6 +561,11 @@
                                                                            <effect>
                                                                               <Blend />
                                                                            </effect>
+                                                                        </Button>
+                                                                        <Button fx:id="btnTabUpd" mnemonicParsing="false" prefWidth="75.0" text="Update">
+                                                                           <graphic>
+                                                                              <FontAwesomeIconView glyphName="EDIT" />
+                                                                           </graphic>
                                                                         </Button>
                                                                         <Button fx:id="btnTabRem" alignment="TOP_LEFT" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefWidth="75.0" text="Remove">
                                                                            <graphic>
@@ -604,7 +605,7 @@
                                                                <children>
                                                                   <Label id="LabelDesc" stylesheets="@../css/FrameStyle.css" text="LTO ID" GridPane.columnIndex="1" />
                                                                   <Label id="LabelDesc" stylesheets="@../css/FrameStyle.css" text="TIN ID" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                                                  <TextField fx:id="txtField14" prefHeight="22.0" prefWidth="162.0" GridPane.columnIndex="2" />
+                                                                  <TextField fx:id="txtField14" GridPane.columnIndex="2" />
                                                                   <TextField fx:id="txtField13" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                                                                </children>
                                                             </GridPane>

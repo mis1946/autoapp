@@ -15,27 +15,21 @@ public class TableClientMobile {
      private SimpleStringProperty contindex01;
      private SimpleStringProperty contindex02; 
      private SimpleStringProperty contindex03;
-     //private SimpleStringProperty xMobileID;
+     private SimpleStringProperty contindex04;
      
      TableClientMobile( String contindex01,
                          String contindex02,
-                         String contindex03
-                         //String xMobileID
+                         String contindex03,
+                         String contindex04
                     ){
      
           this.contindex01 = new SimpleStringProperty(contindex01);
           this.contindex02 = new SimpleStringProperty(contindex02);
           this.contindex03 = new SimpleStringProperty(contindex03);
-          //this.xMobileID = new SimpleStringProperty(xMobileID);
+          this.contindex04 = new SimpleStringProperty(contindex04);
      }
-     
-//     public String getxMobileID() {
-//          return xMobileID.get();
-//     }
-//
-//     public void setxMobileID(String xMobileID) {
-//          this.xMobileID.set(xMobileID);
-//     }
+     public String getContindex04(){return contindex04.get();}
+     public void setContindex04(String contindex01){this.contindex04.set(contindex01);}
      
      public String getContindex01(){return contindex01.get();}
      public void setContindex01(String contindex01){this.contindex01.set(contindex01);}

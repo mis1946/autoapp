@@ -15,28 +15,23 @@ public class TableClientEmail {
      private SimpleStringProperty emadindex01;
      private SimpleStringProperty emadindex02; 
      private SimpleStringProperty emadindex03;
-     //private SimpleStringProperty xEmailID;
+     private SimpleStringProperty emadindex04;
      
      TableClientEmail( String emadindex01,
                          String emadindex02,
-                         String emadindex03
-                         //String xEmailID
+                         String emadindex03,
+                         String emadindex04
                     ){
      
           this.emadindex01 = new SimpleStringProperty(emadindex01);
           this.emadindex02 = new SimpleStringProperty(emadindex02);
           this.emadindex03 = new SimpleStringProperty(emadindex03);
-          //this.xEmailID = new SimpleStringProperty(xEmailID);
+          this.emadindex04 = new SimpleStringProperty(emadindex04);
      }
-/*    
-     public String getxEmailID() {
-          return xEmailID.get();
-     }
-
-     public void setxEmailID(String xEmailID) {
-          this.xEmailID.set(xEmailID);
-     }
-*/    
+     
+     public String getEmadindex04(){return emadindex04.get();}
+     public void setEmadindex04(String emadindex01){this.emadindex04.set(emadindex01);}
+     
      public String getEmadindex01(){return emadindex01.get();}
      public void setEmadindex01(String emadindex01){this.emadindex01.set(emadindex01);}
      

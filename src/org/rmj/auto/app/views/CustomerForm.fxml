@@ -27,7 +27,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" fx:id="AnchorMain" prefHeight="400.0" prefWidth="600.0" stylesheets="@../css/FrameStyle.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane id="AnchorPane" fx:id="AnchorMain" prefHeight="400.0" prefWidth="600.0" stylesheets="@../css/FrameStyle.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" >
    <children>
       <StackPane prefHeight="150.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -144,7 +144,7 @@
                                        <children>
                                           <AnchorPane style="-fx-border-color: orange; -fx-border-radius: 5;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
                                              <children>
-                                                <VBox spacing="3.0" AnchorPane.topAnchor="5.0">
+                                                <VBox spacing="3.0" AnchorPane.bottomAnchor="5.0" AnchorPane.topAnchor="5.0">
                                                    <children>
                                                       <GridPane hgap="3.0" vgap="3.0">
                                                          <columnConstraints>
@@ -243,13 +243,13 @@
                                                       </AnchorPane>
                                                       <AnchorPane>
                                                          <children>
-                                                            <TabPane fx:id="tabPCustCont" prefHeight="210.0" prefWidth="880.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                            <TabPane fx:id="tabPCustCont" prefWidth="880.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                                <tabs>
                                                                   <Tab fx:id="tabAddrInf" style="-fx-font-weight: bold; -fx-font-family: Arial;" text="Address">
                                                                      <content>
                                                                         <AnchorPane>
                                                                            <children>
-                                                                              <ScrollPane prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                                              <ScrollPane prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                                                  <content>
                                                                                     <AnchorPane>
                                                                                        <children>
@@ -334,9 +334,9 @@
                                                                                                       <TableView fx:id="tblAddress" layoutX="7.0" layoutY="7.0" onMouseClicked="#tblAddress_Clicked" prefHeight="100.0" prefWidth="400.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
                                                                                                          <columns>
                                                                                                             <TableColumn fx:id="addrindex01" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" text="Row" />
-                                                                                                            <TableColumn fx:id="addrindex02" maxWidth="70.0" minWidth="70.0" prefWidth="70.0" text="Primary" />
-                                                                                                            <TableColumn fx:id="addrindex03" maxWidth="81.0" minWidth="70.0" prefWidth="81.0" text="House No." />
-                                                                                                            <TableColumn fx:id="addrindex04" maxWidth="300.0" minWidth="289.0" prefWidth="289.0" text="Address" />
+                                                                                                            <TableColumn fx:id="addrindex02" maxWidth="60.0" minWidth="60.0" prefWidth="60.0" text="Primary" />
+                                                                                                            <TableColumn fx:id="addrindex03" maxWidth="70.0" minWidth="70.0" prefWidth="70.0" text="House No." />
+                                                                                                            <TableColumn fx:id="addrindex04" maxWidth="350.0" minWidth="350.0" prefWidth="350.0" text="Address" />
                                                                                                             <TableColumn fx:id="addrindex05" maxWidth="70.0" minWidth="70.0" prefWidth="70.0" text="Zip Code" />
                                                                                                          </columns>
                                                                                                       </TableView>
@@ -356,7 +356,7 @@
                                                                      <content>
                                                                         <AnchorPane>
                                                                            <children>
-                                                                              <ScrollPane prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                                              <ScrollPane prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                                                  <content>
                                                                                     <AnchorPane>
                                                                                        <children>
@@ -407,8 +407,9 @@
                                                                                                       <TableView fx:id="tblContact" onMouseClicked="#tblContact_Clicked" prefHeight="150.0" prefWidth="480.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
                                                                                                          <columns>
                                                                                                             <TableColumn fx:id="contindex01" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" text="Row" />
-                                                                                                            <TableColumn fx:id="contindex02" maxWidth="102.0" minWidth="70.0" prefWidth="102.0" text="Ownership" />
-                                                                                                            <TableColumn fx:id="contindex03" maxWidth="340.0" minWidth="130.0" prefWidth="334.0" text="Contact No" />
+                                                                                                            <TableColumn fx:id="contindex04" maxWidth="60.0" minWidth="60.0" prefWidth="60.0" text="Primary" />
+                                                                                                            <TableColumn fx:id="contindex02" maxWidth="70.0" minWidth="70.0" prefWidth="70.0" text="Ownership" />
+                                                                                                            <TableColumn fx:id="contindex03" maxWidth="300.0" minWidth="300.0" prefWidth="300.0" text="Contact No" />
                                                                                                          </columns>
                                                                                                       </TableView>
                                                                                                    </children>
@@ -427,7 +428,7 @@
                                                                      <content>
                                                                         <AnchorPane>
                                                                            <children>
-                                                                              <ScrollPane prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                                              <ScrollPane prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                                                  <content>
                                                                                     <AnchorPane>
                                                                                        <children>
@@ -471,8 +472,9 @@
                                                                                                       <TableView fx:id="tblEmail" onMouseClicked="#tblEmail_Clicked" prefHeight="155.0" prefWidth="480.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
                                                                                                          <columns>
                                                                                                             <TableColumn fx:id="emadindex01" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" text="Row" />
-                                                                                                            <TableColumn fx:id="emadindex02" maxWidth="103.0" minWidth="70.0" prefWidth="103.0" text="Ownership" />
-                                                                                                            <TableColumn fx:id="emadindex03" maxWidth="344.0" minWidth="167.0" prefWidth="324.0" text="Email Address" />
+                                                                                                            <TableColumn fx:id="emadindex04" maxWidth="60.0" minWidth="60.0" prefWidth="60.0" text="Primary" />
+                                                                                                            <TableColumn fx:id="emadindex02" maxWidth="70.0" minWidth="70.0" prefWidth="70.0" text="Ownership" />
+                                                                                                            <TableColumn fx:id="emadindex03" maxWidth="300.0" minWidth="300.0" prefWidth="300.0" text="Email Address" />
                                                                                                          </columns>
                                                                                                       </TableView>
                                                                                                    </children>
@@ -491,7 +493,7 @@
                                                                      <content>
                                                                         <AnchorPane>
                                                                            <children>
-                                                                              <ScrollPane prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                                              <ScrollPane prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                                                  <content>
                                                                                     <AnchorPane>
                                                                                        <children>
@@ -532,8 +534,8 @@
                                                                                                       <TableView fx:id="tblSocMed" onMouseClicked="#tblSocMed_Clicked" prefHeight="155.0" prefWidth="480.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
                                                                                                          <columns>
                                                                                                             <TableColumn fx:id="socmindex01" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" text="Row" />
-                                                                                                            <TableColumn fx:id="socmindex02" maxWidth="124.0" minWidth="70.0" prefWidth="124.0" text="Social Type" />
-                                                                                                            <TableColumn fx:id="socmindex03" maxWidth="317.0" minWidth="146.0" prefWidth="317.0" text="Account" />
+                                                                                                            <TableColumn fx:id="socmindex02" maxWidth="80.0" minWidth="80.0" text="Social Type" />
+                                                                                                            <TableColumn fx:id="socmindex03" maxWidth="350.0" minWidth="350.0" prefWidth="350.0" text="Account" />
                                                                                                          </columns>
                                                                                                       </TableView>
                                                                                                    </children>
@@ -562,7 +564,7 @@
                                                                               <Blend />
                                                                            </effect>
                                                                         </Button>
-                                                                        <Button fx:id="btnTabUpd" mnemonicParsing="false" prefWidth="75.0" text="Update">
+                                                                        <Button fx:id="btnTabUpd" alignment="TOP_LEFT" mnemonicParsing="false" prefWidth="75.0" text="Update">
                                                                            <graphic>
                                                                               <FontAwesomeIconView glyphName="EDIT" />
                                                                            </graphic>

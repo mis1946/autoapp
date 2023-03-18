@@ -10,8 +10,8 @@ import java.util.regex.Pattern;
 import javafx.scene.control.TextFormatter;
 
 /**
- *
- * @author user
+ * Date : 3/14/2023
+ * @author Arsiela
  */
 public class InputTextFormatter extends TextFormatter<String> {
 

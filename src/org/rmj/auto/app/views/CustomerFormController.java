@@ -40,6 +40,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
+import static javafx.scene.input.KeyCode.DOWN;
+import static javafx.scene.input.KeyCode.ENTER;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -159,7 +161,9 @@ public class CustomerFormController implements Initializable, ScreenInterface {
      private CheckBox checkBox13Addr; //Provincial
      @FXML
      private TextArea textArea11Addr; // Address Remarks
-     /*Contact No*/ObservableList<String> cOwnCont = FXCollections.observableArrayList("Personal", "Office", "Others");
+     
+     /*Contact No*/
+     ObservableList<String> cOwnCont = FXCollections.observableArrayList("Personal", "Office", "Others");
      ObservableList<String> cTypCont = FXCollections.observableArrayList("Mobile", "Telephone", "Fax");
      @FXML
      private ComboBox comboBox05Cont; // Contact Ownership
@@ -326,12 +330,14 @@ public class CustomerFormController implements Initializable, ScreenInterface {
           CommonUtils.addTextLimiter(txtField06, 4); // Suffix
           CommonUtils.addTextLimiter(txtField13, 15); // TIN
           CommonUtils.addTextLimiter(txtField14, 15); // LTO
+          setCapsLockBehavior(txtField14); //Mandatory Capslock letters
           CommonUtils.addTextLimiter(txtField03Addr, 5); //HOUSE NO
           CommonUtils.addTextLimiter(txtField03Cont, 12); //CONTACT NO
           
           Pattern pattern = Pattern.compile("[0-9]*");
           txtField03Cont.setTextFormatter(new InputTextFormatter(pattern)); //Mobile No
           txtField03Addr.setTextFormatter(new InputTextFormatter(pattern)); //House No
+          txtField07Addr.setTextFormatter(new InputTextFormatter(pattern)); //Zip code
           
           /*populate combobox*/
           comboBox09.setItems(cCvlStat);
@@ -352,6 +358,32 @@ public class CustomerFormController implements Initializable, ScreenInterface {
           txtField26.setOnKeyPressed(this::txtField_KeyPressed); //Customer Name Search
           txtField01.setOnKeyPressed(this::txtField_KeyPressed); //Customer ID Search
           txtField25.setOnKeyPressed(this::txtField_KeyPressed); //Spouse
+          
+          //Client Master
+          txtField02.setOnKeyPressed(this::txtField_KeyPressed);
+          txtField03.setOnKeyPressed(this::txtField_KeyPressed);
+          txtField04.setOnKeyPressed(this::txtField_KeyPressed);
+          txtField05.setOnKeyPressed(this::txtField_KeyPressed);
+          txtField06.setOnKeyPressed(this::txtField_KeyPressed);
+          txtField13.setOnKeyPressed(this::txtField_KeyPressed);
+          txtField14.setOnKeyPressed(this::txtField_KeyPressed);
+          txtField16.setOnKeyPressed(this::txtField_KeyPressed);
+          textArea15.setOnKeyPressed(this::txtField_KeyPressed);
+          textArea15.setOnKeyPressed(this::txtArea_KeyPressed);
+          //Client Address
+          txtField03Addr.setOnKeyPressed(this::txtField_KeyPressed); //House No
+          txtField04Addr.setOnKeyPressed(this::txtField_KeyPressed); //Street / Address
+          txtField05Addr.setOnKeyPressed(this::txtField_KeyPressed); // Town
+          txtField06Addr.setOnKeyPressed(this::txtField_KeyPressed); // Brgy
+          txtField07Addr.setOnKeyPressed(this::txtField_KeyPressed); //Zip code
+          textArea11Addr.setOnKeyPressed(this::txtArea_KeyPressed); // Address Remarks
+          //Client Mobile
+          txtField03Cont.setOnKeyPressed(this::txtField_KeyPressed);  //Mobile Number
+          textArea13Cont.setOnKeyPressed(this::txtArea_KeyPressed); // Contact Remarks
+          //Client Email
+          txtField03EmAd.setOnKeyPressed(this::txtField_KeyPressed); // Email Address
+          //Client Social Media
+          txtField03Socm.setOnKeyPressed(this::txtField_KeyPressed); // SocMed Account
           
           /*Radio Button Click Event Y / N*/
           /*client_address*/
@@ -407,6 +439,14 @@ public class CustomerFormController implements Initializable, ScreenInterface {
           pnEditMode = EditMode.UNKNOWN;
           initButton(pnEditMode); 
      } 
+     
+     private static void setCapsLockBehavior(TextField textField) {
+          textField.textProperty().addListener((observable, oldValue, newValue) -> {
+               if (textField.getText() != null) {
+                    textField.setText(newValue.toUpperCase());
+               }
+          });
+     }
      
      @Override
      public void setGRider(GRider foValue) {
@@ -1659,6 +1699,16 @@ public class CustomerFormController implements Initializable, ScreenInterface {
      }
 
      /*TRIGGER FOCUS*/
+     private void txtArea_KeyPressed(KeyEvent event){
+        if (event.getCode() == ENTER || event.getCode() == DOWN){ 
+            event.consume();
+            CommonUtils.SetNextFocus((TextArea)event.getSource());
+        }else if (event.getCode() ==KeyCode.UP){
+        event.consume();
+            CommonUtils.SetPreviousFocus((TextArea)event.getSource());
+        }
+     }
+    
      private void txtField_KeyPressed(KeyEvent event){
           TextField txtField = (TextField)event.getSource();
           int lnIndex = Integer.parseInt(((TextField)event.getSource()).getId().substring(8,10));
@@ -1850,14 +1900,25 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                                        ShowMessageFX.Warning(getStage(), oTransAddress.getMessage(),"Warning", null);
                               break;
                          }
-                    case DOWN:
-                        CommonUtils.SetNextFocus(txtField);break;
-                    case UP:
-                        CommonUtils.SetPreviousFocus(txtField);break;
+                         break;
+//                    case DOWN:
+//                        CommonUtils.SetNextFocus(txtField);break;
+//                    case UP:
+//                        CommonUtils.SetPreviousFocus(txtField);break;
                }
           }catch(SQLException e){
                 ShowMessageFX.Warning(getStage(),e.getMessage(), "Warning", null);
           }
+          
+          switch (event.getCode()){
+          case ENTER:
+          case DOWN:
+              CommonUtils.SetNextFocus(txtField);
+              break;
+          case UP:
+              CommonUtils.SetPreviousFocus(txtField);
+          }
+          
      }
      
      //Set CheckBox Action
@@ -1865,26 +1926,18 @@ public class CustomerFormController implements Initializable, ScreenInterface {
           String scbSel = ((CheckBox)event.getSource()).getId();
           switch (scbSel){
                /*client_address*/
-               case "checkBox14Addr": //Primary
-                    if (checkBox14Addr.isSelected()) {
-                         //checkBox12Addr.setSelected(false);
-                         //checkBox17Addr.setSelected(false); checkBox12Addr.setSelected(false); checkBox13Addr.setSelected(false);
-                    } break;
                case "checkBox17Addr": // Current
                     if (checkBox17Addr.isSelected()) {
                          checkBox12Addr.setSelected(false);
-                         //checkBox14Addr.setSelected(false); checkBox12Addr.setSelected(false); checkBox13Addr.setSelected(false);
                     } break;
                case "checkBox13Addr": // Provincial
                     if (checkBox13Addr.isSelected()) {
                          checkBox12Addr.setSelected(false);
-                         //checkBox17Addr.setSelected(false); checkBox12Addr.setSelected(false); checkBox14Addr.setSelected(false);
                     } break;
                case "checkBox12Addr": // Office
                     if (checkBox12Addr.isSelected()) {
-                         checkBox17Addr.setSelected(false); checkBox14Addr.setSelected(false); checkBox13Addr.setSelected(false);
+                         checkBox17Addr.setSelected(false); checkBox13Addr.setSelected(false);
                     } break;
-               
           }
      }
      //Set Radiobuttons Action
@@ -2002,9 +2055,8 @@ public class CustomerFormController implements Initializable, ScreenInterface {
           /*Client Master*/
           txtField14.setDisable(!lbShow); //LTO NO
           txtField13.setDisable(!lbShow); //TIN NO
-          textArea15.setDisable(!lbShow); //Remarks
           comboBox18.setDisable(!lbShow); //Client type
-        
+          textArea15.setDisable(!lbShow); //Remarks
           txtField02.setDisable(!lbShow); //last name
           txtField03.setDisable(!lbShow); //first name
           txtField04.setDisable(!lbShow); //mid name
@@ -2080,7 +2132,8 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                btnEdit.setManaged(true);
           }
           
-          if (fnValue == EditMode.UPDATE) {
+          if (fnValue == EditMode.UPDATE || fnValue == EditMode.READY) {
+               comboBox18.setDisable(true); //Client type *Do not allow user to change client type in Edit Mode
                //Clear Contact details fields
                /*Address*/
                txtField03Addr.clear(); //House No
@@ -2119,8 +2172,6 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                radiobtn05SocN.setSelected(false); // SocMed Active status
                txtField03Socm.clear(); // SocMed Account
                comboBox04Socm.setValue(null); // SocMed Type
-          
-          
           }
           
           if(lbShow){
@@ -2130,8 +2181,6 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                radiobtn06EmaY.setSelected(true); // Email Active status
                radiobtn05SocY.setSelected(true); // SocMed Active status
           }
-          
-
      }
      
      public void cmdClientType(boolean bValue){

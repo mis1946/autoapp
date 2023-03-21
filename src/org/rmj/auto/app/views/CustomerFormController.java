@@ -13,6 +13,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.ResourceBundle;
+import java.util.function.UnaryOperator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -334,10 +335,15 @@ public class CustomerFormController implements Initializable, ScreenInterface {
           CommonUtils.addTextLimiter(txtField03Addr, 5); //HOUSE NO
           CommonUtils.addTextLimiter(txtField03Cont, 12); //CONTACT NO
           
-          Pattern pattern = Pattern.compile("[0-9]*");
+          Pattern pattern;
+          pattern = Pattern.compile("[0-9]*");
           txtField03Cont.setTextFormatter(new InputTextFormatter(pattern)); //Mobile No
           txtField03Addr.setTextFormatter(new InputTextFormatter(pattern)); //House No
           txtField07Addr.setTextFormatter(new InputTextFormatter(pattern)); //Zip code
+          //TIN Number pattern
+          //pattern = Pattern.compile("\\d{0,3}(-\\d{0,3}){0,3}");
+          pattern = Pattern.compile("[[0-9][-]]*");
+          txtField13.setTextFormatter(new InputTextFormatter(pattern));
           
           /*populate combobox*/
           comboBox09.setItems(cCvlStat);
@@ -2008,10 +2014,10 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                         return;
                     }
                */
-                    if (comboBox18.getSelectionModel().getSelectedIndex() == 1  || comboBox18.getSelectionModel().getSelectedIndex() == 2){
+                    if (comboBox18.getSelectionModel().getSelectedIndex() == 1 ){
                          bAction = true;
-                         txtField16.setDisable(false); //company name
-                         txtField29.setDisable(false); // Business Style
+                         //txtField16.setDisable(false); //company name
+                         //txtField29.setDisable(false); // Business Style
                          txtField02.clear(); //last name
                          txtField03.clear(); //first name
                          txtField04.clear(); //mid name
@@ -2025,14 +2031,17 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                          comboBox09.getSelectionModel().select(Integer.parseInt((String)oTrans.getMaster(9)));
                          txtField25.clear(); // Spouse
                          System.out.println("ComboBox18 >>> "+comboBox18.getSelectionModel().getSelectedIndex()+" true" );
+                    } else if ( comboBox18.getSelectionModel().getSelectedIndex() == 2) {
+                         
                     } else {
                          bAction = false;
-                         txtField16.setDisable(true); //company name
-                         txtField29.setDisable(true); // Business Style
+                         //txtField16.setDisable(true); //company name
+                         //txtField29.setDisable(true); // Business Style
                          txtField16.clear(); //company name
                          txtField29.clear(); // Business Style
                          System.out.println("ComboBox18 >>> "+comboBox18.getSelectionModel().getSelectedIndex()+" false" );
                     }
+                    
                     cmdClientType(true);
                }
           } catch (SQLException ex) {
@@ -2185,36 +2194,55 @@ public class CustomerFormController implements Initializable, ScreenInterface {
      
      public void cmdClientType(boolean bValue){
           if(bValue) {
-               if (comboBox18.getSelectionModel().getSelectedIndex() == 1 ){
-                    txtField16.setDisable(false); //company name
-                    txtField29.setDisable(false); // Business Style
-                    txtField02.setDisable(bValue); //last name
-                    txtField03.setDisable(bValue); //first name
-                    txtField04.setDisable(bValue); //mid name
-                    txtField06.setDisable(bValue); //suffix 
-                    txtField05.setDisable(bValue); //maiden name
-                    txtField12.setDisable(bValue); // birth plce
-                    txtField10.setDisable(bValue); //citizenship
-                    txtField11.setDisable(bValue); //bdate
-                    comboBox08.setDisable(bValue); //Gender
-                    comboBox09.setDisable(bValue); //Civil Stat
-                    comboBox07.setDisable(bValue); //Title
-                    txtField25.setDisable(bValue); // Spouse
-               }else {
-                    txtField16.setDisable(true); //company name
-                    txtField29.setDisable(true); // Business Style
-                    txtField02.setDisable(!bValue); //last name
-                    txtField03.setDisable(!bValue); //first name
-                    txtField04.setDisable(!bValue); //mid name
-                    txtField06.setDisable(!bValue); //suffix 
-                    txtField05.setDisable(!bValue); //maiden name
-                    txtField12.setDisable(!bValue); // birth plce
-                    txtField10.setDisable(!bValue); //citizenship
-                    txtField11.setDisable(!bValue); //bdate
-                    comboBox08.setDisable(!bValue); //Gender
-                    comboBox09.setDisable(!bValue); //Civil Stat
-                    comboBox07.setDisable(!bValue); //Title
-                    txtField25.setDisable(!bValue); // Spouse
+               switch (comboBox18.getSelectionModel().getSelectedIndex()) {
+                    case 1:
+                         txtField16.setDisable(false); //company name
+                         txtField29.setDisable(false); // Business Style
+                         txtField02.setDisable(bValue); //last name
+                         txtField03.setDisable(bValue); //first name
+                         txtField04.setDisable(bValue); //mid name
+                         txtField06.setDisable(bValue); //suffix 
+                         txtField05.setDisable(bValue); //maiden name
+                         txtField12.setDisable(bValue); // birth plce
+                         txtField10.setDisable(bValue); //citizenship
+                         txtField11.setDisable(bValue); //bdate
+                         comboBox08.setDisable(bValue); //Gender
+                         comboBox09.setDisable(bValue); //Civil Stat
+                         comboBox07.setDisable(bValue); //Title
+                         txtField25.setDisable(bValue); // Spouse
+                         break;
+                    case 2:
+                         txtField16.setDisable(!bValue); //company name
+                         txtField29.setDisable(!bValue); // Business Style
+                         txtField02.setDisable(!bValue); //last name
+                         txtField03.setDisable(!bValue); //first name
+                         txtField04.setDisable(!bValue); //mid name
+                         txtField06.setDisable(!bValue); //suffix 
+                         txtField05.setDisable(!bValue); //maiden name
+                         txtField12.setDisable(!bValue); // birth plce
+                         txtField10.setDisable(!bValue); //citizenship
+                         txtField11.setDisable(!bValue); //bdate
+                         comboBox08.setDisable(!bValue); //Gender
+                         comboBox09.setDisable(!bValue); //Civil Stat
+                         comboBox07.setDisable(!bValue); //Title
+                         txtField25.setDisable(!bValue); // Spouse
+                         break;
+                    default:
+                         txtField16.setDisable(true); //company name
+                         txtField29.setDisable(true); // Business Style
+                         txtField02.setDisable(!bValue); //last name
+                         txtField03.setDisable(!bValue); //first name
+                         txtField04.setDisable(!bValue); //mid name
+                         txtField06.setDisable(!bValue); //suffix 
+                         txtField05.setDisable(!bValue); //maiden name
+                         txtField12.setDisable(!bValue); // birth plce
+                         txtField10.setDisable(!bValue); //citizenship
+                         txtField11.setDisable(!bValue); //bdate
+                         comboBox08.setDisable(!bValue); //Gender
+                         comboBox09.setDisable(!bValue); //Civil Stat
+                         comboBox07.setDisable(!bValue); //Title
+                         txtField25.setDisable(!bValue); // Spouse
+                         break;
                }
           }
      }

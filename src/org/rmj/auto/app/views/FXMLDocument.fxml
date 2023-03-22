@@ -115,7 +115,7 @@
                      <children>
                         <BorderPane prefHeight="25.0">
                            <left>
-                              <HBox alignment="CENTER_LEFT" prefHeight="25.0" prefWidth="243.0" BorderPane.alignment="CENTER">
+                              <HBox alignment="CENTER_LEFT" prefHeight="25.0" BorderPane.alignment="CENTER">
                                  <children>
                                     <ImageView fitHeight="12.0" fitWidth="12.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
@@ -125,7 +125,7 @@
                                           <Insets right="5.0" />
                                        </HBox.margin>
                                     </ImageView>
-                                    <Label fx:id="AppUser" prefHeight="17.0" prefWidth="254.0" text="Arsiela Lavarias- MIS | Rank &amp; File" textFill="#3f3f3f" />
+                                    <Label fx:id="AppUser" prefHeight="17.0" text="Arsiela Lavarias- MIS | Rank &amp; File" textFill="#3f3f3f" />
                                  </children>
                                  <BorderPane.margin>
                                     <Insets left="18.0" />

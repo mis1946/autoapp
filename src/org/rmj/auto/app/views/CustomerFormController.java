@@ -461,6 +461,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
      
      /*BUTTON CLICKED*/
      private void cmdButton_Click(ActionEvent event) {
+          int iCntp = 0;
           String lsButton = ((Button)event.getSource()).getId();
           iTabIndex = tabPCustCont.getSelectionModel().getSelectedIndex();
           try {
@@ -541,6 +542,39 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                               ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
                          break;
                     case "btnSave": //save client info
+                         //Do not Allow to save Client Info if there's no Address / Mobile
+                         if (pnEditMode == EditMode.ADDNEW) {
+                              if (oTransAddress.getItemCount() <= 1) {
+                                   ShowMessageFX.Warning(null, "Warning", "Please Add atleast 1 Address.");
+                                   return;
+                              } else if (oTransMobile.getItemCount() <= 1) {
+                                   ShowMessageFX.Warning(null, "Warning", "Please Add atleast 1 Contact Number.");
+                                   return;
+                              }
+                         }
+                         //Do not Allow to save Client Info if there's no Primary Address / Mobile
+                         for (lnCtr = 1; lnCtr <= oTransAddress.getItemCount(); lnCtr++){
+                              if (oTransAddress.getAddress(lnCtr, "cPrimaryx").toString().equals("1") ) {
+                                   iCntp = iCntp + 1;
+                              }
+                         }
+                         if (iCntp <= 0) {
+                              ShowMessageFX.Warning(null, "Warning", "Please Add Primary Address.");
+                              return;
+                         }
+                         
+                         iCntp = 0;
+                         for (lnCtr = 1; lnCtr <= oTransMobile.getItemCount(); lnCtr++){
+                              if (oTransMobile.getMobile(lnCtr, "cPrimaryx").toString().equals("1") ){
+                                   iCntp = iCntp + 1;
+                              }
+                         }
+                         if (iCntp <= 0) {
+                              ShowMessageFX.Warning(null, "Warning", "Please Add Primary Contact Number.");
+                              return;
+                         }
+                         
+                         //Proceed Saving
                          if (setSelection()) {
                               if (oTrans.SaveRecord()){
                                    oTransAddress.setClientID(oTrans.getMaster("sClientID").toString());
@@ -603,7 +637,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                                                   ShowMessageFX.Warning(null, "Warning", "Please note that you cannot add more than 1 primary address.");
                                                   return;
                                              }  
-                                        }
+                                        } 
                                         if(setItemtoTable("btnTabAdd")) {
                                              loadAddress();
                                              oTransAddress.addAddress();
@@ -1171,7 +1205,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                               return false;
                          }
                          
-                         if (!CommonUtils.isValidEmail(txtField03EmAd.getText().toString())) {
+                         if (!CommonUtils.isValidEmail(txtField03EmAd.getText())) {
                               ShowMessageFX.Warning(getStage(),"Invalid Email. Insert to table Aborted!", "Warning", null);
                               return false;
                          }

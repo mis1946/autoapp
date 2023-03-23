@@ -82,7 +82,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
      private int lnCtr;
      private int tbl_row = 0;
      private int iTabIndex = 0; //Set tab index
-     private int iClientType;
+     //private int iClientType;
      
      /*populate tables Address, Mobile, Email and Social Media*/
      private ObservableList<TableClientAddress> addressdata = FXCollections.observableArrayList();
@@ -469,6 +469,10 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                     case "btnBrowse":
                          if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
                               if(ShowMessageFX.OkayCancel(null, "Confirmation", "You have unsaved data. Are you sure you want to browse a new record?") == true){
+                                   oTransAddress.removeAddress(oTransAddress.getItemCount());
+                                   oTransMobile.removeMobile(oTransMobile.getItemCount());
+                                   oTransEmail.removeEmail(oTransEmail.getItemCount());
+                                   oTransSocMed.removeSocMed(oTransSocMed.getItemCount());
                               } else 
                                   return;
                          }
@@ -924,7 +928,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                if (Integer.parseInt((String)oTrans.getMaster(18)) == 1) {
                      txtField16.setText((String) oTrans.getMaster(16));    
                }
-               iClientType = comboBox18.getSelectionModel().getSelectedIndex();
+               //iClientType = comboBox18.getSelectionModel().getSelectedIndex();
                
           } catch (SQLException e) {
                ShowMessageFX.Warning(getStage(),e.getMessage(), "Warning", null);
@@ -1775,6 +1779,10 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                               case "txtField01":  //Search by Client ID
                                    if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
                                         if(ShowMessageFX.OkayCancel(null, "Confirmation", "You have unsaved data. Are you sure you want to browse a new record?") == true){
+                                             oTransAddress.removeAddress(oTransAddress.getItemCount());
+                                             oTransMobile.removeMobile(oTransMobile.getItemCount());
+                                             oTransEmail.removeEmail(oTransEmail.getItemCount());
+                                             oTransSocMed.removeSocMed(oTransSocMed.getItemCount());
                                         } else 
                                             return;
                                    }
@@ -1803,6 +1811,10 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                               case "txtField26": //Search by Name
                                    if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
                                         if(ShowMessageFX.OkayCancel(null, "Confirmation", "You have unsaved data. Are you sure you want to browse a new record?") == true){
+                                             oTransAddress.removeAddress(oTransAddress.getItemCount());
+                                             oTransMobile.removeMobile(oTransMobile.getItemCount());
+                                             oTransEmail.removeEmail(oTransEmail.getItemCount());
+                                             oTransSocMed.removeSocMed(oTransSocMed.getItemCount());
                                         } else 
                                             return;
                                    }

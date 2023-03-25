@@ -38,6 +38,7 @@ import javafx.util.Duration;
 import org.rmj.appdriver.GRider;
 import org.rmj.appdriver.SQLUtil;
 import org.rmj.appdriver.agentfx.ShowMessageFX;
+import org.rmj.auto.app.sales.InquiryFormController;
 
 /**
  *
@@ -69,6 +70,8 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
      private MenuItem mnuVhclDesc;
      @FXML
      private Menu menusales;
+     @FXML
+     private MenuItem mnuInquiry;
      
      @Override
      public void initialize(URL url, ResourceBundle rb) {
@@ -181,8 +184,10 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
                     return new CustomerFormController();
 //               case "SupplierInfo.fxml":
 //                    return new SupplierInfoController();
-//               case "VehicleDescription.fxml":
-//                    return new VehicleDescriptionController();
+               case "VehicleDescriptionForm.fxml":
+                    return new VehicleDescriptionFormController();
+               case "InquiryForm.fxml":
+                    return new InquiryFormController();
                default:
                     ShowMessageFX.Warning(null, "Warning", "Notify System Admin to Configure Screen Interface for " +fsValue);
                     return null;
@@ -195,9 +200,11 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
           case "CustomerForm.fxml":
                return "Customer";
           case "SupplierInfo.fxml":
-              return "Supplier";
-          case "VehicleDescription.fxml":
-              return "Vehicle Description";
+               return "Supplier";
+          case "VehicleDescriptionForm.fxml":
+               return "Vehicle Description";
+          case "InquiryForm.fxml":
+               return "Inquiry Information";
           default:
                ShowMessageFX.Warning(null, "Warning", "Notify System Admin to Configure Tab Title for " +menuaction);
                return null;
@@ -270,7 +277,16 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
      
      @FXML
      public void mnuVhclDescClick(ActionEvent event) {
-          String sformname = "VehicleDescription.fxml";
+          String sformname = "VehicleDescriptionForm.fxml";
+          //check tab
+          if (checktabs(SetTabTitle(sformname)) == 1 ) {
+               setScene2(loadAnimate(sformname));
+          }
+     }
+     
+     @FXML
+     private void mnuInquiryClick(ActionEvent event) {
+          String sformname = "InquiryForm.fxml";
           //check tab
           if (checktabs(SetTabTitle(sformname)) == 1 ) {
                setScene2(loadAnimate(sformname));

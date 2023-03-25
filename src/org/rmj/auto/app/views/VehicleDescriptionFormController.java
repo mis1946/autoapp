@@ -55,10 +55,10 @@ public class VehicleDescriptionFormController implements Initializable, ScreenIn
      private int pnRow = -1;
      
      /*populate tables Vehicle Description List*/
-     private ObservableList<TableVehiceDescriptionList> vhcldescdata = FXCollections.observableArrayList();
+     private ObservableList<TableVehicleDescriptionList> vhcldescdata = FXCollections.observableArrayList();
      
-     ObservableList<String> cTransmission = FXCollections.observableArrayList("Client", "Company", "Institutional");
-     ObservableList<String> cModelsize = FXCollections.observableArrayList("Mr.", "Miss", "Mrs.");
+     ObservableList<String> cTransmission = FXCollections.observableArrayList("Automatic", "Manual", "CVT");
+     ObservableList<String> cModelsize = FXCollections.observableArrayList("Bantam", "Small", "Medium", "Large");
      
      @FXML
      private AnchorPane AnchorMain;
@@ -118,16 +118,15 @@ public class VehicleDescriptionFormController implements Initializable, ScreenIn
           initVhclDescTable();
           
           /*Set Focus to set Value to Class*/
-          txtField02.focusedProperty().addListener(txtField_Focus); // sDescript
           txtField03.focusedProperty().addListener(txtField_Focus); // sMakeIDxx
           txtField04.focusedProperty().addListener(txtField_Focus); // sModelIDx
           txtField06.focusedProperty().addListener(txtField_Focus); // sColorIDx
           txtField05.focusedProperty().addListener(txtField_Focus); // sTypeIDxx
           txtField08.focusedProperty().addListener(txtField_Focus); // nYearModl
           
-          CommonUtils.addTextLimiter(txtField06, 4); // nYearModl
+          CommonUtils.addTextLimiter(txtField08, 4); // nYearModl
           Pattern pattern = Pattern.compile("[0-9]*");
-          txtField06.setTextFormatter(new InputTextFormatter(pattern)); //nYearModl
+          txtField08.setTextFormatter(new InputTextFormatter(pattern)); //nYearModl
           
           comboBox07.setItems(cTransmission);
           comboBox09.setItems(cModelsize);
@@ -219,13 +218,28 @@ public class VehicleDescriptionFormController implements Initializable, ScreenIn
      private void loadVehicleDescription(){
           try {
                txtField02.setText((String) oTrans.getMaster(2));
-               txtField03.setText((String) oTrans.getMaster(3));
-               txtField04.setText((String) oTrans.getMaster(4));
-               txtField05.setText((String) oTrans.getMaster(5));
-               txtField06.setText((String) oTrans.getMaster(6));
-               txtField08.setText((String) oTrans.getMaster(8));
-               comboBox07.getSelectionModel().select(Integer.parseInt((String)oTrans.getMaster(7)));
-               comboBox09.getSelectionModel().select(Integer.parseInt((String)oTrans.getMaster(9)));
+               txtField03.setText((String) oTrans.getMaster(15));
+               txtField04.setText((String) oTrans.getMaster(16));
+               txtField05.setText((String) oTrans.getMaster(17));
+               txtField06.setText((String) oTrans.getMaster(18));
+               txtField08.setText( oTrans.getMaster(8).toString());
+               
+               //comboBox07.getSelectionModel().select(Integer.parseInt(oTrans.getMaster(7).toString()));
+               switch (oTrans.getMaster(7).toString()) {
+                    case "AT":
+                         comboBox07.getSelectionModel().select(0);
+                         break;
+                    case "M":
+                         comboBox07.getSelectionModel().select(1);
+                         break;
+                    case "CVT":
+                         comboBox07.getSelectionModel().select(2);
+                         break;
+                    default:
+                         break;
+               }
+
+               comboBox09.getSelectionModel().select(Integer.parseInt(oTrans.getMaster(9).toString()));
                
           } catch (SQLException e) {
                ShowMessageFX.Warning(getStage(),e.getMessage(), "Warning", null);
@@ -407,14 +421,21 @@ public class VehicleDescriptionFormController implements Initializable, ScreenIn
             if (lsValue == null) return;
             if(!nv){ /*Lost Focus*/
                     switch (lnIndex){
-                        case 2:
-                        case 3:
-                        case 4:
-                        case 5:
-                        case 6:
-                        case 8:
-                             oTrans.setMaster(lnIndex, lsValue); //Handle Encoded Value
-                             break; 
+                         case 3: //sMakeIDxx
+                              oTrans.setMaster(15, lsValue); //Handle Encoded Value
+                              break;
+                         case 4: //sModelIDx
+                              oTrans.setMaster(16, lsValue); //Handle Encoded Value
+                              break;
+                         case 5: //sColorIDx
+                              oTrans.setMaster(17, lsValue); //Handle Encoded Value
+                              break;
+                         case 6: //sTypeIDxx
+                              oTrans.setMaster(18, lsValue); //Handle Encoded Value
+                              break;
+                         case 8: //nYearModl
+                              oTrans.setMaster(lnIndex,  Integer.parseInt(lsValue)); //Handle Encoded Value
+                              break;
                         
                     }
                 
@@ -434,14 +455,22 @@ public class VehicleDescriptionFormController implements Initializable, ScreenIn
                    comboBox07.requestFocus();
                    return false;
                }else 
-                   oTrans.setMaster(7, String.valueOf(comboBox07.getSelectionModel().getSelectedIndex()));
-
+                    //oTrans.setMaster(7, String.valueOf(comboBox07.getSelectionModel().getSelectedIndex()));
+                    if (comboBox07.getSelectionModel().getSelectedIndex() == 0){
+                         oTrans.setMaster(7, "AT");
+                    }else if  (comboBox07.getSelectionModel().getSelectedIndex() == 1){
+                         oTrans.setMaster(7, "M");
+                    }else if  (comboBox07.getSelectionModel().getSelectedIndex() == 2){
+                         oTrans.setMaster(7, "CVT");
+                    }
+               
                if (comboBox09.getSelectionModel().getSelectedIndex() < 0){
                    ShowMessageFX.Warning("No `Vehicle Size` selected.", pxeModuleName, "Please select `Vehicle Size` value.");
                    comboBox09.requestFocus();
                    return false;
                }else 
-                  oTrans.setMaster(9, String.valueOf(comboBox09.getSelectionModel().getSelectedIndex()));
+                    //oTrans.setMaster(9, String.valueOf(comboBox09.getSelectionModel().getSelectedIndex()));
+                    oTrans.setMaster(9, comboBox09.getSelectionModel().getSelectedIndex());
 
           } catch (SQLException ex) {
           ShowMessageFX.Warning(getStage(),ex.getMessage(), "Warning", null);
@@ -460,7 +489,6 @@ public class VehicleDescriptionFormController implements Initializable, ScreenIn
           boolean lbShow = (fnValue == EditMode.ADDNEW || fnValue == EditMode.UPDATE);
           
           /*Vehicle Description*/
-          txtField02.setDisable(!lbShow); // sDescript
           txtField03.setDisable(!lbShow); // sMakeIDxx
           txtField04.setDisable(!lbShow); // sModelIDx
           txtField06.setDisable(!lbShow); // sColorIDx

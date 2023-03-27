@@ -69,8 +69,6 @@ public class VehicleDescriptionFormController implements Initializable, ScreenIn
      @FXML
      private Button btnSave;
      @FXML
-     private Button btnBrowse;
-     @FXML
      private Button btnClose;
      @FXML
      private TableView tblVehicleDesc;
@@ -124,10 +122,12 @@ public class VehicleDescriptionFormController implements Initializable, ScreenIn
           txtField05.focusedProperty().addListener(txtField_Focus); // sTypeIDxx
           txtField08.focusedProperty().addListener(txtField_Focus); // nYearModl
           
+          /*Add limit and text formatter for year model*/
           CommonUtils.addTextLimiter(txtField08, 4); // nYearModl
           Pattern pattern = Pattern.compile("[0-9]*");
           txtField08.setTextFormatter(new InputTextFormatter(pattern)); //nYearModl
           
+          //Populate combo box
           comboBox07.setItems(cTransmission);
           comboBox09.setItems(cModelsize);
           
@@ -144,7 +144,7 @@ public class VehicleDescriptionFormController implements Initializable, ScreenIn
           btnEdit.setOnAction(this::cmdButton_Click); 
           btnSave.setOnAction(this::cmdButton_Click); 
           btnClose.setOnAction(this::cmdButton_Click); 
-          btnBrowse.setOnAction(this::cmdButton_Click);
+          //btnBrowse.setOnAction(this::cmdButton_Click);
           
           /*Clear Fields*/
           clearFields();
@@ -159,19 +159,18 @@ public class VehicleDescriptionFormController implements Initializable, ScreenIn
      }
      
      private void cmdButton_Click(ActionEvent event) {
-          int iCntp = 0;
           String lsButton = ((Button)event.getSource()).getId();
-          try {
+          //try {
                switch (lsButton){
-                    case "btnBrowse":
-                         if (oTrans.SearchRecord(txtField02.getText(), true)){
-                                   loadVehicleDescription();
-                                   pnEditMode = EditMode.READY;
-                              } else {
-                                  ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
-                                  pnEditMode = EditMode.UNKNOWN;
-                              }
-                         break;
+//                    case "btnBrowse":
+//                         if (oTrans.SearchRecord(txtField02.getText(), true)){
+//                                   loadVehicleDescription();
+//                                   pnEditMode = EditMode.READY;
+//                              } else {
+//                                  ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
+//                                  pnEditMode = EditMode.UNKNOWN;
+//                              }
+//                         break;
                     case "btnAdd": //create new Vehicle Description
                          if (oTrans.NewRecord()) {
                               clearFields(); 
@@ -209,10 +208,10 @@ public class VehicleDescriptionFormController implements Initializable, ScreenIn
                              return;
                }
                initButton(pnEditMode);    
-          } catch (SQLException e) {
-               e.printStackTrace();
-               ShowMessageFX.Warning(getStage(),e.getMessage(), "Warning", null);
-          }
+//          } catch (SQLException e) {
+//               e.printStackTrace();
+//               ShowMessageFX.Warning(getStage(),e.getMessage(), "Warning", null);
+//          }
      }
      
      private void loadVehicleDescription(){
@@ -263,8 +262,15 @@ public class VehicleDescriptionFormController implements Initializable, ScreenIn
           
      }
      
+     /*Populate Fields after clicking row in table*/
      @FXML
      private void tblVehicleDesc_Clicked(MouseEvent event) {
+          if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
+               if(ShowMessageFX.OkayCancel(null, pxeModuleName, "You have unsaved data, are you sure you want to continue?") == true){   
+              } else
+                  return;
+          }
+          
           pnRow = tblVehicleDesc.getSelectionModel().getSelectedIndex() + 1;
           if(pnRow == 0) { return;}
           getSelectedItem();
@@ -525,8 +531,6 @@ public class VehicleDescriptionFormController implements Initializable, ScreenIn
           txtField08.clear(); // nYearModl
           comboBox07.setValue(null); //Transmission
           comboBox09.setValue(null); //Vehicle Size
-          
-          
      }
 
 

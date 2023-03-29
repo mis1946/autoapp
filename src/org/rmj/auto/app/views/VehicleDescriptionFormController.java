@@ -68,7 +68,7 @@ public class VehicleDescriptionFormController implements Initializable, ScreenIn
      /*populate tables Vehicle Description List*/
      private ObservableList<TableVehicleDescriptionList> vhcldescdata = FXCollections.observableArrayList();
      private FilteredList<TableVehicleDescriptionList> filteredData;
-     private static final int ROWS_PER_PAGE = 30;
+     private static final int ROWS_PER_PAGE = 50;
      
      ObservableList<String> cTransmission = FXCollections.observableArrayList("Automatic", "Manual", "CVT");
      ObservableList<String> cModelsize = FXCollections.observableArrayList("Bantam", "Small", "Medium", "Large");
@@ -185,7 +185,7 @@ public class VehicleDescriptionFormController implements Initializable, ScreenIn
                          } else 
                              ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
                           break;
-                    case "btnEdit": //modify client info
+                    case "btnEdit": //modify vehicle description
                          if (oTrans.UpdateRecord()) {
                               pnEditMode = oTrans.getEditMode(); 
                          } else 
@@ -195,11 +195,11 @@ public class VehicleDescriptionFormController implements Initializable, ScreenIn
                          //Proceed Saving
                          if (setSelection()) {
                               if (oTrans.SaveRecord()){
-                                   ShowMessageFX.Information(getStage(), "Transaction save successfully.", "Client Information", null);
+                                   ShowMessageFX.Information(getStage(), "Transaction save successfully.", pxeModuleName, null);
                                    loadVehicleDescTable();
                                    pnEditMode = oTrans.getEditMode();
                               } else {
-                                  ShowMessageFX.Warning(getStage(),oTrans.getMessage() ,"Warning", "Error while saving Client Information");
+                                  ShowMessageFX.Warning(getStage(),oTrans.getMessage() ,"Warning", "Error while saving Vehicle Description");
                               }
                          }
                          break;                        
@@ -216,7 +216,7 @@ public class VehicleDescriptionFormController implements Initializable, ScreenIn
                }
                initButton(pnEditMode);  
      }
-     
+     //use for creating new page on pagination 
      private Node createPage(int pageIndex) {
           int fromIndex = pageIndex * ROWS_PER_PAGE;
           int toIndex = Math.min(fromIndex + ROWS_PER_PAGE, vhcldescdata.size());
@@ -227,6 +227,7 @@ public class VehicleDescriptionFormController implements Initializable, ScreenIn
           
      }
      
+     //storing values on vhcldescdata  
      private void loadVehicleDescTable(){
           try {
                /*Populate table*/
@@ -301,22 +302,22 @@ public class VehicleDescriptionFormController implements Initializable, ScreenIn
           int lnIndex = Integer.parseInt(txtField.getId().substring(8, 10));
           boolean fsCode = true;
           txtField.textProperty().addListener((observable, oldValue, newValue) -> {
-                      filteredData.setPredicate(clients-> {
-                // If filter text is empty, display all persons.
-                if (newValue == null || newValue.isEmpty()) {
-                    return true;
-                }
-                // Compare order no. and last name of every person with filter text.
-                String lowerCaseFilter = newValue.toLowerCase();
-                switch (lnIndex){
-                        case 2:
-                            if(lnIndex == 2){
-                                return (clients.getTblindex10().toLowerCase().contains(lowerCaseFilter)); // Does not match.   
-                             }else {
-                                return (clients.getTblindex10().toLowerCase().contains(lowerCaseFilter)); // Does not match.
-                             }   
-                        default:
-                        return true;            
+               filteredData.setPredicate(clients-> {
+               // If filter text is empty, display all persons.
+               if (newValue == null || newValue.isEmpty()) {
+                   return true;
+               }
+               // Compare order no. and last name of every person with filter text.
+               String lowerCaseFilter = newValue.toLowerCase();
+               switch (lnIndex){
+                       case 2:
+                           if(lnIndex == 2){
+                               return (clients.getTblindex10().toLowerCase().contains(lowerCaseFilter)); // Does not match.   
+                            }else {
+                               return (clients.getTblindex10().toLowerCase().contains(lowerCaseFilter)); // Does not match.
+                            }   
+                       default:
+                       return true;            
             }
             });
             
@@ -359,7 +360,7 @@ public class VehicleDescriptionFormController implements Initializable, ScreenIn
           pagecounter = pnRow + pagination.getCurrentPageIndex() * ROWS_PER_PAGE;
           if (pagecounter >= 0){
                if(event.getClickCount() > 0){
-                    getSelectedItem(filteredData.get(pagecounter).getTblindex11());
+                    getSelectedItem(filteredData.get(pagecounter).getTblindex11()); //Populate field based on selected Item
 
                     tblVehicleDesc.setOnKeyReleased((KeyEvent t)-> {
                         KeyCode key = t.getCode();
@@ -430,7 +431,6 @@ public class VehicleDescriptionFormController implements Initializable, ScreenIn
                txtField06.setText((String) oTrans.getMaster(18));
                txtField08.setText( oTrans.getMaster(8).toString());
                
-               //comboBox07.getSelectionModel().select(Integer.parseInt(oTrans.getMaster(7).toString()));
                switch (oTrans.getMaster(7).toString()) {
                     case "AT":
                          comboBox07.getSelectionModel().select(0);
@@ -501,22 +501,20 @@ public class VehicleDescriptionFormController implements Initializable, ScreenIn
                                         loadVehicleDescField();
                                    } else 
                                        ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
-                              
                               break;
+                              
                               case 4: //Model
                                    if (oTrans.searchVehicleModel(txtField04.getText())){
                                         loadVehicleDescField();
                                    } else 
                                        ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
-                              
                               break;
                               
                               case 5: //Color 
                                    if (oTrans.searchVehicleColor(txtField05.getText())){
                                         loadVehicleDescField();
                                    } else 
-                                       ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
-//                              
+                                       ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);                            
                               break;
                               
                               case 6: //Type 
@@ -648,7 +646,6 @@ public class VehicleDescriptionFormController implements Initializable, ScreenIn
      public void clearFields(){
           pnRow = 0;
           /*clear tables*/
-          //vhcldescdata.clear();
           
           txtField02.clear(); // sDescript
           txtField03.clear(); // sMakeIDxx

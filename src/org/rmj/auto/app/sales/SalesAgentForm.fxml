@@ -21,7 +21,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" fx:id="AnchorMain" prefHeight="400.0" prefWidth="600.0" stylesheets="@../css/FrameStyle.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane id="AnchorPane" fx:id="AnchorMain" prefHeight="400.0" prefWidth="600.0" stylesheets="@../css/FrameStyle.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" >
    <children>
       <StackPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -47,7 +47,7 @@
                         <Insets />
                      </BorderPane.margin>
                      <children>
-                        <StackPane AnchorPane.bottomAnchor="3.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="3.0">
+                        <StackPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="3.0">
                            <children>
                               <BorderPane>
                                  <top>
@@ -71,12 +71,12 @@
                                                    </font>
                                                 </Label>
                                                 <TextField fx:id="txtField01" promptText="Search" GridPane.columnIndex="1" />
-                                                <Label text="AGENT" GridPane.columnIndex="3">
+                                                <Label text="AGENT NAME" GridPane.columnIndex="3">
                                                    <font>
                                                       <Font name="Arial Bold" size="12.0" />
                                                    </font>
                                                 </Label>
-                                                <TextField fx:id="textseek01" promptText="Search" GridPane.columnIndex="4" />
+                                                <TextField fx:id="textSeek01" promptText="Search" GridPane.columnIndex="4" />
                                              </children>
                                           </GridPane>
                                        </children>

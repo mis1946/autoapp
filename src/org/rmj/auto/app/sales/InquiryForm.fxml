@@ -145,12 +145,12 @@
                                                                   <Insets top="10.0" />
                                                                </GridPane.margin>
                                                             </Label>
-                                                            <TextField prefHeight="22.0" prefWidth="282.0" GridPane.columnIndex="4">
+                                                            <TextField fx:id="txtFieldSalesExecutive" prefHeight="22.0" prefWidth="282.0" GridPane.columnIndex="4">
                                                                <GridPane.margin>
                                                                   <Insets top="10.0" />
                                                                </GridPane.margin>
                                                             </TextField>
-                                                            <TextField GridPane.columnIndex="1">
+                                                            <TextField fx:id="txtFieldInquiryDate" GridPane.columnIndex="1">
                                                                <GridPane.margin>
                                                                   <Insets top="10.0" />
                                                                </GridPane.margin>
@@ -206,19 +206,19 @@
                                                                   <Insets left="10.0" />
                                                                </padding>
                                                             </Label>
-                                                            <TextField promptText="Search: F3" GridPane.columnIndex="1" />
-                                                            <TextField GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                                            <TextField fx:id="txtFieldCustomerName" promptText="Search: F3" GridPane.columnIndex="1" />
+                                                            <TextField fx:id="txtFieldCompanyName" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                                                <GridPane.margin>
                                                                   <Insets />
                                                                </GridPane.margin>
                                                             </TextField>
-                                                            <TextField GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                                            <TextField fx:id="txtFieldPrefferedMail" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                                                             <Label id="LabelDesc" text="Contact Number" GridPane.columnIndex="3" />
                                                             <Label GridPane.columnIndex="3" GridPane.rowIndex="1" />
                                                             <Label id="LabelDesc" text="Email Address" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-                                                            <TextField prefHeight="22.0" prefWidth="269.0" GridPane.columnIndex="4" />
-                                                            <TextField GridPane.columnIndex="4" GridPane.rowIndex="1" />
-                                                            <TextField GridPane.columnIndex="4" GridPane.rowIndex="2" />
+                                                            <TextField fx:id="txtFieldContactNumber" prefHeight="22.0" prefWidth="269.0" GridPane.columnIndex="4" />
+                                                            <TextField fx:id="txtFieldEmailAddress" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                                                            <TextField fx:id="txtFieldSocialMedia" GridPane.columnIndex="4" GridPane.rowIndex="2" />
                                                             <Label id="LabelDesc" text="Social Media" GridPane.columnIndex="3" GridPane.rowIndex="2" />
                                                          </children>
                                                          <padding>
@@ -242,7 +242,7 @@
                                              <children>
                                                 <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                   <tabs>
-                                                    <Tab text="Customer Inquiry">
+                                                    <Tab fx:id="tabCustomerInquiry" text="Customer Inquiry">
                                                       <content>
                                                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                                                <children>
@@ -278,7 +278,7 @@
                                                                                                 <Insets left="10.0" />
                                                                                              </GridPane.margin>
                                                                                           </Label>
-                                                                                          <TextField prefWidth="275.0" promptText="Search: F3" GridPane.columnIndex="5" />
+                                                                                          <TextField fx:id="txtFieldRefAgent" prefWidth="275.0" promptText="Search: F3" GridPane.columnIndex="5" />
                                                                                           <Label GridPane.columnIndex="4" />
                                                                                           <Label id="LabelDesc" text="Event" GridPane.columnIndex="4" GridPane.rowIndex="1" />
                                                                                           <Label id="LabelDesc" text="Ref Agent" GridPane.columnIndex="4" />
@@ -287,9 +287,9 @@
                                                                                                 <Insets left="5.0" />
                                                                                              </GridPane.margin>
                                                                                           </Button>
-                                                                                          <ComboBox prefHeight="24.0" prefWidth="279.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                                                                          <ComboBox prefHeight="24.0" prefWidth="290.0" GridPane.columnIndex="5" GridPane.rowIndex="1" />
-                                                                                          <ComboBox prefHeight="24.0" prefWidth="260.0" GridPane.columnIndex="1" />
+                                                                                          <ComboBox fx:id="comboOnlineStore" prefHeight="24.0" prefWidth="279.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                                                                          <ComboBox fx:id="comboEvent" prefHeight="24.0" prefWidth="290.0" GridPane.columnIndex="5" GridPane.rowIndex="1" />
+                                                                                          <ComboBox fx:id="comboInquiryType" prefHeight="24.0" prefWidth="260.0" GridPane.columnIndex="1" />
                                                                                        </children>
                                                                                        <VBox.margin>
                                                                                           <Insets top="10.0" />
@@ -334,8 +334,8 @@
                                                                                              </toggleGroup></RadioButton>
                                                                                           <RadioButton mnemonicParsing="false" text="No" toggleGroup="$testDrive" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                                                                                           <Label id="LabelDesc" text="Target  Release Date" GridPane.columnIndex="5" />
-                                                                                          <TextField prefHeight="22.0" prefWidth="149.0" GridPane.columnIndex="6" />
-                                                                                          <TextField prefHeight="22.0" prefWidth="262.0" GridPane.columnIndex="6" GridPane.rowIndex="1" />
+                                                                                          <TextField fx:id="textFieldTargetReleaseDate" prefHeight="22.0" prefWidth="149.0" GridPane.columnIndex="6" />
+                                                                                          <TextField fx:id="txtFieldCustomerInquiryModel" prefHeight="22.0" prefWidth="262.0" GridPane.columnIndex="6" GridPane.rowIndex="1" />
                                                                                           <Label id="LabelDesc" text="Model" GridPane.columnIndex="5" GridPane.rowIndex="1" />
                                                                                           <Button mnemonicParsing="false" GridPane.columnIndex="7" GridPane.rowIndex="1">
                                                                                              <GridPane.margin>
@@ -371,7 +371,7 @@
                                                                                                 <ToggleGroup fx:id="targetVehicle" />
                                                                                              </toggleGroup></RadioButton>
                                                                                           <RadioButton mnemonicParsing="false" text="Pre-owned" toggleGroup="$targetVehicle" GridPane.columnIndex="2" />
-                                                                                          <Button fx:id="btnTabAdd1" alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefWidth="75.0" text="Add" GridPane.columnIndex="4">
+                                                                                          <Button fx:id="btnTargetVehicleAdd" alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefWidth="75.0" text="Add" GridPane.columnIndex="4">
                                                                                              <graphic>
                                                                                                 <FontAwesomeIconView glyphName="PLUS" />
                                                                                              </graphic>
@@ -379,7 +379,7 @@
                                                                                                 <Blend />
                                                                                              </effect>
                                                                                           </Button>
-                                                                                          <Button fx:id="btnTabRem" alignment="TOP_LEFT" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefWidth="75.0" text="Remove" GridPane.columnIndex="5">
+                                                                                          <Button fx:id="btnTargetVehicleRemove" alignment="TOP_LEFT" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefWidth="75.0" text="Remove" GridPane.columnIndex="5">
                                                                                              <graphic>
                                                                                                 <FontAwesomeIconView glyphName="TRASH" />
                                                                                              </graphic>
@@ -394,7 +394,7 @@
                                                                                     </GridPane>
                                                                                     <BorderPane prefHeight="200.0" prefWidth="200.0">
                                                                                        <center>
-                                                                                          <TableView prefHeight="197.0" prefWidth="675.0" BorderPane.alignment="CENTER">
+                                                                                          <TableView fx:id="tblTargetVehicle" prefHeight="197.0" prefWidth="675.0" BorderPane.alignment="CENTER">
                                                                                              <columns>
                                                                                                 <TableColumn prefWidth="75.0" text="Make" />
                                                                                                 <TableColumn prefWidth="75.0" text="Model" />
@@ -407,7 +407,7 @@
                                                                                              <children>
                                                                                                 <VBox layoutY="62.0" prefHeight="53.0" prefWidth="84.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                                                                                                    <children>
-                                                                                                      <Button fx:id="btnTabAdd" alignment="TOP_LEFT" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="22.0" prefWidth="92.0" text="Move Up">
+                                                                                                      <Button fx:id="btnTargetVehicleUp" alignment="TOP_LEFT" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="22.0" prefWidth="92.0" text="Move Up">
                                                                                                          <graphic>
                                                                                                             <FontAwesomeIconView glyphName="ARROW_UP" />
                                                                                                          </graphic>
@@ -418,7 +418,7 @@
                                                                                                             <Insets bottom="10.0" left="10.0" />
                                                                                                          </VBox.margin>
                                                                                                       </Button>
-                                                                                                      <Button fx:id="btnTabRem1" alignment="TOP_LEFT" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="22.0" prefWidth="95.0" text="Move Down">
+                                                                                                      <Button fx:id="btnTargetVehicleDown" alignment="TOP_LEFT" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="22.0" prefWidth="95.0" text="Move Down">
                                                                                                          <graphic>
                                                                                                             <FontAwesomeIconView glyphName="ARROW_DOWN" />
                                                                                                          </graphic>
@@ -457,7 +457,7 @@
                                                                                                 <Insets left="10.0" />
                                                                                              </GridPane.margin>
                                                                                           </Label>
-                                                                                          <Button fx:id="btnTabAdd11" alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefWidth="75.0" text="Add" GridPane.columnIndex="4" GridPane.rowIndex="1">
+                                                                                          <Button fx:id="btnPromosAdd" alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefWidth="75.0" text="Add" GridPane.columnIndex="4" GridPane.rowIndex="1">
                                                                                              <graphic>
                                                                                                 <FontAwesomeIconView glyphName="PLUS" />
                                                                                              </graphic>
@@ -465,7 +465,7 @@
                                                                                                 <Blend />
                                                                                              </effect>
                                                                                           </Button>
-                                                                                          <Button fx:id="btnTabRem2" alignment="TOP_LEFT" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefWidth="75.0" text="Remove" GridPane.columnIndex="5" GridPane.rowIndex="1">
+                                                                                          <Button fx:id="btnPromosRemove" alignment="TOP_LEFT" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefWidth="75.0" text="Remove" GridPane.columnIndex="5" GridPane.rowIndex="1">
                                                                                              <graphic>
                                                                                                 <FontAwesomeIconView glyphName="TRASH" />
                                                                                              </graphic>
@@ -480,7 +480,7 @@
                                                                                     </GridPane>
                                                                                     <BorderPane prefHeight="200.0" prefWidth="200.0">
                                                                                        <center>
-                                                                                          <TableView prefHeight="200.0" prefWidth="758.0" BorderPane.alignment="CENTER">
+                                                                                          <TableView fx:id="tblPromosOFfered" prefHeight="200.0" prefWidth="758.0" BorderPane.alignment="CENTER">
                                                                                              <columns>
                                                                                                 <TableColumn prefWidth="75.0" text="Promo Title" />
                                                                                                 <TableColumn prefWidth="75.0" text="Start Date" />
@@ -493,7 +493,7 @@
                                                                                              <children>
                                                                                                 <VBox layoutY="62.0" prefHeight="53.0" prefWidth="84.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                                                                                                    <children>
-                                                                                                      <Button fx:id="btnTabAdd2" alignment="TOP_LEFT" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="22.0" prefWidth="92.0" text="Move Up">
+                                                                                                      <Button fx:id="btnPromosUp" alignment="TOP_LEFT" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="22.0" prefWidth="92.0" text="Move Up">
                                                                                                          <graphic>
                                                                                                             <FontAwesomeIconView glyphName="ARROW_UP" />
                                                                                                          </graphic>
@@ -504,7 +504,7 @@
                                                                                                             <Insets bottom="10.0" left="10.0" />
                                                                                                          </VBox.margin>
                                                                                                       </Button>
-                                                                                                      <Button fx:id="btnTabRem11" alignment="TOP_LEFT" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="22.0" prefWidth="95.0" text="Move Down">
+                                                                                                      <Button fx:id="btnPromosdDown" alignment="TOP_LEFT" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="22.0" prefWidth="95.0" text="Move Down">
                                                                                                          <graphic>
                                                                                                             <FontAwesomeIconView glyphName="ARROW_DOWN" />
                                                                                                          </graphic>
@@ -546,8 +546,8 @@
                                                                                                       <Insets left="10.0" />
                                                                                                    </GridPane.margin>
                                                                                                 </Label>
-                                                                                                <TextField GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                                                                                <TextField GridPane.columnIndex="1" />
+                                                                                                <TextField fx:id="txtFieldSubCompany" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                                                                                <TextField fx:id="txtFieldBranch" GridPane.columnIndex="1" />
                                                                                              </children>
                                                                                           </GridPane>
                                                                                           <GridPane>
@@ -562,7 +562,7 @@
                                                                                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                                                                              </rowConstraints>
                                                                                              <children>
-                                                                                                <TextArea prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowSpan="2">
+                                                                                                <TextArea fx:id="txtAreaCIRemarks" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowSpan="2">
                                                                                                    <GridPane.margin>
                                                                                                       <Insets bottom="10.0" top="10.0" />
                                                                                                    </GridPane.margin>
@@ -582,8 +582,8 @@
                                                                                                       <Insets left="10.0" />
                                                                                                    </GridPane.margin>
                                                                                                 </Label>
-                                                                                                <TextField GridPane.columnIndex="3" />
-                                                                                                <TextField GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                                                                                                <TextField fx:id="txtFieldCIStatus" GridPane.columnIndex="3" />
+                                                                                                <TextField fx:id="txtFieldCICdot" GridPane.columnIndex="3" GridPane.rowIndex="1" />
                                                                                              </children>
                                                                                           </GridPane>
                                                                                        </children>
@@ -614,10 +614,10 @@
                                                                                           </Label>
                                                                                           <Label id="LabelDesc" text="Amount" GridPane.columnIndex="3" />
                                                                                           <Label id="LabelDesc" text="Amount" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-                                                                                          <TextField GridPane.columnIndex="4" />
-                                                                                          <TextField GridPane.columnIndex="4" GridPane.rowIndex="1" />
-                                                                                          <TextField GridPane.columnIndex="1" />
-                                                                                          <TextField GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                                                                          <TextField fx:id="textFieldRSVAmount" GridPane.columnIndex="4" />
+                                                                                          <TextField fx:id="textFieldRefundSlipAmount" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                                                                                          <TextField fx:id="txtFieldCIRSV" GridPane.columnIndex="1" />
+                                                                                          <TextField fx:id="textFieldRefundSlipNo" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                                                                        </children>
                                                                                     </GridPane>
                                                                                  </children>
@@ -630,7 +630,7 @@
                                                             </AnchorPane>
                                                       </content>
                                                     </Tab>
-                                                    <Tab text="Inquiry Process">
+                                                    <Tab fx:id="tabInquiryProcess" text="Inquiry Process">
                                                       <content>
                                                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                                                <children>
@@ -645,7 +645,7 @@
                                                                                           <AnchorPane prefHeight="177.0" prefWidth="201.0" BorderPane.alignment="CENTER" />
                                                                                        </right>
                                                                                        <center>
-                                                                                          <TableView prefHeight="177.0" prefWidth="417.0" BorderPane.alignment="CENTER">
+                                                                                          <TableView fx:id="tblRequirementsInfo" prefHeight="177.0" prefWidth="417.0" BorderPane.alignment="CENTER">
                                                                                              <columns>
                                                                                                 <TableColumn prefWidth="75.0" text="C1" />
                                                                                                 <TableColumn prefWidth="509.666748046875" text="Requirments" />
@@ -681,8 +681,8 @@
                                                                                                                   <Insets left="10.0" />
                                                                                                                </GridPane.margin>
                                                                                                             </Label>
-                                                                                                            <ComboBox prefWidth="150.0" GridPane.columnIndex="1" />
-                                                                                                            <ComboBox prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                                                                                            <ComboBox fx:id="comboIPModeofPayment" prefWidth="150.0" GridPane.columnIndex="1" />
+                                                                                                            <ComboBox fx:id="comboIPCustomerType" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                                                                                          </children>
                                                                                                          <VBox.margin>
                                                                                                             <Insets />
@@ -745,9 +745,9 @@
                                                                                                 <Insets left="10.0" />
                                                                                              </GridPane.margin>
                                                                                           </Label>
-                                                                                          <TextField GridPane.columnIndex="3" GridPane.rowIndex="1" />
-                                                                                          <TextField prefHeight="22.0" prefWidth="282.0" GridPane.columnIndex="3" GridPane.columnSpan="4" GridPane.rowIndex="2" />
-                                                                                          <TextField GridPane.columnIndex="6" GridPane.rowIndex="1" />
+                                                                                          <TextField fx:id="txtFieldIPCsNo" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                                                                                          <TextField fx:id="txtFieldIPModel" prefHeight="22.0" prefWidth="282.0" GridPane.columnIndex="3" GridPane.columnSpan="4" GridPane.rowIndex="2" />
+                                                                                          <TextField fx:id="txtFieldPlateNo" GridPane.columnIndex="6" GridPane.rowIndex="1" />
                                                                                           <Label id="LabelDesc" text="Plate No" GridPane.columnIndex="5" GridPane.rowIndex="1">
                                                                                              <GridPane.margin>
                                                                                                 <Insets left="10.0" />
@@ -785,7 +785,7 @@
                                                                                                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                                                                                    </rowConstraints>
                                                                                                    <children>
-                                                                                                      <Button fx:id="btnTabAdd3" alignment="TOP_LEFT" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefWidth="75.0" text="Add" GridPane.rowIndex="1">
+                                                                                                      <Button fx:id="btnASadd" alignment="TOP_LEFT" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefWidth="75.0" text="Add" GridPane.rowIndex="1">
                                                                                                          <graphic>
                                                                                                             <FontAwesomeIconView glyphName="PLUS" text="" />
                                                                                                          </graphic>
@@ -793,7 +793,7 @@
                                                                                                             <Blend />
                                                                                                          </effect>
                                                                                                       </Button>
-                                                                                                      <Button fx:id="btnTabAdd31" alignment="TOP_LEFT" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefWidth="75.0" text="Remove" GridPane.rowIndex="2">
+                                                                                                      <Button fx:id="btnASremove" alignment="TOP_LEFT" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefWidth="75.0" text="Remove" GridPane.rowIndex="2">
                                                                                                          <graphic>
                                                                                                             <FontAwesomeIconView glyphName="TRASH" />
                                                                                                          </graphic>
@@ -801,7 +801,7 @@
                                                                                                             <Blend />
                                                                                                          </effect>
                                                                                                       </Button>
-                                                                                                      <Button fx:id="btnTabAdd32" alignment="TOP_LEFT" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefWidth="75.0" text="Print" GridPane.rowIndex="3">
+                                                                                                      <Button fx:id="btnASprint" alignment="TOP_LEFT" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefWidth="75.0" text="Print" GridPane.rowIndex="3">
                                                                                                          <graphic>
                                                                                                             <FontAwesomeIconView glyphName="PRINT" />
                                                                                                          </graphic>
@@ -809,7 +809,7 @@
                                                                                                             <Blend />
                                                                                                          </effect>
                                                                                                       </Button>
-                                                                                                      <Button fx:id="btnTabAdd33" alignment="TOP_LEFT" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="22.0" prefWidth="88.0" text="Print View" GridPane.rowIndex="4">
+                                                                                                      <Button fx:id="btnASprintview" alignment="TOP_LEFT" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="22.0" prefWidth="88.0" text="Print View" GridPane.rowIndex="4">
                                                                                                          <graphic>
                                                                                                             <FontAwesomeIconView glyphName="EXPAND" />
                                                                                                          </graphic>
@@ -817,7 +817,7 @@
                                                                                                             <Blend />
                                                                                                          </effect>
                                                                                                       </Button>
-                                                                                                      <Button fx:id="btnTabAdd4" alignment="TOP_LEFT" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefWidth="75.0" text="Cancel" GridPane.rowIndex="5">
+                                                                                                      <Button fx:id="btnAScancel" alignment="TOP_LEFT" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefWidth="75.0" text="Cancel" GridPane.rowIndex="5">
                                                                                                          <graphic>
                                                                                                             <FontAwesomeIconView glyphName="TIMES" />
                                                                                                          </graphic>
@@ -831,7 +831,7 @@
                                                                                           </AnchorPane>
                                                                                        </left>
                                                                                        <center>
-                                                                                          <TableView prefHeight="215.0" prefWidth="640.0" BorderPane.alignment="CENTER">
+                                                                                          <TableView fx:id="tblAdvanceSlip" prefHeight="215.0" prefWidth="640.0" BorderPane.alignment="CENTER">
                                                                                              <columns>
                                                                                                 <TableColumn prefWidth="75.0" />
                                                                                                 <TableColumn prefWidth="103.0" />
@@ -875,13 +875,13 @@
                                                                                                 <Insets left="10.0" />
                                                                                              </GridPane.margin>
                                                                                           </Label>
-                                                                                          <TextField GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                                                                          <TextField fx:id="txtFieldPaymentConversion" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                                                                                           <Button mnemonicParsing="false" text="..." GridPane.columnIndex="3" GridPane.rowIndex="1">
                                                                                              <GridPane.margin>
                                                                                                 <Insets left="5.0" />
                                                                                              </GridPane.margin>
                                                                                           </Button>
-                                                                                          <ComboBox prefWidth="150.0" GridPane.columnIndex="2" />
+                                                                                          <ComboBox fx:id="comboIPProcessApprovedBy" prefWidth="150.0" GridPane.columnIndex="2" />
                                                                                        </children>
                                                                                        <VBox.margin>
                                                                                           <Insets top="10.0" />
@@ -891,7 +891,7 @@
                                                                                        <children>
                                                                                           <HBox layoutX="390.0" layoutY="-6.0" prefHeight="65.0" prefWidth="216.0" spacing="10.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="350.0" AnchorPane.rightAnchor="235.0" AnchorPane.topAnchor="5.0">
                                                                                              <children>
-                                                                                                <Button fx:id="btnClose15" contentDisplay="TOP" mnemonicParsing="false" prefHeight="50.0" prefWidth="70.0" text="Process">
+                                                                                                <Button fx:id="btnProcess" contentDisplay="TOP" mnemonicParsing="false" prefHeight="50.0" prefWidth="70.0" text="Process">
                                                                                                    <effect>
                                                                                                       <Blend />
                                                                                                    </effect>
@@ -899,7 +899,7 @@
                                                                                                       <FontAwesomeIconView glyphName="CARET_DOWN" size="20" />
                                                                                                    </graphic>
                                                                                                 </Button>
-                                                                                                <Button fx:id="btnClose151" contentDisplay="TOP" mnemonicParsing="false" prefHeight="50.0" prefWidth="70.0" text="Modify">
+                                                                                                <Button fx:id="btnModify" contentDisplay="TOP" mnemonicParsing="false" prefHeight="50.0" prefWidth="70.0" text="Modify">
                                                                                                    <effect>
                                                                                                       <Blend />
                                                                                                    </effect>
@@ -907,7 +907,7 @@
                                                                                                       <FontAwesomeIconView glyphName="EDIT" size="20" />
                                                                                                    </graphic>
                                                                                                 </Button>
-                                                                                                <Button fx:id="btnClose1511" contentDisplay="TOP" mnemonicParsing="false" prefHeight="50.0" prefWidth="70.0" text="Apply">
+                                                                                                <Button fx:id="btnApply" contentDisplay="TOP" mnemonicParsing="false" prefHeight="50.0" prefWidth="70.0" text="Apply">
                                                                                                    <effect>
                                                                                                       <Blend />
                                                                                                    </effect>
@@ -932,7 +932,7 @@
                                                             </AnchorPane>
                                                       </content>
                                                     </Tab>
-                                                      <Tab text="Bank Application History">
+                                                      <Tab fx:id="tabBankHistory" text="Bank Application History">
                                                         <content>
                                                           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                                                <children>
@@ -944,7 +944,7 @@
                                                                                  <children>
                                                                                     <HBox prefHeight="24.0" prefWidth="851.0">
                                                                                        <children>
-                                                                                          <Button fx:id="btnTabAdd34" alignment="TOP_LEFT" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefWidth="75.0" text="New">
+                                                                                          <Button fx:id="btnBPHnew" alignment="TOP_LEFT" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefWidth="75.0" text="New">
                                                                                              <graphic>
                                                                                                 <FontAwesomeIconView glyphName="MINUS" text="" />
                                                                                              </graphic>
@@ -955,7 +955,7 @@
                                                                                                 <Insets bottom="10.0" left="20.0" top="10.0" />
                                                                                              </HBox.margin>
                                                                                           </Button>
-                                                                                          <Button fx:id="btnTabAdd35" alignment="TOP_LEFT" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefWidth="75.0" text="Update">
+                                                                                          <Button fx:id="btnBPHupdate" alignment="TOP_LEFT" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefWidth="75.0" text="Update">
                                                                                              <effect>
                                                                                                 <Blend />
                                                                                              </effect>
@@ -966,7 +966,7 @@
                                                                                                 <FontAwesomeIconView glyphName="EDIT" text="" />
                                                                                              </graphic>
                                                                                           </Button>
-                                                                                          <Button fx:id="btnTabAdd36" alignment="TOP_LEFT" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefWidth="75.0" text="View">
+                                                                                          <Button fx:id="btnBPHview" alignment="TOP_LEFT" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefWidth="75.0" text="View">
                                                                                              <effect>
                                                                                                 <Blend />
                                                                                              </effect>
@@ -977,7 +977,7 @@
                                                                                                 <FontAwesomeIconView glyphName="EXPAND" />
                                                                                              </graphic>
                                                                                           </Button>
-                                                                                          <Button fx:id="btnTabAdd37" alignment="TOP_LEFT" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefWidth="75.0" text="Cancel">
+                                                                                          <Button fx:id="btnBPHcancel" alignment="TOP_LEFT" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefWidth="75.0" text="Cancel">
                                                                                              <effect>
                                                                                                 <Blend />
                                                                                              </effect>
@@ -990,7 +990,7 @@
                                                                                           </Button>
                                                                                        </children>
                                                                                     </HBox>
-                                                                                    <TableView prefHeight="585.0" prefWidth="850.0">
+                                                                                    <TableView fx:id="tblBankHistory" prefHeight="585.0" prefWidth="850.0">
                                                                                        <columns>
                                                                                           <TableColumn prefWidth="75.0" />
                                                                                           <TableColumn prefWidth="257.6666259765625" text="Bank Name" />
@@ -1011,7 +1011,7 @@
                                                             </AnchorPane>
                                                         </content>
                                                       </Tab>
-                                                      <Tab text="Following History">
+                                                      <Tab fx:id="tabFollowingHistory" text="Following History">
                                                         <content>
                                                           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                                                <children>
@@ -1023,14 +1023,14 @@
                                                                                  <children>
                                                                                     <HBox prefHeight="41.0" prefWidth="851.0">
                                                                                        <children>
-                                                                                          <Button mnemonicParsing="false" text="Followup">
+                                                                                          <Button fx:id="btnFollowUp" mnemonicParsing="false" text="Followup">
                                                                                              <HBox.margin>
                                                                                                 <Insets left="20.0" top="10.0" />
                                                                                              </HBox.margin>
                                                                                           </Button>
                                                                                        </children>
                                                                                     </HBox>
-                                                                                    <TableView prefHeight="423.0" prefWidth="820.0">
+                                                                                    <TableView fx:id="tblFollowHistory" prefHeight="423.0" prefWidth="820.0">
                                                                                        <columns>
                                                                                           <TableColumn prefWidth="221.66668701171875" text="Followup Date" />
                                                                                           <TableColumn prefWidth="223.33331298828125" text="Followed up by " />
@@ -1060,7 +1060,7 @@
                                        <bottom>
                                           <AnchorPane prefHeight="3.0" prefWidth="970.0" style="-fx-background-radius: 5; -fx-background-color: #515151; -fx-border-radius: 5;" BorderPane.alignment="CENTER">
                                              <children>
-                                                <Button fx:id="btnClose" contentDisplay="TOP" layoutX="836.0" layoutY="9.0" mnemonicParsing="false" onMouseClicked="#btnClose" prefHeight="50.0" prefWidth="70.0" text="Close" AnchorPane.bottomAnchor="6.0" AnchorPane.rightAnchor="12.0" AnchorPane.topAnchor="9.0">
+                                                <Button fx:id="btnClose" contentDisplay="TOP" layoutX="836.0" layoutY="9.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="70.0" text="Close" AnchorPane.bottomAnchor="6.0" AnchorPane.rightAnchor="12.0" AnchorPane.topAnchor="9.0">
                                                    <effect>
                                                       <Blend />
                                                    </effect>
@@ -1070,7 +1070,7 @@
                                                 </Button>
                                                 <HBox layoutX="33.0" layoutY="-36.0" prefHeight="52.0" prefWidth="645.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0">
                                                    <children>
-                                                      <Button fx:id="btnClose1" contentDisplay="TOP" mnemonicParsing="false" prefHeight="50.0" prefWidth="70.0" text="Add">
+                                                      <Button fx:id="btnAdd" contentDisplay="TOP" mnemonicParsing="false" prefHeight="50.0" prefWidth="70.0" text="Add">
                                                          <effect>
                                                             <Blend />
                                                          </effect>
@@ -1078,7 +1078,7 @@
                                                             <FontAwesomeIconView glyphName="PLUS" size="20" />
                                                          </graphic>
                                                       </Button>
-                                                      <Button fx:id="btnClose11" contentDisplay="TOP" mnemonicParsing="false" prefHeight="50.0" prefWidth="70.0" text="Edit">
+                                                      <Button fx:id="btnEdit" contentDisplay="TOP" mnemonicParsing="false" prefHeight="50.0" prefWidth="70.0" text="Edit">
                                                          <effect>
                                                             <Blend />
                                                          </effect>
@@ -1086,7 +1086,7 @@
                                                             <FontAwesomeIconView glyphName="EDIT" size="20" />
                                                          </graphic>
                                                       </Button>
-                                                      <Button fx:id="btnClose12" contentDisplay="TOP" mnemonicParsing="false" prefHeight="50.0" prefWidth="70.0" text="Save">
+                                                      <Button fx:id="btnSave" contentDisplay="TOP" mnemonicParsing="false" prefHeight="50.0" prefWidth="70.0" text="Save">
                                                          <effect>
                                                             <Blend />
                                                          </effect>
@@ -1094,7 +1094,7 @@
                                                             <FontAwesomeIconView glyphName="SAVE" size="20" />
                                                          </graphic>
                                                       </Button>
-                                                      <Button fx:id="btnClose13" contentDisplay="TOP" mnemonicParsing="false" prefHeight="50.0" prefWidth="70.0" text="Clear">
+                                                      <Button fx:id="btnClear" contentDisplay="TOP" mnemonicParsing="false" prefHeight="50.0" prefWidth="70.0" text="Clear">
                                                          <effect>
                                                             <Blend />
                                                          </effect>
@@ -1102,7 +1102,7 @@
                                                             <FontAwesomeIconView glyphName="REFRESH" size="20" />
                                                          </graphic>
                                                       </Button>
-                                                      <Button fx:id="btnClose14" contentDisplay="TOP" mnemonicParsing="false" prefHeight="50.0" prefWidth="104.0" text="Convert to Sales">
+                                                      <Button fx:id="btnConvertSales" contentDisplay="TOP" mnemonicParsing="false" prefHeight="50.0" prefWidth="104.0" text="Convert to Sales">
                                                          <effect>
                                                             <Blend />
                                                          </effect>
@@ -1110,7 +1110,7 @@
                                                             <FontAwesomeIconView glyphName="EXCHANGE" size="20" />
                                                          </graphic>
                                                       </Button>
-                                                      <Button fx:id="btnClose141" contentDisplay="TOP" mnemonicParsing="false" prefHeight="50.0" prefWidth="104.0" text="Print Refund">
+                                                      <Button fx:id="btnPrintRefund" contentDisplay="TOP" mnemonicParsing="false" prefHeight="50.0" prefWidth="104.0" text="Print Refund">
                                                          <effect>
                                                             <Blend />
                                                          </effect>
@@ -1118,7 +1118,7 @@
                                                             <FontAwesomeIconView glyphName="PRINT" size="20" />
                                                          </graphic>
                                                       </Button>
-                                                      <Button fx:id="btnClose1411" contentDisplay="TOP" mnemonicParsing="false" prefHeight="50.0" prefWidth="104.0" text="Lost of Sale">
+                                                      <Button fx:id="btnLostSale" contentDisplay="TOP" mnemonicParsing="false" prefHeight="50.0" prefWidth="104.0" text="Lost of Sale">
                                                          <effect>
                                                             <Blend />
                                                          </effect>

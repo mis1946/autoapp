@@ -18,11 +18,15 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Pagination;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -32,6 +36,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import static junit.framework.Assert.fail;
 import org.rmj.appdriver.GRider;
 import org.rmj.appdriver.agentfx.CommonUtils;
 import org.rmj.appdriver.agentfx.ShowMessageFX;
@@ -53,9 +58,17 @@ public class VehicleDescriptionFormController implements Initializable, ScreenIn
      private final String pxeModuleName = "Vehicle Description"; //Form Title
      private int pnEditMode;//Modifying fields
      private int pnRow = -1;
+     private int oldPnRow = -1;
+     private int lnCtr = 0;
+     private int pagecounter;
+     
+     private String oldTransNo = "";
+     private String TransNo = "";
      
      /*populate tables Vehicle Description List*/
      private ObservableList<TableVehicleDescriptionList> vhcldescdata = FXCollections.observableArrayList();
+     private FilteredList<TableVehicleDescriptionList> filteredData;
+     private static final int ROWS_PER_PAGE = 50;
      
      ObservableList<String> cTransmission = FXCollections.observableArrayList("Automatic", "Manual", "CVT");
      ObservableList<String> cModelsize = FXCollections.observableArrayList("Bantam", "Small", "Medium", "Large");
@@ -68,8 +81,6 @@ public class VehicleDescriptionFormController implements Initializable, ScreenIn
      private Button btnEdit;
      @FXML
      private Button btnSave;
-     @FXML
-     private Button btnBrowse;
      @FXML
      private Button btnClose;
      @FXML
@@ -98,6 +109,8 @@ public class VehicleDescriptionFormController implements Initializable, ScreenIn
      private ComboBox comboBox07;
      @FXML
      private ComboBox comboBox09;
+     @FXML
+     private Pagination pagination;
      
      private Stage getStage(){
           return (Stage) txtField02.getScene().getWindow();
@@ -115,7 +128,6 @@ public class VehicleDescriptionFormController implements Initializable, ScreenIn
           oTrans = new VehicleDescription(oApp, oApp.getBranchCode(), true); //Initialize ClientMaster
           oTrans.setCallback(oListener);
           oTrans.setWithUI(true);
-          initVhclDescTable();
           
           /*Set Focus to set Value to Class*/
           txtField03.focusedProperty().addListener(txtField_Focus); // sMakeIDxx
@@ -124,10 +136,12 @@ public class VehicleDescriptionFormController implements Initializable, ScreenIn
           txtField05.focusedProperty().addListener(txtField_Focus); // sTypeIDxx
           txtField08.focusedProperty().addListener(txtField_Focus); // nYearModl
           
+          /*Add limit and text formatter for year model*/
           CommonUtils.addTextLimiter(txtField08, 4); // nYearModl
           Pattern pattern = Pattern.compile("[0-9]*");
           txtField08.setTextFormatter(new InputTextFormatter(pattern)); //nYearModl
           
+          //Populate combo box
           comboBox07.setItems(cTransmission);
           comboBox09.setItems(cModelsize);
           
@@ -144,7 +158,9 @@ public class VehicleDescriptionFormController implements Initializable, ScreenIn
           btnEdit.setOnAction(this::cmdButton_Click); 
           btnSave.setOnAction(this::cmdButton_Click); 
           btnClose.setOnAction(this::cmdButton_Click); 
-          btnBrowse.setOnAction(this::cmdButton_Click);
+          //Populate table
+          loadVehicleDescTable();
+          pagination.setPageFactory(this::createPage); 
           
           /*Clear Fields*/
           clearFields();
@@ -159,28 +175,17 @@ public class VehicleDescriptionFormController implements Initializable, ScreenIn
      }
      
      private void cmdButton_Click(ActionEvent event) {
-          int iCntp = 0;
           String lsButton = ((Button)event.getSource()).getId();
-          try {
                switch (lsButton){
-                    case "btnBrowse":
-                         if (oTrans.SearchRecord(txtField02.getText(), true)){
-                                   loadVehicleDescription();
-                                   pnEditMode = EditMode.READY;
-                              } else {
-                                  ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
-                                  pnEditMode = EditMode.UNKNOWN;
-                              }
-                         break;
                     case "btnAdd": //create new Vehicle Description
                          if (oTrans.NewRecord()) {
                               clearFields(); 
-                              loadVehicleDescription();
+                              loadVehicleDescField();
                               pnEditMode = oTrans.getEditMode();
                          } else 
                              ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
                           break;
-                    case "btnEdit": //modify client info
+                    case "btnEdit": //modify vehicle description
                          if (oTrans.UpdateRecord()) {
                               pnEditMode = oTrans.getEditMode(); 
                          } else 
@@ -190,10 +195,11 @@ public class VehicleDescriptionFormController implements Initializable, ScreenIn
                          //Proceed Saving
                          if (setSelection()) {
                               if (oTrans.SaveRecord()){
-                                   ShowMessageFX.Information(getStage(), "Transaction save successfully.", "Client Information", null);
+                                   ShowMessageFX.Information(getStage(), "Transaction save successfully.", pxeModuleName, null);
+                                   loadVehicleDescTable();
                                    pnEditMode = oTrans.getEditMode();
                               } else {
-                                  ShowMessageFX.Warning(getStage(),oTrans.getMessage() ,"Warning", "Error while saving Client Information");
+                                  ShowMessageFX.Warning(getStage(),oTrans.getMessage() ,"Warning", "Error while saving Vehicle Description");
                               }
                          }
                          break;                        
@@ -208,23 +214,223 @@ public class VehicleDescriptionFormController implements Initializable, ScreenIn
                          } else
                              return;
                }
-               initButton(pnEditMode);    
+               initButton(pnEditMode);  
+     }
+     //use for creating new page on pagination 
+     private Node createPage(int pageIndex) {
+          int fromIndex = pageIndex * ROWS_PER_PAGE;
+          int toIndex = Math.min(fromIndex + ROWS_PER_PAGE, vhcldescdata.size());
+          if(vhcldescdata.size()>0){
+             tblVehicleDesc.setItems(FXCollections.observableArrayList(vhcldescdata.subList(fromIndex, toIndex))); 
+          }
+          return tblVehicleDesc;
+          
+     }
+     
+     //storing values on vhcldescdata  
+     private void loadVehicleDescTable(){
+          try {
+               /*Populate table*/
+               vhcldescdata.clear();
+               if (oTrans.LoadList("")){
+                    String sDescription ;
+                    for (lnCtr = 1; lnCtr <= oTrans.getItemCount(); lnCtr++){
+                         sDescription = oTrans.getDetail(lnCtr,"sModelDsc").toString() 
+                                 + " " + oTrans.getDetail(lnCtr,"sTypeDesc").toString()
+                                 + " " + oTrans.getDetail(lnCtr,"sTransMsn").toString()
+                                 + " " + oTrans.getDetail(lnCtr,"sColorDsc").toString();
+                         vhcldescdata.add(new TableVehicleDescriptionList(
+                         String.valueOf(lnCtr), //ROW
+                         oTrans.getDetail(lnCtr,"sMakeDesc").toString(), //Make
+                         sDescription, //Description
+                         oTrans.getDetail(lnCtr,"nYearModl").toString(), //Year
+                         oTrans.getDetail(lnCtr,"sModelDsc").toString(), //Model
+                         oTrans.getDetail(lnCtr,"sTypeDesc").toString(), //Type
+                         oTrans.getDetail(lnCtr,"sTransMsn").toString(), //Transmission
+                         oTrans.getDetail(lnCtr,"cVhclSize").toString(), //Vehicle Size
+                         oTrans.getDetail(lnCtr,"sColorDsc").toString(), //Color        
+                         oTrans.getDetail(lnCtr,"sDescript").toString(), //Description 
+                         oTrans.getDetail(lnCtr,"sVhclIDxx").toString()  //sVhclIDxx
+                         ));
+                    }
+                    initVhclDescTable();
+               }
+               loadTab();
+               
           } catch (SQLException e) {
-               e.printStackTrace();
                ShowMessageFX.Warning(getStage(),e.getMessage(), "Warning", null);
           }
      }
      
-     private void loadVehicleDescription(){
+     /*populate Table*/    
+     private void initVhclDescTable() {
+          tblindex01.setCellValueFactory(new PropertyValueFactory<>("tblindex01"));
+          tblindex02.setCellValueFactory(new PropertyValueFactory<>("tblindex02"));
+          tblindex03.setCellValueFactory(new PropertyValueFactory<>("tblindex03"));
+          tblindex04.setCellValueFactory(new PropertyValueFactory<>("tblindex04"));
+          
+          tblVehicleDesc.widthProperty().addListener((ObservableValue<? extends Number> source, Number oldWidth, Number newWidth) -> {
+               TableHeaderRow header = (TableHeaderRow) tblVehicleDesc.lookup("TableHeaderRow");
+               header.reorderingProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+               header.setReordering(false);
+               });
+          });
+          
+          filteredData = new FilteredList<>(vhcldescdata, b -> true);
+          autoSearch(txtField02);
+          // 3. Wrap the FilteredList in a SortedList. 
+          SortedList<TableVehicleDescriptionList> sortedData = new SortedList<>(filteredData);
+
+          // 4. Bind the SortedList comparator to the TableView comparator.
+          // 	  Otherwise, sorting the TableView would have no effect.
+          sortedData.comparatorProperty().bind(tblVehicleDesc.comparatorProperty());
+
+          // 5. Add sorted (and filtered) data to the table.
+          tblVehicleDesc.setItems(sortedData);
+          tblVehicleDesc.widthProperty().addListener((ObservableValue<? extends Number> source, Number oldWidth, Number newWidth) -> {
+              TableHeaderRow header = (TableHeaderRow) tblVehicleDesc.lookup("TableHeaderRow");
+              header.reorderingProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+                  header.setReordering(false);
+              });
+              header.setDisable(true);
+          });
+            
+     }
+     
+     
+     private void autoSearch(TextField txtField){
+          int lnIndex = Integer.parseInt(txtField.getId().substring(8, 10));
+          boolean fsCode = true;
+          txtField.textProperty().addListener((observable, oldValue, newValue) -> {
+               filteredData.setPredicate(clients-> {
+               // If filter text is empty, display all persons.
+               if (newValue == null || newValue.isEmpty()) {
+                   return true;
+               }
+               // Compare order no. and last name of every person with filter text.
+               String lowerCaseFilter = newValue.toLowerCase();
+               switch (lnIndex){
+                       case 2:
+                           if(lnIndex == 2){
+                               return (clients.getTblindex10().toLowerCase().contains(lowerCaseFilter)); // Does not match.   
+                            }else {
+                               return (clients.getTblindex10().toLowerCase().contains(lowerCaseFilter)); // Does not match.
+                            }   
+                       default:
+                       return true;            
+            }
+            });
+            
+            changeTableView(0, ROWS_PER_PAGE);
+        });
+        loadTab();
+     } 
+     
+     private void loadTab(){
+                int totalPage = (int) (Math.ceil(vhcldescdata.size() * 1.0 / ROWS_PER_PAGE));
+                pagination.setPageCount(totalPage);
+                pagination.setCurrentPageIndex(0);
+                changeTableView(0, ROWS_PER_PAGE);
+                pagination.currentPageIndexProperty().addListener(
+                        (observable, oldValue, newValue) -> changeTableView(newValue.intValue(), ROWS_PER_PAGE));
+      
+     } 
+     
+     private void changeTableView(int index, int limit) {
+          int fromIndex = index * limit;
+          int toIndex = Math.min(fromIndex + limit, vhcldescdata.size());
+
+          int minIndex = Math.min(toIndex, filteredData.size());
+          SortedList<TableVehicleDescriptionList> sortedData = new SortedList<>(
+                  FXCollections.observableArrayList(filteredData.subList(Math.min(fromIndex, minIndex), minIndex)));
+          sortedData.comparatorProperty().bind(tblVehicleDesc.comparatorProperty());
+          tblVehicleDesc.setItems(sortedData); 
+     }
+     
+     /*Populate Fields after clicking row in table*/
+     @FXML
+     private void tblVehicleDesc_Clicked(MouseEvent event) {
+          if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
+               if(ShowMessageFX.OkayCancel(null, pxeModuleName, "You have unsaved data, are you sure you want to continue?") == true){   
+              } else
+                  return;
+          }
+          
+          pnRow = tblVehicleDesc.getSelectionModel().getSelectedIndex(); 
+          pagecounter = pnRow + pagination.getCurrentPageIndex() * ROWS_PER_PAGE;
+          if (pagecounter >= 0){
+               if(event.getClickCount() > 0){
+                    getSelectedItem(filteredData.get(pagecounter).getTblindex11()); //Populate field based on selected Item
+
+                    tblVehicleDesc.setOnKeyReleased((KeyEvent t)-> {
+                        KeyCode key = t.getCode();
+                        switch (key){
+                            case DOWN:
+                                pnRow = tblVehicleDesc.getSelectionModel().getSelectedIndex();
+                                pagecounter = pnRow + pagination.getCurrentPageIndex() * ROWS_PER_PAGE;
+                                if (pagecounter == tblVehicleDesc.getItems().size()) {
+                                    pagecounter = tblVehicleDesc.getItems().size();
+                                    getSelectedItem(filteredData.get(pagecounter).getTblindex11());
+                                }else {
+                                   int y = 1;
+                                  pnRow = pnRow + y;
+                                    getSelectedItem(filteredData.get(pagecounter).getTblindex11());
+                                }
+                                break;
+                            case UP:
+                                pnRow = tblVehicleDesc.getSelectionModel().getSelectedIndex();
+                                pagecounter = pnRow + pagination.getCurrentPageIndex() * ROWS_PER_PAGE;
+                                getSelectedItem(filteredData.get(pagecounter).getTblindex11());
+                                break;
+                            default:
+                              return; 
+                      }
+                    });
+               } 
+               pnEditMode = EditMode.READY;
+               initButton(pnEditMode);  
+          }     
+     }
+     
+     /*Populate Text Field Based on selected address in table*/
+     private void getSelectedItem(String TransNo){
+        oldTransNo = TransNo;
+          if (oTrans.OpenRecord(TransNo)){
+               //txtField02.setText(vhcldescdata.get(pagecounter).getTblindex10()); //Description 
+               txtField03.setText(vhcldescdata.get(pagecounter).getTblindex02()); //Make
+               txtField04.setText(vhcldescdata.get(pagecounter).getTblindex05()); //Model
+               txtField05.setText(vhcldescdata.get(pagecounter).getTblindex09()); //Color
+               txtField06.setText(vhcldescdata.get(pagecounter).getTblindex06()); //Type
+               txtField08.setText(vhcldescdata.get(pagecounter).getTblindex04()); //Year
+
+               switch (vhcldescdata.get(pagecounter).getTblindex07()) { //Transmission
+                    case "AT":
+                         comboBox07.getSelectionModel().select(0);
+                         break;
+                    case "M":
+                         comboBox07.getSelectionModel().select(1);
+                         break;
+                    case "CVT":
+                         comboBox07.getSelectionModel().select(2);
+                         break;
+                    default:
+                         break;
+               }
+
+               comboBox09.getSelectionModel().select(Integer.parseInt(vhcldescdata.get(pagecounter).getTblindex08())); //Vehicle Size
+               oldPnRow = pagecounter;   
+          }
+        
+     }
+     
+     private void loadVehicleDescField(){
           try {
-               txtField02.setText((String) oTrans.getMaster(2));
                txtField03.setText((String) oTrans.getMaster(15));
                txtField04.setText((String) oTrans.getMaster(16));
                txtField05.setText((String) oTrans.getMaster(17));
                txtField06.setText((String) oTrans.getMaster(18));
                txtField08.setText( oTrans.getMaster(8).toString());
                
-               //comboBox07.getSelectionModel().select(Integer.parseInt(oTrans.getMaster(7).toString()));
                switch (oTrans.getMaster(7).toString()) {
                     case "AT":
                          comboBox07.getSelectionModel().select(0);
@@ -240,74 +446,11 @@ public class VehicleDescriptionFormController implements Initializable, ScreenIn
                }
 
                comboBox09.getSelectionModel().select(Integer.parseInt(oTrans.getMaster(9).toString()));
+    
                
           } catch (SQLException e) {
                ShowMessageFX.Warning(getStage(),e.getMessage(), "Warning", null);
           }
-     }
-     
-     /*populate Table*/    
-     private void initVhclDescTable() {
-          tblindex01.setCellValueFactory(new PropertyValueFactory<>("tblindex01"));
-          tblindex02.setCellValueFactory(new PropertyValueFactory<>("tblindex02"));
-          tblindex03.setCellValueFactory(new PropertyValueFactory<>("tblindex03"));
-          tblindex04.setCellValueFactory(new PropertyValueFactory<>("tblindex04"));
-          tblVehicleDesc.widthProperty().addListener((ObservableValue<? extends Number> source, Number oldWidth, Number newWidth) -> {
-               TableHeaderRow header = (TableHeaderRow) tblVehicleDesc.lookup("TableHeaderRow");
-               header.reorderingProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
-               header.setReordering(false);
-               });
-          });
-        vhcldescdata.clear();
-        tblVehicleDesc.setItems(vhcldescdata);
-          
-     }
-     
-     @FXML
-     private void tblVehicleDesc_Clicked(MouseEvent event) {
-          pnRow = tblVehicleDesc.getSelectionModel().getSelectedIndex() + 1;
-          if(pnRow == 0) { return;}
-          getSelectedItem();
-          
-          tblVehicleDesc.setOnKeyReleased((KeyEvent t)-> {
-                KeyCode key = t.getCode();
-                switch (key){
-                    case DOWN:
-                        pnRow = tblVehicleDesc.getSelectionModel().getSelectedIndex();
-                        if (pnRow == tblVehicleDesc.getItems().size()) {
-                            pnRow = tblVehicleDesc.getItems().size();
-                            getSelectedItem();
-                        }else {
-                            int y = 1;
-                            pnRow = pnRow + y;
-                            getSelectedItem();
-                        }
-                        break;
-                        
-                    case UP:
-                        int pnRows = 0;
-                        int x = -1;
-                        pnRows = tblVehicleDesc.getSelectionModel().getSelectedIndex() + 1;
-                            pnRow = pnRows; 
-                            getSelectedItem();
-                        break;
-                    default:
-                        return; 
-                }
-            });
-     }
-     
-     /*Populate Text Field Based on selected address in table*/
-     private void getSelectedItem(){
-          
-//          txtField03.setText((String) oTrans.getMaster(pnRow,"sMakeDesc" ));
-//          txtField04.setText((String) oTrans.getMaster(pnRow, "sModelDsc"));
-//          txtField05.setText((String) oTrans.getMaster(pnRow, "sColorDsc"));
-//          txtField06.setText((String) oTrans.getMaster(pnRow, "sTypeDesc"));
-//          txtField08.setText((String) oTrans.getMaster(pnRow, "nYearModl"));
-//          comboBox07.getSelectionModel().select(Integer.parseInt((String) oTrans.getMaster(pnRow,"sTransMsn" )));
-//          comboBox09.getSelectionModel().select(Integer.parseInt((String) oTrans.getMaster(pnRow,"cVhclSize" )));
-                
      }
      
      private void txtField_KeyPressed(KeyEvent event){
@@ -318,26 +461,16 @@ public class VehicleDescriptionFormController implements Initializable, ScreenIn
                switch (event.getCode()){
                     case F3:
                          switch (lnIndex){ 
-                              case 2:  //Search by Vehicle Description
-                               if (oTrans.SearchRecord(txtField02.getText(), true)){
-                                        loadVehicleDescription();
-                                        pnEditMode = oTrans.getEditMode();
-                                   } else {
-                                       ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
-                                       pnEditMode = EditMode.UNKNOWN;
-                                   }
-                                   initButton(pnEditMode); 
-                              break;
                               case 3: //Make
                                    if (oTrans.searchVehicleMake(txtField03.getText())){
-                                        loadVehicleDescription();
+                                        loadVehicleDescField();
                                    } else 
                                        ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
                               
                               break;
                               case 4: //Model
                                    if (oTrans.searchVehicleModel(txtField04.getText())){
-                                        loadVehicleDescription();
+                                        loadVehicleDescField();
                                    } else 
                                        ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
                               
@@ -345,7 +478,7 @@ public class VehicleDescriptionFormController implements Initializable, ScreenIn
                               
                               case 5: //Color 
                                    if (oTrans.searchVehicleColor(txtField05.getText())){
-                                        loadVehicleDescription();
+                                        loadVehicleDescField();
                                    } else 
                                        ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
            
@@ -353,7 +486,7 @@ public class VehicleDescriptionFormController implements Initializable, ScreenIn
                               
                               case 6: //Type 
                                    if (oTrans.searchVehicleType(txtField06.getText())){
-                                        loadVehicleDescription();
+                                        loadVehicleDescField();
                                         pnEditMode = oTrans.getEditMode();
                                    } else 
                                        ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
@@ -365,30 +498,28 @@ public class VehicleDescriptionFormController implements Initializable, ScreenIn
                          switch (lnIndex){ 
                               case 3: //Make
                                    if (oTrans.searchVehicleMake(txtField03.getText())){
-                                        loadVehicleDescription();
+                                        loadVehicleDescField();
                                    } else 
                                        ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
-                              
                               break;
+                              
                               case 4: //Model
                                    if (oTrans.searchVehicleModel(txtField04.getText())){
-                                        loadVehicleDescription();
+                                        loadVehicleDescField();
                                    } else 
                                        ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
-                              
                               break;
                               
                               case 5: //Color 
                                    if (oTrans.searchVehicleColor(txtField05.getText())){
-                                        loadVehicleDescription();
+                                        loadVehicleDescField();
                                    } else 
-                                       ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
-//                              
+                                       ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);                            
                               break;
                               
                               case 6: //Type 
                                    if (oTrans.searchVehicleType(txtField06.getText())){
-                                        loadVehicleDescription();
+                                        loadVehicleDescField();
                                         pnEditMode = oTrans.getEditMode();
                                    } else 
                                        ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
@@ -515,7 +646,6 @@ public class VehicleDescriptionFormController implements Initializable, ScreenIn
      public void clearFields(){
           pnRow = 0;
           /*clear tables*/
-          vhcldescdata.clear();
           
           txtField02.clear(); // sDescript
           txtField03.clear(); // sMakeIDxx
@@ -525,8 +655,6 @@ public class VehicleDescriptionFormController implements Initializable, ScreenIn
           txtField08.clear(); // nYearModl
           comboBox07.setValue(null); //Transmission
           comboBox09.setValue(null); //Vehicle Size
-          
-          
      }
 
 

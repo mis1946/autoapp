@@ -35,7 +35,7 @@ public class SalesAgentFormController implements Initializable, ScreenInterface 
      private MasterCallback oListener;
      
      unloadForm unload = new unloadForm(); //Used in Close Button
-     private final String pxeModuleName = "Sales Agent Information"; //Form Title
+     private final String pxeModuleName = "Sales Agent"; //Form Title
      private int pnEditMode;//Modifying fields
      private int pnRow = -1;
      private int oldPnRow = -1;
@@ -79,7 +79,7 @@ public class SalesAgentFormController implements Initializable, ScreenInterface 
      @FXML
      private AnchorPane AnchorMain;
      @FXML
-     private TextField textseek01;
+     private TextField textSeek01;
 
      private Stage getStage(){
           return (Stage) txtField01.getScene().getWindow();

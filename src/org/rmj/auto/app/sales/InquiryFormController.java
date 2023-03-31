@@ -56,191 +56,191 @@ public class InquiryFormController implements Initializable, ScreenInterface{
     
     //AnchorPane
     @FXML
-    private AnchorPane AnchorMain;
+    private AnchorPane AnchorMain; 
     //Buttons
     @FXML
-    private Button btnClose;
+    private Button btnClose; //Close
     @FXML
-    private Button btnAdd;
+    private Button btnAdd; // Add
     @FXML
-    private Button btnEdit;
+    private Button btnEdit; // Edit
     @FXML
-    private Button btnSave;
+    private Button btnSave; // Save
     @FXML
-    private Button btnClear;
+    private Button btnClear; // Clear
     @FXML
-    private Button btnConvertSales;
+    private Button btnConvertSales; // Convert Sales
     @FXML
-    private Button btnPrintRefund;
+    private Button btnPrintRefund; // Print Refund
     @FXML
-    private Button btnLostSale;
+    private Button btnLostSale; // Lost of Sale
     //TextFields
     @FXML
-    private TextField txtFieldInquiryDate;
+    private TextField txtFieldInquiryDate; // Inquiry Date
     @FXML
-    private TextField txtFieldSalesExecutive;
+    private TextField txtFieldSalesExecutive; // Sales Executive
     @FXML
-    private TextField txtFieldCustomerName;
+    private TextField txtFieldCustomerName; // Customer Name
     @FXML
-    private TextField txtFieldCompanyName;
+    private TextField txtFieldCompanyName; // Company Name
     @FXML
-    private TextField txtFieldPrefferedMail;
+    private TextField txtFieldPreferedMail; // Preferred Mailing Address
     @FXML
-    private TextField txtFieldContactNumber;
+    private TextField txtFieldContactNumber; // Contact Number
+    @FXML 
+    private TextField txtFieldEmailAddress; // Email Addresse
     @FXML
-    private TextField txtFieldEmailAddress;
-    @FXML
-    private TextField txtFieldSocialMedia;
+    private TextField txtFieldSocialMedia; // Social Media
     //Table View
     @FXML
-    private TableView<?> tblInquiry;
+    private TableView<?> tblInquiry; // Table View Inquiry 
     //Tabs
     @FXML
-    private Tab tabCustomerInquiry;
+    private Tab tabCustomerInquiry; // Customer Inquiry Tab
     @FXML
-    private Tab tabInquiryProcess;
+    private Tab tabInquiryProcess; // Inquiry Process Tab
     @FXML
-    private Tab tabBankHistory;
+    private Tab tabBankHistory; // Bank History Tab
     @FXML
-    private Tab tabFollowingHistory;
-    
+    private Tab tabFollowingHistory; // Following History Tab
+     
     //Costumer Inquiry Elements
  
     //Text Fields   
     @FXML
-    private TextField txtFieldRefAgent;
+    private TextField txtFieldRefAgent; // Ref Agent
     @FXML
-    private TextField textFieldTargetReleaseDate;
+    private TextField textFieldTargetReleaseDate; //Target Release Date
     @FXML
-    private TextField txtFieldCustomerInquiryModel;
+    private TextField txtFieldCustomerInquiryModel; // Customer Inquiry Model
     @FXML
-    private TextField txtFieldBranch;
+    private TextField txtFieldBranch; // Branch
     @FXML
-    private TextField txtFieldSubCompany;
+    private TextField txtFieldSubCompany; // Sub Company
     @FXML
-    private TextArea txtAreaCIRemarks;
+    private TextArea txtAreaCIRemarks; // Customer Inquiry Remarks
     @FXML
-    private TextField txtFieldCIStatus;
+    private TextField txtFieldCIStatus; // Customer Inquiry Status
     @FXML
-    private TextField txtFieldCICdot;
+    private TextField txtFieldCICdot; // C.
     @FXML
-    private TextField txtFieldCIRSV;
+    private TextField txtFieldCIRSV; // RSV/DEV Slip No.
     @FXML
-    private TextField textFieldRSVAmount;
+    private TextField textFieldRSVAmount; //RSV/DEV Slip No. Amount
     @FXML
-    private TextField textFieldRefundSlipNo;
+    private TextField textFieldRefundSlipNo; //Refund Slip No.
     @FXML
-    private TextField textFieldRefundSlipAmount;
+    private TextField textFieldRefundSlipAmount; //Refund Slip No. Amount
     //Combo Box
     @FXML
-    private ComboBox comboInquiryType;
+    private ComboBox comboInquiryType; // Inquiry Type
     @FXML
-    private ComboBox<?> comboOnlineStore;
+    private ComboBox<?> comboOnlineStore; // Online Store
     @FXML
-    private ComboBox comboEvent;
+    private ComboBox comboEvent; // Event
     //Combo Box Value
-    ObservableList<String> cInquiryType = FXCollections.observableArrayList("TYPE 1", "TYPE 2", "TPYE 3");
-    ObservableList<String> cEvent = FXCollections.observableArrayList("EVENT 1", "EVENT 2", "EVENT 3");
+    ObservableList<String> cInquiryType = FXCollections.observableArrayList("TYPE 1", "TYPE 2", "TPYE 3"); //Inquiry Type values
+    ObservableList<String> cEvent = FXCollections.observableArrayList("EVENT 1", "EVENT 2", "EVENT 3"); // Event values
     //Radio Toogle Group
     @FXML
-    private ToggleGroup category;
+    private ToggleGroup category; //Toggle Radio Button category 
     @FXML
-    private ToggleGroup testDrive;
+    private ToggleGroup testDrive;//Toggle Radio Button Test Drive
     @FXML
-    private ToggleGroup targetVehicle;
+    private ToggleGroup targetVehicle;//Toggle Radio Button Target Vehicle 
     //Table View
     @FXML
-    private TableView<?> tblTargetVehicle;
+    private TableView<?> tblTargetVehicle; // Table View Target Vehicle
     @FXML
-    private TableView<?> tblPromosOFfered;
+    private TableView<?> tblPromosOffered; // Table View Promos Offered
     //Tables
     
     //Buttons
     @FXML
-    private Button btnTargetVehicleAdd;
+    private Button btnTargetVehicleAdd; // Add Target Vehicle
     @FXML
-    private Button btnTargetVehicleRemove;
+    private Button btnTargetVehicleRemove; // Remove Target Vehicle
     @FXML
-    private Button btnTargetVehicleUp;
+    private Button btnTargetVehicleUp; // Move Up Target Vehicle Up
     @FXML
-    private Button btnTargetVehicleDown;
+    private Button btnTargetVehicleDown; // Move Down Target Vehicle
     @FXML
-    private Button btnPromosAdd;
+    private Button btnPromosAdd; // Add Promo Offered
     @FXML
-    private Button btnPromosRemove;
+    private Button btnPromosRemove; //Remove Promo Offered
     @FXML
-    private Button btnPromosUp;
+    private Button btnPromosUp; // Move Up Promo Offered
     @FXML
-    private Button btnPromosdDown;
+    private Button btnPromosdDown; // Move Down Promo Offered
     
     //Inquiry Process Elements
     
     //Buttons
     @FXML
-    private Button btnASadd;
+    private Button btnASadd; // Add Advance Slip
     @FXML
-    private Button btnASremove;
+    private Button btnASremove; // Remove Advance Slip
     @FXML
-    private Button btnASprint;
+    private Button btnASprint; //  Print Advance Slip
     @FXML
-    private Button btnASprintview;
+    private Button btnASprintview; // Print View Advance Slip
     @FXML
-    private Button btnAScancel;
+    private Button btnAScancel;// Cancel Advance Slip
     @FXML
-    private Button btnProcess;
+    private Button btnProcess;// Process Advance Slip
     @FXML
-    private Button btnModify;
+    private Button btnModify; // Modify Advance Slip
     @FXML
-    private Button btnApply;
+    private Button btnApply; // Apply Advance Slip
     
     //TextFields
     @FXML
-    private TextField txtFieldIPCsNo;
+    private TextField txtFieldIPCsNo; //Inquiry Process CS No
     @FXML
-    private TextField txtFieldIPModel;
+    private TextField txtFieldIPModel; //Inquiry Process Model
     @FXML
-    private TextField txtFieldPlateNo;
+    private TextField txtFieldPlateNo; // Inquiry Process Plate No.
     @FXML
-    private TextField txtFieldPaymentConversion;
+    private TextField txtFieldPaymentConversion; // Inquiry Process Payment Conversion
     //Table View
     @FXML
-    private TableView<?> tblRequirementsInfo;
+    private TableView<?> tblRequirementsInfo; // Table View Requirments Info
     @FXML
-    private TableView<?> tblAdvanceSlip;
+    private TableView<?> tblAdvanceSlip; // Table View Advance Slip
     //Combo Box
     @FXML
-    private ComboBox comboIPModeofPayment;
+    private ComboBox comboIPModeofPayment; // Inquiry Process Mode of Payment
     @FXML
-    private ComboBox comboIPCustomerType;
+    private ComboBox comboIPCustomerType;// Inquiry Process Customer Type
     @FXML
-    private ComboBox comboIPProcessApprovedBy;
+    private ComboBox comboIPProcessApprovedBy; //Process Approved By
     //Combo Box Value  
-    ObservableList<String> cModeOfPayment = FXCollections.observableArrayList("PAYMENT 1", "PAYMENT 2", "PAYMENT 3");
-    ObservableList<String> cCustomerType = FXCollections.observableArrayList("cTYPE 1", "cTYPE 2", "cTYPE 3");
+    ObservableList<String> cModeOfPayment = FXCollections.observableArrayList("PAYMENT 1", "PAYMENT 2", "PAYMENT 3"); //Mode of Payment Values
+    ObservableList<String> cCustomerType = FXCollections.observableArrayList("cTYPE 1", "cTYPE 2", "cTYPE 3"); // Customer Type Values
    
     //Bank Application History Elements
     //Buttons
     @FXML
-    private Button btnBPHnew;
+    private Button btnBPHnew; //New Bank Application History
     @FXML
-    private Button btnBPHupdate;
+    private Button btnBPHupdate; // Update Bank Application History
     @FXML
-    private Button btnBPHview;
+    private Button btnBPHview; // View Bank Application History
     @FXML
-    private Button btnBPHcancel;
+    private Button btnBPHcancel; // Cancel Bank Application History
 
     @FXML
-    private TableView<?> tblBankHistory;
+    private TableView<?> tblBankHistory; //Table VieW Bank Application History
     //Tables
     
     //Follow Up Elements
     
     //Buttons
     @FXML
-    private Button btnFollowUp;
+    private Button btnFollowUp; // FollowUp
     //Table View
     @FXML
-    private TableView<?> tblFollowHistory;
+    private TableView<?> tblFollowHistory; //Table View Follow Up
     //Tables
     
    
@@ -252,11 +252,15 @@ public class InquiryFormController implements Initializable, ScreenInterface{
     **/
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-     
+        
+        
+        //ComboBox set Items
         comboInquiryType.setItems(cInquiryType);
         comboEvent.setItems(cEvent);
         comboIPModeofPayment.setItems(cModeOfPayment);
         comboIPCustomerType.setItems(cCustomerType);
+        
+        //Button SetOnAction using cmdButton_Click() method
         btnClose.setOnAction(this::cmdButton_Click);
     }    
     
@@ -264,8 +268,10 @@ public class InquiryFormController implements Initializable, ScreenInterface{
     public void setGRider(GRider foValue) {
              oApp = foValue;
     }
-   
-  private void cmdButton_Click(ActionEvent event) {
+    
+    
+    //Method/Function for general buttons
+    private void cmdButton_Click(ActionEvent event) {
           String lsButton = ((Button)event.getSource()).getId();
           switch(lsButton){
             case "btnAdd":
@@ -295,58 +301,76 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                                }
                                break;
                                }else
-                           return;
+                      return;
             }
         }
-  
-  
-        //Clear Fields
-        public void clearFields(){
+    //Load Customer Profile Data
+    public void loadCustomerProfile(){
+            
+    }
+    //Load Customer Inquiry Data
+    public void loadCustomerInquiry(){
+            
+    }
+    //Load Inquiry Process Data
+    public void loadInquiryProcess(){
+            
+    }
+    //Load Bank Application History Data
+    public void laodBankHistory(){
+            
+    }
+    //Load Bank History Data
+    public void loadFollowUp(){
+            
+    }
+    //Method for clearing Fields
+    public void clearFields(){
                 
-                 //Clear TextFields
-                 //General
-                 txtFieldInquiryDate.clear();
-                 txtFieldSalesExecutive.clear();
-                 txtFieldCustomerName.clear();
-                 txtFieldCompanyName.clear();
-                 txtFieldPrefferedMail.clear();
-                 txtFieldContactNumber.clear();
-                 txtFieldEmailAddress.clear();
-                 txtFieldSocialMedia.clear();
-                 //Customer Inquiry
-                 txtFieldRefAgent.clear();
-                 textFieldTargetReleaseDate.clear();
-                 txtFieldCustomerInquiryModel.clear();
-                 txtFieldBranch.clear();
-                 txtFieldSubCompany.clear();
-                 txtAreaCIRemarks.clear();
-                 txtFieldCIStatus.clear();
-                 txtFieldCICdot.clear();
-                 txtFieldCIRSV.clear();
-                 textFieldRSVAmount.clear();
-                 textFieldRefundSlipNo.clear();
-                 textFieldRefundSlipAmount.clear();
-                 //InquiryProcess
-                 txtFieldIPCsNo.clear();
-                 txtFieldIPModel.clear();
-                 txtFieldPlateNo.clear();
-                 txtFieldPaymentConversion.clear();
+            //Clear TextFields
+            //General
+            txtFieldInquiryDate.clear();
+            txtFieldSalesExecutive.clear();
+            txtFieldCustomerName.clear();
+            txtFieldCompanyName.clear();
+            txtFieldPreferedMail.clear();
+            txtFieldContactNumber.clear();
+            txtFieldEmailAddress.clear();
+            txtFieldSocialMedia.clear();
+            //Customer Inquiry
+            txtFieldRefAgent.clear();
+            textFieldTargetReleaseDate.clear();
+            txtFieldCustomerInquiryModel.clear();
+            txtFieldBranch.clear();
+            txtFieldSubCompany.clear();
+            txtAreaCIRemarks.clear();
+            txtFieldCIStatus.clear();
+            txtFieldCICdot.clear();
+            txtFieldCIRSV.clear();
+            textFieldRSVAmount.clear();
+            textFieldRefundSlipNo.clear();
+            textFieldRefundSlipAmount.clear();
+            //InquiryProcess
+            txtFieldIPCsNo.clear();
+            txtFieldIPModel.clear();
+            txtFieldPlateNo.clear();
+            txtFieldPaymentConversion.clear();
                  
-                 //COMBOBOX
-                 //Customer Inquiry
-                 comboInquiryType.setValue(null);
-                 comboOnlineStore.setValue(null);
-                 comboEvent.setValue(null);
+            //COMBOBOX
+            //Customer Inquiry
+            comboInquiryType.setValue(null);
+            comboOnlineStore.setValue(null);
+            comboEvent.setValue(null);
 
-                 //Inquiry Process
-                 comboIPModeofPayment.setValue(null);
-                 comboIPCustomerType.setValue(null);
-                 comboIPProcessApprovedBy.setValue(null);
+            //Inquiry Process
+            comboIPModeofPayment.setValue(null);
+            comboIPCustomerType.setValue(null);
+            comboIPProcessApprovedBy.setValue(null);
                  
-                 //Radio Button Toggle Group
-                 category.selectToggle(null);
-                 testDrive.selectToggle(null);
-                 targetVehicle.selectToggle(null);
+            //Radio Button Toggle Group
+            category.selectToggle(null);
+            testDrive.selectToggle(null);
+            targetVehicle.selectToggle(null);
 
         }
     }

@@ -324,19 +324,47 @@ public class InquiryFormController implements Initializable, ScreenInterface{
     }
     //Load Customer Inquiry Data
     public void loadCustomerInquiry(){
-            
+        initTargetVehicle();
+        initPromosOffered();
     }
     //Load Inquiry Process Data
     public void loadInquiryProcess(){
+        initRequirments();
+        initAdvanceSlip();
             
     }
     //Load Bank Application History Data
     public void laodBankHistory(){
-            
+        
+        initBankHistory();
     }
-    //Load Bank History Data
+    //Load FollowUp Data
     public void loadFollowUp(){
-            
+        initFollowUp();
+    }
+    // Load Customer Inquiry Target Vehicle Data
+    public void initTargetVehicle(){
+        
+    }
+    //Load Customer Inquiry PromosOffered
+    public void initPromosOffered(){
+        
+    }
+    // Load Inquiry Process Requirements
+    public void initRequirments(){
+    
+    }
+    // Load Inquiry Process Advance Slip
+    public void initAdvanceSlip(){
+        
+    }
+    //Load Bank Application Data in table
+    public void initBankHistory(){
+        
+    }
+    //Load FollowUp Data
+    public void initFollowUp(){
+        
     }
     //Method for clearing Fields
     public void clearFields(){

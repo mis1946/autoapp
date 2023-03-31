@@ -7,6 +7,7 @@ package org.rmj.auto.app.sales;
 
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -14,20 +15,28 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Pagination;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableColumn.CellEditEvent;
+import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
+import javafx.util.Callback;
 import org.rmj.appdriver.GRider;
+import org.rmj.appdriver.agentfx.CommonUtils;
 import org.rmj.appdriver.agentfx.ShowMessageFX;
 import org.rmj.appdriver.callback.MasterCallback;
 import org.rmj.appdriver.constants.EditMode;
@@ -49,6 +58,7 @@ public class UnitReceivingFormController implements Initializable, ScreenInterfa
      private int pnRow = -1;
      private int oldPnRow = -1;
      private int lnCtr = 0;
+     private int lnRow = 0;
      private int pagecounter;
      
      private String oldTransNo = "";
@@ -66,8 +76,6 @@ public class UnitReceivingFormController implements Initializable, ScreenInterfa
 
      @FXML
      private AnchorPane AnchorMain;
-     @FXML
-     private TextField txtField01;
      @FXML
      private Pagination pagination;
      @FXML
@@ -109,6 +117,12 @@ public class UnitReceivingFormController implements Initializable, ScreenInterfa
      private Button btnAddRow;
      @FXML
      private Button btnDelRow;
+     @FXML
+     private TextField textSeek01;
+     
+     private Stage getStage(){
+          return (Stage) textSeek01.getScene().getWindow();
+     }
 
      /**
       * Initializes the controller class.
@@ -119,12 +133,15 @@ public class UnitReceivingFormController implements Initializable, ScreenInterfa
                System.out.println("Set Class Value "  + fnIndex + "-->" + foValue);
           };
           
+          initUnitDetailTable();
            //Button Click Event
           btnAdd.setOnAction(this::cmdButton_Click);
           btnEdit.setOnAction(this::cmdButton_Click); 
           btnSave.setOnAction(this::cmdButton_Click); 
           btnCancel.setOnAction(this::cmdButton_Click); 
           btnClose.setOnAction(this::cmdButton_Click); 
+          btnAddRow.setOnAction(this::cmdButton_Click); 
+          btnDelRow.setOnAction(this::cmdButton_Click); 
           
      }  
      
@@ -157,6 +174,21 @@ public class UnitReceivingFormController implements Initializable, ScreenInterfa
                          } else
                              return;
                     case "btnAddRow": //Add Row on table unit details
+                         lnRow = unitrdetdata.size();
+                         if (lnRow == 0){
+                              lnRow = 1;
+                         } else {
+                              lnRow++;
+                         }
+                         
+                         unitrdetdata.add(new TableUnitReceivingDetail(
+                         String.valueOf(lnRow), //ROW
+                         "",
+                         "",
+                         "",
+                         "",
+                         ""
+                         ));
                          break;
                     case "btnDelRow": //Add Row on table unit details
                          break;
@@ -166,6 +198,15 @@ public class UnitReceivingFormController implements Initializable, ScreenInterfa
      
      //storing values on unitlistdata  
      private void loadUnitDetailTable(){
+          //unitrdetdata.clear();
+          unitrdetdata.add(new TableUnitReceivingDetail(
+               String.valueOf(lnCtr), //ROW
+               "",
+               "",
+               "",
+               "",
+               ""
+               ));
           
      }
      
@@ -174,10 +215,64 @@ public class UnitReceivingFormController implements Initializable, ScreenInterfa
           tblUnitRecEntry.setEditable(true);
           unitIndex01.setCellValueFactory(new PropertyValueFactory<>("tblindex01"));
           unitIndex02.setCellValueFactory(new PropertyValueFactory<>("tblindex02"));
+          unitIndex02.setCellFactory(TextFieldTableCell.forTableColumn()); // make the cells editable
+          // Set the event handler to store the edited value
+          unitIndex02.setOnEditCommit(new EventHandler<CellEditEvent<TableUnitReceivingDetail, String>>() {
+               @Override
+               public void handle(CellEditEvent<TableUnitReceivingDetail, String> event) {
+                   // Code to handle edit event
+                   TableUnitReceivingDetail detail = event.getRowValue();
+                   detail.setTblindex02(event.getNewValue());
+               }
+           });
+          unitIndex02.setEditable(true);// make the column editable
           unitIndex03.setCellValueFactory(new PropertyValueFactory<>("tblindex03"));
+          unitIndex03.setCellFactory(TextFieldTableCell.forTableColumn()); // make the cells editable
+          // Set the event handler to store the edited value
+          unitIndex03.setOnEditCommit(new EventHandler<CellEditEvent<TableUnitReceivingDetail, String>>() {
+               @Override
+               public void handle(CellEditEvent<TableUnitReceivingDetail, String> event) {
+                   // Code to handle edit event
+                   TableUnitReceivingDetail detail = event.getRowValue();
+                   detail.setTblindex03(event.getNewValue());
+               }
+           });
+          unitIndex03.setEditable(true); // make the column editable
           unitIndex04.setCellValueFactory(new PropertyValueFactory<>("tblindex04"));
           unitIndex05.setCellValueFactory(new PropertyValueFactory<>("tblindex05"));
           unitIndex06.setCellValueFactory(new PropertyValueFactory<>("tblindex06"));
+          
+          tblUnitRecEntry.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+               TablePosition<?, ?> focusedCell = tblUnitRecEntry.getFocusModel().getFocusedCell();
+               String columnId = focusedCell.getTableColumn().getId(); 
+               int lnIndex = Integer.parseInt(focusedCell.getTableColumn().getId().substring(9,11));
+                    switch (event.getCode()){
+                         case F3:
+                         case ENTER:
+                              // Check if the focused cell is editable
+                              if (focusedCell.getTableColumn().isEditable()) {
+                                   switch (lnIndex){ 
+                                        case 2: //CS No
+                                             // Code to execute when F3 is pressed on an editable column
+                                             ShowMessageFX.Warning(getStage(), columnId,"Warning", null);
+                                             System.out.println("F3 was pressed on an editable column");
+                                             System.out.println(columnId);
+                                             
+                                             
+                                        break;
+                                        case 3: //Plate No
+                                             // Code to execute when F3 is pressed on an editable column
+                                             ShowMessageFX.Warning(getStage(), columnId,"Warning", null);
+
+                                             System.out.println("F3 was pressed on an editable column");
+                                             System.out.println(columnId);
+
+                                        break;
+                                   } 
+                              }
+                         break;
+                    }
+           });
           
           
           tblUnitRecEntry.widthProperty().addListener((ObservableValue<? extends Number> source, Number oldWidth, Number newWidth) -> {
@@ -186,6 +281,9 @@ public class UnitReceivingFormController implements Initializable, ScreenInterfa
                header.setReordering(false);
                });
           });
+          
+          //unitrdetdata.clear();
+          tblUnitRecEntry.setItems(unitrdetdata);
           
      }
      
@@ -400,7 +498,44 @@ public class UnitReceivingFormController implements Initializable, ScreenInterfa
         
      }
      
-
+     private void txtField_KeyPressed(KeyEvent event){
+          TextField txtField = (TextField)event.getSource();
+          int lnIndex = Integer.parseInt(((TextField)event.getSource()).getId().substring(8,10));
+          
+//          try{
+               switch (event.getCode()){
+                    case F3:
+                         switch (lnIndex){ 
+                              case 3: //Model
+                               
+                              break;    
+                         } 
+                    break;
+                    case TAB:
+                    case ENTER:
+                         switch (lnIndex){ 
+                              case 3: //Make
+                              break;       
+                         } 
+                         break;
+               }
+//          }catch(SQLException e){
+//                ShowMessageFX.Warning(getStage(),e.getMessage(), "Warning", null);
+//          }
+          
+          switch (event.getCode()){
+          case ENTER:
+          case DOWN:
+              CommonUtils.SetNextFocus(txtField);
+              break;
+          case UP:
+              CommonUtils.SetPreviousFocus(txtField);
+          }
+          
+     }
+     
+     
+     
      /*Enabling / Disabling Fields*/
      private void initButton(int fnValue){
           pnRow = 0;

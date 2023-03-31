@@ -265,6 +265,14 @@ public class InquiryFormController implements Initializable, ScreenInterface{
         
         //Button SetOnAction using cmdButton_Click() method
         btnClose.setOnAction(this::cmdButton_Click);
+        btnAdd.setOnAction(this::cmdButton_Click);
+        btnSave.setOnAction(this::cmdButton_Click);
+        btnClear.setOnAction(this::cmdButton_Click);
+        btnEdit.setOnAction(this::cmdButton_Click);
+        btnConvertSales.setOnAction(this::cmdButton_Click);
+        btnPrintRefund.setOnAction(this::cmdButton_Click);
+        btnLostSale.setOnAction(this::cmdButton_Click);
+        
     }    
     
     @Override
@@ -278,22 +286,25 @@ public class InquiryFormController implements Initializable, ScreenInterface{
           String lsButton = ((Button)event.getSource()).getId();
           switch(lsButton){
             case "btnAdd":
+                ShowMessageFX.Warning(null, "Warning", "You click add button!"); 
                 break;
             case "btnEdit":
+                 ShowMessageFX.Warning(null, "Warning", "You click edit button!"); 
                 break;
             case "btnSave":
+                 ShowMessageFX.Warning(null, "Warning", "You click save button!"); 
                 break;
             case "btnClear":
-                break;
-            case "btnPrintClear":
+                 ShowMessageFX.Warning(null, "Warning", "You click clear button!"); 
                 break;
             case "btnConvertSales":
-                break;
-            case "btnRefund":
+                 ShowMessageFX.Warning(null, "Warning", "You click convert to sales button"); 
                 break;
             case "btnPrintRefund":
+                 ShowMessageFX.Warning(null, "Warning", "You click print refund button"); 
                 break;
             case "btnLostSale":
+                 ShowMessageFX.Warning(null, "Warning", "You click lost sale button"); 
                 break;
             case "btnClose": //close tab
                          if(ShowMessageFX.OkayCancel(null, "Close Tab", "Are you sure, do you want to close tab?") == true){

@@ -135,12 +135,13 @@ public class InquiryFormController implements Initializable, ScreenInterface{
     @FXML
     private ComboBox comboInquiryType; // Inquiry Type
     @FXML
-    private ComboBox<?> comboOnlineStore; // Online Store
+    private ComboBox comboOnlineStore; // Online Store
     @FXML
     private ComboBox comboEvent; // Event
     //Combo Box Value
     ObservableList<String> cInquiryType = FXCollections.observableArrayList("TYPE 1", "TYPE 2", "TPYE 3"); //Inquiry Type values
     ObservableList<String> cEvent = FXCollections.observableArrayList("EVENT 1", "EVENT 2", "EVENT 3"); // Event values
+    ObservableList<String> cOnlineStore = FXCollections.observableArrayList("STORE 1", "STORE 2", "STORE 3"); // STORE values
     //Radio Toogle Group
     @FXML
     private ToggleGroup category; //Toggle Radio Button category 
@@ -257,8 +258,10 @@ public class InquiryFormController implements Initializable, ScreenInterface{
         //ComboBox set Items
         comboInquiryType.setItems(cInquiryType);
         comboEvent.setItems(cEvent);
+        comboOnlineStore.setItems(cOnlineStore);
         comboIPModeofPayment.setItems(cModeOfPayment);
         comboIPCustomerType.setItems(cCustomerType);
+        
         
         //Button SetOnAction using cmdButton_Click() method
         btnClose.setOnAction(this::cmdButton_Click);

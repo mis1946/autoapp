@@ -271,7 +271,7 @@ public class InquiryFormController implements Initializable, ScreenInterface{
         btnEdit.setOnAction(this::cmdButton_Click);
         btnConvertSales.setOnAction(this::cmdButton_Click);
         btnPrintRefund.setOnAction(this::cmdButton_Click);
-        btnLostSale.setOnAction(this::cmdButton_Click);
+        btnLostSale.setOnAction(this::cmdButton_Click); 
         
     }    
     

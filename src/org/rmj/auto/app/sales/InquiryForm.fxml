@@ -170,7 +170,10 @@
                                                       </GridPane>
                                                       <AnchorPane prefHeight="17.0" prefWidth="961.0" style="-fx-background-color: #FACEA1;">
                                                          <children>
-                                                            <Label alignment="CENTER" layoutX="467.0" layoutY="9.0" text="Customer Profile" textAlignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                            <Label alignment="CENTER" layoutX="467.0" layoutY="9.0" text="Customer Profile" textAlignment="CENTER" textFill="#5b5b5b" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                               <font>
+                                                                  <Font name="System Bold" size="12.0" />
+                                                               </font></Label>
                                                          </children>
                                                          <VBox.margin>
                                                             <Insets top="10.0" />
@@ -833,13 +836,11 @@
                                                                                        <center>
                                                                                           <TableView fx:id="tblAdvanceSlip" prefHeight="215.0" prefWidth="640.0" BorderPane.alignment="CENTER">
                                                                                              <columns>
-                                                                                                <TableColumn prefWidth="75.0" />
-                                                                                                <TableColumn prefWidth="103.0" />
                                                                                                 <TableColumn prefWidth="75.0" text="Slip Type" />
-                                                                                                <TableColumn prefWidth="132.3333740234375" text="Res Slipno" />
+                                                                                                <TableColumn prefWidth="132.3333740234375" text="Adv Slip No" />
                                                                                                 <TableColumn prefWidth="75.0" text="Res Date" />
                                                                                                 <TableColumn prefWidth="75.0" text="Amount" />
-                                                                                                <TableColumn prefWidth="75.0" text="Stat" />
+                                                                                                <TableColumn prefWidth="75.0" text="Status" />
                                                                                              </columns>
                                                                                              <BorderPane.margin>
                                                                                                 <Insets top="10.0" />

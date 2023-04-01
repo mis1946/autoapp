@@ -9,6 +9,8 @@ import com.sun.javafx.scene.control.skin.TableHeaderRow;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
+import javafx.beans.property.ReadOnlyBooleanPropertyBase;
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -20,13 +22,17 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Pagination;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.KeyCode;
@@ -119,6 +125,16 @@ public class UnitReceivingFormController implements Initializable, ScreenInterfa
      private Button btnDelRow;
      @FXML
      private TextField textSeek01;
+     @FXML
+     private DatePicker dateSeek01; //From
+     @FXML
+     private DatePicker dateSeek02; //To
+     @FXML
+     private RadioButton rdbBnew;
+     @FXML
+     private ToggleGroup tgCategory;
+     @FXML
+     private RadioButton rdbPown;
      
      private Stage getStage(){
           return (Stage) textSeek01.getScene().getWindow();
@@ -134,6 +150,12 @@ public class UnitReceivingFormController implements Initializable, ScreenInterfa
           };
           
           initUnitDetailTable();
+          
+          
+          //Populate table
+          loadUnitRecListTable();
+          pagination.setPageFactory(this::createPage); 
+          
            //Button Click Event
           btnAdd.setOnAction(this::cmdButton_Click);
           btnEdit.setOnAction(this::cmdButton_Click); 
@@ -142,6 +164,12 @@ public class UnitReceivingFormController implements Initializable, ScreenInterfa
           btnClose.setOnAction(this::cmdButton_Click); 
           btnAddRow.setOnAction(this::cmdButton_Click); 
           btnDelRow.setOnAction(this::cmdButton_Click); 
+          
+          /*Clear Fields*/
+          clearFields();
+          
+          pnEditMode = EditMode.UNKNOWN;
+          initButton(pnEditMode); 
           
      }  
      
@@ -287,12 +315,6 @@ public class UnitReceivingFormController implements Initializable, ScreenInterfa
           
      }
      
-     
-     
-     
-     
-     
-     
      //use for creating new page on pagination 
      private Node createPage(int pageIndex) {
           int fromIndex = pageIndex * ROWS_PER_PAGE;
@@ -305,7 +327,7 @@ public class UnitReceivingFormController implements Initializable, ScreenInterfa
      }
      
      //storing values on unitlistdata  
-     private void loadVehicleDescTable(){
+     private void loadUnitRecListTable(){
 //          try {
 //               /*Populate table*/
 //               unitlistdata.clear();
@@ -534,6 +556,52 @@ public class UnitReceivingFormController implements Initializable, ScreenInterfa
           
      }
      
+     /*Set TextField Value to Master Class*/
+     final ChangeListener<? super Boolean> txtField_Focus = (o,ov,nv)->{
+//          try{
+            TextField txtField = (TextField)((ReadOnlyBooleanPropertyBase)o).getBean();
+            int lnIndex = Integer.parseInt(txtField.getId().substring(8, 10));
+            String lsValue = txtField.getText();
+            
+            if (lsValue == null) return;
+            if(!nv){ /*Lost Focus*/
+                    switch (lnIndex){ 
+                        case 25:
+                              //Handle Encoded Value
+                             break;    
+
+                    }
+                
+            } else
+               txtField.selectAll();
+//          } catch (SQLException ex) {
+//            Logger.getLogger(CustomerFormController.class.getName()).log(Level.SEVERE, null, ex);
+//          }
+     };
+     
+     /*Set TextArea to Master Class*/
+     final ChangeListener<? super Boolean> txtArea_Focus = (o,ov,nv)->{ 
+
+          TextArea txtField = (TextArea)((ReadOnlyBooleanPropertyBase)o).getBean();
+          int lnIndex = Integer.parseInt(txtField.getId().substring(8, 10));
+          String lsValue = txtField.getText();
+          String txtFieldID = txtField.getId();
+          
+          if (lsValue == null) return;
+//          try {
+             if(!nv){ /*Lost Focus*/
+               switch (lnIndex){
+                   case 15:
+                   break;
+               }
+             } else
+                 txtField.selectAll();
+//          } catch (SQLException e) {
+//             ShowMessageFX.Warning(getStage(),e.getMessage(), "Warning", null);
+//             System.exit(1);
+//          }
+     };
+     
      
      
      /*Enabling / Disabling Fields*/
@@ -555,6 +623,8 @@ public class UnitReceivingFormController implements Initializable, ScreenInterfa
           btnCancel.setManaged(false);
           btnSave.setVisible(lbShow);
           btnSave.setManaged(lbShow);
+          btnAddRow.setDisable(!lbShow);
+          btnDelRow.setDisable(!lbShow);
           
           if (fnValue == EditMode.READY) { //show edit if user clicked save / browse
                btnEdit.setVisible(true); 

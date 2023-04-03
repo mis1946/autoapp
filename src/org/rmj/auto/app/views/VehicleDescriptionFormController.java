@@ -153,6 +153,63 @@ public class VehicleDescriptionFormController implements Initializable, ScreenIn
           txtField05.setOnKeyPressed(this::txtField_KeyPressed); // sTypeIDxx
           txtField08.setOnKeyPressed(this::txtField_KeyPressed); // nYearModl
           
+          //If the 'Make' field has not been filled out, disable the 'Model' text field. Otherwise, enable it.
+          txtField03.textProperty().addListener((observable, oldValue, newValue) -> {
+               try {
+                    if (newValue != null && !newValue.isEmpty()) {
+                          // Enable 
+                          if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
+                               txtField04.setDisable(false);
+                          } else {
+                               txtField04.setDisable(true);
+                          }
+                    } else {
+                         // Disable 
+                         txtField04.clear();
+                         //Set Value to Master
+                         oTrans.setMaster(4, txtField04.getText());
+                         oTrans.setMaster(16, txtField04.getText());
+                         txtField04.setDisable(true);
+                    }
+               } catch (SQLException ex) {
+                     Logger.getLogger(VehicleDescriptionFormController.class.getName()).log(Level.SEVERE, null, ex);
+               }
+          });
+          
+          txtField04.textProperty().addListener((observable, oldValue, newValue) -> {
+               if (!txtField03.getText().equals(null) && !txtField03.getText().trim().equals("")) {
+                    if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
+                         txtField04.setDisable(false);
+                    }
+               } else {
+                    txtField04.setDisable(true);
+               } 
+          });
+          
+          //Set Value to Master
+          comboBox07.setOnAction(e -> {
+               try {
+                    //oTrans.setMaster(7, String.valueOf(comboBox07.getSelectionModel().getSelectedIndex()));
+                    if (comboBox07.getSelectionModel().getSelectedIndex() == 0){
+                         oTrans.setMaster(7, "AT");
+                    }else if  (comboBox07.getSelectionModel().getSelectedIndex() == 1){
+                         oTrans.setMaster(7, "M");
+                    }else if  (comboBox07.getSelectionModel().getSelectedIndex() == 2){
+                         oTrans.setMaster(7, "CVT");
+                    }
+               
+               } catch (SQLException ex) {
+                    Logger.getLogger(CustomerFormController.class.getName()).log(Level.SEVERE, null, ex);
+               }
+          });
+          comboBox09.setOnAction(e -> {
+               try {
+                    oTrans.setMaster(9, comboBox09.getSelectionModel().getSelectedIndex());
+               } catch (SQLException ex) {
+                    Logger.getLogger(CustomerFormController.class.getName()).log(Level.SEVERE, null, ex);
+               }
+          });
+          
           //Button Click Event
           btnAdd.setOnAction(this::cmdButton_Click);
           btnEdit.setOnAction(this::cmdButton_Click); 
@@ -192,6 +249,34 @@ public class VehicleDescriptionFormController implements Initializable, ScreenIn
                               ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
                          break;
                     case "btnSave": 
+                         //Validate before saving
+                         if (txtField03.getText().trim().equals("")) {
+                              ShowMessageFX.Warning(getStage(), "Please enter a value for Make.","Warning", null);
+                              txtField03.requestFocus();
+                              return;
+                         }
+                         if (txtField04.getText().trim().equals("")) {
+                              ShowMessageFX.Warning(getStage(), "Please enter a value for Model.","Warning", null);
+                              txtField04.requestFocus();
+                              return;
+                         }
+                         if (txtField06.getText().trim().equals("")) {
+                              ShowMessageFX.Warning(getStage(), "Please enter a value for Type.","Warning", null);
+                              txtField06.requestFocus();
+                              return;
+                         }
+                         if (txtField05.getText().trim().equals("")) {
+                              ShowMessageFX.Warning(getStage(), "Please enter a value for Color.","Warning", null);
+                              txtField05.requestFocus();
+                              return;
+                         }
+                         
+                         if (txtField08.getText().trim().equals("") || Integer.parseInt(txtField08.getText()) < 1900) {
+                              ShowMessageFX.Warning(getStage(), "Please enter a valid value for Year.","Warning", null);
+                              txtField08.requestFocus();
+                              return;
+                         }
+                         
                          //Proceed Saving
                          if (setSelection()) {
                               if (oTrans.SaveRecord()){
@@ -565,7 +650,11 @@ public class VehicleDescriptionFormController implements Initializable, ScreenIn
                               oTrans.setMaster(18, lsValue); //Handle Encoded Value
                               break;
                          case 8: //nYearModl
-                              oTrans.setMaster(lnIndex,  Integer.parseInt(lsValue)); //Handle Encoded Value
+                              if (lsValue.trim().equals("")){
+                                   oTrans.setMaster(lnIndex,  0); //Handle Encoded Value     
+                              } else {
+                                   oTrans.setMaster(lnIndex,  Integer.parseInt(lsValue)); //Handle Encoded Value
+                              }
                               break;
                         
                     }

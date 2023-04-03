@@ -26,6 +26,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
@@ -280,31 +281,39 @@ public class InquiryFormController implements Initializable, ScreenInterface{
              oApp = foValue;
     }
     
+    //Populate Text Field Based on selected address in table
+    private void getSelectedItem(){
     
+    }
+    //Search using F3
+    private void txtField_KeyPressed(KeyEvent event){
+    
+    }
     //Method/Function for general buttons
     private void cmdButton_Click(ActionEvent event) {
           String lsButton = ((Button)event.getSource()).getId();
           switch(lsButton){
+              
             case "btnAdd":
-                ShowMessageFX.Warning(null, "Warning", "You click add button!"); 
+                ShowMessageFX.Information(null, "Information", "You click add button!"); 
                 break;
             case "btnEdit":
-                 ShowMessageFX.Warning(null, "Warning", "You click edit button!"); 
+                 ShowMessageFX.Information(null, "Information", "You click edit button!"); 
                 break;
             case "btnSave":
-                 ShowMessageFX.Warning(null, "Warning", "You click save button!"); 
+                 ShowMessageFX.Information(null, "Information","You click save button!"); 
                 break;
             case "btnClear":
-                 ShowMessageFX.Warning(null, "Warning", "You click clear button!"); 
+                 ShowMessageFX.Information(null, "Information", "You click clear button!"); 
                 break;
             case "btnConvertSales":
-                 ShowMessageFX.Warning(null, "Warning", "You click convert to sales button"); 
+                 ShowMessageFX.Information(null, "Information", "You click convert to sales button"); 
                 break;
             case "btnPrintRefund":
-                 ShowMessageFX.Warning(null, "Warning", "You click print refund button"); 
+                 ShowMessageFX.Information(null, "Information", "You click print refund button"); 
                 break;
             case "btnLostSale":
-                 ShowMessageFX.Warning(null, "Warning", "You click lost sale button"); 
+                 ShowMessageFX.Information(null, "Information", "You click lost sale button"); 
                 break;
             case "btnClose": //close tab
                          if(ShowMessageFX.OkayCancel(null, "Close Tab", "Are you sure, do you want to close tab?") == true){
@@ -316,7 +325,11 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                                break;
                                }else
                       return;
+             default:
+                    ShowMessageFX.Warning(null, pxeModuleName, "Button with name " + lsButton + " not registered.");
+                    return;
             }
+          
         }
     //Load Customer Profile Data
     public void loadCustomerProfile(){
@@ -335,7 +348,6 @@ public class InquiryFormController implements Initializable, ScreenInterface{
     }
     //Load Bank Application History Data
     public void laodBankHistory(){
-        
         initBankHistory();
     }
     //Load FollowUp Data
@@ -399,7 +411,7 @@ public class InquiryFormController implements Initializable, ScreenInterface{
             txtFieldPaymentConversion.clear();
                  
             //COMBOBOX
-            //Customer Inquiry
+            //Customer Inquiry  
             comboInquiryType.setValue(null);
             comboOnlineStore.setValue(null);
             comboEvent.setValue(null);

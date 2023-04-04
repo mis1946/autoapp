@@ -41,6 +41,7 @@ import org.rmj.appdriver.agentfx.ShowMessageFX;
 import org.rmj.auto.app.sales.InquiryFormController;
 import org.rmj.auto.app.sales.SalesAgentFormController;
 import org.rmj.auto.app.sales.UnitReceivingFormController;
+import org.rmj.auto.app.sales.VehicleEntryFormController;
 
 /**
  *
@@ -78,6 +79,8 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
      private MenuItem mnuSalesAgent;
      @FXML
      private MenuItem mnuUnitRecv;
+     @FXML
+     private MenuItem mnuVhclEntry;
      
      @Override
      public void initialize(URL url, ResourceBundle rb) {
@@ -194,6 +197,8 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
                     return new SalesAgentFormController();
                case "VehicleDescriptionForm.fxml":
                     return new VehicleDescriptionFormController();
+               case "VehicleEntryForm.fxml":
+                    return new VehicleEntryFormController();
                case "UnitReceivingForm.fxml":
                     return new UnitReceivingFormController();
                case "InquiryForm.fxml":
@@ -216,6 +221,8 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
                return "Sales Agent";
           case "VehicleDescriptionForm.fxml":
                return "Vehicle Description";
+          case "VehicleEntryForm.fxml":
+               return "Vehicle Entry";
           case "UnitReceivingForm.fxml":
                return "Unit Receiving";
           case "InquiryForm.fxml":
@@ -309,6 +316,15 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
      }
      
      @FXML
+     private void mnuVhclEntryClick(ActionEvent event) {
+          String sformname = "VehicleEntryForm.fxml";
+          //check tab
+          if (checktabs(SetTabTitle(sformname)) == 1 ) {
+               setScene2(loadAnimate(sformname));
+          }
+     }
+     
+     @FXML
      private void mnuUnitRecvClick(ActionEvent event) {
           String sformname = "UnitReceivingForm.fxml";
           //check tab
@@ -381,6 +397,8 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
      private void initMenu(){
      
      }
+
+     
 
      
 

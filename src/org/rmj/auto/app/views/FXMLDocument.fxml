@@ -92,6 +92,7 @@
                                           <items>
                                                 <MenuItem fx:id="mnuSalesAgent" mnemonicParsing="false" onAction="#mnuSalesAgentClick" text="Sales Agent" />
                                             <MenuItem fx:id="mnuVhclDesc" mnemonicParsing="false" onAction="#mnuVhclDescClick" text="Vehicle Description" />
+                                                <MenuItem fx:id="mnuVhclEntry" mnemonicParsing="false" onAction="#mnuVhclEntryClick" text="Vehicle Entry" />
                                                 <MenuItem fx:id="mnuUnitRecv" mnemonicParsing="false" onAction="#mnuUnitRecvClick" text="Unit Receiving" />
                                                 <MenuItem fx:id="mnuInquiry" mnemonicParsing="false" onAction="#mnuInquiryClick" text="Inquiry" />
                                           </items>

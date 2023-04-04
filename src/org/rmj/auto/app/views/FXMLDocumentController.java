@@ -40,6 +40,7 @@ import org.rmj.appdriver.SQLUtil;
 import org.rmj.appdriver.agentfx.ShowMessageFX;
 import org.rmj.auto.app.sales.InquiryFormController;
 import org.rmj.auto.app.sales.SalesAgentFormController;
+import org.rmj.auto.app.sales.UnitReceivingFormController;
 
 /**
  *
@@ -75,6 +76,8 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
      private MenuItem mnuInquiry;
      @FXML
      private MenuItem mnuSalesAgent;
+     @FXML
+     private MenuItem mnuUnitRecv;
      
      @Override
      public void initialize(URL url, ResourceBundle rb) {
@@ -191,6 +194,8 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
                     return new SalesAgentFormController();
                case "VehicleDescriptionForm.fxml":
                     return new VehicleDescriptionFormController();
+               case "UnitReceivingForm.fxml":
+                    return new UnitReceivingFormController();
                case "InquiryForm.fxml":
                     return new InquiryFormController();
                
@@ -208,9 +213,11 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
           case "SupplierInfo.fxml":
                return "Supplier";
           case "SalesAgentForm.fxml":
-               return "Sales Agent Information";
+               return "Sales Agent";
           case "VehicleDescriptionForm.fxml":
                return "Vehicle Description";
+          case "UnitReceivingForm.fxml":
+               return "Unit Receiving";
           case "InquiryForm.fxml":
                return "Inquiry Information";
           default:
@@ -302,6 +309,15 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
      }
      
      @FXML
+     private void mnuUnitRecvClick(ActionEvent event) {
+          String sformname = "UnitReceivingForm.fxml";
+          //check tab
+          if (checktabs(SetTabTitle(sformname)) == 1 ) {
+               setScene2(loadAnimate(sformname));
+          }
+     }
+     
+     @FXML
      private void mnuInquiryClick(ActionEvent event) {
           String sformname = "InquiryForm.fxml";
           //check tab
@@ -365,6 +381,8 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
      private void initMenu(){
      
      }
+
+     
 
      
 

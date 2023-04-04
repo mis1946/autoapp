@@ -75,8 +75,8 @@
                                       <menus>
                                         <Menu mnemonicParsing="false" text="Directory">
                                           <items>
-                                            <MenuItem fx:id="mnuCustomerInfo" mnemonicParsing="false" onAction="#mnuCustomerInfoClick" text="Customer Entry" />
-                                                <MenuItem fx:id="mnuSupplierInfo" mnemonicParsing="false" onAction="#mnuSupplierInfoClick" text="Supplier Entry" />
+                                            <MenuItem fx:id="mnuCustomerInfo" mnemonicParsing="false" onAction="#mnuCustomerInfoClick" text="Customer" />
+                                                <MenuItem fx:id="mnuSupplierInfo" mnemonicParsing="false" onAction="#mnuSupplierInfoClick" text="Supplier" />
                                                 <MenuItem mnemonicParsing="false" text="Activity" />
                                                 <MenuItem mnemonicParsing="false" text="Activiy Approval" />
                                                 <MenuItem mnemonicParsing="false" text="VIP Programs" />
@@ -92,6 +92,7 @@
                                           <items>
                                                 <MenuItem fx:id="mnuSalesAgent" mnemonicParsing="false" onAction="#mnuSalesAgentClick" text="Sales Agent" />
                                             <MenuItem fx:id="mnuVhclDesc" mnemonicParsing="false" onAction="#mnuVhclDescClick" text="Vehicle Description" />
+                                                <MenuItem fx:id="mnuUnitRecv" mnemonicParsing="false" onAction="#mnuUnitRecvClick" text="Unit Receiving" />
                                                 <MenuItem fx:id="mnuInquiry" mnemonicParsing="false" onAction="#mnuInquiryClick" text="Inquiry" />
                                           </items>
                                         </Menu>

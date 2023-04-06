@@ -6,6 +6,7 @@ package org.rmj.auto.app.views;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -17,6 +18,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import org.rmj.appdriver.GRider;
+import org.rmj.appdriver.agentfx.ShowMessageFX;
 
 /**
  * FXML Controller class
@@ -25,6 +27,8 @@ import org.rmj.appdriver.GRider;
  */
 public class BankEntryFormController implements Initializable, ScreenInterface{
     private GRider oApp;
+    unloadForm unload = new unloadForm(); //Object for closing form
+    private final String pxeModuleName = "Bank Entry"; //Form Title
     @FXML
     private AnchorPane AnchorMain;
     @FXML
@@ -70,12 +74,48 @@ public class BankEntryFormController implements Initializable, ScreenInterface{
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+        btnClose.setOnAction(this::cmdButton_Click);
     }    
 
     @FXML
     private void tblVehicleDesc_Clicked(MouseEvent event) {
     }
-
+    
+      
+  private void cmdButton_Click(ActionEvent event) {
+          String lsButton = ((Button)event.getSource()).getId();
+          switch(lsButton){
+            case "btnAdd":
+                break;
+            case "btnEdit":
+                break;
+            case "btnSave":
+                break;
+            case "btnClear":
+                break;
+            case "btnPrintClear":
+                break;
+            case "btnConvertSales":
+                break;
+            case "btnRefund":
+                break;
+            case "btnPrintRefund":
+                break;
+            case "btnLostSale":
+                break;
+            case "btnClose": //close tab
+                         if(ShowMessageFX.OkayCancel(null, "Close Tab", "Are you sure, do you want to close tab?") == true){
+                               if (unload != null) {
+                                    unload.unloadForm(AnchorMain, oApp, pxeModuleName);
+                               }else {
+                                    ShowMessageFX.Warning(null, "Warning", "Notify System Admin to Configure Null value at close button.");    
+                               }
+                               break;
+                               }else
+                           return;
+            }
+        }
+  
     @Override
     public void setGRider(GRider foValue) {
        

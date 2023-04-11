@@ -91,18 +91,6 @@ public class BankEntryFormController implements Initializable, ScreenInterface{
                 break;
             case "btnSave":
                 break;
-            case "btnClear":
-                break;
-            case "btnPrintClear":
-                break;
-            case "btnConvertSales":
-                break;
-            case "btnRefund":
-                break;
-            case "btnPrintRefund":
-                break;
-            case "btnLostSale":
-                break;
             case "btnClose": //close tab
                          if(ShowMessageFX.OkayCancel(null, "Close Tab", "Are you sure, do you want to close tab?") == true){
                                if (unload != null) {

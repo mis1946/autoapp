@@ -199,14 +199,14 @@ public class VehicleDescriptionFormController implements Initializable, ScreenIn
                     }
                
                } catch (SQLException ex) {
-                    Logger.getLogger(CustomerFormController.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(VehicleDescriptionFormController.class.getName()).log(Level.SEVERE, null, ex);
                }
           });
           comboBox09.setOnAction(e -> {
                try {
                     oTrans.setMaster(9, comboBox09.getSelectionModel().getSelectedIndex());
                } catch (SQLException ex) {
-                    Logger.getLogger(CustomerFormController.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(VehicleDescriptionFormController.class.getName()).log(Level.SEVERE, null, ex);
                }
           });
           
@@ -662,7 +662,7 @@ public class VehicleDescriptionFormController implements Initializable, ScreenIn
             } else
                txtField.selectAll();
           } catch (SQLException ex) {
-            Logger.getLogger(CustomerFormController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(VehicleDescriptionFormController.class.getName()).log(Level.SEVERE, null, ex);
           }
      };
      

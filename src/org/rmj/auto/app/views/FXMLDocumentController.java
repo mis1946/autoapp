@@ -19,17 +19,23 @@ import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Bounds;
+import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -41,6 +47,7 @@ import org.rmj.appdriver.agentfx.ShowMessageFX;
 import org.rmj.auto.app.sales.InquiryFormController;
 import org.rmj.auto.app.sales.SalesAgentFormController;
 import org.rmj.auto.app.sales.UnitReceivingFormController;
+import org.rmj.auto.app.sales.VehicleEntryFormController;
 
 /**
  *
@@ -49,6 +56,8 @@ import org.rmj.auto.app.sales.UnitReceivingFormController;
 public class FXMLDocumentController implements Initializable, ScreenInterface {
     
      private GRider oApp;
+     private int targetTabIndex = -1;
+     private double tabsize;
      
      @FXML
      private Label AppUser;
@@ -78,6 +87,8 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
      private MenuItem mnuSalesAgent;
      @FXML
      private MenuItem mnuUnitRecv;
+     @FXML
+     private MenuItem mnuVhclEntry;
      
      @Override
      public void initialize(URL url, ResourceBundle rb) {
@@ -104,9 +115,92 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
           /*USER ACCESS*/
           initMenu();
           
+          // set up the drag and drop listeners on the tab pane
+          tabpane.setOnDragDetected(event -> {
+              Dragboard db = tabpane.startDragAndDrop(TransferMode.MOVE);
+              ClipboardContent content = new ClipboardContent();
+              content.putString(tabpane.getSelectionModel().getSelectedItem().getText());
+              db.setContent(content);
+              event.consume();
+          });
+
+          tabpane.setOnDragOver(event -> {
+               Dragboard db = event.getDragboard();
+               if (db.hasString()) {
+                    event.acceptTransferModes(TransferMode.MOVE);
+                    event.consume();
+               }
+          });
+          
+          tabpane.setOnDragDropped(event -> {
+               Dragboard db = event.getDragboard();
+               boolean success = false;
+               if (db.hasString()) {
+                    String tabText = db.getString();
+                    int draggedTabIndex = findTabIndex(tabText);
+                    //double mouseP , mousePCom;
+                    double mouseX = event.getX();
+                    double mouseY = event.getY();
+                    Bounds headerBounds = tabpane.lookup(".tab-header-area").getBoundsInParent();
+                    Point2D mouseInScene = tabpane.localToScene(mouseX, mouseY);
+                    Point2D mouseInHeader = tabpane.sceneToLocal(mouseInScene);     
+                    double tabHeaderHeight = tabpane.lookup(".tab-header-area").getBoundsInParent().getHeight();
+                    System.out.println("mouseY " + mouseY);
+                    System.out.println("tabHeaderHeight " + tabHeaderHeight);
+                    
+//                    mouse is over the tab header area
+//                    mouseP = ((mouseInHeader.getX() / headerBounds.getWidth()));
+//                    tabsize = tabpane.getTabs().size();
+//                    mousePCom = mouseP * tabsize;
+//                    targetTabIndex = (int) Math.round(mousePCom) ;
+//
+//                    double tabWidth = headerBounds.getWidth() / tabpane.getTabs().size();
+//                    targetTabIndex = (int) ((mouseX - headerBounds.getMinX()) / tabWidth);
+                       
+                    targetTabIndex = (int) (mouseX / 180);
+                    System.out.println("targetTabIndex " + targetTabIndex);
+                    if (mouseY < tabHeaderHeight) {
+                         //if (headerBounds.contains(mouseInHeader)) {    
+                         System.out.println("mouseInHeader.getX() " + mouseInHeader.getX());
+                         System.out.println("headerBounds.getWidth() " + headerBounds.getWidth());
+                         System.out.println("tabsize " + tabpane.getTabs().size());
+                         System.out.println("tabText " + tabText);
+                         System.out.println("draggedTabIndex " + draggedTabIndex);
+                         
+                         if (draggedTabIndex != targetTabIndex) {
+                              Tab draggedTab = tabpane.getTabs().remove(draggedTabIndex);
+                              if (targetTabIndex > tabpane.getTabs().size()) {
+                                   targetTabIndex = tabpane.getTabs().size();
+                              }
+                              tabpane.getTabs().add(targetTabIndex, draggedTab);
+                              tabpane.getSelectionModel().select(draggedTab);
+                              success = true;
+
+                         }
+                         //}     
+                    }
+               }
+               event.setDropCompleted(success);
+               event.consume();
+          });
+          
+          tabpane.setOnDragDone(event -> {
+               event.consume();
+          });
+          
      }  
 
-     //@Override
+     private int findTabIndex(String tabText) {
+          ObservableList<Tab> tabs = tabpane.getTabs();
+          for (int i = 0; i < tabs.size(); i++) {
+              if (tabs.get(i).getText().equals(tabText)) {
+                  return i;
+              }
+          }
+          return -1;
+     }
+     
+     @Override
      public void setGRider(GRider foValue) {
           oApp = foValue;
      }
@@ -157,7 +251,8 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
           
           //Add new tab;
           Tab newTab = new Tab(SetTabTitle(fsFormName));
-          newTab.setStyle("-fx-font-weight: bold;");
+          newTab.setStyle("-fx-font-weight: bold; -fx-pref-width: 180; -fx-font-size: 11px;");
+          
           try {
                Node content = fxmlLoader.load();
                newTab.setContent(content);
@@ -194,6 +289,8 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
                     return new SalesAgentFormController();
                case "VehicleDescriptionForm.fxml":
                     return new VehicleDescriptionFormController();
+               case "VehicleEntryForm.fxml":
+                    return new VehicleEntryFormController();
                case "UnitReceivingForm.fxml":
                     return new UnitReceivingFormController();
                case "InquiryForm.fxml":
@@ -216,6 +313,8 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
                return "Sales Agent";
           case "VehicleDescriptionForm.fxml":
                return "Vehicle Description";
+          case "VehicleEntryForm.fxml":
+               return "Vehicle Entry";
           case "UnitReceivingForm.fxml":
                return "Unit Receiving";
           case "InquiryForm.fxml":
@@ -309,6 +408,15 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
      }
      
      @FXML
+     private void mnuVhclEntryClick(ActionEvent event) {
+          String sformname = "VehicleEntryForm.fxml";
+          //check tab
+          if (checktabs(SetTabTitle(sformname)) == 1 ) {
+               setScene2(loadAnimate(sformname));
+          }
+     }
+     
+     @FXML
      private void mnuUnitRecvClick(ActionEvent event) {
           String sformname = "UnitReceivingForm.fxml";
           //check tab
@@ -381,6 +489,8 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
      private void initMenu(){
      
      }
+
+     
 
      
 

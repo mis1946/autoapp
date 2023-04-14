@@ -39,6 +39,8 @@ import org.rmj.appdriver.GRider;
 import org.rmj.appdriver.SQLUtil;
 import org.rmj.appdriver.agentfx.ShowMessageFX;
 import org.rmj.auto.app.sales.InquiryFormController;
+import org.rmj.auto.app.sales.SalesAgentFormController;
+import org.rmj.auto.app.sales.UnitReceivingFormController;
 
 /**
  *
@@ -72,6 +74,10 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
      private Menu menusales;
      @FXML
      private MenuItem mnuInquiry;
+     @FXML
+     private MenuItem mnuSalesAgent;
+     @FXML
+     private MenuItem mnuUnitRecv;
      
      @Override
      public void initialize(URL url, ResourceBundle rb) {
@@ -184,10 +190,15 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
                     return new CustomerFormController();
 //               case "SupplierInfo.fxml":
 //                    return new SupplierInfoController();
+               case "SalesAgentForm.fxml":
+                    return new SalesAgentFormController();
                case "VehicleDescriptionForm.fxml":
                     return new VehicleDescriptionFormController();
+               case "UnitReceivingForm.fxml":
+                    return new UnitReceivingFormController();
                case "InquiryForm.fxml":
                     return new InquiryFormController();
+               
                default:
                     ShowMessageFX.Warning(null, "Warning", "Notify System Admin to Configure Screen Interface for " +fsValue);
                     return null;
@@ -201,8 +212,12 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
                return "Customer";
           case "SupplierInfo.fxml":
                return "Supplier";
+          case "SalesAgentForm.fxml":
+               return "Sales Agent";
           case "VehicleDescriptionForm.fxml":
                return "Vehicle Description";
+          case "UnitReceivingForm.fxml":
+               return "Unit Receiving";
           case "InquiryForm.fxml":
                return "Inquiry Information";
           default:
@@ -276,8 +291,26 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
      }
      
      @FXML
+     private void mnuSalesAgentClick(ActionEvent event) {
+          String sformname = "SalesAgentForm.fxml";
+          //check tab
+          if (checktabs(SetTabTitle(sformname)) == 1 ) {
+               setScene2(loadAnimate(sformname));
+          }
+     }
+     
+     @FXML
      public void mnuVhclDescClick(ActionEvent event) {
           String sformname = "VehicleDescriptionForm.fxml";
+          //check tab
+          if (checktabs(SetTabTitle(sformname)) == 1 ) {
+               setScene2(loadAnimate(sformname));
+          }
+     }
+     
+     @FXML
+     private void mnuUnitRecvClick(ActionEvent event) {
+          String sformname = "UnitReceivingForm.fxml";
           //check tab
           if (checktabs(SetTabTitle(sformname)) == 1 ) {
                setScene2(loadAnimate(sformname));
@@ -348,6 +381,10 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
      private void initMenu(){
      
      }
+
+     
+
+     
 
   
     

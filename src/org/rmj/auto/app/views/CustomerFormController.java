@@ -10,6 +10,7 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.time.DateTimeException;
 import java.time.LocalDate;
+import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.ResourceBundle;
@@ -196,7 +197,8 @@ public class CustomerFormController implements Initializable, ScreenInterface {
      private RadioButton radiobtn05EmaN; // Email Primary
      @FXML
      private TextField txtField03EmAd; // Email Address
-     /*Social Media*/ObservableList<String> cSocType = FXCollections.observableArrayList("Facebook", "WhatsUp", "Instagram", "Tiktok", "Twitter");
+     /*Social Media*/
+     ObservableList<String> cSocType = FXCollections.observableArrayList("Facebook", "WhatsUp", "Instagram", "Tiktok", "Twitter");
      
      @FXML
      private RadioButton radiobtn05SocN; // SocMed Active status
@@ -426,9 +428,36 @@ public class CustomerFormController implements Initializable, ScreenInterface {
           btnClose.setOnAction(this::cmdButton_Click); 
           btnBrowse.setOnAction(this::cmdButton_Click);
           
-          // Register the event handler for the selection change event
+          //Update Class master
           comboBox18.setOnAction(e -> {
               comboChange();
+               try {
+                    oTrans.setMaster(18, String.valueOf(comboBox18.getSelectionModel().getSelectedIndex()));
+               } catch (SQLException ex) {
+                    Logger.getLogger(CustomerFormController.class.getName()).log(Level.SEVERE, null, ex);
+               }
+               
+          });
+          comboBox09.setOnAction(e -> {
+               try {
+                    oTrans.setMaster(9, String.valueOf(comboBox09.getSelectionModel().getSelectedIndex()));
+               } catch (SQLException ex) {
+                    Logger.getLogger(CustomerFormController.class.getName()).log(Level.SEVERE, null, ex);
+               }
+          });
+          comboBox08.setOnAction(e -> {
+               try {
+                    oTrans.setMaster(8, String.valueOf(comboBox08.getSelectionModel().getSelectedIndex()));
+               } catch (SQLException ex) {
+                    Logger.getLogger(CustomerFormController.class.getName()).log(Level.SEVERE, null, ex);
+               }
+          });
+          comboBox07.setOnAction(e -> {
+               try {
+                    oTrans.setMaster(7, String.valueOf(comboBox07.getSelectionModel().getSelectedIndex()));
+               } catch (SQLException ex) {
+                    Logger.getLogger(CustomerFormController.class.getName()).log(Level.SEVERE, null, ex);
+               }
           });
           
           //Tab Process
@@ -473,9 +502,13 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                                    oTransMobile.removeMobile(oTransMobile.getItemCount());
                                    oTransEmail.removeEmail(oTransEmail.getItemCount());
                                    oTransSocMed.removeSocMed(oTransSocMed.getItemCount());
+                                   
                               } else 
                                   return;
                          }
+                         txtField26.clear(); // Client Search
+                         txtField01.clear(); // Client ID
+                         clearFields();
                          if (!txtField26.getText().isEmpty() && !txtField26.getText().trim().equals("")) {
                               
                               if (oTrans.SearchRecord(txtField26.getText(), false)){
@@ -497,6 +530,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                                   ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
                                   pnEditMode = EditMode.UNKNOWN;
                               }
+                             
                          } else {
                               if (oTrans.SearchRecord(txtField01.getText(), true)){
                                    if (oTransAddress.OpenRecord(oTrans.getMaster("sClientID").toString(), false)
@@ -518,6 +552,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                                   pnEditMode = EditMode.UNKNOWN;
                               }
                          }
+                         
                          break;
                     case "btnAdd": //create new client
                          if (oTrans.NewRecord() && oTransAddress.NewRecord() && oTransMobile.NewRecord() 
@@ -530,6 +565,8 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                               mobiledata.clear();
                               emaildata.clear();
                               socialmediadata.clear();
+                              txtField26.clear(); // Client Search
+                              txtField01.clear(); // Client ID
                               pnEditMode = oTrans.getEditMode();
                          } else 
                              ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
@@ -544,6 +581,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                               pnEditMode = oTrans.getEditMode(); 
                          } else 
                               ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
+                         clearContactInfo();
                          break;
                     case "btnSave": //save client info
                          //Do not Allow to save Client Info if there's no Address / Mobile
@@ -618,6 +656,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                                   ShowMessageFX.Warning(getStage(),oTrans.getMessage() ,"Warning", "Error while saving Client Information");
                               }
                          }
+                         clearContactInfo();
                          break;                        
                     case "btnClose": //close tab
                          if(ShowMessageFX.OkayCancel(null, "Close Tab", "Are you sure you want to close this Tab?") == true){
@@ -928,7 +967,6 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                if (Integer.parseInt((String)oTrans.getMaster(18)) == 1) {
                      txtField16.setText((String) oTrans.getMaster(16));    
                }
-               //iClientType = comboBox18.getSelectionModel().getSelectedIndex();
                
           } catch (SQLException e) {
                ShowMessageFX.Warning(getStage(),e.getMessage(), "Warning", null);
@@ -1783,10 +1821,12 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                                              oTransMobile.removeMobile(oTransMobile.getItemCount());
                                              oTransEmail.removeEmail(oTransEmail.getItemCount());
                                              oTransSocMed.removeSocMed(oTransSocMed.getItemCount());
+                                             
                                         } else 
                                             return;
                                    }
-                                   
+                                   txtField26.clear(); // Client Search
+                                   clearFields();
                                    if (oTrans.SearchRecord(txtField01.getText(), true)){
                                         if (oTransAddress.OpenRecord(oTrans.getMaster("sClientID").toString(), false)
                                              && oTransMobile.OpenRecord(oTrans.getMaster("sClientID").toString(), false)
@@ -1806,6 +1846,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                                        ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
                                        pnEditMode = EditMode.UNKNOWN;
                                    }
+                                   
                                    initButton(pnEditMode); 
                                    break;
                               case "txtField26": //Search by Name
@@ -1815,10 +1856,12 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                                              oTransMobile.removeMobile(oTransMobile.getItemCount());
                                              oTransEmail.removeEmail(oTransEmail.getItemCount());
                                              oTransSocMed.removeSocMed(oTransSocMed.getItemCount());
+                                             
                                         } else 
                                             return;
                                    }
-                                   
+                                   txtField01.clear(); // Client ID
+                                   clearFields();
                                    if (oTrans.SearchRecord(txtField26.getText(), false)){
                                         if (oTransAddress.OpenRecord(oTrans.getMaster("sClientID").toString(), false)
                                              && oTransMobile.OpenRecord(oTrans.getMaster("sClientID").toString(), false)
@@ -1841,6 +1884,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                                    initButton(pnEditMode); 
                                    break;
                               case "txtField10": //Citizenship
+                                   
                                    if (oTrans.searchCitizenship(txtField10.getText(), false)){
                                         loadClientMaster();
                                           
@@ -1851,6 +1895,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                               
                               case "txtField12": //BirthPlace
                                    if (oTrans.searchBirthplace(txtField12.getText(), false)){
+                                        
                                         loadClientMaster();
                                    } else 
                                        ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
@@ -1859,6 +1904,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                               
                               case "txtField25": //Spouse 
                                    if (oTrans.searchSpouse(txtField25.getText(), false)){
+                                        
                                         loadClientMaster();
                                    } else 
                                        ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
@@ -2060,6 +2106,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                         return;
                     }
                */
+               
                     if (comboBox18.getSelectionModel().getSelectedIndex() == 1 ){
                          bAction = true;
                          //txtField16.setDisable(false); //company name
@@ -2203,7 +2250,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                checkBox12Addr.setSelected(false); //Office
                checkBox13Addr.setSelected(false); //Provincial
                textArea11Addr.clear(); // Address Remarks
-
+               
                /*Contact No*/
                comboBox05Cont.setValue(null); // Contact Ownership
                comboBox04Cont.setValue(null); // Mobile Type
@@ -2293,6 +2340,47 @@ public class CustomerFormController implements Initializable, ScreenInterface {
           }
      }
      
+     
+     public void clearContactInfo(){
+          /*Address*/
+          txtField03Addr.clear(); //House No
+          txtField04Addr.clear(); //Street / Address
+          txtField05Addr.clear(); // Town
+          txtField06Addr.clear(); // Brgy
+          txtField07Addr.clear(); //Zip code
+          radiobtn18AddY.setSelected(true); //Active status
+          radiobtn18AddN.setSelected(false); //Active status
+          checkBox14Addr.setSelected(false); //Primary
+          checkBox17Addr.setSelected(false); //Current
+          checkBox12Addr.setSelected(false); //Office
+          checkBox13Addr.setSelected(false); //Provincial
+          textArea11Addr.clear(); // Address Remarks
+          
+          //Mobile
+          comboBox05Cont.setValue(null); // Contact Ownership
+          comboBox04Cont.setValue(null); // Mobile Type
+          txtField03Cont.clear();  //Mobile Number
+          radiobtn14CntY.setSelected(true); // Contact Active Status
+          radiobtn14CntN.setSelected(false); // Contact Active Status
+          radiobtn11CntY.setSelected(false); // Contact Primary
+          radiobtn11CntN.setSelected(false); // Contact Primary
+          textArea13Cont.clear(); // Contact Remarks
+          
+          //Email
+          comboBox04EmAd.setValue(null); // Email Ownership
+          radiobtn06EmaY.setSelected(true); // Email Active status
+          radiobtn06EmaN.setSelected(false); // Email Active status
+          radiobtn05EmaY.setSelected(false); // Email Primary
+          radiobtn05EmaN.setSelected(false); // Email Primary
+          txtField03EmAd.clear(); // Email Address
+          
+          //Social Media
+          radiobtn05SocY.setSelected(true); // SocMed Active status
+          radiobtn05SocN.setSelected(false); // SocMed Active status
+          txtField03Socm.clear(); // SocMed Account
+          comboBox04Socm.setValue(null); // SocMed Type
+     }
+     
      /*Clear Fields*/
      public void clearFields(){
           pnRow = 0;
@@ -2316,8 +2404,8 @@ public class CustomerFormController implements Initializable, ScreenInterface {
           textArea15.clear(); //Remarks
           txtField25.clear(); // Spouse
           txtField29.clear(); // Business Style
-          txtField26.clear(); // Client Search
-          txtField01.clear(); // Client ID
+          txtField11.setValue(LocalDate.of(1900, Month.JANUARY, 1)); //birthdate
+              
           //txtField11.setValue(null); //bdate Do not clear bdate since script is already assigning value to prevent nullpointerexception
           comboBox18.setValue(null); //Client type
           comboBox08.setValue(null); //Gender

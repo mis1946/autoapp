@@ -11,7 +11,7 @@ import javafx.beans.property.SimpleStringProperty;
  * DATE CREATED: 03-30-2023
  * @author Arsiela
  */
-public class TableUnitReceivingList {
+public class UnitReceivingTableList {
      private SimpleStringProperty tblindex01; //Row
      private SimpleStringProperty tblindex02; //Control No
      private SimpleStringProperty tblindex03; //Date
@@ -25,7 +25,7 @@ public class TableUnitReceivingList {
      private SimpleStringProperty tblindex10; //
      private SimpleStringProperty tblindex11; //
      
-     TableUnitReceivingList( String tblindex01,
+     UnitReceivingTableList( String tblindex01,
                          String tblindex02,
                          String tblindex03,
                          String tblindex04,

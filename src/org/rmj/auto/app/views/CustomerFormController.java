@@ -86,10 +86,10 @@ public class CustomerFormController implements Initializable, ScreenInterface {
      //private int iClientType;
      
      /*populate tables Address, Mobile, Email and Social Media*/
-     private ObservableList<TableClientAddress> addressdata = FXCollections.observableArrayList();
-     private ObservableList<TableClientMobile> mobiledata = FXCollections.observableArrayList();
-     private ObservableList<TableClientEmail> emaildata = FXCollections.observableArrayList();
-     private ObservableList<TableClientSocialMedia> socialmediadata = FXCollections.observableArrayList();
+     private ObservableList<CustomerTableAddress> addressdata = FXCollections.observableArrayList();
+     private ObservableList<CustomerTableMobile> mobiledata = FXCollections.observableArrayList();
+     private ObservableList<CustomerTableEmail> emaildata = FXCollections.observableArrayList();
+     private ObservableList<CustomerTableSocialMedia> socialmediadata = FXCollections.observableArrayList();
 
      /*populate comboxes client_master*/
      ObservableList<String> cCvlStat = FXCollections.observableArrayList("Single", "Married", "Divorced", "Separated", "Widowed");
@@ -989,7 +989,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                          sStatus = "N";
                     }
                     if (!sAddress.isEmpty() && !sAddress.trim().equals("")) {
-                         addressdata.add(new TableClientAddress(
+                         addressdata.add(new CustomerTableAddress(
                          String.valueOf(lnCtr), //ROW
                          sStatus,
                          oTransAddress.getAddress(lnCtr, "sHouseNox").toString(), //HOUSE NUMBER
@@ -1028,7 +1028,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                     
                     if (!oTransMobile.getMobile(lnCtr, "sMobileNo").toString().trim().equals("") ||
                         !oTransMobile.getMobile(lnCtr, "sMobileNo").toString().trim().isEmpty()){
-                         mobiledata.add(new TableClientMobile(
+                         mobiledata.add(new CustomerTableMobile(
                          String.valueOf(lnCtr), //ROW
                          sOwnership, //OWNERSHIP
                          oTransMobile.getMobile(lnCtr, "sMobileNo").toString(), //NUMBER
@@ -1063,7 +1063,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                     
                     if (!oTransEmail.getEmail(lnCtr, "sEmailAdd").toString().trim().equals("") ||
                         !oTransEmail.getEmail(lnCtr, "sEmailAdd").toString().trim().isEmpty()){
-                         emaildata.add(new TableClientEmail(
+                         emaildata.add(new CustomerTableEmail(
                          String.valueOf(lnCtr), //ROW
                          sOwnership, //OWNERSHIP
                          oTransEmail.getEmail(lnCtr, "sEmailAdd").toString(), //EMAIL
@@ -1100,7 +1100,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                     
                     if (!oTransSocMed.getSocMed(lnCtr, "sAccountx").toString().trim().equals("") ||
                         !oTransSocMed.getSocMed(lnCtr, "sAccountx").toString().trim().isEmpty()){
-                         socialmediadata.add(new TableClientSocialMedia(
+                         socialmediadata.add(new CustomerTableSocialMedia(
                          String.valueOf(lnCtr), //ROW
                          sSocType, //Social Type
                          oTransSocMed.getSocMed(lnCtr, "sAccountx").toString() //Acount

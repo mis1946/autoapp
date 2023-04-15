@@ -60,8 +60,8 @@ public class VehicleEntryFormController implements Initializable, ScreenInterfac
      private String TransNo = "";
      
      /*populate tables Vehicle Description List*/
-     private ObservableList<TableVehicleEntryList> vhcllistdata = FXCollections.observableArrayList();
-     private FilteredList<TableVehicleEntryList> filteredData;
+     private ObservableList<VehicleEntryTableList> vhcllistdata = FXCollections.observableArrayList();
+     private FilteredList<VehicleEntryTableList> filteredData;
      private static final int ROWS_PER_PAGE = 50;
      
      @FXML
@@ -219,7 +219,7 @@ public class VehicleEntryFormController implements Initializable, ScreenInterfac
           filteredData = new FilteredList<>(vhcllistdata, b -> true);
           autoSearch(textSeek01);
           // 3. Wrap the FilteredList in a SortedList. 
-          SortedList<TableVehicleEntryList> sortedData = new SortedList<>(filteredData);
+          SortedList<VehicleEntryTableList> sortedData = new SortedList<>(filteredData);
 
           // 4. Bind the SortedList comparator to the TableView comparator.
           // 	  Otherwise, sorting the TableView would have no effect.
@@ -280,7 +280,7 @@ public class VehicleEntryFormController implements Initializable, ScreenInterfac
           int toIndex = Math.min(fromIndex + limit, vhcllistdata.size());
 
           int minIndex = Math.min(toIndex, filteredData.size());
-          SortedList<TableVehicleEntryList> sortedData = new SortedList<>(
+          SortedList<VehicleEntryTableList> sortedData = new SortedList<>(
                   FXCollections.observableArrayList(filteredData.subList(Math.min(fromIndex, minIndex), minIndex)));
           sortedData.comparatorProperty().bind(tblVhclEntryList.comparatorProperty());
           tblVhclEntryList.setItems(sortedData); 

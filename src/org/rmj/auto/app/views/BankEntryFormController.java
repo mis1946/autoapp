@@ -21,6 +21,7 @@ import javafx.scene.control.Pagination;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -466,48 +467,48 @@ public class BankEntryFormController implements Initializable, ScreenInterface{
         txtField09.clear();// sFaxNoxx
           }
     @FXML
-    private void tblBankEntry_Clicked(MouseEvent event) {
-         if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
-               if(ShowMessageFX.OkayCancel(null, pxeModuleName, "You have unsaved data, are you sure you want to continue?") == true){   
-              } else
-                  return;
-          }
-          
-          pnRow = tblBankEntry.getSelectionModel().getSelectedIndex(); 
-          pagecounter = pnRow + pagination.getCurrentPageIndex() * ROWS_PER_PAGE;
-          if (pagecounter >= 0){
-               if(event.getClickCount() > 0){
-                    getSelectedItem(filteredData.get(pagecounter).getTblindex11()); //Populate field based on selected Item
-
-                    tblBankEntry.setOnKeyReleased((KeyEvent t)-> {
-                        KeyCode key = t.getCode();
-                        switch (key){
-                            case DOWN:
-                                pnRow =tblBankEntry.getSelectionModel().getSelectedIndex();
-                                pagecounter = pnRow + pagination.getCurrentPageIndex() * ROWS_PER_PAGE;
-                                if (pagecounter == tblBankEntry.getItems().size()) {
-                                    pagecounter = tblBankEntry.getItems().size();
-                                    getSelectedItem(filteredData.get(pagecounter).getTblindex11());
-                                }else {
-                                   int y = 1;
-                                  pnRow = pnRow + y;
-                                    getSelectedItem(filteredData.get(pagecounter).getTblindex11());
-                                }
-                                break;
-                            case UP:
-                                pnRow = tblBankEntry.getSelectionModel().getSelectedIndex();
-                                pagecounter = pnRow + pagination.getCurrentPageIndex() * ROWS_PER_PAGE;
-                                getSelectedItem(filteredData.get(pagecounter).getTblindex11());
-                                break;
-                            default:
-                              return; 
-                      }
-                    });
-               } 
-               pnEditMode = EditMode.READY;
-               initButton(pnEditMode);  
-          }     
-    }
+//    private void tblBankEntry_Clicked(MouseEvent event) {
+//         if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
+//               if(ShowMessageFX.OkayCancel(null, pxeModuleName, "You have unsaved data, are you sure you want to continue?") == true){   
+//              } else
+//                  return;
+//          }
+//          
+//          pnRow = tblBankEntry.getSelectionModel().getSelectedIndex(); 
+//          pagecounter = pnRow + pagination.getCurrentPageIndex() * ROWS_PER_PAGE;
+//          if (pagecounter >= 0){
+//               if(event.getClickCount() > 0){
+//                    getSelectedItem(filteredData.get(pagecounter).getTblindex11()); //Populate field based on selected Item
+//
+//                    tblBankEntry.setOnKeyReleased((KeyEvent t)-> {
+//                        KeyCode key = t.getCode();
+//                        switch (key){
+//                            case DOWN:
+//                                pnRow =tblBankEntry.getSelectionModel().getSelectedIndex();
+//                                pagecounter = pnRow + pagination.getCurrentPageIndex() * ROWS_PER_PAGE;
+//                                if (pagecounter == tblBankEntry.getItems().size()) {
+//                                    pagecounter = tblBankEntry.getItems().size();
+//                                    getSelectedItem(filteredData.get(pagecounter).getTblindex11());
+//                                }else {
+//                                   int y = 1;
+//                                  pnRow = pnRow + y;
+//                                    getSelectedItem(filteredData.get(pagecounter).getTblindex11());
+//                                }
+//                                break;
+//                            case UP:
+//                                pnRow = tblBankEntry.getSelectionModel().getSelectedIndex();
+//                                pagecounter = pnRow + pagination.getCurrentPageIndex() * ROWS_PER_PAGE;
+//                                getSelectedItem(filteredData.get(pagecounter).getTblindex11());
+//                                break;
+//                            default:
+//                              return; 
+//                      }
+//                    });
+//               } 
+//               pnEditMode = EditMode.READY;
+//               initButton(pnEditMode);  
+//          }     
+//    }
 
     
  private Stage getStage(){

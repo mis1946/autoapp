@@ -46,8 +46,6 @@ public class BankEntryFormController implements Initializable, ScreenInterface{
     @FXML
     private AnchorPane AnchorMain;
     @FXML
-    private TextField txtField02;
-    @FXML
     private Pagination pagination;
     @FXML
     private TableView<?> tblBankEntry;
@@ -58,8 +56,6 @@ public class BankEntryFormController implements Initializable, ScreenInterface{
     @FXML
     private TableColumn<?, ?> tblindex03;
     @FXML
-    private TableColumn<?, ?> tblindex04;
-    @FXML
     private Button btnAdd;
     @FXML
     private Button btnEdit;
@@ -68,15 +64,27 @@ public class BankEntryFormController implements Initializable, ScreenInterface{
     @FXML
     private Button btnClose;
     @FXML
-    private TextField txtField03;
+    private TextField txtField02; //BankName
     @FXML
-    private TextField txtField04;
+    private TextField txtField03; //BankAdd
     @FXML
-    private TextField txtField06;
+    private TextField txtField04; //ContactPerson
     @FXML
-    private TextField txtField05;
+    private TextField txtField06; 
     @FXML
-    private TextField txtField08;
+    private TextField txtField08; //Telephone No4
+    @FXML
+    private TextField txtSecField02;
+    @FXML
+    private TextField txtField16; //Barangay Name
+    @FXML
+    private TextField txtField17; //Town Name
+    @FXML
+    private TextField txtField15; //Province Name
+    @FXML
+    private TextField txtField07; //Zip Code
+    @FXML
+    private TextField txtField09; //Fax No
 
 
     /**
@@ -145,10 +153,10 @@ public class BankEntryFormController implements Initializable, ScreenInterface{
 //                        KeyCode key = t.getCode();
 //                        switch (key){
 //                            case DOWN:
-//                                pnRow = tblVehicleDesc.getSelectionModel().getSelectedIndex();
+//                                pnRow = tblBankEntry.getSelectionModel().getSelectedIndex();
 //                                pagecounter = pnRow + pagination.getCurrentPageIndex() * ROWS_PER_PAGE;
-//                                if (pagecounter == tblVehicleDesc.getItems().size()) {
-//                                    pagecounter = tblVehicleDesc.getItems().size();
+//                                if (pagecounter == tblBankEntry.getItems().size()) {
+//                                    pagecounter = tblBankEntry.getItems().size();
 //                                    getSelectedItem(filteredData.get(pagecounter).getTblindex11());
 //                                }else {
 //                                   int y = 1;
@@ -157,7 +165,7 @@ public class BankEntryFormController implements Initializable, ScreenInterface{
 //                                }
 //                                break;
 //                            case UP:
-//                                pnRow = tblVehicleDesc.getSelectionModel().getSelectedIndex();
+//                                pnRow = tblBankEntry.getSelectionModel().getSelectedIndex();
 //                                pagecounter = pnRow + pagination.getCurrentPageIndex() * ROWS_PER_PAGE;
 //                                getSelectedItem(filteredData.get(pagecounter).getTblindex11());
 //                                break;
@@ -172,6 +180,41 @@ public class BankEntryFormController implements Initializable, ScreenInterface{
 //     }
     
       
+    
+//      /*populate Table*/    
+//     private void initVhclDescTable() {
+//          tblindex01.setCellValueFactory(new PropertyValueFactory<>("tblindex01"));
+//          tblindex02.setCellValueFactory(new PropertyValueFactory<>("tblindex02"));
+//          tblindex03.setCellValueFactory(new PropertyValueFactory<>("tblindex03"));
+//          tblindex04.setCellValueFactory(new PropertyValueFactory<>("tblindex04"));
+//          
+//          tblBankEntry.widthProperty().addListener((ObservableValue<? extends Number> source, Number oldWidth, Number newWidth) -> {
+//               TableHeaderRow header = (TableHeaderRow) tblBankEntry.lookup("TableHeaderRow");
+//               header.reorderingProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+//               header.setReordering(false);
+//               });
+//          });
+//          
+//          filteredData = new FilteredList<>(bankentrydata, b -> true);
+//          autoSearch(txtField02);
+//          // 3. Wrap the FilteredList in a SortedList. 
+//          SortedList<TableVehicleDescriptionList> sortedData = new SortedList<>(filteredData);
+//
+//          // 4. Bind the SortedList comparator to the TableView comparator.
+//          // 	  Otherwise, sorting the TableView would have no effect.
+//          sortedData.comparatorProperty().bind(tblBankEntry.comparatorProperty());
+//
+//          // 5. Add sorted (and filtered) data to the table.
+//          tblBankEntry.setItems(sortedData);
+//          tblBankEntry.widthProperty().addListener((ObservableValue<? extends Number> source, Number oldWidth, Number newWidth) -> {
+//              TableHeaderRow header = (TableHeaderRow) tblBankEntry.lookup("TableHeaderRow");
+//              header.reorderingProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+//                  header.setReordering(false);
+//              });
+//              header.setDisable(true);
+//          });
+//            
+//     }
   private void cmdButton_Click(ActionEvent event) {
           String lsButton = ((Button)event.getSource()).getId();
           switch(lsButton){
@@ -211,7 +254,7 @@ public class BankEntryFormController implements Initializable, ScreenInterface{
     
 //      private void changeTableView(int index, int limit) {
 //          int fromIndex = index * limit;
-//          int toIndex = Math.min(fromIndex + limit, vhcldescdata.size());
+//          int toIndex = Math.min(fromIndex + limit, bankentrydata.size());
 //
 //          int minIndex = Math.min(toIndex, filteredData.size());
 //          SortedList<BankEntryTableList> sortedData = new SortedList<>(
@@ -224,7 +267,7 @@ public class BankEntryFormController implements Initializable, ScreenInterface{
 //      //use for creating new page on pagination 
 //     private Node createPage(int pageIndex) {
 //          int fromIndex = pageIndex * ROWS_PER_PAGE;
-//          int toIndex = Math.min(fromIndex + ROWS_PER_PAGE, vhcldescdata.size());
+//          int toIndex = Math.min(fromIndex + ROWS_PER_PAGE,bankentrydata.size());
 //          if(bnkentrydata.size()>0){
 //             tblVehicleDesc.setItems(FXCollections.observableArrayList(vhcldescdata.subList(fromIndex, toIndex))); 
 //          }
@@ -271,26 +314,19 @@ public class BankEntryFormController implements Initializable, ScreenInterface{
 //            if (lsValue == null) return;
 //            if(!nv){ /*Lost Focus*/
 //                    switch (lnIndex){
-//                         case 3: //sMakeIDxx
+//                         case 3: //sBankName
 //                              oTrans.setMaster(15, lsValue); //Handle Encoded Value
 //                              break;
-//                         case 4: //sModelIDx
+//                         case 4: //sBarangayName
 //                              oTrans.setMaster(16, lsValue); //Handle Encoded Value
 //                              break;
-//                         case 5: //sColorIDx
+//                         case 5: //sTownName
 //                              oTrans.setMaster(17, lsValue); //Handle Encoded Value
 //                              break;
-//                         case 6: //sTypeIDxx
+//                         case 6: //sProvNamex
 //                              oTrans.setMaster(18, lsValue); //Handle Encoded Value
 //                              break;
-//                         case 8: //nYearModl
-//                              if (lsValue.trim().equals("")){
-//                                   oTrans.setMaster(lnIndex,  0); //Handle Encoded Value     
-//                              } else {
-//                                   oTrans.setMaster(lnIndex,  Integer.parseInt(lsValue)); //Handle Encoded Value
-//                              }
-//                              break;
-//                        
+//                    
 //                    }
 //                
 //            } else
@@ -308,22 +344,21 @@ public class BankEntryFormController implements Initializable, ScreenInterface{
 //                    case F3:
 //                         switch (lnIndex){ 
 //                              case 3: //BankName
-//                                   if (oTrans.searchBankName(txtField03.getText())){
+//                                   if (oTrans.searchBankName(txtField02.getText())){
 //                                        loadBankEntryField();
 //                                   } else 
 //                                       ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
 //                              
 //                              break;
-//                              case 4: //HouseNo
-//                                   if (oTrans.searchHouseNo(txtField04.getText())){
+//                              case 4: //Barangay Name
+//                                   if (oTrans.searchHouseNo(txtField16.getText())){
 //                                       loadBankEntryField();
 //                                   } else 
 //                                       ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
 //                              
 //                              break;
-//                              
-//                              case 5: //Municipality
-//                                   if (oTrans.searchMunicipality(txtField05.getText())){
+//                              case 5: //Town Name
+//                                   if (oTrans.searchMunicipality(txtField17.getText())){
 //                                       loadBankEntryField();
 //                                   } else 
 //                                       ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
@@ -331,7 +366,7 @@ public class BankEntryFormController implements Initializable, ScreenInterface{
 //                              break;
 //                              
 //                              case 6: //Province
-//                                   if (oTrans.searchProvince(txtField06.getText())){
+//                                   if (oTrans.searchProvince(txtField15.getText())){
 //                                        loadBankEntryField();
 //                                        pnEditMode = oTrans.getEditMode();
 //                                   } else 
@@ -343,22 +378,22 @@ public class BankEntryFormController implements Initializable, ScreenInterface{
 //                    case ENTER:
 //                         switch (lnIndex){ 
 //                                  case 3: //BankName
-//                                   if (oTrans.searchBankName(txtField03.getText())){
+//                                   if (oTrans.searchBankName(txtField02.getText())){
 //                                        loadBankEntryField();
 //                                   } else 
 //                                       ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
 //                              
 //                              break;
-//                              case 4: //HouseNo
-//                                   if (oTrans.searchHouseNo(txtField04.getText())){
+//                              case 4: //Barangay
+//                                   if (oTrans.searchHouseNo(txtField16.getText())){
 //                                       loadBankEntryField();
 //                                   } else 
 //                                       ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
 //                              
 //                              break;
 //                              
-//                              case 5: //Municipality
-//                                   if (oTrans.searchMunicipality(txtField05.getText())){
+//                              case 5: //Town Name
+//                                   if (oTrans.searchMunicipality(txtField17.getText())){
 //                                       loadBankEntryField();
 //                                   } else 
 //                                       ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
@@ -366,7 +401,7 @@ public class BankEntryFormController implements Initializable, ScreenInterface{
 //                              break;
 //                              
 //                              case 6: //Province
-//                                   if (oTrans.searchProvince(txtField06.getText())){
+//                                   if (oTrans.searchProvince(txtField15.getText())){
 //                                        loadBankEntryField();
 //                                        pnEditMode = oTrans.getEditMode();
 //                                   } else 
@@ -400,12 +435,17 @@ public class BankEntryFormController implements Initializable, ScreenInterface{
 //             */
 //             boolean lbShow = (fnValue == EditMode.ADDNEW || fnValue == EditMode.UPDATE);
 //
-//             /*Vehicle Description*/
-//             txtField03.setDisable(!lbShow); // sMakeIDxx
-//             txtField04.setDisable(!lbShow); // sModelIDx
-//             txtField06.setDisable(!lbShow); // sColorIDx
-//             txtField05.setDisable(!lbShow); // sTypeIDxx
-//             txtField08.setDisable(!lbShow); // nYearModl
+//             /*Bank Entry*/
+//             txtField02.setDisable(!lbShow); // sBankNamexx
+//             txtField03.setDisable(!lbShow); // sBankCodex
+//             txtField06.setDisable(!lbShow); // sBranchx
+////           txtField016.setDisable(!lbShow); // sBarangayx
+////           txtField017.setDisable(!lbShow); // sTownNamex
+////           txtField015.setDisable(!lbShow); // sProvNamexx
+////           txtField07.setDisable(!lbShow); // sZipCode
+//             txtField04.setDisable(!lbShow); // sContactP
+    ////       txtField08.setDisable(!lbShow); // sTeleNo
+////           txtField09.setDisable(!lbShow); // sFaxNoxx
 //
 //             btnAdd.setVisible(!lbShow);
 //             btnAdd.setManaged(!lbShow);
@@ -425,14 +465,63 @@ public class BankEntryFormController implements Initializable, ScreenInterface{
 //          public void clearFields(){
 //          pnRow = 0;
 //          /*clear tables*/
-//          
-//          txtField02.clear(); // sDescript
-//          txtField03.clear(); // sMakeIDxx
-//          txtField04.clear(); // sModelIDx
-//          txtField06.clear(); // sColorIDx
-//          txtField05.clear(); // sTypeIDxx
-//          txtField08.clear(); // nYearModl
 
     
+         // txtField02.clear(); // sBankNamexx
+//          txtField03.clear(); // sBankCodex
+//          txtField06.clear(); // sBranchx
+////        txtField016.clear(); // sBarangayx
+////        txtField017.clear(); // sTownNamex
+////        txtField015.clear(); // sProvNamexx
+////        txtField07.clear(); // sZipCode
+//          txtField04.clear(); // sContactP
+    ////    txtField08.clear(); // sTeleNo
+////        txtField09.clear();// sFaxNoxx
+
+//    @FXML
+//    private void tblBankEntry_Clicked(MouseEvent event) {
+//         if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
+//               if(ShowMessageFX.OkayCancel(null, pxeModuleName, "You have unsaved data, are you sure you want to continue?") == true){   
+//              } else
+//                  return;
+//          }
+//          
+//          pnRow = tblBankEntry.getSelectionModel().getSelectedIndex(); 
+//          pagecounter = pnRow + pagination.getCurrentPageIndex() * ROWS_PER_PAGE;
+//          if (pagecounter >= 0){
+//               if(event.getClickCount() > 0){
+//                    getSelectedItem(filteredData.get(pagecounter).getTblindex11()); //Populate field based on selected Item
+//
+//                    tblBankEntry.setOnKeyReleased((KeyEvent t)-> {
+//                        KeyCode key = t.getCode();
+//                        switch (key){
+//                            case DOWN:
+//                                pnRow =tblBankEntry.getSelectionModel().getSelectedIndex();
+//                                pagecounter = pnRow + pagination.getCurrentPageIndex() * ROWS_PER_PAGE;
+//                                if (pagecounter == tblBankEntry.getItems().size()) {
+//                                    pagecounter = tblBankEntry.getItems().size();
+//                                    getSelectedItem(filteredData.get(pagecounter).getTblindex11());
+//                                }else {
+//                                   int y = 1;
+//                                  pnRow = pnRow + y;
+//                                    getSelectedItem(filteredData.get(pagecounter).getTblindex11());
+//                                }
+//                                break;
+//                            case UP:
+//                                pnRow = tblBankEntry.getSelectionModel().getSelectedIndex();
+//                                pagecounter = pnRow + pagination.getCurrentPageIndex() * ROWS_PER_PAGE;
+//                                getSelectedItem(filteredData.get(pagecounter).getTblindex11());
+//                                break;
+//                            default:
+//                              return; 
+//                      }
+//                    });
+//               } 
+//               pnEditMode = EditMode.READY;
+//               initButton(pnEditMode);  
+//          }     
+//    }
+//
+//    
     
 }

@@ -13,18 +13,15 @@ import javafx.beans.property.SimpleStringProperty;
 public class BankEntryTableList {
     
     
-    private SimpleStringProperty tblindex01;
-    
+    private SimpleStringProperty tblindex02;
+    private SimpleStringProperty tblindex02;
+    private SimpleStringProperty tblindex02;
+    private SimpleStringProperty tblindex02;
     
     BankEntryTableList(String tblindex01){
-        this.tblindex01 = new SimpleStringProperty(tblindex01);
+        this.tblindex02 = new SimpleStringProperty(tblindex01);
     }
 
-    public String getTblindex01() { 
-        return tblindex01.get();
-    }
-    public void setTblindex01(String tblindex01){
-        this.tblindex01.set(tblindex01);
     }
     
 }

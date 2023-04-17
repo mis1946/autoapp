@@ -29,7 +29,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" fx:id="AnchorMain" prefHeight="1182.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" >
+<AnchorPane id="AnchorPane" fx:id="AnchorMain" prefHeight="1182.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.rmj.auto.app.sales.InquiryFormController">
    <children>
       <StackPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -86,19 +86,19 @@
                                                       <Font name="Arial Bold" size="12.0" />
                                                    </font>
                                                 </Label>
-                                                <TextField prefHeight="22.0" prefWidth="244.0" promptText="Search: F3" GridPane.columnIndex="1" />
+                                                <TextField fx:id="textSeek01" prefHeight="22.0" prefWidth="244.0" promptText="Search: F3" GridPane.columnIndex="1" />
                                                 <Label prefHeight="24.0" prefWidth="75.0" text="DATE FROM" GridPane.columnIndex="4">
                                                    <font>
                                                       <Font name="Arial Bold" size="12.0" />
                                                    </font>
                                                 </Label>
-                                                <DatePicker prefHeight="24.0" prefWidth="134.0" GridPane.columnIndex="5" />
+                                                <DatePicker fx:id="dateSeek01" prefHeight="24.0" prefWidth="134.0" GridPane.columnIndex="5" />
                                                 <Label prefHeight="17.0" prefWidth="59.0" text="DATE TO" GridPane.columnIndex="7">
                                                    <font>
                                                       <Font name="Arial Bold" size="12.0" />
                                                    </font>
                                                 </Label>
-                                                <DatePicker prefHeight="24.0" prefWidth="135.0" GridPane.columnIndex="8" />
+                                                <DatePicker fx:id="dateSeek02" prefHeight="24.0" prefWidth="135.0" GridPane.columnIndex="8" />
                                              </children>
                                           </GridPane>
                                        </children>
@@ -110,14 +110,14 @@
                                  <left>
                                     <AnchorPane style="-fx-border-color: orange; -fx-border-radius: 5;" BorderPane.alignment="CENTER">
                                        <children>
-                                          <TableView fx:id="tblInquiry" layoutX="6.0" layoutY="25.0" minWidth="400.0" prefWidth="440.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="3.0" AnchorPane.rightAnchor="3.0" AnchorPane.topAnchor="3.0">
+                                          <Pagination fx:id="pagination" maxPageIndicatorCount="3" minWidth="400.0" prefWidth="440.0" AnchorPane.bottomAnchor="3.0" AnchorPane.leftAnchor="3.0" AnchorPane.rightAnchor="3.0" AnchorPane.topAnchor="3.0" />
+                                          <TableView fx:id="tblInquiry" layoutX="6.0" layoutY="25.0" minWidth="400.0" onMouseClicked="#tblInquiry_Clicked" prefWidth="440.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="3.0" AnchorPane.rightAnchor="3.0" AnchorPane.topAnchor="3.0">
                                              <columns>
-                                                <TableColumn prefWidth="30.0" text="Row" />
-                                                <TableColumn prefWidth="90.0" text="Inquiry Date" />
-                                                <TableColumn minWidth="100.0" prefWidth="200.0" text="Customer Name" />
+                                                <TableColumn fx:id="listIndex01" prefWidth="30.0" text="Row" />
+                                                <TableColumn fx:id="listIndex02" prefWidth="90.0" text="Inquiry Date" />
+                                                <TableColumn fx:id="listIndex03" minWidth="100.0" prefWidth="290.9999694824219" text="Customer Name" />
                                              </columns>
                                           </TableView>
-                                          <Pagination maxPageIndicatorCount="3" minWidth="400.0" prefWidth="440.0" AnchorPane.bottomAnchor="3.0" AnchorPane.leftAnchor="3.0" AnchorPane.rightAnchor="3.0" AnchorPane.topAnchor="3.0" />
                                        </children>
                                        <opaqueInsets>
                                           <Insets />
@@ -144,7 +144,7 @@
                                                                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="100.0" />
                                                                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="120.0" />
                                                                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="95.0" prefWidth="180.0" />
-                                                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="5.0" prefWidth="10.0" />
+                                                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="8.0" prefWidth="13.0" />
                                                                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="110.0" />
                                                                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="200.0" prefWidth="300.0" />
                                                                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="0.0" minWidth="0.0" prefWidth="0.0" />
@@ -161,12 +161,12 @@
                                                                               <Insets />
                                                                            </GridPane.margin>
                                                                         </Label>
-                                                                        <TextField fx:id="txtFieldSalesExecutive" prefHeight="22.0" prefWidth="282.0" GridPane.columnIndex="6" GridPane.rowIndex="1">
+                                                                        <TextField fx:id="txtField04" prefHeight="22.0" prefWidth="282.0" GridPane.columnIndex="6" GridPane.rowIndex="1">
                                                                            <GridPane.margin>
                                                                               <Insets />
                                                                            </GridPane.margin>
                                                                         </TextField>
-                                                                        <TextField fx:id="txtFieldInquiryDate" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                                                                        <TextField fx:id="txtfield03" GridPane.columnIndex="2" GridPane.rowIndex="1">
                                                                            <GridPane.margin>
                                                                               <Insets />
                                                                            </GridPane.margin>
@@ -201,7 +201,7 @@
                                                                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="5.0" prefWidth="10.0" />
                                                                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="100.0" />
                                                                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="200.0" prefWidth="300.0" />
-                                                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="5.0" prefWidth="10.0" />
+                                                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="8.0" prefWidth="13.0" />
                                                                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="110.0" />
                                                                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="200.0" prefWidth="300.0" />
                                                                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="5.0" prefWidth="10.0" />
@@ -216,20 +216,20 @@
                                                                      <children>
                                                                         <Label id="LabelDesc" stylesheets="@../css/FrameStyle.css" text="Customer Name" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                                                         <Label id="LabelDesc" text="Company Name" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                                                                        <Label id="LabelDesc" text="Mailing Address" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                                                                        <TextField fx:id="txtFieldCustomerName" promptText="Search: F3" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                                                                        <TextField fx:id="txtFieldCompanyName" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                                                                        <Label id="LabelDesc" text="Address" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                                                        <TextField fx:id="txtField07" promptText="Search: F3" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                                                        <TextField fx:id="txtField29" GridPane.columnIndex="2" GridPane.rowIndex="2">
                                                                            <GridPane.margin>
                                                                               <Insets />
                                                                            </GridPane.margin>
                                                                         </TextField>
-                                                                        <TextField fx:id="txtFieldPreferredMail" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                                                                        <TextField GridPane.columnIndex="2" GridPane.rowIndex="3" />
                                                                         <Label id="LabelDesc" text="Contact Number" GridPane.columnIndex="4" GridPane.rowIndex="1" />
                                                                         <Label GridPane.columnIndex="4" GridPane.rowIndex="2" />
                                                                         <Label id="LabelDesc" text="Email Address" GridPane.columnIndex="4" GridPane.rowIndex="2" />
-                                                                        <TextField fx:id="txtFieldContactNumber" prefHeight="22.0" prefWidth="269.0" GridPane.columnIndex="5" GridPane.rowIndex="1" />
-                                                                        <TextField fx:id="txtFieldEmailAddress" GridPane.columnIndex="5" GridPane.rowIndex="2" />
-                                                                        <TextField fx:id="txtFieldSocialMedia" GridPane.columnIndex="5" GridPane.rowIndex="3" />
+                                                                        <TextField fx:id="txtField30" prefHeight="22.0" prefWidth="269.0" GridPane.columnIndex="5" GridPane.rowIndex="1" />
+                                                                        <TextField fx:id="txtField32" GridPane.columnIndex="5" GridPane.rowIndex="2" />
+                                                                        <TextField fx:id="txtField31" GridPane.columnIndex="5" GridPane.rowIndex="3" />
                                                                         <Label id="LabelDesc" text="Social Media" GridPane.columnIndex="4" GridPane.rowIndex="3" />
                                                                      </children>
                                                                      <VBox.margin>
@@ -274,6 +274,7 @@
                                                                                           <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
                                                                                           <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
                                                                                           <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
+                                                                                          <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
                                                                                           <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="5.0" vgrow="SOMETIMES" />
                                                                                        </rowConstraints>
                                                                                        <children>
@@ -287,16 +288,16 @@
                                                                                                 <Insets />
                                                                                              </GridPane.margin>
                                                                                           </Label>
-                                                                                          <TextField fx:id="txtFieldRefAgent" prefWidth="275.0" promptText="Search: F3" GridPane.columnIndex="7" GridPane.columnSpan="2" GridPane.rowIndex="1" />
+                                                                                          <TextField fx:id="txtField09" prefWidth="275.0" promptText="Search: F3" GridPane.columnIndex="7" GridPane.columnSpan="2" GridPane.rowIndex="1" />
                                                                                           <Label GridPane.columnIndex="6" GridPane.rowIndex="1" />
                                                                                           <Label id="LabelDesc" text="Event" GridPane.columnIndex="6" GridPane.rowIndex="2" />
                                                                                           <Label id="LabelDesc" text="Ref Agent" GridPane.columnIndex="6" GridPane.rowIndex="1" />
-                                                                                          <ComboBox fx:id="comboOnlineStore" prefHeight="24.0" prefWidth="279.0" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="2" />
-                                                                                          <ComboBox fx:id="comboInquiryType" prefHeight="24.0" prefWidth="260.0" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="1" />
-                                                                                          <Separator style="-fx-background-color: orange;" GridPane.columnSpan="11" GridPane.rowIndex="4" />
-                                                                                          <TextField fx:id="txtFieldRefAgent1" layoutX="516.0" layoutY="20.0" prefWidth="275.0" promptText="Search: F3" GridPane.columnIndex="7" GridPane.columnSpan="2" GridPane.rowIndex="2" />
+                                                                                          <ComboBox fx:id="cmbOnstr13" prefHeight="24.0" prefWidth="279.0" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="2" />
+                                                                                          <ComboBox fx:id="cmbType012" prefHeight="24.0" prefWidth="260.0" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="1" />
+                                                                                          <Separator style="-fx-background-color: orange;" GridPane.columnSpan="11" GridPane.rowIndex="5" />
+                                                                                          <TextField fx:id="txtField15" layoutX="516.0" layoutY="20.0" prefWidth="275.0" promptText="Search: F3" GridPane.columnIndex="7" GridPane.columnSpan="2" GridPane.rowIndex="2" />
                                                                                           <Label id="LabelDesc" text="Branch" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                                                                                          <TextField fx:id="txtFieldBranch" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                                                                                          <TextField fx:id="txtField02" GridPane.columnIndex="2" GridPane.rowIndex="3" />
                                                                                           <Label id="LabelDesc" layoutX="20.0" layoutY="146.0" text="Sub Company" GridPane.columnIndex="6" GridPane.rowIndex="3" />
                                                                                           <TextField fx:id="txtFieldSubCompany" GridPane.columnIndex="7" GridPane.columnSpan="2" GridPane.rowIndex="3" />
                                                                                        </children>
@@ -331,17 +332,19 @@
                                                                                                             <Insets />
                                                                                                          </GridPane.margin>
                                                                                                       </Label>
-                                                                                                      <RadioButton mnemonicParsing="false" prefHeight="18.0" prefWidth="63.0" text="Hot A" GridPane.columnIndex="2">
+                                                                                                      <RadioButton fx:id="rdbtnHtA11" mnemonicParsing="false" prefHeight="18.0" prefWidth="63.0" text="Hot A" GridPane.columnIndex="2">
                                                                                                          <toggleGroup>
-                                                                                                            <ToggleGroup fx:id="category1" />
+                                                                                                            <ToggleGroup fx:id="hotcategory" />
                                                                                                          </toggleGroup>
                                                                                                       </RadioButton>
-                                                                                                      <RadioButton mnemonicParsing="false" text="Hot B" toggleGroup="$category1" GridPane.columnIndex="3" />
-                                                                                                      <RadioButton mnemonicParsing="false" text="Hot C" toggleGroup="$category1" GridPane.columnIndex="4" />
-                                                                                                      <Label id="LabelDesc" text="Target Release Date" GridPane.columnIndex="6" GridPane.rowIndex="1" />
+                                                                                                      <RadioButton fx:id="rdbtnHtB11" mnemonicParsing="false" text="Hot B" toggleGroup="$hotcategory" GridPane.columnIndex="3" />
+                                                                                                      <RadioButton fx:id="rdbtnHtC11" mnemonicParsing="false" text="Hot C" toggleGroup="$hotcategory" GridPane.columnIndex="4" />
+                                                                                                      <Label id="LabelDesc" text="Target Release Date" GridPane.columnIndex="6" />
                                                                                                       <Label id="LabelDesc" text="Model" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                                                                                      <TextField fx:id="textFieldTargetReleaseDate1" prefHeight="22.0" prefWidth="149.0" GridPane.columnIndex="7" GridPane.rowIndex="1" />
-                                                                                                      <TextField fx:id="txtFieldCustomerInquiryModel1" prefHeight="22.0" prefWidth="262.0" promptText="Search: F3" GridPane.columnIndex="2" GridPane.columnSpan="3" GridPane.rowIndex="1" />
+                                                                                                      <TextField fx:id="txtField14" prefHeight="22.0" prefWidth="262.0" promptText="Search: F3" GridPane.columnIndex="2" GridPane.columnSpan="3" GridPane.rowIndex="1" />
+                                                                                                      <DatePicker fx:id="txtField10" GridPane.columnIndex="7" />
+                                                                                                      <Label id="LabelDesc" text="Inquiry Status " GridPane.columnIndex="6" GridPane.rowIndex="1" />
+                                                                                                      <TextField fx:id="txtField24" GridPane.columnIndex="7" GridPane.rowIndex="1" />
                                                                                                    </children>
                                                                                                    <VBox.margin>
                                                                                                       <Insets top="3.0" />
@@ -368,13 +371,13 @@
                                                                                                             <Insets />
                                                                                                          </GridPane.margin>
                                                                                                       </Label>
-                                                                                                      <RadioButton mnemonicParsing="false" text="Brandnew" GridPane.columnIndex="2">
+                                                                                                      <RadioButton fx:id="rdbtnNew05" mnemonicParsing="false" text="Brandnew" GridPane.columnIndex="2">
                                                                                                          <toggleGroup>
                                                                                                             <ToggleGroup fx:id="targetVehicle" />
                                                                                                          </toggleGroup>
                                                                                                       </RadioButton>
-                                                                                                      <RadioButton mnemonicParsing="false" text="Pre-owned" toggleGroup="$targetVehicle" GridPane.columnIndex="3" />
-                                                                                                      <Button fx:id="btnTargetVehicleAdd" alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefWidth="75.0" text="Add" GridPane.columnIndex="5">
+                                                                                                      <RadioButton fx:id="rdbtnPro05" mnemonicParsing="false" text="Pre-owned" toggleGroup="$targetVehicle" GridPane.columnIndex="3" />
+                                                                                                      <Button fx:id="btnTargetVhclAdd" alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefWidth="75.0" text="Add" GridPane.columnIndex="5">
                                                                                                          <graphic>
                                                                                                             <FontAwesomeIconView glyphName="PLUS" />
                                                                                                          </graphic>
@@ -382,7 +385,7 @@
                                                                                                             <Blend />
                                                                                                          </effect>
                                                                                                       </Button>
-                                                                                                      <Button fx:id="btnTargetVehicleRemove" alignment="TOP_LEFT" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefWidth="75.0" text="Remove" GridPane.columnIndex="6">
+                                                                                                      <Button fx:id="btnTargetVhclRemove" alignment="TOP_LEFT" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefWidth="75.0" text="Remove" GridPane.columnIndex="6">
                                                                                                          <graphic>
                                                                                                             <FontAwesomeIconView glyphName="TRASH" />
                                                                                                          </graphic>
@@ -413,8 +416,8 @@
                                                                                                       </AnchorPane>
                                                                                                       <TableView fx:id="tblTargetVehicle" GridPane.columnIndex="3" GridPane.rowSpan="2">
                                                                                                          <columns>
-                                                                                                            <TableColumn prefWidth="75.0" text="Priority No." />
-                                                                                                            <TableColumn prefWidth="500.0" text="Vehicle Description" />
+                                                                                                            <TableColumn fx:id="trgvIndex01" prefWidth="75.0" text="Priority No." />
+                                                                                                            <TableColumn fx:id="trgvIndex02" prefWidth="500.0" text="Vehicle Description" />
                                                                                                          </columns>
                                                                                                       </TableView>
                                                                                                       <Button fx:id="btnTargetVehicleDown" alignment="TOP_LEFT" mnemonicParsing="false" GridPane.columnIndex="2">
@@ -488,11 +491,12 @@
                                                                                                       <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="10.0" vgrow="SOMETIMES" />
                                                                                                    </rowConstraints>
                                                                                                    <children>
-                                                                                                      <TableView fx:id="tblPromosOffered1" GridPane.columnIndex="2">
+                                                                                                      <TableView fx:id="tblPromosOffered" GridPane.columnIndex="2">
                                                                                                          <columns>
-                                                                                                            <TableColumn prefWidth="75.0" text="Start Date" />
-                                                                                                            <TableColumn prefWidth="75.0" text="End Date" />
-                                                                                                            <TableColumn prefWidth="425.0" text="Promo Title" />
+                                                                                                            <TableColumn fx:id="prmoIndex01" prefWidth="34.0" text="Row" />
+                                                                                                            <TableColumn fx:id="prmoIndex02" prefWidth="116.0" text="Start Date" />
+                                                                                                            <TableColumn fx:id="prmoIndex03" prefWidth="75.0" text="End Date" />
+                                                                                                            <TableColumn fx:id="prmoIndex04" prefWidth="425.0" text="Promo Title" />
                                                                                                          </columns>
                                                                                                       </TableView>
                                                                                                       <Separator style="-fx-background-color: orange;" GridPane.columnSpan="4" GridPane.rowIndex="1" />
@@ -502,10 +506,7 @@
                                                                                                    <columnConstraints>
                                                                                                       <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="65.0" prefWidth="70.0" />
                                                                                                       <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="100.0" />
-                                                                                                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="200.0" prefWidth="400.0" />
-                                                                                                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="10.0" />
-                                                                                                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="100.0" />
-                                                                                                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="120.0" />
+                                                                                                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="200.0" prefWidth="670.0" />
                                                                                                       <ColumnConstraints hgrow="SOMETIMES" minWidth="5.0" prefWidth="10.0" />
                                                                                                    </columnConstraints>
                                                                                                    <rowConstraints>
@@ -514,7 +515,7 @@
                                                                                                       <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
                                                                                                    </rowConstraints>
                                                                                                    <children>
-                                                                                                      <TextArea fx:id="txtAreaCIRemarks" GridPane.columnIndex="2" GridPane.rowIndex="1" GridPane.rowSpan="2">
+                                                                                                      <TextArea fx:id="textArea08" GridPane.columnIndex="2" GridPane.rowIndex="1" GridPane.rowSpan="2">
                                                                                                          <GridPane.margin>
                                                                                                             <Insets />
                                                                                                          </GridPane.margin>
@@ -524,18 +525,6 @@
                                                                                                             <Insets />
                                                                                                          </GridPane.margin>
                                                                                                       </Label>
-                                                                                                      <Label id="LabelDesc" text="Status " GridPane.columnIndex="4" GridPane.rowIndex="1">
-                                                                                                         <GridPane.margin>
-                                                                                                            <Insets />
-                                                                                                         </GridPane.margin>
-                                                                                                      </Label>
-                                                                                                      <Label id="LabelDesc" text="Cancelled " GridPane.columnIndex="4" GridPane.rowIndex="2">
-                                                                                                         <GridPane.margin>
-                                                                                                            <Insets />
-                                                                                                         </GridPane.margin>
-                                                                                                      </Label>
-                                                                                                      <TextField fx:id="txtFieldCIStatus" GridPane.columnIndex="5" GridPane.rowIndex="1" />
-                                                                                                      <TextField fx:id="txtFieldCICdot" GridPane.columnIndex="5" GridPane.rowIndex="2" />
                                                                                                    </children>
                                                                                                 </GridPane>
                                                                                                 <GridPane vgap="3.0">
@@ -567,9 +556,9 @@
                                                                                                       </Label>
                                                                                                       <Label id="LabelDesc" text="Amount" GridPane.columnIndex="4" GridPane.rowIndex="1" />
                                                                                                       <Label id="LabelDesc" text="Amount" GridPane.columnIndex="4" GridPane.rowIndex="2" />
-                                                                                                      <TextField fx:id="textFieldRSVAmount" GridPane.columnIndex="5" GridPane.rowIndex="1" />
+                                                                                                      <TextField fx:id="txtField18" GridPane.columnIndex="5" GridPane.rowIndex="1" />
                                                                                                       <TextField fx:id="textFieldRefundSlipAmount" GridPane.columnIndex="5" GridPane.rowIndex="2" />
-                                                                                                      <TextField fx:id="txtFieldCIRSV" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                                                                                      <TextField fx:id="txtField17" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                                                                                                       <TextField fx:id="textFieldRefundSlipNo" GridPane.columnIndex="2" GridPane.rowIndex="2" />
                                                                                                    </children>
                                                                                                 </GridPane>
@@ -790,7 +779,7 @@
                                                                                                       <Insets />
                                                                                                    </GridPane.margin>
                                                                                                 </Button>
-                                                                                                <TextField GridPane.columnIndex="2" />
+                                                                                                <TextField fx:id="txtField21" GridPane.columnIndex="2" />
                                                                                              </children>
                                                                                              <VBox.margin>
                                                                                                 <Insets top="10.0" />

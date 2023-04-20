@@ -11,13 +11,13 @@ import javafx.beans.property.SimpleStringProperty;
  * Date: 03-07-2023
  * @author Arsiela
  */
-public class TableClientEmail {
+public class CustomerTableEmail {
      private SimpleStringProperty emadindex01;
      private SimpleStringProperty emadindex02; 
      private SimpleStringProperty emadindex03;
      private SimpleStringProperty emadindex04;
      
-     TableClientEmail( String emadindex01,
+     CustomerTableEmail( String emadindex01,
                          String emadindex02,
                          String emadindex03,
                          String emadindex04

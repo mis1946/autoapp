@@ -66,8 +66,8 @@ public class VehicleDescriptionFormController implements Initializable, ScreenIn
      private String TransNo = "";
      
      /*populate tables Vehicle Description List*/
-     private ObservableList<TableVehicleDescriptionList> vhcldescdata = FXCollections.observableArrayList();
-     private FilteredList<TableVehicleDescriptionList> filteredData;
+     private ObservableList<VehicleDescriptionTableList> vhcldescdata = FXCollections.observableArrayList();
+     private FilteredList<VehicleDescriptionTableList> filteredData;
      private static final int ROWS_PER_PAGE = 50;
      
      ObservableList<String> cTransmission = FXCollections.observableArrayList("Automatic", "Manual", "CVT");
@@ -324,7 +324,7 @@ public class VehicleDescriptionFormController implements Initializable, ScreenIn
                                  + " " + oTrans.getDetail(lnCtr,"sTypeDesc").toString()
                                  + " " + oTrans.getDetail(lnCtr,"sTransMsn").toString()
                                  + " " + oTrans.getDetail(lnCtr,"sColorDsc").toString();
-                         vhcldescdata.add(new TableVehicleDescriptionList(
+                         vhcldescdata.add(new VehicleDescriptionTableList(
                          String.valueOf(lnCtr), //ROW
                          oTrans.getDetail(lnCtr,"sMakeDesc").toString(), //Make
                          sDescription, //Description
@@ -364,7 +364,7 @@ public class VehicleDescriptionFormController implements Initializable, ScreenIn
           filteredData = new FilteredList<>(vhcldescdata, b -> true);
           autoSearch(txtField02);
           // 3. Wrap the FilteredList in a SortedList. 
-          SortedList<TableVehicleDescriptionList> sortedData = new SortedList<>(filteredData);
+          SortedList<VehicleDescriptionTableList> sortedData = new SortedList<>(filteredData);
 
           // 4. Bind the SortedList comparator to the TableView comparator.
           // 	  Otherwise, sorting the TableView would have no effect.
@@ -426,7 +426,7 @@ public class VehicleDescriptionFormController implements Initializable, ScreenIn
           int toIndex = Math.min(fromIndex + limit, vhcldescdata.size());
 
           int minIndex = Math.min(toIndex, filteredData.size());
-          SortedList<TableVehicleDescriptionList> sortedData = new SortedList<>(
+          SortedList<VehicleDescriptionTableList> sortedData = new SortedList<>(
                   FXCollections.observableArrayList(filteredData.subList(Math.min(fromIndex, minIndex), minIndex)));
           sortedData.comparatorProperty().bind(tblVehicleDesc.comparatorProperty());
           tblVehicleDesc.setItems(sortedData); 

@@ -11,13 +11,13 @@ import javafx.beans.property.SimpleStringProperty;
  * Date: 03-07-2023
  * @author Arsiela
  */
-public class TableClientMobile {
+public class CustomerTableMobile {
      private SimpleStringProperty contindex01;
      private SimpleStringProperty contindex02; 
      private SimpleStringProperty contindex03;
      private SimpleStringProperty contindex04;
      
-     TableClientMobile( String contindex01,
+     CustomerTableMobile( String contindex01,
                          String contindex02,
                          String contindex03,
                          String contindex04

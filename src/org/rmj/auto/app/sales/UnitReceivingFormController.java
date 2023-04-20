@@ -70,11 +70,11 @@ public class UnitReceivingFormController implements Initializable, ScreenInterfa
      private String oldTransNo = "";
      private String TransNo = "";
      
-     private ObservableList<TableUnitReceivingDetail> unitrdetdata = FXCollections.observableArrayList();
+     private ObservableList<UnitReceivingTableDetail> unitrdetdata = FXCollections.observableArrayList();
      
      /*populate tables Unit Receiving List List*/
-     private ObservableList<TableUnitReceivingList> unitlistdata = FXCollections.observableArrayList();
-     private FilteredList<TableUnitReceivingList> filteredData;
+     private ObservableList<UnitReceivingTableList> unitlistdata = FXCollections.observableArrayList();
+     private FilteredList<UnitReceivingTableList> filteredData;
      private static final int ROWS_PER_PAGE = 50;
      
      ObservableList<String> cTransmission = FXCollections.observableArrayList("Automatic", "Manual", "CVT");
@@ -209,7 +209,7 @@ public class UnitReceivingFormController implements Initializable, ScreenInterfa
                               lnRow++;
                          }
                          
-                         unitrdetdata.add(new TableUnitReceivingDetail(
+                         unitrdetdata.add(new UnitReceivingTableDetail(
                          String.valueOf(lnRow), //ROW
                          "",
                          "",
@@ -227,7 +227,7 @@ public class UnitReceivingFormController implements Initializable, ScreenInterfa
      //storing values on unitlistdata  
      private void loadUnitDetailTable(){
           //unitrdetdata.clear();
-          unitrdetdata.add(new TableUnitReceivingDetail(
+          unitrdetdata.add(new UnitReceivingTableDetail(
                String.valueOf(lnCtr), //ROW
                "",
                "",
@@ -245,11 +245,11 @@ public class UnitReceivingFormController implements Initializable, ScreenInterfa
           unitIndex02.setCellValueFactory(new PropertyValueFactory<>("tblindex02"));
           unitIndex02.setCellFactory(TextFieldTableCell.forTableColumn()); // make the cells editable
           // Set the event handler to store the edited value
-          unitIndex02.setOnEditCommit(new EventHandler<CellEditEvent<TableUnitReceivingDetail, String>>() {
+          unitIndex02.setOnEditCommit(new EventHandler<CellEditEvent<UnitReceivingTableDetail, String>>() {
                @Override
-               public void handle(CellEditEvent<TableUnitReceivingDetail, String> event) {
+               public void handle(CellEditEvent<UnitReceivingTableDetail, String> event) {
                    // Code to handle edit event
-                   TableUnitReceivingDetail detail = event.getRowValue();
+                   UnitReceivingTableDetail detail = event.getRowValue();
                    detail.setTblindex02(event.getNewValue());
                }
            });
@@ -257,11 +257,11 @@ public class UnitReceivingFormController implements Initializable, ScreenInterfa
           unitIndex03.setCellValueFactory(new PropertyValueFactory<>("tblindex03"));
           unitIndex03.setCellFactory(TextFieldTableCell.forTableColumn()); // make the cells editable
           // Set the event handler to store the edited value
-          unitIndex03.setOnEditCommit(new EventHandler<CellEditEvent<TableUnitReceivingDetail, String>>() {
+          unitIndex03.setOnEditCommit(new EventHandler<CellEditEvent<UnitReceivingTableDetail, String>>() {
                @Override
-               public void handle(CellEditEvent<TableUnitReceivingDetail, String> event) {
+               public void handle(CellEditEvent<UnitReceivingTableDetail, String> event) {
                    // Code to handle edit event
-                   TableUnitReceivingDetail detail = event.getRowValue();
+                   UnitReceivingTableDetail detail = event.getRowValue();
                    detail.setTblindex03(event.getNewValue());
                }
            });
@@ -378,7 +378,7 @@ public class UnitReceivingFormController implements Initializable, ScreenInterfa
           filteredData = new FilteredList<>(unitlistdata, b -> true);
           //autoSearch(txtField02);
           // 3. Wrap the FilteredList in a SortedList. 
-          SortedList<TableUnitReceivingList> sortedData = new SortedList<>(filteredData);
+          SortedList<UnitReceivingTableList> sortedData = new SortedList<>(filteredData);
 
           // 4. Bind the SortedList comparator to the TableView comparator.
           // 	  Otherwise, sorting the TableView would have no effect.
@@ -439,7 +439,7 @@ public class UnitReceivingFormController implements Initializable, ScreenInterfa
           int toIndex = Math.min(fromIndex + limit, unitlistdata.size());
 
           int minIndex = Math.min(toIndex, filteredData.size());
-          SortedList<TableUnitReceivingList> sortedData = new SortedList<>(
+          SortedList<UnitReceivingTableList> sortedData = new SortedList<>(
                   FXCollections.observableArrayList(filteredData.subList(Math.min(fromIndex, minIndex), minIndex)));
           sortedData.comparatorProperty().bind(tblUnitRecList.comparatorProperty());
           tblUnitRecList.setItems(sortedData); 

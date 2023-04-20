@@ -1,4 +1,7 @@
-
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/javafx/FXMLController.java to edit this template
+ */
 package org.rmj.auto.app.bank;
 
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
@@ -25,6 +28,7 @@ import javafx.scene.control.Pagination;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -37,6 +41,7 @@ import org.rmj.appdriver.agentfx.CommonUtils;
 import org.rmj.appdriver.agentfx.ShowMessageFX;
 import org.rmj.appdriver.callback.MasterCallback;
 import org.rmj.appdriver.constants.EditMode;
+import org.rmj.auto.app.views.InputTextFormatter;
 import org.rmj.auto.app.views.ScreenInterface;
 import org.rmj.auto.app.views.unloadForm;
 import org.rmj.auto.clients.base.BankInformation;
@@ -156,9 +161,18 @@ public class BankEntryFormController implements Initializable, ScreenInterface{
             
             /*Clear Fields*/
           clearFields();
-          
-          //Populate table
+    
+            Pattern pattern = Pattern.compile("[\\d\\p{Punct}]*");
+            TextFormatter<String> formatter = new TextFormatter<>(change -> {
+            if (!change.getControlNewText().matches(pattern.pattern())) {
+                return null;
+            }
+            return change;
+        });
+          txtField08.setTextFormatter(new InputTextFormatter(pattern)); //sTelNoxxx
+          txtField09.setTextFormatter(new InputTextFormatter(pattern)); //sFaxNoxxx
           loadBankEntryTable();
+        
           pagination.setPageFactory(this::createPage); 
           
           
@@ -284,7 +298,7 @@ public class BankEntryFormController implements Initializable, ScreenInterface{
                /*Populate table*/
                bankentrydata.clear();
                if (oTrans.LoadList("")){
-                   
+                   System.out.println(oTrans.getItemCount());
                     for (lnCtr = 1; lnCtr <= oTrans.getItemCount(); lnCtr++){
                          bankentrydata.add(new BankEntryTableList(
                          String.valueOf(lnCtr), //ROW
@@ -318,16 +332,7 @@ public class BankEntryFormController implements Initializable, ScreenInterface{
           tblindex02.setCellValueFactory(new PropertyValueFactory<>("tblindex02")); // sBankName
           tblindex03.setCellValueFactory(new PropertyValueFactory<>("tblindex03")); // sBankCode
           tblindex17.setCellValueFactory(new PropertyValueFactory<>("tblindex17")); // sBankBrch
-          tblindex16.setCellValueFactory(new PropertyValueFactory<>("tblindex16")); // sTownProvxx
-          
-    
-          
-          tblBankEntry.widthProperty().addListener((ObservableValue<? extends Number> source, Number oldWidth, Number newWidth) -> {
-               TableHeaderRow header = (TableHeaderRow) tblBankEntry.lookup("TableHeaderRow");
-               header.reorderingProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
-               header.setReordering(false);
-               });
-          });
+          tblindex16.setCellValueFactory(new PropertyValueFactory<>("tblindex16")); // sTownProv
           
           filteredData = new FilteredList<>(bankentrydata, b -> true);
           autoSearch(textSeek02);
@@ -338,14 +343,16 @@ public class BankEntryFormController implements Initializable, ScreenInterface{
           sortedData.comparatorProperty().bind(tblBankEntry.comparatorProperty());
           // 5. Add sorted (and filtered) data to the table.
           tblBankEntry.setItems(sortedData);
+        
           tblBankEntry.widthProperty().addListener((ObservableValue<? extends Number> source, Number oldWidth, Number newWidth) -> {
-              TableHeaderRow header = (TableHeaderRow) tblBankEntry.lookup("TableHeaderRow");
-              header.reorderingProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
-                  header.setReordering(false);
-              });
-              header.setDisable(true);
+               TableHeaderRow header = (TableHeaderRow) tblBankEntry.lookup("TableHeaderRow");
+               header.reorderingProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+               header.setReordering(false);
+               });
+                header.setDisable(true);
           });
-            
+          
+     
      }
     private void autoSearch(TextField txtField){
           int lnIndex = Integer.parseInt(txtField.getId().substring(8, 10));
@@ -393,7 +400,7 @@ public class BankEntryFormController implements Initializable, ScreenInterface{
             sortedData.comparatorProperty().bind(tblBankEntry.comparatorProperty());
             tblBankEntry.setItems(sortedData); 
     }
-    @FXML
+    
     private void tblBankEntry_Clicked(MouseEvent event) {
           if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
                if(ShowMessageFX.OkayCancel(null, pxeModuleName, "You have unsaved data, are you sure you want to continue?") == true){   
@@ -452,6 +459,7 @@ public class BankEntryFormController implements Initializable, ScreenInterface{
           txtField09.setText(bankentrydata.get(pagecounter).getTblindex09()); // sFaxNoxxx
           
           }
+          oldPnRow = pagecounter;
 
      }
      private void loadBankEntryField(){

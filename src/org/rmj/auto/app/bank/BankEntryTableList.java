@@ -114,7 +114,7 @@ public class BankEntryTableList {
     }
     // sZipCode
       public String getTblindex07() {
-        return tblindex02.get();
+        return tblindex07.get();
     }
 
     public void setTblindex07(String tblindex07) {

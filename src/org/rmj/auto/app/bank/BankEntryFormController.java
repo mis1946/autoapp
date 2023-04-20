@@ -49,7 +49,7 @@ import org.rmj.auto.clients.base.BankInformation;
 /**
  * FXML Controller class
  *
- * @author john dave
+ * @author John Dave
  */
 public class BankEntryFormController implements Initializable, ScreenInterface{
    private GRider oApp;
@@ -151,6 +151,7 @@ public class BankEntryFormController implements Initializable, ScreenInterface{
           textSeek02.setOnKeyPressed(this::txtField_KeyPressed); //search bank name textfield
           txtField18.setOnKeyPressed(this::txtField_KeyPressed); // sTownNamexx
           txtField15.setOnKeyPressed(this::txtField_KeyPressed); // sProvNamexx
+          txtField07.setOnKeyPressed(this::txtField_KeyPressed); // sProvNamexx
           
           //Button Click Event
           btnAdd.setOnAction(this::cmdButton_Click);
@@ -161,7 +162,6 @@ public class BankEntryFormController implements Initializable, ScreenInterface{
             
             /*Clear Fields*/
           clearFields();
-    
             Pattern pattern = Pattern.compile("[\\d\\p{Punct}]*");
             TextFormatter<String> formatter = new TextFormatter<>(change -> {
             if (!change.getControlNewText().matches(pattern.pattern())) {
@@ -169,8 +169,10 @@ public class BankEntryFormController implements Initializable, ScreenInterface{
             }
             return change;
         });
+          //Populate table
           txtField08.setTextFormatter(new InputTextFormatter(pattern)); //sTelNoxxx
           txtField09.setTextFormatter(new InputTextFormatter(pattern)); //sFaxNoxxx
+          
           loadBankEntryTable();
         
           pagination.setPageFactory(this::createPage); 
@@ -400,7 +402,6 @@ public class BankEntryFormController implements Initializable, ScreenInterface{
             sortedData.comparatorProperty().bind(tblBankEntry.comparatorProperty());
             tblBankEntry.setItems(sortedData); 
     }
-    
     private void tblBankEntry_Clicked(MouseEvent event) {
           if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
                if(ShowMessageFX.OkayCancel(null, pxeModuleName, "You have unsaved data, are you sure you want to continue?") == true){   
@@ -453,7 +454,7 @@ public class BankEntryFormController implements Initializable, ScreenInterface{
           txtField05.setText(bankentrydata.get(pagecounter).getTblindex05()); // sAddressx
           txtField18.setText(bankentrydata.get(pagecounter).getTblindex18()); // sTownName
           txtField15.setText(bankentrydata.get(pagecounter).getTblindex15()); // sProvName
-          txtField07.setText(bankentrydata.get(pagecounter).getTblindex07()); // sZipCode
+          txtField07.setText(bankentrydata.get(pagecounter).getTblindex07()); // sZippCode
           txtField04.setText(bankentrydata.get(pagecounter).getTblindex04()); // sContactP
           txtField08.setText(bankentrydata.get(pagecounter).getTblindex08()); // sTelNoxxx
           txtField09.setText(bankentrydata.get(pagecounter).getTblindex09()); // sFaxNoxxx
@@ -465,83 +466,60 @@ public class BankEntryFormController implements Initializable, ScreenInterface{
      private void loadBankEntryField(){
           try {
               
-            txtField02.setText((String) oTrans.getMaster(2));// sBankName
-            txtField03.setText((String) oTrans.getMaster(3));// sBankCode
-            txtField17.setText((String) oTrans.getMaster(17));// sBankBrch
-            txtField05.setText((String) oTrans.getMaster(5));// sAddressx
-            txtField18.setText((String) oTrans.getMaster(18));// sTownName
-            txtField15.setText((String) oTrans.getMaster(15));// sProvName
-            txtField07.setText((String) oTrans.getMaster(7));// sZipPCode
-            txtField04.setText((String) oTrans.getMaster(4));// sContactP
-            txtField08.setText((String) oTrans.getMaster(8));// sTelNoxxx
-            txtField09.setText((String) oTrans.getMaster(9));// sFaxNoxxx
+            txtField02.setText((String) oTrans.getMaster("sBankName"));// sBankName
+            txtField03.setText((String) oTrans.getMaster("sBankCode"));// sBankCode
+            txtField17.setText((String) oTrans.getMaster("sBankBrch"));// sBankBrch
+            txtField05.setText((String) oTrans.getMaster("sAddressx"));// sAddressx
+            txtField18.setText((String) oTrans.getMaster("sTownName"));// sTownName
+            txtField15.setText((String) oTrans.getMaster("sProvName"));// sProvName
+            txtField07.setText((String) oTrans.getMaster(7));// sZippCode
+            txtField04.setText((String) oTrans.getMaster("sContactP"));// sContactP
+            txtField08.setText((String) oTrans.getMaster("sTelNoxxx"));// sTelNoxxx
+            txtField09.setText((String) oTrans.getMaster("sFaxNoxxx"));// sFaxNoxxx
                
           } catch (SQLException e) {
                ShowMessageFX.Warning(getStage(),e.getMessage(), "Warning", null);
           }
      }
-      private void txtField_KeyPressed(KeyEvent event){
-          TextField txtField = (TextField)event.getSource();
-          int lnIndex = Integer.parseInt(((TextField)event.getSource()).getId().substring(8,10));
-          
-          try{
-               switch (event.getCode()){
-                    case F3:
-                         switch (lnIndex){ 
+    private void txtField_KeyPressed(KeyEvent event) {
+    TextField txtField = (TextField) event.getSource();
+    int lnIndex = Integer.parseInt(txtField.getId().substring(8, 10));
 
-                              case 18:// sTownNamexx
-                                   if(oTrans.searchTown(txtField18.getText(),false)){
-                                       loadBankEntryField();
-                                   } else 
-                                       ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
-           
-                              break;
-                              
-                              case 15: // sProvName
-                                   if(oTrans.searchProvince(txtField15.getText(),false)){
-                                        loadBankEntryField();
-                                        pnEditMode = oTrans.getEditMode();
-                                   } else 
-                                       ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
-                              break;     
-                         } 
+    try {
+        if (event.getCode() == KeyCode.TAB || event.getCode() == KeyCode.ENTER || event.getCode() == KeyCode.F3) {
+            switch (lnIndex) {
+                case 18: // sTownNamexx
+                    if (oTrans.searchTown(txtField.getText(), false)) {
+                        loadBankEntryField();
+                    } else {
+                        ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                    }
                     break;
-                    case TAB:
-                    case ENTER:
-                         switch (lnIndex){ 
-                              
-                              case 18: // sTownNamexx
-                                   if (oTrans.searchProvince(txtField18.getText(),false)){
-                                       loadBankEntryField();
-                                   } else 
-                                       ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
-           
-                              break;
-                              
-                              case 15: // sProvName
-                                   if (oTrans.searchProvince(txtField15.getText(),false)){
-                                        loadBankEntryField();
-                                        pnEditMode = oTrans.getEditMode();
-                                   } else 
-                                       ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
-                              break; 
-                         } 
-                         break;
-               }
-          }catch(SQLException e){
-                ShowMessageFX.Warning(getStage(),e.getMessage(), "Warning", null);
-          }
-          
-          switch (event.getCode()){
-          case ENTER:
-          case DOWN:
-              CommonUtils.SetNextFocus(txtField);
-              break;
-          case UP:
-              CommonUtils.SetPreviousFocus(txtField);
-          }
-          
-     }
+
+                case 15: // sProvName
+                    if (oTrans.searchProvince(txtField.getText(), false)) {
+                        loadBankEntryField();
+                        pnEditMode = oTrans.getEditMode();
+                    } else {
+                        ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                    }
+                    break;
+            }
+        }
+
+        switch (event.getCode()) {
+            case ENTER:
+            case DOWN:
+                CommonUtils.SetNextFocus(txtField);
+                break;
+            case UP:
+                CommonUtils.SetPreviousFocus(txtField);
+                break;
+        }
+    } catch (SQLException e) {
+        ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
+    }
+}
      /*Set TextField Value to Master Class*/
     final ChangeListener<? super Boolean> txtField_Focus = (o,ov,nv)->{
           try{

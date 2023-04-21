@@ -12,7 +12,7 @@ import javafx.beans.property.SimpleStringProperty;
  * @author Arsiela
  */
 public class InquiryTablePriorityUnit {
-     private SimpleStringProperty tblindex01; //Priority No
+     private SimpleStringProperty tblindex01; //Row
      private SimpleStringProperty tblindex02; //Vehicle Description
      
      InquiryTablePriorityUnit( String tblindex01,

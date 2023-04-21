@@ -44,6 +44,7 @@ import javafx.util.Duration;
 import org.rmj.appdriver.GRider;
 import org.rmj.appdriver.SQLUtil;
 import org.rmj.appdriver.agentfx.ShowMessageFX;
+import org.rmj.auto.app.bank.BankEntryFormController;
 import org.rmj.auto.app.sales.InquiryFormController;
 import org.rmj.auto.app.sales.SalesAgentFormController;
 import org.rmj.auto.app.sales.UnitReceivingFormController;
@@ -89,6 +90,8 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
      private MenuItem mnuUnitRecv;
      @FXML
      private MenuItem mnuVhclEntry;
+     @FXML
+     private MenuItem mnuBank;
      
      @Override
      public void initialize(URL url, ResourceBundle rb) {
@@ -295,6 +298,8 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
                     return new UnitReceivingFormController();
                case "InquiryForm.fxml":
                     return new InquiryFormController();
+               case "BankEntryForm.fxml":
+                    return new BankEntryFormController();
                
                default:
                     ShowMessageFX.Warning(null, "Warning", "Notify System Admin to Configure Screen Interface for " +fsValue);
@@ -318,7 +323,9 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
           case "UnitReceivingForm.fxml":
                return "Unit Receiving";
           case "InquiryForm.fxml":
-               return "Inquiry Information";
+               return "Inquiry";
+          case "BankEntryForm.fxml":
+               return "Bank";
           default:
                ShowMessageFX.Warning(null, "Warning", "Notify System Admin to Configure Tab Title for " +menuaction);
                return null;
@@ -433,6 +440,15 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
                setScene2(loadAnimate(sformname));
           }
      }
+     
+     @FXML
+     private void mnuBankClick(ActionEvent event) {
+          String sformname = "BankEntryForm.fxml";
+          //check tab
+          if (checktabs(SetTabTitle(sformname)) == 1 ) {
+               setScene2(loadAnimate(sformname));
+          }
+     }
        
      /*SET CURRENT TIME*/
      private void getTime(){
@@ -489,6 +505,8 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
      private void initMenu(){
      
      }
+
+     
 
      
 

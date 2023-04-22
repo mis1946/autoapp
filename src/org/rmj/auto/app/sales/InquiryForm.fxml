@@ -413,8 +413,8 @@
                                                                                                       </AnchorPane>
                                                                                                       <TableView fx:id="tblPriorityUnit" onMouseClicked="#tblPriorityUnit_Clicked" GridPane.columnIndex="3" GridPane.rowSpan="2">
                                                                                                          <columns>
-                                                                                                            <TableColumn fx:id="trgvIndex01" prefWidth="75.0" text="Priority No." />
-                                                                                                            <TableColumn fx:id="trgvIndex02" prefWidth="500.0" text="Vehicle Description" />
+                                                                                                            <TableColumn fx:id="trgvIndex01" prefWidth="75.0" sortable="false" text="Priority No." />
+                                                                                                            <TableColumn fx:id="trgvIndex02" prefWidth="500.0" sortable="false" text="Vehicle Description" />
                                                                                                          </columns>
                                                                                                       </TableView>
                                                                                                       <Button fx:id="btnTargetVehicleDown" alignment="TOP_LEFT" mnemonicParsing="false" GridPane.columnIndex="2">
@@ -490,10 +490,10 @@
                                                                                                    <children>
                                                                                                       <TableView fx:id="tblPromosOffered" GridPane.columnIndex="2">
                                                                                                          <columns>
-                                                                                                            <TableColumn fx:id="prmoIndex01" prefWidth="34.0" text="Row" />
-                                                                                                            <TableColumn fx:id="prmoIndex02" prefWidth="116.0" text="Start Date" />
-                                                                                                            <TableColumn fx:id="prmoIndex03" prefWidth="75.0" text="End Date" />
-                                                                                                            <TableColumn fx:id="prmoIndex04" prefWidth="425.0" text="Promo Title" />
+                                                                                                            <TableColumn fx:id="prmoIndex01" prefWidth="34.0" sortable="false" text="Row" />
+                                                                                                            <TableColumn fx:id="prmoIndex02" prefWidth="116.0" sortable="false" text="Start Date" />
+                                                                                                            <TableColumn fx:id="prmoIndex03" prefWidth="75.0" sortable="false" text="End Date" />
+                                                                                                            <TableColumn fx:id="prmoIndex04" prefWidth="425.0" sortable="false" text="Promo Title" />
                                                                                                          </columns>
                                                                                                       </TableView>
                                                                                                       <Separator style="-fx-background-color: orange;" GridPane.columnSpan="4" GridPane.rowIndex="1" />
@@ -1055,6 +1055,14 @@
                                                                      </effect>
                                                                      <graphic>
                                                                         <FontAwesomeIconView glyphName="FILE" size="20" />
+                                                                     </graphic>
+                                                                  </Button>
+                                                                  <Button fx:id="btnCancel" contentDisplay="TOP" mnemonicParsing="false" prefHeight="50.0" prefWidth="70.0" text="Cancel">
+                                                                     <effect>
+                                                                        <Blend />
+                                                                     </effect>
+                                                                     <graphic>
+                                                                        <FontAwesomeIconView glyphName="TIMES" size="20" />
                                                                      </graphic>
                                                                   </Button>
                                                                </children>

@@ -162,14 +162,17 @@ public class BankEntryFormController implements Initializable, ScreenInterface{
             
             /*Clear Fields*/
           clearFields();
+          
+          
             Pattern pattern = Pattern.compile("[\\d\\p{Punct}]*");
             TextFormatter<String> formatter = new TextFormatter<>(change -> {
             if (!change.getControlNewText().matches(pattern.pattern())) {
                 return null;
             }
             return change;
-        });
-          //Populate table
+            });
+
+     
           txtField08.setTextFormatter(new InputTextFormatter(pattern)); //sTelNoxxx
           txtField09.setTextFormatter(new InputTextFormatter(pattern)); //sFaxNoxxx
           
@@ -252,11 +255,6 @@ public class BankEntryFormController implements Initializable, ScreenInterface{
                          if (txtField08.getText().trim().equals("")) {
                               ShowMessageFX.Warning(getStage(), "Please enter a value for Telephone No.","Warning", null);
                               txtField08.requestFocus();
-                              return;
-                         }
-                         if (txtField09.getText().trim().equals("")) {
-                              ShowMessageFX.Warning(getStage(), "Please enter a value for Fax No.","Warning", null);
-                              txtField09.requestFocus();
                               return;
                          }
                          //Proceed Saving

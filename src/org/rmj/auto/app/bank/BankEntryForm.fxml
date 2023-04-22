@@ -219,10 +219,10 @@
                                                                                     <Label id="LabelDesc" prefHeight="14.0" prefWidth="101.0" stylesheets="@../css/FrameStyle.css" text="Fax No." GridPane.columnIndex="1" GridPane.rowIndex="11" />
                                                                                     <TextField fx:id="txtField15" promptText="Search: F3" GridPane.columnIndex="2" GridPane.columnSpan="4" GridPane.rowIndex="7" />
                                                                                     <TextField fx:id="txtField07" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="8" />
-                                                                                    <TextField fx:id="txtField04" GridPane.columnIndex="2" GridPane.columnSpan="4" GridPane.rowIndex="9" />
                                                                                     <TextField fx:id="txtField08" GridPane.columnIndex="2" GridPane.columnSpan="3" GridPane.rowIndex="10" />
                                                                                     <TextField fx:id="txtField09" GridPane.columnIndex="2" GridPane.columnSpan="3" GridPane.rowIndex="11" />
                                                                                     <Separator prefWidth="200.0" style="-fx-background-color: orange;" GridPane.columnSpan="8" GridPane.rowIndex="4" />
+                                                                                    <TextField fx:id="txtField04" GridPane.columnIndex="2" GridPane.columnSpan="4" GridPane.rowIndex="9" />
                                                                                  </children>
                                                                               </GridPane>
                                                                            </children>

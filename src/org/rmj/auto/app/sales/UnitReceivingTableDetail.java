@@ -11,7 +11,7 @@ import javafx.beans.property.SimpleStringProperty;
  * DATE CREATED: 03-30-2023
  * @author Arsiela
  */
-public class TableUnitReceivingDetail {
+public class UnitReceivingTableDetail {
      private SimpleStringProperty tblindex01; //Row
      private SimpleStringProperty tblindex02; //CS No
      private SimpleStringProperty tblindex03; //Plate No
@@ -19,7 +19,7 @@ public class TableUnitReceivingDetail {
      private SimpleStringProperty tblindex05; //Frame No
      private SimpleStringProperty tblindex06; //Engine No
      
-     TableUnitReceivingDetail( String tblindex01,
+     UnitReceivingTableDetail( String tblindex01,
                          String tblindex02,
                          String tblindex03,
                          String tblindex04,

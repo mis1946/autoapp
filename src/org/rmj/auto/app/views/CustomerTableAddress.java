@@ -11,7 +11,7 @@ import javafx.beans.property.SimpleStringProperty;
  * Date: 03-07-2023
  * @author Arsiela
  */
-public class TableClientAddress {
+public class CustomerTableAddress {
      private SimpleStringProperty addrindex01;
      private SimpleStringProperty addrindex02; 
      private SimpleStringProperty addrindex03;
@@ -26,7 +26,7 @@ public class TableClientAddress {
 //     private SimpleStringProperty addrindex12;
 //     private SimpleStringProperty addrindex13;
      
-     TableClientAddress( String addrindex01,
+     CustomerTableAddress( String addrindex01,
                          String addrindex02,
                          String addrindex03,
                          String addrindex04,

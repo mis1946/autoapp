@@ -11,13 +11,13 @@ import javafx.beans.property.SimpleStringProperty;
  * Date: 03-07-2023
  * @author Arsiela
  */
-public class TableClientSocialMedia {
+public class CustomerTableSocialMedia {
      private SimpleStringProperty socmindex01;
      private SimpleStringProperty socmindex02; 
      private SimpleStringProperty socmindex03;
      //private SimpleStringProperty xSocialID;
      
-     TableClientSocialMedia( String socmindex01,
+     CustomerTableSocialMedia( String socmindex01,
                          String socmindex02,
                          String socmindex03
                          //String xSocialID

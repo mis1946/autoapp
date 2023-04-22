@@ -97,6 +97,11 @@
                                                 <MenuItem fx:id="mnuInquiry" mnemonicParsing="false" onAction="#mnuInquiryClick" text="Inquiry" />
                                           </items>
                                         </Menu>
+                                          <Menu mnemonicParsing="false" text="Bank Transactions">
+                                            <items>
+                                              <MenuItem fx:id="mnuBank" mnemonicParsing="false" onAction="#mnuBankClick" text="Bank" />
+                                            </items>
+                                          </Menu>
                                       </menus>
                                     </MenuBar>
                                  </children>

@@ -64,7 +64,7 @@
                                                       <Font name="Arial Bold" size="12.0" />
                                                    </font>
                                                 </Label>
-                                                <TextField fx:id="txtField02" prefHeight="22.0" prefWidth="272.0" promptText="Search: F3" GridPane.columnIndex="1" />
+                                                <TextField fx:id="textSeek02" prefHeight="22.0" prefWidth="272.0" promptText="Search:" GridPane.columnIndex="1" />
                                              </children>
                                           </GridPane>
                                        </children>
@@ -80,12 +80,13 @@
                                        </BorderPane.margin>
                                        <children>
                                           <Pagination fx:id="pagination" maxPageIndicatorCount="3" minHeight="390.0" minWidth="550.0" AnchorPane.bottomAnchor="3.0" AnchorPane.leftAnchor="3.0" AnchorPane.rightAnchor="3.0" AnchorPane.topAnchor="3.0" />
-                                          <TableView fx:id="tblVehicleDesc" layoutX="4.0" layoutY="4.0" onMouseClicked="#tblVehicleDesc_Clicked" prefWidth="550.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="3.0" AnchorPane.rightAnchor="3.0" AnchorPane.topAnchor="3.0">
+                                          <TableView fx:id="tblBankEntry" layoutX="4.0" layoutY="4.0" prefWidth="550.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="3.0" AnchorPane.rightAnchor="3.0" AnchorPane.topAnchor="3.0">
                                             <columns>
-                                              <TableColumn fx:id="tblindex01" maxWidth="238.0" minWidth="35.0" prefWidth="207.0" resizable="false" text="Bank Name" />
-                                              <TableColumn fx:id="tblindex02" minWidth="17.0" prefWidth="193.0" text="Bank Abbrev" />
-                                                <TableColumn fx:id="tblindex03" minWidth="72.0" prefWidth="75.0" text="Branch" />
-                                                <TableColumn fx:id="tblindex04" minWidth="50.0" prefWidth="50.0" text="Year" />
+                                                <TableColumn fx:id="tblindexRow" prefWidth="38.0" text="Row" />
+                                              <TableColumn fx:id="tblindex02" maxWidth="297.0" minWidth="35.0" prefWidth="236.0" resizable="false" text="Bank Name" />
+                                              <TableColumn fx:id="tblindex03" minWidth="17.0" prefWidth="201.0" text="Bank Abbrev" />
+                                                <TableColumn fx:id="tblindex17" minWidth="72.0" prefWidth="143.0" text="Branch" />
+                                                <TableColumn fx:id="tblindex16" prefWidth="200.0" text="Address" />
                                             </columns>
                                           </TableView>
                                        </children>
@@ -191,30 +192,36 @@
                                                                                     <RowConstraints maxHeight="41.0" minHeight="10.0" prefHeight="37.0" vgrow="SOMETIMES" />
                                                                                  </rowConstraints>
                                                                                  <children>
-                                                                                    <Label text="Branch Name" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                                                                    <Label text="Bank Name" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                                                                        <font>
                                                                                           <Font name="Arial Bold" size="11.5" />
                                                                                        </font>
                                                                                     </Label>
-                                                                                    <Label id="LabelDesc" stylesheets="@../css/FrameStyle.css" text="Branch Abbrev" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                                                                                    <Label id="LabelDesc" stylesheets="@../css/FrameStyle.css" text="Branch" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                                                                    <Label id="LabelDesc" stylesheets="@../css/FrameStyle.css" text="Bank Abbrev" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                                                                       <font>
+                                                                                          <Font name="System Bold" size="11.5" />
+                                                                                       </font></Label>
+                                                                                    <Label id="LabelDesc" stylesheets="@../css/FrameStyle.css" text="Branch" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                                                                                       <font>
+                                                                                          <Font name="System Bold" size="12.0" />
+                                                                                       </font></Label>
                                                                                     <Label id="LabelDesc" stylesheets="@../css/FrameStyle.css" text="House No/Street/Barangay" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                                                                                     <Label id="LabelDesc" stylesheets="@../css/FrameStyle.css" text="Municipality/City" GridPane.columnIndex="1" GridPane.rowIndex="6" />
                                                                                     <Label id="LabelDesc" stylesheets="@../css/FrameStyle.css" text="Province" GridPane.columnIndex="1" GridPane.rowIndex="7" />
                                                                                     <Label id="LabelDesc" stylesheets="@../css/FrameStyle.css" text="Zip Code" GridPane.columnIndex="1" GridPane.rowIndex="8" />
-                                                                                    <TextField fx:id="txtField03" GridPane.columnIndex="2" GridPane.columnSpan="4" GridPane.rowIndex="1" />
-                                                                                    <TextField fx:id="txtField04" GridPane.columnIndex="2" GridPane.columnSpan="4" GridPane.rowIndex="2" />
-                                                                                    <TextField fx:id="txtField06" GridPane.columnIndex="2" GridPane.columnSpan="4" GridPane.rowIndex="3" />
-                                                                                    <TextField fx:id="txtField05" promptText="Search: F3" GridPane.columnIndex="2" GridPane.columnSpan="4" GridPane.rowIndex="5" />
-                                                                                    <TextField fx:id="txtField08" promptText="Search: F3" GridPane.columnIndex="2" GridPane.columnSpan="4" GridPane.rowIndex="6" />
+                                                                                    <TextField fx:id="txtField02" GridPane.columnIndex="2" GridPane.columnSpan="4" GridPane.rowIndex="1" />
+                                                                                    <TextField fx:id="txtField03" GridPane.columnIndex="2" GridPane.columnSpan="4" GridPane.rowIndex="2" />
+                                                                                    <TextField fx:id="txtField17" GridPane.columnIndex="2" GridPane.columnSpan="4" GridPane.rowIndex="3" />
+                                                                                    <TextField fx:id="txtField05" GridPane.columnIndex="2" GridPane.columnSpan="4" GridPane.rowIndex="5" />
+                                                                                    <TextField fx:id="txtField18" promptText="Search: F3" GridPane.columnIndex="2" GridPane.columnSpan="4" GridPane.rowIndex="6" />
                                                                                     <Label id="LabelDesc" stylesheets="@../css/FrameStyle.css" text="Contact Person" GridPane.columnIndex="1" GridPane.rowIndex="9" />
                                                                                     <Label id="LabelDesc" stylesheets="@../css/FrameStyle.css" text="Telephone No." GridPane.columnIndex="1" GridPane.rowIndex="10" />
                                                                                     <Label id="LabelDesc" prefHeight="14.0" prefWidth="101.0" stylesheets="@../css/FrameStyle.css" text="Fax No." GridPane.columnIndex="1" GridPane.rowIndex="11" />
-                                                                                    <TextField fx:id="txtField081" promptText="Search: F3" GridPane.columnIndex="2" GridPane.columnSpan="4" GridPane.rowIndex="7" />
-                                                                                    <TextField fx:id="txtField0811" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="8" />
-                                                                                    <TextField fx:id="txtField08111" GridPane.columnIndex="2" GridPane.columnSpan="3" GridPane.rowIndex="9" />
-                                                                                    <TextField fx:id="txtField081111" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="10" />
-                                                                                    <TextField fx:id="txtField0811111" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="11" />
+                                                                                    <TextField fx:id="txtField15" promptText="Search: F3" GridPane.columnIndex="2" GridPane.columnSpan="4" GridPane.rowIndex="7" />
+                                                                                    <TextField fx:id="txtField07" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="8" />
+                                                                                    <TextField fx:id="txtField04" GridPane.columnIndex="2" GridPane.columnSpan="4" GridPane.rowIndex="9" />
+                                                                                    <TextField fx:id="txtField08" GridPane.columnIndex="2" GridPane.columnSpan="3" GridPane.rowIndex="10" />
+                                                                                    <TextField fx:id="txtField09" GridPane.columnIndex="2" GridPane.columnSpan="3" GridPane.rowIndex="11" />
                                                                                     <Separator prefWidth="200.0" style="-fx-background-color: orange;" GridPane.columnSpan="8" GridPane.rowIndex="4" />
                                                                                  </children>
                                                                               </GridPane>

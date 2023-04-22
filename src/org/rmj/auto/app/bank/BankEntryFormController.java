@@ -119,6 +119,8 @@ public class BankEntryFormController implements Initializable, ScreenInterface{
     private TextField txtField17; //ssBankBrch
     @FXML
     private TextField textSeek02; //for search 
+    @FXML
+    private Button btnCancel;
     
         
     @Override
@@ -158,6 +160,7 @@ public class BankEntryFormController implements Initializable, ScreenInterface{
           btnEdit.setOnAction(this::cmdButton_Click); 
           btnSave.setOnAction(this::cmdButton_Click); 
           btnClose.setOnAction(this::cmdButton_Click); 
+          btnCancel.setOnAction(this::cmdButton_Click);
           tblBankEntry.setOnMouseClicked(this::tblBankEntry_Clicked);
             
             /*Clear Fields*/
@@ -203,12 +206,21 @@ public class BankEntryFormController implements Initializable, ScreenInterface{
                          } else 
                              ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
                           break;
+      
             case "btnEdit":
                if (oTrans.UpdateRecord()) {
                               pnEditMode = oTrans.getEditMode(); 
                          } else 
                               ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
                          break;
+            case "btnCancel":
+                  if(ShowMessageFX.OkayCancel(null, "Cancel", "Are you sure, do you want to cancel?") == true){
+                             clearFields();
+                             pnEditMode = EditMode.UNKNOWN;
+                         break;
+                              }
+                  else
+                           return;
             case "btnSave":
                    //Validate before saving
                          if (txtField02.getText().trim().equals("")) {
@@ -461,6 +473,7 @@ public class BankEntryFormController implements Initializable, ScreenInterface{
           oldPnRow = pagecounter;
 
      }
+   
      private void loadBankEntryField(){
           try {
               
@@ -588,15 +601,22 @@ public class BankEntryFormController implements Initializable, ScreenInterface{
 
              btnAdd.setVisible(!lbShow);
              btnAdd.setManaged(!lbShow);
+                
+             btnCancel.setVisible(lbShow);
+             btnCancel.setManaged(lbShow);
              //if lbShow = false hide btn          
              btnEdit.setVisible(false); 
              btnEdit.setManaged(false);
              btnSave.setVisible(lbShow);
              btnSave.setManaged(lbShow);
-
+             
+             
+             
              if (fnValue == EditMode.READY) { //show edit if user clicked save / browse
                   btnEdit.setVisible(true); 
                   btnEdit.setManaged(true);
+               
+                  
              }
             }
     /*Clear Fields*/

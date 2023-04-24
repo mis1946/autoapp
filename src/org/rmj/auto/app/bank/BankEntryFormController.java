@@ -55,7 +55,7 @@ public class BankEntryFormController implements Initializable, ScreenInterface{
    private GRider oApp;
     private BankInformation oTrans;
     unloadForm unload = new unloadForm(); //Object for closing form
-    private final String pxeModuleName = "Bank Entry"; //Form Title
+    private final String pxeModuleName = "Bank"; //Form Title
     private MasterCallback oListener;
     
     
@@ -199,14 +199,15 @@ public class BankEntryFormController implements Initializable, ScreenInterface{
           String lsButton = ((Button)event.getSource()).getId();
           switch(lsButton){
             case "btnAdd":
-                 if (oTrans.NewRecord()) {
+                        if (oTrans.NewRecord()) {
                               clearFields(); 
                               loadBankEntryField();
                               pnEditMode = oTrans.getEditMode();
                          } else 
                              ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
+               
                           break;
-      
+                      
             case "btnEdit":
                if (oTrans.UpdateRecord()) {
                               pnEditMode = oTrans.getEditMode(); 
@@ -214,7 +215,7 @@ public class BankEntryFormController implements Initializable, ScreenInterface{
                               ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
                          break;
             case "btnCancel":
-                  if(ShowMessageFX.OkayCancel(null, "Cancel", "Are you sure, do you want to cancel?") == true){
+                  if(ShowMessageFX.OkayCancel(null,pxeModuleName, "Are you sure, do you want to cancel?") == true){
                              clearFields();
                              pnEditMode = EditMode.UNKNOWN;
                          break;
@@ -223,6 +224,7 @@ public class BankEntryFormController implements Initializable, ScreenInterface{
                            return;
             case "btnSave":
                    //Validate before saving
+                  if(ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure, do you want to save?") == true){
                          if (txtField02.getText().trim().equals("")) {
                               ShowMessageFX.Warning(getStage(), "Please enter a value for Bank Name.","Warning", null);
                               txtField02.requestFocus();
@@ -278,6 +280,7 @@ public class BankEntryFormController implements Initializable, ScreenInterface{
                               } else {
                                   ShowMessageFX.Warning(getStage(),oTrans.getMessage() ,"Warning", "Error while saving Bank Information");
                               }
+                  }
                 break;
             case "btnClose": //close tab
                          if(ShowMessageFX.OkayCancel(null, "Close Tab", "Are you sure, do you want to close tab?") == true){

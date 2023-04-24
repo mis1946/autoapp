@@ -479,8 +479,11 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                    break;
                case "btnSave":
                     pnEditMode  = EditMode.READY; 
-                    ShowMessageFX.Information(null, pxeModuleName,"You click save button!"); 
-                   break;
+                    if(ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure, do you want to save?") == true){
+                         //TODO
+                         break;
+                    }else
+                         return;
                case "btnClear":
                     clearClassFields();
                     loadCustomerInquiry();
@@ -496,8 +499,11 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                     ShowMessageFX.Information(null, pxeModuleName, "You click print refund button"); 
                    break;
                case "btnLostSale":
-                    ShowMessageFX.Information(null, pxeModuleName, "You click lost sale button"); 
-                    break;
+                    if(ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure, do you want to tag this inquiry as LOST SALE?") == true){
+                         //TODO
+                         break;
+                    }else
+                         return;
                case "btnCancel":
                     clearClassFields();
                     loadCustomerInquiry();
@@ -1454,14 +1460,11 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                }
                
                //Class Priority Unit
-               for (lnCtr = 1; lnCtr <= oTrans.getVhclPrtyCount(); lnCtr++){
-                    oTrans.removeTargetVehicle(lnCtr);
-               }
-               
+               do oTrans.removeTargetVehicle( oTrans.getVhclPrtyCount());
+               while  (oTrans.getVhclPrtyCount() != 0);
                //Class Promo Offered
-               for (lnCtr = 1; lnCtr <= oTrans.getInqPromoCount(); lnCtr++){
-                    oTrans.removeInqPromo(lnCtr);
-               }
+               do oTrans.removeInqPromo( oTrans.getInqPromoCount());
+               while  (oTrans.getInqPromoCount() != 0);
                
           }catch (SQLException ex) {
                Logger.getLogger(InquiryFormController.class.getName()).log(Level.SEVERE, null, ex);

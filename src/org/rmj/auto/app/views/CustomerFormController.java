@@ -77,7 +77,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
      private ClientEMail oTransEmail;
      private ClientSocMed oTransSocMed;
      unloadForm unload = new unloadForm(); //Used in Close Button
-     private final String pxeModuleName = "Customer Information"; //Form Title
+     private final String pxeModuleName = "Customer"; //Form Title
      private int pnEditMode;//Modifying fields
      private int pnRow = -1;
      private int lnCtr;
@@ -131,8 +131,6 @@ public class CustomerFormController implements Initializable, ScreenInterface {
      private TextField txtField13; //TIN NO
      @FXML
      private TextArea textArea15; //Remarks
-     @FXML
-     private TextField txtField29; //Business Style
      @FXML
      private TextField txtField25; // Spouse
      @FXML
@@ -427,7 +425,6 @@ public class CustomerFormController implements Initializable, ScreenInterface {
           btnSave.setOnAction(this::cmdButton_Click); 
           btnClose.setOnAction(this::cmdButton_Click); 
           btnBrowse.setOnAction(this::cmdButton_Click);
-          
           //Update Class master
           comboBox18.setOnAction(e -> {
               comboChange();
@@ -936,6 +933,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                          } 
                         
                     break;
+                         
                }
                initButton(pnEditMode);    
           } catch (SQLException e) {
@@ -2131,7 +2129,6 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                          //txtField16.setDisable(true); //company name
                          //txtField29.setDisable(true); // Business Style
                          txtField16.clear(); //company name
-                         txtField29.clear(); // Business Style
                          System.out.println("ComboBox18 >>> "+comboBox18.getSelectionModel().getSelectedIndex()+" false" );
                     }
                     
@@ -2172,7 +2169,6 @@ public class CustomerFormController implements Initializable, ScreenInterface {
           comboBox07.setDisable(!lbShow); //Title
           txtField25.setDisable(!lbShow); // Spouse
           txtField16.setDisable(!lbShow); //company name
-          txtField29.setDisable(!lbShow); // Business Style
           cmdClientType(lbShow);
           
           /*Address*/
@@ -2220,7 +2216,6 @@ public class CustomerFormController implements Initializable, ScreenInterface {
           btnEdit.setManaged(false);
           btnSave.setVisible(lbShow);
           btnSave.setManaged(lbShow);
-          
           btnTabAdd.setVisible(lbShow); 
           btnTabUpd.setVisible(lbShow);
           
@@ -2290,7 +2285,6 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                switch (comboBox18.getSelectionModel().getSelectedIndex()) {
                     case 1:
                          txtField16.setDisable(false); //company name
-                         txtField29.setDisable(false); // Business Style
                          txtField02.setDisable(bValue); //last name
                          txtField03.setDisable(bValue); //first name
                          txtField04.setDisable(bValue); //mid name
@@ -2306,7 +2300,6 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                          break;
                     case 2:
                          txtField16.setDisable(!bValue); //company name
-                         txtField29.setDisable(!bValue); // Business Style
                          txtField02.setDisable(!bValue); //last name
                          txtField03.setDisable(!bValue); //first name
                          txtField04.setDisable(!bValue); //mid name
@@ -2322,7 +2315,6 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                          break;
                     default:
                          txtField16.setDisable(true); //company name
-                         txtField29.setDisable(true); // Business Style
                          txtField02.setDisable(!bValue); //last name
                          txtField03.setDisable(!bValue); //first name
                          txtField04.setDisable(!bValue); //mid name
@@ -2403,7 +2395,6 @@ public class CustomerFormController implements Initializable, ScreenInterface {
           txtField13.clear(); //TIN NO
           textArea15.clear(); //Remarks
           txtField25.clear(); // Spouse
-          txtField29.clear(); // Business Style
           txtField11.setValue(LocalDate.of(1900, Month.JANUARY, 1)); //birthdate
               
           //txtField11.setValue(null); //bdate Do not clear bdate since script is already assigning value to prevent nullpointerexception

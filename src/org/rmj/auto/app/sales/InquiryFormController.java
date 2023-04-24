@@ -13,6 +13,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 import java.util.Date;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -431,27 +432,41 @@ public class InquiryFormController implements Initializable, ScreenInterface{
 //                    ));
                     break;
                
-               case "btnTargetVhclRemove":
+               case "btnTargetVhclRemove":     
                     if (selectedPUnitIndex >= 1) {
                          oTrans.removeTargetVehicle(selectedPUnitIndex);
-                         loadTargetVehicle();  
+                         //loadTargetVehicle();  
                     }
                     break;     
                case "btnTargetVehicleDown":
-                    if ((selectedPUnitIndex >= 1) && (selectedPUnitIndex < oTrans.getVhclPrtyCount())){
-                         oTrans.setVehiclePriority(selectedPUnitIndex, false);
-                         selectedPUnitIndex = selectedPUnitIndex + 1;
-                         //oTrans.setVhclPrty(selectedPUnitIndex-1, "nPriority",selectedPUnitIndex); //Handle Encoded Value   
+                    //selectedPUnitIndex = tblPriorityUnit.getSelectionModel().getSelectedIndex();
+                    if (selectedPUnitIndex < tblPriorityUnit.getItems().size() - 1) {
+                         Collections.swap(tblPriorityUnit.getItems(), selectedPUnitIndex, selectedPUnitIndex + 1);
+                         tblPriorityUnit.getSelectionModel().select(selectedPUnitIndex + 1);
+                         lnCtr = 1;
+                         for (InquiryTablePriorityUnit unit : priorityunitdata) {
+                              oTrans.setVhclPrty(lnCtr, "nPriority",unit.getTblindex01());
+                              oTrans.setVhclPrty(lnCtr, "sDescript",unit.getTblindex02());
+                              lnCtr++;
+                         }
                          loadTargetVehicle();
                     }
+                    selectedPUnitIndex++;
                     break;    
                case "btnTargetVehicleUp":
-                    if (selectedPUnitIndex > 1){
-                         oTrans.setVehiclePriority(selectedPUnitIndex, true);
-                         selectedPUnitIndex = selectedPUnitIndex - 1;
-                         //oTrans.setVhclPrty(selectedPUnitIndex+1, "nPriority",selectedPUnitIndex); //Handle Encoded Value   
+                    //selectedPUnitIndex = tblPriorityUnit.getSelectionModel().getSelectedIndex();
+                    if (selectedPUnitIndex > 0) {
+                         Collections.swap(tblPriorityUnit.getItems(), selectedPUnitIndex, selectedPUnitIndex - 1);
+                         tblPriorityUnit.getSelectionModel().select(selectedPUnitIndex - 1);
+                         lnCtr = 1;
+                         for (InquiryTablePriorityUnit unit : priorityunitdata) {
+                              oTrans.setVhclPrty(lnCtr, "nPriority",unit.getTblindex01());
+                              oTrans.setVhclPrty(lnCtr, "sDescript",unit.getTblindex02());
+                              lnCtr++;
+                         }
                          loadTargetVehicle();
                     }
+                    selectedPUnitIndex--;
                     break;
                
                /*CUSTOMER INDQUIRY: PROMO OFFERED*/
@@ -531,8 +546,8 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                initButton(pnEditMode); 
           } catch (SQLException ex) {
                Logger.getLogger(InquiryFormController.class.getName()).log(Level.SEVERE, null, ex);
-          } catch (org.json.simple.parser.ParseException ex) {
-               Logger.getLogger(InquiryFormController.class.getName()).log(Level.SEVERE, null, ex);
+//          } catch (org.json.simple.parser.ParseException ex) {
+             //  Logger.getLogger(InquiryFormController.class.getName()).log(Level.SEVERE, null, ex);
           }
 
      }
@@ -993,74 +1008,86 @@ public class InquiryFormController implements Initializable, ScreenInterface{
      }   
     // Load Customer Inquiry Target Vehicle Data
     public void initTargetVehicle(){
-          boolean lbShow = (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE);
-          if (lbShow) {
-               tblPriorityUnit.setEditable(true);
-          } else { 
-               tblPriorityUnit.setEditable(false);
-          }
-          
-          trgvIndex01.setCellValueFactory(new PropertyValueFactory<>("tblindex01"));
-          trgvIndex02.setCellValueFactory(new PropertyValueFactory<>("tblindex02"));
-          trgvIndex02.setCellFactory(TextFieldTableCell.forTableColumn()); // make the cells editable
-          // Set the event handler to store the edited value
-          trgvIndex02.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<InquiryTablePriorityUnit, String>>() {
-               @Override
-               public void handle(TableColumn.CellEditEvent<InquiryTablePriorityUnit, String> event) {
-                    // Code to handle edit event
-                    InquiryTablePriorityUnit detail = event.getRowValue();
-                    detail.setTblindex02(event.getNewValue());
-                    sValue = event.getNewValue();
+          try {
+               boolean lbShow = (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE);
+               if (lbShow) {
+                    tblPriorityUnit.setEditable(true);
+               } else { 
+                    tblPriorityUnit.setEditable(false);
                }
-          });
-          trgvIndex02.setEditable(true);// make the column editable
-          //unitIndex02.setCellValueFactory(new PropertyValueFactory<>("tblindex02"));
-          if (lbShow) {      
-               tblPriorityUnit.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
-                    TablePosition<?, ?> focusedCell = tblPriorityUnit.getFocusModel().getFocusedCell();
-                    //String columnId = focusedCell.getTableColumn().getId();
-                    int lnIndex = Integer.parseInt(focusedCell.getTableColumn().getId().substring(9,11));
-                    switch (event.getCode()){
-                         case F3:
-                         case ENTER:
-                              // Check if the focused cell is editable
-                              if (focusedCell.getTableColumn().isEditable()) {
-                                   switch (lnIndex){
-                                        case 2: //Vehicle Description
-                                              // Code to execute when F3 is pressed on an editable column
-                                             // ShowMessageFX.Warning(getStage(), (tblPriorityUnit.getSelectionModel().getSelectedIndex() + 1) + "","Warning", null);
-                                              //System.out.println("F3 was pressed on an editable column");
-                                             // System.out.println(tblPriorityUnit.getSelectionModel().getSelectedIndex());
-                                             try {
-                                                  if (oTrans.searchVhclPrty(tblPriorityUnit.getSelectionModel().getSelectedIndex() + 1,sValue,false)){
-                                                      loadTargetVehicle();
-                                                  } else
-                                                       ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
-                                              } catch (SQLException ex) {
-                                                   Logger.getLogger(InquiryFormController.class.getName()).log(Level.SEVERE, null, ex);
-                                              }
+
+               trgvIndex01.setCellValueFactory(new PropertyValueFactory<>("tblindex01"));
+               trgvIndex02.setCellValueFactory(new PropertyValueFactory<>("tblindex02"));
+               String svhcldescr = "";
+               
+               if (oTrans.getInquiryMasterCount() > 0 ) {
+                    svhcldescr = oTrans.getVhclPrty(tblPriorityUnit.getSelectionModel().getSelectedIndex() + 1,"sDescript").toString();
+               } 
+               
+               if (svhcldescr == "" || pnEditMode == EditMode.ADDNEW){
+                    trgvIndex02.setCellFactory(TextFieldTableCell.forTableColumn()); // make the cells editable
+                    // Set the event handler to store the edited value
+                    trgvIndex02.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<InquiryTablePriorityUnit, String>>() {
+                         @Override
+                         public void handle(TableColumn.CellEditEvent<InquiryTablePriorityUnit, String> event) {
+                              // Code to handle edit event
+                              InquiryTablePriorityUnit detail = event.getRowValue();
+                              detail.setTblindex02(event.getNewValue());
+                              sValue = event.getNewValue();
+                         }
+                    });
+                    trgvIndex02.setEditable(true);// make the column editable
+                    //unitIndex02.setCellValueFactory(new PropertyValueFactory<>("tblindex02"));
+                    if (lbShow) {      
+                         tblPriorityUnit.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+                              TablePosition<?, ?> focusedCell = tblPriorityUnit.getFocusModel().getFocusedCell();
+                              //String columnId = focusedCell.getTableColumn().getId();
+                              int lnIndex = Integer.parseInt(focusedCell.getTableColumn().getId().substring(9,11));
+                              switch (event.getCode()){
+                                   case F3:
+                                   case ENTER:
+                                        // Check if the focused cell is editable
+                                        if (focusedCell.getTableColumn().isEditable()) {
+                                             switch (lnIndex){
+                                                  case 2: //Vehicle Description
+                                                        // Code to execute when F3 is pressed on an editable column
+                                                       // ShowMessageFX.Warning(getStage(), (tblPriorityUnit.getSelectionModel().getSelectedIndex() + 1) + "","Warning", null);
+                                                        //System.out.println("F3 was pressed on an editable column");
+                                                       // System.out.println(tblPriorityUnit.getSelectionModel().getSelectedIndex());
+                                                       try {
+                                                            if (oTrans.searchVhclPrty(tblPriorityUnit.getSelectionModel().getSelectedIndex() + 1,sValue,false)){
+                                                                loadTargetVehicle();
+                                                            } else
+                                                                 ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
+                                                        } catch (SQLException ex) {
+                                                             Logger.getLogger(InquiryFormController.class.getName()).log(Level.SEVERE, null, ex);
+                                                        }
+                                                  break;
+                                             }
+                                        }
                                         break;
-                                   }
                               }
-                              break;
+                         });
                     }
+               }
+               tblPriorityUnit.widthProperty().addListener((ObservableValue<? extends Number> source, Number oldWidth, Number newWidth) -> {
+                    TableHeaderRow header = (TableHeaderRow) tblPriorityUnit.lookup("TableHeaderRow");
+                    header.reorderingProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+                         header.setReordering(false);
+                    });
                });
+
+               tblPriorityUnit.setItems(priorityunitdata);
+          } catch (SQLException ex) {
+               Logger.getLogger(InquiryFormController.class.getName()).log(Level.SEVERE, null, ex);
           }
-          tblPriorityUnit.widthProperty().addListener((ObservableValue<? extends Number> source, Number oldWidth, Number newWidth) -> {
-               TableHeaderRow header = (TableHeaderRow) tblPriorityUnit.lookup("TableHeaderRow");
-               header.reorderingProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
-                    header.setReordering(false);
-               });
-          });
-          
-          tblPriorityUnit.setItems(priorityunitdata);
      }
     
     
      @FXML
      private void tblPriorityUnit_Clicked(MouseEvent event) {
           if(event.getClickCount() > 0){
-               selectedPUnitIndex = tblPriorityUnit.getSelectionModel().getSelectedIndex() + 1;
+               selectedPUnitIndex = tblPriorityUnit.getSelectionModel().getSelectedIndex();
                //ShowMessageFX.Information(null, pxeModuleName, selectedPUnitIndex + ""); 
                tblPriorityUnit.setOnKeyReleased((KeyEvent t)-> {
                     try {

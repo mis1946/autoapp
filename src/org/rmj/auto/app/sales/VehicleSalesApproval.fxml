@@ -80,7 +80,7 @@
                                                 </Label>
                                                 <HBox prefHeight="100.0" prefWidth="200.0" spacing="1.0" GridPane.columnIndex="3">
                                                    <children>
-                                                      <TextField fx:id="txtFieldSearch" prefHeight="24.0" prefWidth="324.0" promptText="Search:">
+                                                      <TextField fx:id="txtFieldSearch" prefHeight="24.0" prefWidth="297.0" promptText="Search:">
                                                          <HBox.margin>
                                                             <Insets />
                                                          </HBox.margin>

@@ -18,7 +18,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.rmj.auto.app.sales.InquiryBankApplicationFormController">
+<AnchorPane xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" >
    <children>
       <StackPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -124,7 +124,7 @@
                <bottom>
                   <AnchorPane style="-fx-background-color: #515151;">
                      <children>
-                        <Button fx:id="btnAdd1" contentDisplay="TOP" layoutX="10.0" layoutY="5.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="70.0" text="Save" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="5.0">
+                        <Button fx:id="btnAdd" contentDisplay="TOP" layoutX="10.0" layoutY="5.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="70.0" text="Save" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="5.0">
                            <effect>
                               <Blend />
                            </effect>
@@ -132,7 +132,7 @@
                               <FontAwesomeIconView glyphName="SAVE" size="20" />
                            </graphic>
                         </Button>
-                        <Button fx:id="btnClose1" contentDisplay="TOP" layoutX="416.0" layoutY="5.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="70.0" text="Close" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="5.0">
+                        <Button fx:id="btnClose" contentDisplay="TOP" layoutX="416.0" layoutY="5.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="70.0" text="Close" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="5.0">
                            <effect>
                               <Blend />
                            </effect>

@@ -6,10 +6,19 @@
 package org.rmj.auto.app.sales;
 
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import org.rmj.appdriver.GRider;
+import org.rmj.appdriver.agentfx.CommonUtils;
+import org.rmj.appdriver.agentfx.ShowMessageFX;
+import org.rmj.appdriver.callback.MasterCallback;
+import org.rmj.auto.sales.base.InquiryMaster;
 
 /**
  * FXML Controller class
@@ -17,11 +26,49 @@ import javafx.scene.control.Button;
  * @author Arsiela
  */
 public class InquiryVehicleSalesAdvancesFormController implements Initializable {
-
+     private GRider oApp;
+     private boolean pbLoaded = false;
+     private MasterCallback oListener;
+     private InquiryMaster oTrans;
+     
+     public int tbl_row = 0;
+     private int pnIndex = -1;    
+     private int pnRow = -1;
+     private int pnEmp = -1;
+     private int lnCtr;
+     private String oTransnox = "";
+     private String psOldRec;
+     private String psCode;
+     private int pnEditMode;
+     private boolean state = false;
+    
+     private final String pxeModuleName = "Inquiry Vehicle Sales Advances";
+     public static InquiryTableVehicleSalesAdvances incModel;
      @FXML
      private Button btnAdd;
      @FXML
      private Button btnClose;
+     
+     public void setGRider(GRider foValue) {
+        
+    }
+     public static void setData(InquiryTableVehicleSalesAdvances inqvsadata){
+        incModel = inqvsadata;    
+    }
+    public void setVSAObject(InquiryMaster foValue){
+        oTrans = foValue;
+    }
+    
+    public void setDeductionCode(String fsValue){
+        psCode = fsValue;
+    }
+    public void setTableRows(int row){
+        tbl_row = row;
+    }
+
+    public void setState(boolean fsValue){
+        state = fsValue;
+    }
 
      /**
       * Initializes the controller class.
@@ -29,6 +76,26 @@ public class InquiryVehicleSalesAdvancesFormController implements Initializable 
      @Override
      public void initialize(URL url, ResourceBundle rb) {
           // TODO
-     }     
+          
+          btnClose.setOnAction(this::cmdButton_Click);
+     } 
+     
+     private void cmdButton_Click(ActionEvent event) {
+//          try{
+               String lsButton = ((Button)event.getSource()).getId();
+               switch (lsButton){
+                   case "btnClose":
+                       CommonUtils.closeStage(btnClose);
+                      break;
+
+                   default:
+                       ShowMessageFX.Warning(null, pxeModuleName, "Button with name " + lsButton + " not registered.");
+                       break;
+               }
+//          }catch (SQLException ex) {
+//          Logger.getLogger(InquiryVehicleSalesAdvancesFormController.class.getName()).log(Level.SEVERE, null, ex);
+//          }   
+    } 
+     
      
 }

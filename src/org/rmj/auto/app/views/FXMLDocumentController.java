@@ -49,6 +49,7 @@ import org.rmj.auto.app.sales.InquiryFormController;
 import org.rmj.auto.app.sales.SalesAgentFormController;
 import org.rmj.auto.app.sales.UnitReceivingFormController;
 import org.rmj.auto.app.sales.VehicleEntryFormController;
+import org.rmj.auto.app.sales.VehicleSalesApprovalController;
 
 /**
  *
@@ -92,6 +93,8 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
      private MenuItem mnuVhclEntry;
      @FXML
      private MenuItem mnuBank;
+    @FXML
+    private MenuItem mnuVhclRsrvApp;
      
      @Override
      public void initialize(URL url, ResourceBundle rb) {
@@ -298,6 +301,8 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
                     return new UnitReceivingFormController();
                case "InquiryForm.fxml":
                     return new InquiryFormController();
+               case "VehicleSalesApproval.fxml":
+                    return new VehicleSalesApprovalController();
                case "BankEntryForm.fxml":
                     return new BankEntryFormController();
                
@@ -324,6 +329,8 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
                return "Unit Receiving";
           case "InquiryForm.fxml":
                return "Inquiry";
+          case "VehicleSalesApproval.fxml":
+               return "Vehicle Reservation Approval";
           case "BankEntryForm.fxml":
                return "Bank";
           default:
@@ -427,6 +434,14 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
      private void mnuUnitRecvClick(ActionEvent event) {
           String sformname = "UnitReceivingForm.fxml";
           //check tab
+          if (checktabs(SetTabTitle(sformname)) == 1 ) {
+               setScene2(loadAnimate(sformname));
+          }
+     }
+     @FXML
+     private void mnuVhclRsrvAppClick(ActionEvent event){
+         String sformname = "VehicleSalesApproval.fxml";
+         
           if (checktabs(SetTabTitle(sformname)) == 1 ) {
                setScene2(loadAnimate(sformname));
           }

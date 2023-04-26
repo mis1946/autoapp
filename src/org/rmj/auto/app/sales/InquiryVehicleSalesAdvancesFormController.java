@@ -10,14 +10,22 @@ import java.sql.SQLException;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import org.rmj.appdriver.GRider;
 import org.rmj.appdriver.agentfx.CommonUtils;
 import org.rmj.appdriver.agentfx.ShowMessageFX;
 import org.rmj.appdriver.callback.MasterCallback;
+import org.rmj.auto.app.views.InputTextFormatter;
 import org.rmj.auto.sales.base.InquiryMaster;
 
 /**
@@ -44,10 +52,29 @@ public class InquiryVehicleSalesAdvancesFormController implements Initializable 
     
      private final String pxeModuleName = "Inquiry Vehicle Sales Advances";
      public static InquiryTableVehicleSalesAdvances incModel;
+     
+     ObservableList<String> cSlipType = FXCollections.observableArrayList("Reservation", "Deposit", "Safeguard Duty");
+     
      @FXML
      private Button btnAdd;
      @FXML
      private Button btnClose;
+     @FXML
+     private ComboBox comboBox12; //Slip Type
+     @FXML
+     private TextField txtField02; //RSV Date
+     @FXML
+     private TextField txtField03; //Slip No
+     @FXML
+     private TextField txtField05; //Slip Amount
+     @FXML
+     private TextArea textArea06; //Remarks
+     @FXML
+     private TextField txtField13; //Approved Status
+     @FXML
+     private TextField txtField14; //Approved By
+     @FXML
+     private TextField txtField15; //Approved Date
      
      public void setGRider(GRider foValue) {
         
@@ -76,6 +103,11 @@ public class InquiryVehicleSalesAdvancesFormController implements Initializable 
      @Override
      public void initialize(URL url, ResourceBundle rb) {
           // TODO
+          comboBox12.setItems(cSlipType); //Slipt Type
+          
+          Pattern pattern;
+          pattern = Pattern.compile("^\\d*(\\.\\d{0,2})?$");
+          txtField05.setTextFormatter(new InputTextFormatter(pattern)); //Amount
           
           btnClose.setOnAction(this::cmdButton_Click);
      } 
@@ -84,13 +116,16 @@ public class InquiryVehicleSalesAdvancesFormController implements Initializable 
 //          try{
                String lsButton = ((Button)event.getSource()).getId();
                switch (lsButton){
-                   case "btnClose":
-                       CommonUtils.closeStage(btnClose);
-                      break;
+                    case "btnClose":
+                         CommonUtils.closeStage(btnClose);
+                         break;
+                    case "btnAdd":
+                         CommonUtils.closeStage(btnAdd);
+                         break;
 
-                   default:
-                       ShowMessageFX.Warning(null, pxeModuleName, "Button with name " + lsButton + " not registered.");
-                       break;
+                    default:
+                        ShowMessageFX.Warning(null, pxeModuleName, "Button with name " + lsButton + " not registered.");
+                        break; 
                }
 //          }catch (SQLException ex) {
 //          Logger.getLogger(InquiryVehicleSalesAdvancesFormController.class.getName()).log(Level.SEVERE, null, ex);

@@ -5,6 +5,7 @@
 package org.rmj.auto.app.sales;
 
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -42,7 +43,7 @@ public class VehicleSalesApprovalController implements Initializable,ScreenInter
     @FXML
     private Button btnClose;
     
-    ObservableList<String> cFilter = FXCollections.observableArrayList("Advance Slip Date", "Advances Slip No", "Advances Type",
+    ObservableList<String> cFilter = FXCollections.observableArrayList("Advance Slip Date", "Advances Slip No.", "Advances Type",
                                                                        "Customer Name","Employee Name","Unit Description");
         
     ObservableList<String> cType = FXCollections.observableArrayList("Reservation", "Deposit");
@@ -70,7 +71,7 @@ public class VehicleSalesApprovalController implements Initializable,ScreenInter
     @FXML
     private ComboBox<String> comboFilter;
     @FXML
-    private ComboBox comboType;
+    private ComboBox<String> comboType;
     @FXML
     private DatePicker fromDate;
     @FXML
@@ -84,10 +85,7 @@ public class VehicleSalesApprovalController implements Initializable,ScreenInter
      * Initializes the controller class.
      */
     @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        // TODO
-        
-        
+    public void initialize(URL url, ResourceBundle rb) {        
         txtFieldSearch.setVisible(false);
         txtFieldSearch.setManaged(false);
         lFrom.setManaged(false);
@@ -107,27 +105,56 @@ public class VehicleSalesApprovalController implements Initializable,ScreenInter
         //cmdButtons_click properties
         btnClose.setOnAction(this::cmdButton_Click);
     }    
-     private void cmdButton_Click(ActionEvent event) {
-          String lsButton = ((Button)event.getSource()).getId();
-          switch(lsButton){
-            case "btnClose": //close tab
-                         if(ShowMessageFX.OkayCancel(null, "Close Tab", "Are you sure, do you want to close tab?") == true){
-                               if (unload != null) {
-                                    unload.unloadForm(AnchorMain, oApp, pxeModuleName);
-                               }else {
-                                    ShowMessageFX.Warning(null, "Warning", "Notify System Admin to Configure Null value at close button.");    
-                               }
-                               break;
-                               }
-                         else
-                           return;
+    private void cmdButton_Click(ActionEvent event) {
+    String lsButton = ((Button)event.getSource()).getId();
+    switch(lsButton){
+        case "btnClose": //close tab
+            if(ShowMessageFX.OkayCancel(null, "Close Tab", "Are you sure, do you want to close tab?") == true){
+                if (unload != null) {
+                    unload.unloadForm(AnchorMain, oApp, pxeModuleName);
+                }else {
+                    ShowMessageFX.Warning(null, "Warning", "Notify System Admin to Configure Null value at close button.");    
+                }
+            } else {
+                return;
             }
-//              initButton(pnEditMode);  
-        }
-
-
-
-    
+            break;
+//        case "btnFilter": //filter table
+//            // Retrieve filter criteria from text fields, combo box, and date pickers
+//            String customerFilter = txtFieldSearch.getText().trim().toLowerCase();
+//            String unitFilter = txtFieldSearch.getText().trim().toLowerCase();
+//            String typeFilter = comboType.getValue();
+//            LocalDate fromDateFilter = fromDate.getValue();
+//            LocalDate toDateFilter = toDate.getValue();
+//
+//            // Create a list to hold the filtered orders
+//            List<Order> filteredOrders = new ArrayList<>();
+//
+//            // Filter the orders based on the criteria
+//            for (Order order : allOrders) {
+//                boolean customerMatch = order.getCustomer().toLowerCase().contains(customerFilter);
+//                boolean unitMatch = order.getUnit().toLowerCase().contains(unitFilter);
+//                boolean typeMatch = typeFilter == null || typeFilter.isEmpty() || order.getType().equals(typeFilter);
+//                boolean dateMatch = true;
+//                if (fromDateFilter != null) {
+//                    if (!toDateFilter.isEmpty()) {
+//                        dateMatch = order.getDate().compareTo(fromDateFilter) >= 0 && order.getDate().compareTo(toDateFilter) <= 0;
+//                    } else {
+//                        dateMatch = order.getDate().compareTo(fromDateFilter) >= 0;
+//                    }
+//                } else if (!toDateFilter.isEmpty()) {
+//                    dateMatch = order.getDate().compareTo(toDateFilter) <= 0;
+//                }
+//                if (customerMatch && unitMatch && typeMatch && dateMatch) {
+//                    filteredOrders.add(order);
+//                }
+//            }
+//
+//            // Update the table view with the filtered data
+//            tableView.setItems(filteredOrders);
+//            break;
+    }
+}
     private Stage getStage(){
           return (Stage) txtFieldSearch.getScene().getWindow();
      }
@@ -152,7 +179,7 @@ public class VehicleSalesApprovalController implements Initializable,ScreenInter
 
             // Show relevant controls based on selected filter
             switch (selectedFilter) {
-                case "Advances Slip No":
+                case "Advances Slip No.":
                     txtFieldSearch.setVisible(true);
                     txtFieldSearch.setManaged(true);
                     break;

@@ -19,7 +19,10 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.animation.FadeTransition;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanPropertyBase;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -43,8 +46,11 @@ import javafx.scene.control.Pagination;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TablePosition;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -87,7 +93,8 @@ public class InquiryFormController implements Initializable, ScreenInterface{
      private GRider oApp;
 
      unloadForm unload = new unloadForm(); //Object for closing form
-
+     private double xOffset = 0;
+     private double yOffset = 0;
      private final String pxeModuleName = "Inquiry"; //Form Title
      private int pnEditMode;//Modifying fields
      private int pnRow = -1;
@@ -327,9 +334,7 @@ public class InquiryFormController implements Initializable, ScreenInterface{
      @FXML
      private Button btnBankAppCancel;
     
-    //Follow Up Elements
-    
-    //Buttons
+     /*INQUIRY FOLLOW-UP*/
      @FXML
      private Button btnFollowUp; // FollowUp
      //Table View
@@ -443,16 +448,25 @@ public class InquiryFormController implements Initializable, ScreenInterface{
           btnPromosRemove.setOnAction(this::cmdButton_Click); 
           
           /*INQUIRY PROCESS*/
+          initInquiryRequirements();
+          initInquiryAdvances();
           cmbInqpr01.setItems(cModeOfPayment); //Mode of Payment
           cmbInqpr02.setItems(cCustomerType); //Customer Type
           //Button SetOnAction using cmdButton_Click() method
           btnASadd.setOnAction(this::cmdButton_Click); 
+          
+          cmbInqpr02.setOnAction(event -> {
+               loadInquiryRequirements();
+          });
           
           /*INQUIRY BANK APPLICATION*/ 
           btnBankAppNew.setOnAction(this::cmdButton_Click); 
           btnBankAppUpdate.setOnAction(this::cmdButton_Click); 
           btnBankAppCancel.setOnAction(this::cmdButton_Click); 
           btnBankAppView.setOnAction(this::cmdButton_Click);
+          
+          /*INQUIRY FOLLOW-UP*/
+          btnFollowUp.setOnAction(this::cmdButton_Click);
           
           /*Clear Fields*/
           clearFields();
@@ -605,6 +619,11 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                     break;
                
                /*INQUIRY FOR FOLLOW UP*/
+               case "btnFollowUp":
+                    //Open window 
+                    loadFollowUp("");
+                    break;
+                            
                case "btnCancel":
                     clearClassFields();
                     loadCustomerInquiry();
@@ -653,6 +672,22 @@ public class InquiryFormController implements Initializable, ScreenInterface{
 
                //load the main interface
                Parent parent = fxmlLoader.load();
+               
+               parent.setOnMousePressed(new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent event) {
+                        xOffset = event.getSceneX();
+                        yOffset = event.getSceneY();
+                    }
+               });
+               
+               parent.setOnMouseDragged(new EventHandler<MouseEvent>() {
+                   @Override
+                   public void handle(MouseEvent event) {
+                       stage.setX(event.getScreenX() - xOffset);
+                       stage.setY(event.getScreenY() - yOffset);
+                   }
+               });
 
                //set the main interface as the scene
                Scene scene = new Scene(parent);
@@ -686,6 +721,22 @@ public class InquiryFormController implements Initializable, ScreenInterface{
 
                //load the main interface
                Parent parent = fxmlLoader.load();
+                           
+               parent.setOnMousePressed(new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent event) {
+                        xOffset = event.getSceneX();
+                        yOffset = event.getSceneY();
+                    }
+               });
+               
+               parent.setOnMouseDragged(new EventHandler<MouseEvent>() {
+                   @Override
+                   public void handle(MouseEvent event) {
+                       stage.setX(event.getScreenX() - xOffset);
+                       stage.setY(event.getScreenY() - yOffset);
+                   }
+               });
 
                //set the main interface as the scene
                Scene scene = new Scene(parent);
@@ -719,6 +770,23 @@ public class InquiryFormController implements Initializable, ScreenInterface{
 
                //load the main interface
                Parent parent = fxmlLoader.load();
+               
+                                          
+               parent.setOnMousePressed(new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent event) {
+                        xOffset = event.getSceneX();
+                        yOffset = event.getSceneY();
+                    }
+               });
+               
+               parent.setOnMouseDragged(new EventHandler<MouseEvent>() {
+                   @Override
+                   public void handle(MouseEvent event) {
+                       stage.setX(event.getScreenX() - xOffset);
+                       stage.setY(event.getScreenY() - yOffset);
+                   }
+               });
 
                //set the main interface as the scene
                Scene scene = new Scene(parent);
@@ -1026,11 +1094,6 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                txtField07.setText(inqlistdata.get(pagecounter).getTblcinqindex07()); //
                textArea08.setText(inqlistdata.get(pagecounter).getTblcinqindex08()); //
                txtField09.setText(inqlistdata.get(pagecounter).getTblcinqindex09()); //
-               
-//               String dateString = inqlistdata.get(pagecounter).getTblcinqindex09();
-//               SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-//               Date date = dateFormat.parse(dateString);
-               //txtField10.setValue(strToDate(CommonUtils.xsDateShort( inqlistdata.get(pagecounter).getTblcinqindex09())));
                txtField10.setValue(strToDate( inqlistdata.get(pagecounter).getTblcinqindex09()));
                switch (inqlistdata.get(pagecounter).getTblcinqindex11().toLowerCase()) {
                    case "a":
@@ -1111,6 +1174,8 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                if (Integer.parseInt(oTrans.getMaster(12).toString()) == 1) {
                     cmbOnstr13.getSelectionModel().select(Integer.parseInt(oTrans.getMaster(13).toString())); //Online Store
                }
+               System.out.println("date "+ CommonUtils.xsDateShort((Date) oTrans.getMaster(10)));
+               System.out.println("strToDate " + strToDate(CommonUtils.xsDateShort((Date) oTrans.getMaster(10))));
                txtField10.setValue(strToDate(CommonUtils.xsDateShort((Date) oTrans.getMaster(10)))); //Target Release Date
                txtField09.setText((String) oTrans.getMaster(9)); //Agent ID
                txtField15.setText((String) oTrans.getMaster(15)); //Activity ID
@@ -1399,35 +1464,93 @@ public class InquiryFormController implements Initializable, ScreenInterface{
      /*INQUIRY: PROCESS*/
      // Load Inquiry Process Requirements
      public void loadInquiryRequirements(){
-          try {
+//          try {
                /*Populate table*/
                inqrequirementsdata.clear();
-               for (lnCtr = 1; lnCtr <= oTrans.getInqPromoCount(); lnCtr++){
-                    if (oTrans.getInqPromo(lnCtr,"").toString() == "0"){
-                    
-                    }
+               for (lnCtr = 1; lnCtr <= 3; lnCtr++){
                     inqrequirementsdata.add(new InquiryTableRequirements(
                          true, //Check box
-                         oTrans.getInqPromo(lnCtr,"").toString() //Requirements
+                         //"test",
+                         "sample" + lnCtr + "data" //Requirements
                     ));
                }
+               
+               
+//               for (lnCtr = 1; lnCtr <= oTrans.getInqPromoCount(); lnCtr++){
+//                    if (oTrans.getInqPromo(lnCtr,"").toString() == "0"){
+//                    
+//                    }
+//                    inqrequirementsdata.add(new InquiryTableRequirements(
+//                         true, //Check box
+//                         oTrans.getInqPromo(lnCtr,"").toString() //Requirements
+//                    ));
+//               }
                     
-          } catch (SQLException e) {
-               ShowMessageFX.Warning(getStage(),e.getMessage(), "Warning", null);
-          }
+//          } catch (SQLException e) {
+//               ShowMessageFX.Warning(getStage(),e.getMessage(), "Warning", null);
+//          }
      }
      
      public void initInquiryRequirements(){
+          
           tblRequirementsInfo.setEditable(true);
           rqrmIndex01.setCellValueFactory(new PropertyValueFactory<>("tblindex01"));
-          rqrmIndex01.setCellFactory(CheckBoxTableCell.forTableColumn(new Callback<Integer, ObservableValue<Boolean>>() {
-               @Override
-               public ObservableValue<Boolean> call(Integer index) {
-                   return inqrequirementsdata.get(index).selectedProperty();
-               }
-          }));
+//          rqrmIndex01.setCellFactory(CheckBoxTableCell.forTableColumn(new Callback<Integer, ObservableValue<Boolean>>() {
+//               @Override
+//               public ObservableValue<Boolean> call(Integer index) {
+//                   return inqrequirementsdata.get(index).selectedProperty();
+//               }
+//          }));
           rqrmIndex02.setCellValueFactory(new PropertyValueFactory<>("tblindex02"));
+//          
+//          rqrmIndex01.setCellFactory(column -> new CheckBoxTableCell<InquiryTableRequirements, Boolean>() {
+//               @Override
+//               public void updateItem(Boolean item, boolean empty) {
+//                   super.updateItem(item, empty);
+//                   if (!empty) {
+//                       TableRow<InquiryTableRequirements> row = getTableRow();
+//                       if (row != null) {
+//                           boolean isSelected = row.getItem().isTblindex01();
+//                           
+//                           setEditable(true);
+//                       }
+//                   } else {
+//                       setGraphic(null);
+//                       setEditable(false);
+//                   }
+//               }
+//
+//               @Override
+//               public void commitEdit(Boolean newValue) {
+//                   if (!isSelected()) {
+//                       // prevent unselecting the checkbox
+//                       cancelEdit();
+//                   } else {
+//                       super.commitEdit(newValue);
+//                   }
+//               }
+//           });
+
           
+//          tblRequirementsInfo.setOnMouseClicked(event -> {
+//               if (event.getClickCount() == 1) {
+//                   int index = tblRequirementsInfo.getSelectionModel().getSelectedIndex();
+//                   if (index >= 0) {
+//                        TablePosition<?, ?> focusedCell = tblRequirementsInfo.getFocusModel().getFocusedCell();
+//                         //String columnId = focusedCell.getTableColumn().getId();
+//                         if (focusedCell != null && focusedCell.getTableColumn() != null) {
+//                              int lnCol = Integer.parseInt(focusedCell.getTableColumn().getId().substring(9,11));
+//                              System.out.println(focusedCell.getTableColumn().getId().substring(9,11));
+//                              if (lnCol == 1){
+//                                   //InquiryTableRequirements item = inqrequirementsdata.get(index);
+//                                   //item.setTblindex01(true);
+//                              }
+//                         }
+//   
+//                   }
+//               }
+//          });
+
           tblRequirementsInfo.widthProperty().addListener((ObservableValue<? extends Number> source, Number oldWidth, Number newWidth) -> {
                     TableHeaderRow header = (TableHeaderRow) tblRequirementsInfo.lookup("TableHeaderRow");
                     header.reorderingProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
@@ -1440,11 +1563,46 @@ public class InquiryFormController implements Initializable, ScreenInterface{
      
      // Load Inquiry Process Advance Slip
      public void loadInquiryAdvances(){
-        initInquiryAdvances();
-            
+          //          try {
+               /*Populate table*/
+//               inqrequirementsdata.clear();
+//               for (lnCtr = 1; lnCtr <= 3; lnCtr++){
+//                    inqrequirementsdata.add(new InquiryTableRequirements(
+//                         true, //Check box
+//                         "sample" + lnCtr + "data" //Requirements
+//                    ));
+//               }
+               
+               
+//               for (lnCtr = 1; lnCtr <= oTrans.getInqPromoCount(); lnCtr++){
+//                    if (oTrans.getInqPromo(lnCtr,"").toString() == "0"){
+//                    
+//                    }
+//                    inqrequirementsdata.add(new InquiryTableRequirements(
+//                         true, //Check box
+//                         oTrans.getInqPromo(lnCtr,"").toString() //Requirements
+//                    ));
+//               }
+                    
+//          } catch (SQLException e) {
+//               ShowMessageFX.Warning(getStage(),e.getMessage(), "Warning", null);
+//          }
+              
      }
     
      public void initInquiryAdvances(){
+          tblRequirementsInfo.setEditable(true);
+          rqrmIndex01.setCellValueFactory(new PropertyValueFactory<>("tblindex01"));
+          rqrmIndex02.setCellValueFactory(new PropertyValueFactory<>("tblindex02"));
+          
+          tblRequirementsInfo.widthProperty().addListener((ObservableValue<? extends Number> source, Number oldWidth, Number newWidth) -> {
+                    TableHeaderRow header = (TableHeaderRow) tblRequirementsInfo.lookup("TableHeaderRow");
+                    header.reorderingProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+                         header.setReordering(false);
+                    });
+          });
+
+          tblRequirementsInfo.setItems(inqrequirementsdata);
 
      }
 
@@ -1632,7 +1790,7 @@ public class InquiryFormController implements Initializable, ScreenInterface{
           cmbType012.setDisable(!lbShow); //Inquiry Type
           txtField15.setDisable(true); //Activity ID
           txtField14.setDisable(!lbShow); //Test Model
-          txtField10.setValue(LocalDate.of(1900, Month.JANUARY, 1));//Target Release Date
+          //txtField10.setValue(LocalDate.of(1900, Month.JANUARY, 1));//Target Release Date
           //Radio Button Toggle Group
           rdbtnHtA11.setDisable(!lbShow);
           rdbtnHtB11.setDisable(!lbShow);
@@ -1679,8 +1837,16 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                btnPrintRefund.setVisible(true); 
                btnPrintRefund.setManaged(true);
                btnLostSale.setVisible(true); 
-               btnLostSale.setManaged(true);
+               btnLostSale.setManaged(true);   
           }
+          
+          boolean lbTab = (fnValue == EditMode.READY);
+          
+          //tabCustomerInquiry.setDisable(!lbTab);
+          //tabInquiryProcess.setDisable(!lbTab);
+          //tabBankHistory.setDisable(!lbTab);
+          //tabFollowingHistory.setDisable(!lbTab);
+          
      }
      
      /*Clear Class Value*/
@@ -1755,7 +1921,7 @@ public class InquiryFormController implements Initializable, ScreenInterface{
            cmbType012.setValue(null); //Inquiry Type
            txtField15.clear(); //Activity ID
            txtField14.clear(); //Test Model
-           txtField10.setValue(LocalDate.of(1900, Month.JANUARY, 1)); //birthdate
+           //txtField10.setValue(LocalDate.of(1900, Month.JANUARY, 1)); //birthdate
            
            hotCategory.selectToggle(null);//Radio Button Toggle Group
            targetVehicle.selectToggle(null);//Radio Button Toggle Group

@@ -29,7 +29,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" fx:id="AnchorMain" prefHeight="1182.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" >
+<AnchorPane id="AnchorPane" fx:id="AnchorMain" prefHeight="1182.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <StackPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -590,6 +590,7 @@
                                                                                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="10.0" />
                                                                                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="100.0" />
                                                                                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="150.0" />
+                                                                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="165.0" />
                                                                                                 <ColumnConstraints hgrow="SOMETIMES" minWidth="5.0" prefWidth="10.0" />
                                                                                             </columnConstraints>
                                                                                             <rowConstraints>
@@ -609,10 +610,12 @@
                                                                                                 </Label>
                                                                                                 <ComboBox fx:id="cmbInqpr01" prefWidth="150.0" GridPane.columnIndex="2" />
                                                                                                 <ComboBox fx:id="cmbInqpr02" prefWidth="150.0" GridPane.columnIndex="5" />
-                                                                                                <TableView fx:id="tblRequirementsInfo" prefHeight="177.0" prefWidth="417.0" GridPane.columnIndex="2" GridPane.columnSpan="4" GridPane.rowIndex="1">
+                                                                                                <TableView fx:id="tblRequirementsInfo" prefHeight="177.0" prefWidth="417.0" GridPane.columnIndex="1" GridPane.columnSpan="6" GridPane.rowIndex="1">
                                                                                                    <columns>
                                                                                                       <TableColumn fx:id="rqrmIndex01" prefWidth="33.0" />
-                                                                                                      <TableColumn fx:id="rqrmIndex02" prefWidth="355.0" text="Requirments" />
+                                                                                                      <TableColumn fx:id="rqrmIndex02" prefWidth="255.0" text="Requirements" />
+                                                                                                      <TableColumn fx:id="rqrmIndex03" prefWidth="239.0" text="Received By" />
+                                                                                                      <TableColumn fx:id="rqrmIndex04" prefWidth="110.0" text="Received Date" />
                                                                                                    </columns>
                                                                                                 </TableView>
                                                                                              </children>

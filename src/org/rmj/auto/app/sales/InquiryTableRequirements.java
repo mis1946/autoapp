@@ -13,6 +13,48 @@ import javafx.beans.property.SimpleStringProperty;
  * Date Created: 04-25-2023
  * @author Arsiela
  */
+//
+//public class InquiryTableRequirements {
+//
+//    private SimpleBooleanProperty selected;
+//    private SimpleStringProperty tblindex01;
+//    private SimpleStringProperty tblindex02;
+//
+//    public InquiryTableRequirements(String tblindex01, String tblindex02) {
+//        this.selected = new SimpleBooleanProperty(false);
+//        this.tblindex01 = new SimpleStringProperty(tblindex01);
+//        this.tblindex02 = new SimpleStringProperty(tblindex02);
+//    }
+//
+//    public boolean isSelected() {
+//        return selected.get();
+//    }
+//
+//    public SimpleBooleanProperty selectedProperty() {
+//        return selected;
+//    }
+//
+//    public void setSelected(boolean selected) {
+//        this.selected.set(selected);
+//    }
+//
+//    public String getTblindex01() {
+//        return tblindex01.get();
+//    }
+//
+//    public void setTblindex01(String tblindex01) {
+//        this.tblindex01.set(tblindex01);
+//    }
+//
+//    public String getTblindex02() {
+//        return tblindex02.get();
+//    }
+//
+//    public void setTblindex02(String tblindex02) {
+//        this.tblindex02.set(tblindex02);
+//    }
+//}
+
 public class InquiryTableRequirements {
      
      private SimpleBooleanProperty tblindex01; //Check box

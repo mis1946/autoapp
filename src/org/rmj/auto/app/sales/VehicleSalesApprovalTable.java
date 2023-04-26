@@ -4,6 +4,8 @@
  */
 package org.rmj.auto.app.sales;
 
+import java.awt.Checkbox;
+
 /**
  *
  * @author User
@@ -11,6 +13,7 @@ package org.rmj.auto.app.sales;
 public class VehicleSalesApprovalTable {
     
     
+    private Checkbox Remarks;
     
     
 }

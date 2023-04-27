@@ -49,7 +49,8 @@ public class InquiryTableList {
      private SimpleStringProperty tblcinqindex31 ; //sAccountx
      private SimpleStringProperty tblcinqindex32 ; //sEmailAdd
      private SimpleStringProperty tblcinqindex33 ; //sAddressx
-     
+     private SimpleStringProperty tblcinqindex34 ; //sSalesExe
+     private SimpleStringProperty tblcinqindex35 ; //sSalesAgn
      InquiryTableList( String tbllistindex01,
                          String tbllistindex02,
                          String tbllistindex03,
@@ -86,7 +87,9 @@ public class InquiryTableList {
                          String tblcinqindex30,
                          String tblcinqindex31,
                          String tblcinqindex32,
-                         String tblcinqindex33
+                         String tblcinqindex33,
+                         String tblcinqindex34,
+                         String tblcinqindex35
                          ){
      
           this.tbllistindex01 = new SimpleStringProperty(tbllistindex01);
@@ -126,6 +129,8 @@ public class InquiryTableList {
           this.tblcinqindex31 = new SimpleStringProperty( tblcinqindex31 );
           this.tblcinqindex32 = new SimpleStringProperty( tblcinqindex32 );
           this.tblcinqindex33 = new SimpleStringProperty( tblcinqindex33 );
+          this.tblcinqindex34 = new SimpleStringProperty( tblcinqindex34 );
+          this.tblcinqindex35 = new SimpleStringProperty( tblcinqindex35 );
      }
      
      //Row
@@ -196,6 +201,8 @@ public class InquiryTableList {
      public String getTblcinqindex31(){return tblcinqindex31.get();}
      public String getTblcinqindex32(){return tblcinqindex32.get();}
      public String getTblcinqindex33(){return tblcinqindex33.get();}
+     public String getTblcinqindex34(){return tblcinqindex34.get();}
+     public String getTblcinqindex35(){return tblcinqindex35.get();}
 
      public void setTblcinqindex12(String tblcinqindex12){this.tblcinqindex12.set(tblcinqindex12);}
      public void setTblcinqindex13(String tblcinqindex13){this.tblcinqindex13.set(tblcinqindex13);}
@@ -219,6 +226,8 @@ public class InquiryTableList {
      public void setTblcinqindex31(String tblcinqindex31){this.tblcinqindex31.set(tblcinqindex31);}
      public void setTblcinqindex32(String tblcinqindex32){this.tblcinqindex32.set(tblcinqindex32);}
      public void setTblcinqindex33(String tblcinqindex33){this.tblcinqindex33.set(tblcinqindex33);}
+     public void setTblcinqindex34(String tblcinqindex34){this.tblcinqindex34.set(tblcinqindex34);}
+     public void setTblcinqindex35(String tblcinqindex35){this.tblcinqindex35.set(tblcinqindex35);}
      
 
      

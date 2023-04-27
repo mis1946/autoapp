@@ -37,7 +37,7 @@
                <top>
                   <AnchorPane prefHeight="25.0" style="-fx-background-color: #515151; -fx-background-radius: 5;" BorderPane.alignment="CENTER">
                      <children>
-                        <Label alignment="CENTER" contentDisplay="CENTER" text="Vehicles Sales Advance for Approval" textAlignment="CENTER" textFill="WHITE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <Label alignment="CENTER" contentDisplay="CENTER" text="VEHICLES SALES ADVANCE FOR APPROVAL" textAlignment="CENTER" textFill="WHITE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <font>
                               <Font name="Arial Bold" size="13.0" />
                            </font>
@@ -124,21 +124,21 @@
                                  <center>
                                     <AnchorPane style="-fx-border-color: orange; -fx-border-radius: 5;" BorderPane.alignment="CENTER">
                                        <children>
-                                          <TableView fx:id="tblVehicleApproval" prefWidth="550.0" style="-fx-border-radius: 5;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                          <TableView fx:id="tblVhclApproval" prefWidth="550.0" style="-fx-border-radius: 5;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                              <columns>
-                                                <TableColumn fx:id="tblindexRow" prefWidth="38.0" sortable="false" text="Row" />
-                                                <TableColumn fx:id="tblindex02" maxWidth="297.0" minWidth="18.0" prefWidth="33.0" resizable="false" sortable="false">
+                                                <TableColumn fx:id="tblRow" prefWidth="38.0" sortable="false" text="Row" />
+                                                <TableColumn fx:id="tblselected" maxWidth="297.0" minWidth="18.0" prefWidth="33.0" resizable="false" sortable="false">
                                                    <graphic>
-                                                      <CheckBox mnemonicParsing="false" />
+                                                      <CheckBox fx:id="selectAllCheckBox" mnemonicParsing="false" />
                                                    </graphic></TableColumn>
-                                                <TableColumn fx:id="tblindex03" minWidth="17.0" prefWidth="200.0" sortable="false" text="Slip No." />
-                                                <TableColumn fx:id="tblindex17" minWidth="72.0" prefWidth="132.33331298828125" sortable="false" text="Type" />
-                                                <TableColumn fx:id="tblindex16" prefWidth="118.3333740234375" sortable="false" text="Slip Date" />
-                                                <TableColumn minWidth="0.0" prefWidth="219.6666259765625" sortable="false" text="Customer Name" />
-                                                <TableColumn prefWidth="300.0" sortable="false" text="Unit Description" />
-                                                <TableColumn prefWidth="75.0" sortable="false" text="Amount" />
-                                                <TableColumn prefWidth="150.0" sortable="false" text="SE Name" />
-                                                <TableColumn prefWidth="75.0" sortable="false" text="Branch" />
+                                                <TableColumn fx:id="tblslipNo" minWidth="17.0" prefWidth="200.0" sortable="false" text="Slip No." />
+                                                <TableColumn fx:id="tbltype" minWidth="72.0" prefWidth="132.33331298828125" sortable="false" text="Type" />
+                                                <TableColumn fx:id="tblslipDate" prefWidth="109.0" text="Slip Date" />
+                                                <TableColumn fx:id="tblcustomerName" minWidth="0.0" prefWidth="255.0" sortable="false" text="Customer Name" />
+                                                <TableColumn fx:id="tblunitDescription" prefWidth="231.0" sortable="false" text="Unit Description" />
+                                                <TableColumn fx:id="tblamount" prefWidth="109.0" sortable="false" text="Amount" />
+                                                <TableColumn fx:id="tblseName" prefWidth="200.0" sortable="false" text="SE Name" />
+                                                <TableColumn fx:id="tblbranch" prefWidth="75.0" sortable="false" text="Branch" />
                                              </columns>
                                           </TableView>
                                        </children>

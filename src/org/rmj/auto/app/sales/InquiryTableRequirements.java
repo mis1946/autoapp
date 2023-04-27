@@ -59,10 +59,18 @@ public class InquiryTableRequirements {
      
      private SimpleBooleanProperty tblindex01; //Check box
      private SimpleStringProperty tblindex02; //Requirements
+     private SimpleStringProperty tblindex03; //Received By
+     private SimpleStringProperty tblindex04; //Received Date
      
-     public InquiryTableRequirements(boolean tblindex01, String tblindex02) {
+     public InquiryTableRequirements(boolean tblindex01
+                                   , String tblindex02
+                                   , String tblindex03
+                                   , String tblindex04
+                                   ) {
           this.tblindex01 = new SimpleBooleanProperty(tblindex01);
           this.tblindex02 = new SimpleStringProperty(tblindex02);
+          this.tblindex03 = new SimpleStringProperty(tblindex03);
+          this.tblindex04 = new SimpleStringProperty(tblindex04);
      }
      
      //Check box
@@ -73,6 +81,14 @@ public class InquiryTableRequirements {
      //Requirements
      public String getTblindex02(){return tblindex02.get();}
      public void setTblindex02(String tblindex02){this.tblindex02.set(tblindex02);}
+     
+     //Received By
+     public String getTblindex03(){return tblindex03.get();}
+     public void setTblindex03(String tblindex03){this.tblindex03.set(tblindex03);}
+     
+     //Received Date
+     public String getTblindex04(){return tblindex04.get();}
+     public void setTblindex04(String tblindex04){this.tblindex04.set(tblindex04);}
 }
 
 

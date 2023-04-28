@@ -29,7 +29,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" fx:id="AnchorMain" prefHeight="1182.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" >
+<AnchorPane id="AnchorPane" fx:id="AnchorMain" prefHeight="1182.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <StackPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -114,7 +114,10 @@
                                              <columns>
                                                 <TableColumn fx:id="listIndex01" prefWidth="30.0" text="Row" />
                                                 <TableColumn fx:id="listIndex02" prefWidth="90.0" text="Inquiry Date" />
-                                                <TableColumn fx:id="listIndex03" minWidth="100.0" prefWidth="290.9999694824219" text="Customer Name" />
+                                                <TableColumn fx:id="listIndex03" minWidth="100.0" prefWidth="300.0" text="Customer Name" />
+                                                <TableColumn fx:id="listIndex04" minWidth="100.0" prefWidth="100.0" text="Inquiry Status" />
+                                                <TableColumn fx:id="listIndex05" minWidth="100.0" prefWidth="300.0" text="Sales Executive" />
+                                                <TableColumn fx:id="listIndex06" minWidth="100.0" prefWidth="200.0" text="Reservation Slip" />
                                              </columns>
                                           </TableView>
                                        </children>

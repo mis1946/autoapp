@@ -132,6 +132,12 @@ public class InquiryFormController implements Initializable, ScreenInterface{
      @FXML
      private TableColumn listIndex03;
      @FXML
+     private TableColumn listIndex04;
+     @FXML
+     private TableColumn listIndex05;
+     @FXML
+     private TableColumn listIndex06;
+     @FXML
      private TextField textSeek01;
      @FXML
      private DatePicker dateSeek01;
@@ -371,12 +377,19 @@ public class InquiryFormController implements Initializable, ScreenInterface{
           initTargetVehicle();
           initPromosOffered();
           
-          
+          dateSeek02.setOnAction(event -> {
+               loadInquiryListTable();
+               pagination.setPageFactory(this::createPage);
+          });
+          dateSeek01.setOnAction(event -> {
+               loadInquiryListTable();
+               pagination.setPageFactory(this::createPage);
+          });
+
           dateSeek01.setValue(LocalDate.of(2023, Month.JANUARY, 1)); //birthdate
-          dateSeek02.setValue(LocalDate.of(2023, Month.APRIL, 30)); //birthdate
-          //dateSeek02.setValue(LocalDate.of(oApp.getServerDate(), Month.APRIL, 30)); //birthdate
+          dateSeek02.setValue(strToDate(CommonUtils.xsDateShort((Date) oApp.getServerDate())));
           
-          //dateSeek02.setValue(strToDate(CommonUtils.xsDateShort((Date) oApp.getServerDate())));
+          
           //Populate table
           loadInquiryListTable();
           pagination.setPageFactory(this::createPage);
@@ -387,21 +400,24 @@ public class InquiryFormController implements Initializable, ScreenInterface{
           cmbOnstr13.setItems(cOnlineStore); //Web Inquiry
           cmbType012.setOnAction(event -> {
                cmbOnstr13.setDisable(true);
-               cmbOnstr13.setValue("");
                txtField09.setDisable(true);
-               txtField09.setText("");
                txtField15.setDisable(true);
-               txtField15.setText("");
                switch (cmbType012.getSelectionModel().getSelectedIndex()) {
                     case 1:
                          cmbOnstr13.setDisable(false);
+                         txtField15.setText("");
+                         txtField09.setText("");
                          break;
                     case 3:
                          txtField09.setDisable(false);
+                         txtField15.setText("");
+                         cmbOnstr13.setValue(null);
                          break;
                     case 4:
                     case 5:
                          txtField15.setDisable(false);
+                         txtField09.setText("");
+                         cmbOnstr13.setValue(null);
                          break;
                }
                
@@ -491,7 +507,8 @@ public class InquiryFormController implements Initializable, ScreenInterface{
           
           pnEditMode = EditMode.UNKNOWN;
           initButton(pnEditMode);
-        
+          
+          
     }    
     
      @Override
@@ -504,8 +521,6 @@ public class InquiryFormController implements Initializable, ScreenInterface{
           try {
           String lsButton = ((Button)event.getSource()).getId();
           switch(lsButton){
-               
-                   
                /*CUSTOMER INQUIRY: PRIORITY UNIT*/
                case "btnTargetVhclAdd": 
                     lnRow = priorityunitdata.size();
@@ -521,8 +536,12 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                case "btnTargetVhclRemove":
                     selectedPUnitIndex = tblPriorityUnit.getSelectionModel().getSelectedIndex() + 1;
                     if (selectedPUnitIndex >= 1) {
-                         oTrans.removeTargetVehicle(selectedPUnitIndex);
-                         loadTargetVehicle();  
+                         System.out.println(oTrans.getVhclPrty(selectedPUnitIndex, 1).toString());
+                         if ((oTrans.getVhclPrty(selectedPUnitIndex, 1).toString() != null) && (!oTrans.getVhclPrty(selectedPUnitIndex, 1).toString().trim().equals(""))){
+                         } else {
+                              oTrans.removeTargetVehicle(selectedPUnitIndex);
+                              loadTargetVehicle();
+                         }
                     }
                     break;     
                case "btnTargetVehicleDown":
@@ -574,9 +593,11 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                         ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
                      break;
                case "btnEdit":
-                    pnEditMode  = EditMode.UPDATE; 
-                    ShowMessageFX.Information(null, pxeModuleName, "You click edit button!"); 
-                   break;
+                    if (oTrans.UpdateRecord() ){
+                         pnEditMode = oTrans.getEditMode(); 
+                    } else 
+                         ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
+                    break;
                case "btnSave":
                     if(ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure, do you want to save?") == true){
                          //TODO
@@ -586,6 +607,8 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                                    loadCustomerInquiry();
                                    loadTargetVehicle();
                                    loadPromosOfferred();
+                                   loadInquiryListTable();
+                                   pagination.setPageFactory(this::createPage);
                                    pnEditMode = oTrans.getEditMode();
                               } else {
                                   ShowMessageFX.Warning(getStage(),oTrans.getMessage() ,"Warning", "Error while saving " + pxeModuleName);
@@ -643,12 +666,14 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                     break;
                             
                case "btnCancel":
-                    clearClassFields();
-                    loadCustomerInquiry();
-                    loadTargetVehicle();
-                    loadPromosOfferred();
-                    pnEditMode = EditMode.UNKNOWN;
+                    
                     if(ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure, do you want to cancel?") == true){
+                         clearFields();
+                         clearClassFields();
+                         loadCustomerInquiry();
+                         loadTargetVehicle();
+                         loadPromosOfferred();
+                         pnEditMode = EditMode.UNKNOWN;
                          break;
                     }else
                          return;
@@ -908,26 +933,50 @@ public class InquiryFormController implements Initializable, ScreenInterface{
     //Load Customer Profile Data
     public void loadInquiryListTable(){
           try {
+               String sInqStat ;
                /*Populate table*/
                inqlistdata.clear();
                if (oTrans.loadCustomer("",dateSeek01.getValue().toString(), dateSeek02.getValue().toString(),false)){
-                    System.out.println("getInquiryMasterCount" + oTrans.getInquiryMasterCount());
-                    
                     for (lnCtr = 1; lnCtr <= oTrans.getInquiryMasterCount(); lnCtr++){
-                         System.out.println("dTransact " + oTrans.getInqDetail(lnCtr,"dTransact").toString());
-                         System.out.println("sCompnyNm " + oTrans.getInqDetail(lnCtr,"sCompnyNm").toString());
+                         //Inquiry Status
+                         switch (oTrans.getInqDetail(lnCtr, "cTranStat").toString()) { // cTranStat
+                              case "0":
+                                   sInqStat = "For Follow-up";
+                                   break;
+                              case "1":
+                                   sInqStat = "On Process" ; 
+                                   break;
+                              case "2":
+                                   sInqStat = "Lost Sale";
+                                   break;
+                              case "3":
+                                   sInqStat = "VSP";
+                                   break;
+                              case "4":
+                                   sInqStat = "Sold";
+                                   break;
+                              case "5":
+                                   sInqStat = "Retired" ;
+                                   break;
+                              case "6":
+                                   sInqStat = "Cancelled" ; 
+                                   break;
+                              default:
+                                   sInqStat = "" ; //Inquiry Status
+                                   break;
+                         }
+                         
                          inqlistdata.add(new InquiryTableList(
                          String.valueOf(lnCtr), //ROW
-                         CommonUtils.xsDateMedium((Date) oTrans.getInqDetail(lnCtr,"dTransact")), //Inquir date
+                         CommonUtils.xsDateShort((Date) oTrans.getInqDetail(lnCtr,"dTransact")), //Inquir date
                          oTrans.getInqDetail(lnCtr,"sCompnyNm").toString(), //Company/ customer name
                                  
                          oTrans.getInqDetail(lnCtr, "sTransNox").toString(), //
                          oTrans.getInqDetail(lnCtr, "sBranchCD").toString(), //
                          CommonUtils.xsDateMedium((Date) oTrans.getInqDetail(lnCtr,"dTransact")), //Inquir date
-                         //oTrans.getInqDetail(lnCtr, "dTransact").toString(), //
                          oTrans.getInqDetail(lnCtr, "sEmployID").toString(), // Employee name
                          oTrans.getInqDetail(lnCtr, "cIsVhclNw").toString(), //
-                         //oTrans.getInqDetail(lnCtr, "sVhclIDxx").toString(), //
+                         oTrans.getInqDetail(lnCtr, "sVhclIDxx").toString(), //
                          oTrans.getInqDetail(lnCtr, "sClientID").toString(), //sClientID Customer name
                          oTrans.getInqDetail(lnCtr, "sRemarksx").toString(), //
                          oTrans.getInqDetail(lnCtr, "sAgentIDx").toString(), // Agent name
@@ -946,7 +995,7 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                          oTrans.getInqDetail(lnCtr, "sApproved").toString(), //
                          //oTrans.getInqDetail(lnCtr, "sSerialID").toString(), //
                          //oTrans.getInqDetail(lnCtr, "sInqryCde").toString(), //
-                         oTrans.getInqDetail(lnCtr, "cTranStat").toString(), //
+                         sInqStat, //
                         // oTrans.getInqDetail(lnCtr, "sEntryByx").toString(), //
                         // oTrans.getInqDetail(lnCtr, "dEntryDte").toString(), //
                         // oTrans.getInqDetail(lnCtr, "sModified").toString(), //
@@ -977,7 +1026,10 @@ public class InquiryFormController implements Initializable, ScreenInterface{
           listIndex01.setCellValueFactory(new PropertyValueFactory<>("tbllistindex01"));
           listIndex02.setCellValueFactory(new PropertyValueFactory<>("tbllistindex02"));
           listIndex03.setCellValueFactory(new PropertyValueFactory<>("tbllistindex03"));
-         
+          listIndex04.setCellValueFactory(new PropertyValueFactory<>("tblcinqindex24"));
+          listIndex05.setCellValueFactory(new PropertyValueFactory<>("tblcinqindex34"));
+          listIndex06.setCellValueFactory(new PropertyValueFactory<>("tblcinqindex17"));
+          
           tblInquiry.widthProperty().addListener((ObservableValue<? extends Number> source, Number oldWidth, Number newWidth) -> {
                TableHeaderRow header = (TableHeaderRow) tblInquiry.lookup("TableHeaderRow");
                header.reorderingProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
@@ -1003,9 +1055,6 @@ public class InquiryFormController implements Initializable, ScreenInterface{
               });
               header.setDisable(true);
           });
-          
-          
-    
     }
     
      private void autoSearch(TextField txtField){
@@ -1022,9 +1071,9 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                switch (lnIndex){
                        case 1:
                            if(lnIndex == 1){
-                               return (clients.getTblcinqindex03().toLowerCase().contains(lowerCaseFilter)); // Does not match.   
+                               return (clients.getTbllistindex03().toLowerCase().contains(lowerCaseFilter)); // Does not match.   
                             }else {
-                               return (clients.getTblcinqindex03().toLowerCase().contains(lowerCaseFilter)); // Does not match.
+                               return (clients.getTbllistindex03().toLowerCase().contains(lowerCaseFilter)); // Does not match.
                             }   
                        default:
                        return true;            
@@ -1037,12 +1086,12 @@ public class InquiryFormController implements Initializable, ScreenInterface{
      } 
      
      private void loadTab(){
-                int totalPage = (int) (Math.ceil(inqlistdata.size() * 1.0 / ROWS_PER_PAGE));
-                pagination.setPageCount(totalPage);
-                pagination.setCurrentPageIndex(0);
-                changeTableView(0, ROWS_PER_PAGE);
-                pagination.currentPageIndexProperty().addListener(
-                        (observable, oldValue, newValue) -> changeTableView(newValue.intValue(), ROWS_PER_PAGE));
+          int totalPage = (int) (Math.ceil(inqlistdata.size() * 1.0 / ROWS_PER_PAGE));
+          pagination.setPageCount(totalPage);
+          pagination.setCurrentPageIndex(0);
+          changeTableView(0, ROWS_PER_PAGE);
+          pagination.currentPageIndexProperty().addListener(
+                  (observable, oldValue, newValue) -> changeTableView(newValue.intValue(), ROWS_PER_PAGE));
       
      } 
      
@@ -1069,7 +1118,7 @@ public class InquiryFormController implements Initializable, ScreenInterface{
           pagecounter = pnRow + pagination.getCurrentPageIndex() * ROWS_PER_PAGE;
           if (pagecounter >= 0){
                if(event.getClickCount() > 0){
-                    getSelectedItem(filteredData.get(pagecounter).getTbllistindex01()); //Populate field based on selected Item
+                    getSelectedItem(filteredData.get(pagecounter).getTblcinqindex01()); //Populate field based on selected Item
 
                     tblInquiry.setOnKeyReleased((KeyEvent t)-> {
                         KeyCode key = t.getCode();
@@ -1089,6 +1138,7 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                             case UP:
                                 pnRow = tblInquiry.getSelectionModel().getSelectedIndex();
                                 pagecounter = pnRow + pagination.getCurrentPageIndex() * ROWS_PER_PAGE;
+                                
                                 getSelectedItem(filteredData.get(pagecounter).getTblcinqindex01());
                                 break;
                             default:
@@ -1125,6 +1175,7 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                textArea08.setText(inqlistdata.get(pagecounter).getTblcinqindex08()); // sRemarksx
                txtField09.setText(inqlistdata.get(pagecounter).getTblcinqindex35()); // sSalesAgn
                txtField10.setValue( strToDate( inqlistdata.get(pagecounter).getTblcinqindex10())); //dTargetDt
+               
                switch (inqlistdata.get(pagecounter).getTblcinqindex11().toLowerCase()) {
                    case "a":
                         rdbtnHtA11.setSelected(true);
@@ -1302,13 +1353,13 @@ public class InquiryFormController implements Initializable, ScreenInterface{
 
                trgvIndex01.setCellValueFactory(new PropertyValueFactory<>("tblindex01"));
                trgvIndex02.setCellValueFactory(new PropertyValueFactory<>("tblindex02"));
-               String svhcldescr = "";
+//               String svhcldescr = "";
+//               
+//               if (oTrans.getInquiryMasterCount() > 0 ) {
+//                    svhcldescr = oTrans.getVhclPrty(tblPriorityUnit.getSelectionModel().getSelectedIndex() + 1,"sDescript").toString();
+//               } 
                
-               if (oTrans.getInquiryMasterCount() > 0 ) {
-                    svhcldescr = oTrans.getVhclPrty(tblPriorityUnit.getSelectionModel().getSelectedIndex() + 1,"sDescript").toString();
-               } 
-               
-               if (svhcldescr == "" || pnEditMode == EditMode.ADDNEW){
+               if (lbShow) {
                     trgvIndex02.setCellFactory(TextFieldTableCell.forTableColumn()); // make the cells editable
                     // Set the event handler to store the edited value
                     trgvIndex02.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<InquiryTablePriorityUnit, String>>() {
@@ -1320,9 +1371,13 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                               sValue = event.getNewValue();
                          }
                     });
-                    trgvIndex02.setEditable(true);// make the column editable
-                    //unitIndex02.setCellValueFactory(new PropertyValueFactory<>("tblindex02"));
-                    if (lbShow) {      
+
+                    if ((oTrans.getVhclPrty(tblPriorityUnit.getSelectionModel().getSelectedIndex() + 1, 1).toString() != null) 
+                         &&  (!oTrans.getVhclPrty(tblPriorityUnit.getSelectionModel().getSelectedIndex() + 1, 1).toString().trim().equals(""))){
+                         trgvIndex02.setEditable(false);// make the column editable
+                    } else 
+                         trgvIndex02.setEditable(true);// make the column editable
+
                          tblPriorityUnit.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
                               TablePosition<?, ?> focusedCell = tblPriorityUnit.getFocusModel().getFocusedCell();
                               //String columnId = focusedCell.getTableColumn().getId();
@@ -1334,25 +1389,24 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                                         if (focusedCell.getTableColumn().isEditable()) {
                                              switch (lnIndex){
                                                   case 2: //Vehicle Description
-                                                        // Code to execute when F3 is pressed on an editable column
-                                                       // ShowMessageFX.Warning(getStage(), (tblPriorityUnit.getSelectionModel().getSelectedIndex() + 1) + "","Warning", null);
-                                                        //System.out.println("F3 was pressed on an editable column");
-                                                       // System.out.println(tblPriorityUnit.getSelectionModel().getSelectedIndex());
                                                        try {
-                                                            if (oTrans.searchVhclPrty(tblPriorityUnit.getSelectionModel().getSelectedIndex() + 1,sValue,false)){
-                                                                loadTargetVehicle();
-                                                            } else
-                                                                 ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
-                                                        } catch (SQLException ex) {
-                                                             Logger.getLogger(InquiryFormController.class.getName()).log(Level.SEVERE, null, ex);
-                                                        }
+                                                            if ((oTrans.getVhclPrty(tblPriorityUnit.getSelectionModel().getSelectedIndex() + 1, 1).toString() != null) 
+                                                            &&  (!oTrans.getVhclPrty(tblPriorityUnit.getSelectionModel().getSelectedIndex() + 1, 1).toString().trim().equals(""))){
+                                                            } else 
+                                                                 if (oTrans.searchVhclPrty(tblPriorityUnit.getSelectionModel().getSelectedIndex() + 1,sValue,false)){
+                                                                      loadTargetVehicle();
+                                                                 } else
+                                                                      ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
+
+                                                       } catch (SQLException ex) {
+                                                            Logger.getLogger(InquiryFormController.class.getName()).log(Level.SEVERE, null, ex);
+                                                       }
                                                   break;
                                              }
                                         }
                                         break;
                               }
                          });
-                    }
                }
                tblPriorityUnit.widthProperty().addListener((ObservableValue<? extends Number> source, Number oldWidth, Number newWidth) -> {
                     TableHeaderRow header = (TableHeaderRow) tblPriorityUnit.lookup("TableHeaderRow");
@@ -1796,11 +1850,17 @@ public class InquiryFormController implements Initializable, ScreenInterface{
      public void getDate(ActionEvent event) { 
           try {
                //System.out.println(SQLUtil.toDate(txtField10.getValue().toString(), SQLUtil.FORMAT_LONG_DATE));
-          //SQLUtil.toDate(txtField10.getValue().toString(), SQLUtil.FORMAT_SHORT_DATE)
+               //SQLUtil.toDate(txtField10.getValue().toString(), SQLUtil.FORMAT_SHORT_DATE)
                //System.out.println(txtField10.getValue().toString());
                //oTrans.setMaster(10, strToDate(txtField10.getValue().toString()) );
-          oTrans.setMaster(10,SQLUtil.toDate(txtField10.getValue().toString(), SQLUtil.FORMAT_SHORT_DATE));
+               //oTrans.setMaster(10,SQLUtil.toDate(txtField10.getValue().toString(), SQLUtil.FORMAT_SHORT_DATE));
+               String dateString = txtField10.getValue().toString();
+               SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+               Date date = dateFormat.parse(dateString);
+               oTrans.setMaster(10,SQLUtil.toDate((Date) date));
          }catch (SQLException ex) {
+               Logger.getLogger(InquiryFormController.class.getName()).log(Level.SEVERE, null, ex);
+          } catch (ParseException ex) {
                Logger.getLogger(InquiryFormController.class.getName()).log(Level.SEVERE, null, ex);
           }
      }
@@ -1824,14 +1884,11 @@ public class InquiryFormController implements Initializable, ScreenInterface{
           txtField31.setDisable(true); //Social Media
           txtField32.setDisable(true); //Email
           txtField33.setDisable(true); //Client Address
-          txtField09.setDisable(true); //Agent ID
           textArea08.setDisable(!lbShow); //Remarks
           txtField24.setDisable(true); //Inquiry Status
           txtField18.setDisable(true); //Reserve Amount
           txtField17.setDisable(true); //Reserved
-          cmbOnstr13.setDisable(true); //Online Store
           cmbType012.setDisable(!lbShow); //Inquiry Type
-          txtField15.setDisable(true); //Activity ID
           txtField14.setDisable(!lbShow); //Test Model
           //txtField10.setValue(LocalDate.of(1900, Month.JANUARY, 1));//Target Release Date
           //Radio Button Toggle Group
@@ -1840,6 +1897,29 @@ public class InquiryFormController implements Initializable, ScreenInterface{
           rdbtnHtC11.setDisable(!lbShow);
           rdbtnNew05.setDisable(!lbShow);
           rdbtnPro05.setDisable(!lbShow);
+          
+          switch (cmbType012.getSelectionModel().getSelectedIndex()) {
+               case 1:
+                    cmbOnstr13.setDisable(!lbShow);
+                    txtField15.setText("");
+                    txtField09.setText("");
+                    break;
+               case 3:
+                    txtField09.setDisable(!lbShow);
+                    txtField15.setText("");
+                    cmbOnstr13.setValue(null);
+                    break;
+               case 4:
+               case 5:
+                    txtField15.setDisable(!lbShow);
+                    txtField09.setText("");
+                    cmbOnstr13.setValue(null);
+                    break;
+               default:
+                    txtField15.setDisable(true); //Activity ID
+                    txtField09.setDisable(true); //Agent ID
+                    cmbOnstr13.setDisable(true); //Online Store             
+          }
           
           btnAdd.setVisible(!lbShow);
           btnAdd.setManaged(!lbShow);
@@ -1896,7 +1976,7 @@ public class InquiryFormController implements Initializable, ScreenInterface{
      private void clearClassFields() {
           try {
                //Class Master
-               for (lnCtr = 1; lnCtr <= 32; lnCtr++){
+               for (lnCtr = 1; lnCtr <= 35; lnCtr++){
                     switch (lnCtr) {
                          case 2: //
                          //case 4: //
@@ -1942,6 +2022,8 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                //Class Promo Offered
                do oTrans.removeInqPromo( oTrans.getInqPromoCount());
                while  (oTrans.getInqPromoCount() != 0);
+               
+               
                
           }catch (SQLException ex) {
                Logger.getLogger(InquiryFormController.class.getName()).log(Level.SEVERE, null, ex);

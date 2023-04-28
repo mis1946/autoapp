@@ -5,6 +5,8 @@
  */
 package org.rmj.auto.app.sales;
 
+import java.util.Date;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 
 /**
@@ -15,17 +17,21 @@ public class InquiryTableList {
      private SimpleStringProperty tbllistindex01; //Row
      private SimpleStringProperty tbllistindex02; //Inquiry Date
      private SimpleStringProperty tbllistindex03; //Customer Name
+//     private SimpleStringProperty tbllistindex04; //Inquiry Status
+//     private SimpleStringProperty tbllistindex05; //Sales Excutive
+//     private SimpleStringProperty tbllistindex06; //Reserve slip no
      
      private SimpleStringProperty tblcinqindex01; //sTransNox
      private SimpleStringProperty tblcinqindex02; //sBranchCD
      private SimpleStringProperty tblcinqindex03; //dTransact
      private SimpleStringProperty tblcinqindex04; //sEmployID
      private SimpleStringProperty tblcinqindex05; //cIsVhclNw
-     //private SimpleStringProperty tblcinqindex06; //sVhclIDxx
+     private SimpleStringProperty tblcinqindex06; //sVhclIDxx
      private SimpleStringProperty tblcinqindex07; //sClientID
      private SimpleStringProperty tblcinqindex08; //sRemarksx
      private SimpleStringProperty tblcinqindex09; //sAgentIDx
      private SimpleStringProperty tblcinqindex10; //dTargetDt
+     //private SimpleObjectProperty<Date> tblcinqindex10;
      private SimpleStringProperty tblcinqindex11; //cIntrstLv
      private SimpleStringProperty tblcinqindex12 ; // sSourceCD
      private SimpleStringProperty tblcinqindex13 ; // sSourceNo
@@ -51,20 +57,24 @@ public class InquiryTableList {
      private SimpleStringProperty tblcinqindex33 ; //sAddressx
      private SimpleStringProperty tblcinqindex34 ; //sSalesExe
      private SimpleStringProperty tblcinqindex35 ; //sSalesAgn
-     InquiryTableList( String tbllistindex01,
+     InquiryTableList(   String tbllistindex01,
                          String tbllistindex02,
                          String tbllistindex03,
+//                         String tbllistindex04,
+//                         String tbllistindex05,
+//                         String tbllistindex06,
                          
                          String tblcinqindex01,
                          String tblcinqindex02,
                          String tblcinqindex03,
                          String tblcinqindex04,
                          String tblcinqindex05,
-                         //String tblcinqindex06,
+                         String tblcinqindex06,
                          String tblcinqindex07,
                          String tblcinqindex08,
                          String tblcinqindex09,
                          String tblcinqindex10,
+                         //Date tblcinqindex10,
                          String tblcinqindex11,
                          String tblcinqindex12 ,
                          String tblcinqindex13 ,
@@ -95,17 +105,22 @@ public class InquiryTableList {
           this.tbllistindex01 = new SimpleStringProperty(tbllistindex01);
           this.tbllistindex02 = new SimpleStringProperty(tbllistindex02);
           this.tbllistindex03 = new SimpleStringProperty(tbllistindex03);
+//          this.tbllistindex04 = new SimpleStringProperty(tbllistindex04);
+//          this.tbllistindex05 = new SimpleStringProperty(tbllistindex05);
+//          this.tbllistindex06 = new SimpleStringProperty(tbllistindex06);
+          
           
           this.tblcinqindex01 = new SimpleStringProperty(tblcinqindex01);
           this.tblcinqindex02 = new SimpleStringProperty(tblcinqindex02);
           this.tblcinqindex03 = new SimpleStringProperty(tblcinqindex03);
           this.tblcinqindex04 = new SimpleStringProperty(tblcinqindex04);
           this.tblcinqindex05 = new SimpleStringProperty(tblcinqindex05);
-          //this.tblcinqindex06 = new SimpleStringProperty(tblcinqindex06);
+          this.tblcinqindex06 = new SimpleStringProperty(tblcinqindex06);
           this.tblcinqindex07 = new SimpleStringProperty(tblcinqindex07);
           this.tblcinqindex08 = new SimpleStringProperty(tblcinqindex08);
           this.tblcinqindex09 = new SimpleStringProperty(tblcinqindex09);
           this.tblcinqindex10 = new SimpleStringProperty(tblcinqindex10);
+          //this.tblcinqindex10 = new SimpleObjectProperty<Date>(tblcinqindex10);
           this.tblcinqindex11 = new SimpleStringProperty(tblcinqindex11);
           this.tblcinqindex12 = new SimpleStringProperty( tblcinqindex12 );
           this.tblcinqindex13 = new SimpleStringProperty( tblcinqindex13 );
@@ -142,10 +157,21 @@ public class InquiryTableList {
      //
      public String getTbllistindex03(){return tbllistindex03.get();}
      public void setTbllistindex03(String tbllistindex03){this.tbllistindex03.set(tbllistindex03);}
+//     //Inquiry Status
+//     public String getTbllistindex04(){return tbllistindex04.get();}
+//     public void setTbllistindex04(String tbllistindex04){this.tbllistindex04.set(tbllistindex04);}
+//     //
+//     public String getTbllistindex05(){return tbllistindex05.get();}
+//     public void setTbllistindex05(String tbllistindex05){this.tbllistindex05.set(tbllistindex05);}
+//     //
+//     public String getTbllistindex06(){return tbllistindex06.get();}
+//     public void setTbllistindex06(String tbllistindex06){this.tbllistindex06.set(tbllistindex06);}
+//     
+     
      
      //ID
-     public String getTblcinqindex01(){return tbllistindex01.get();}
-     public void setTblcinqindex01(String tbllistindex01){this.tbllistindex01.set(tbllistindex01);}
+     public String getTblcinqindex01(){return tblcinqindex01.get();}
+     public void setTblcinqindex01(String tblcinqindex01){this.tblcinqindex01.set(tblcinqindex01);}
      //
      public String getTblcinqindex02(){return tblcinqindex02.get();}
      public void setTblcinqindex02(String tblcinqindex02){this.tblcinqindex02.set(tblcinqindex02);}
@@ -160,8 +186,8 @@ public class InquiryTableList {
      public String getTblcinqindex05(){return tblcinqindex05.get();}
      public void setTblcinqindex05(String tblcinqindex05){this.tblcinqindex05.set(tblcinqindex05);}
      //sVhclIDxx
-//     public String getTblcinqindex06(){return tblcinqindex06.get();}
-//     public void setTblcinqindex06(String tblcinqindex06){this.tblcinqindex06.set(tblcinqindex06);}
+     public String getTblcinqindex06(){return tblcinqindex06.get();}
+     public void setTblcinqindex06(String tblcinqindex06){this.tblcinqindex06.set(tblcinqindex06);}
      //
      public String getTblcinqindex07(){return tblcinqindex07.get();}
      public void setTblcinqindex07(String tblcinqindex07){this.tblcinqindex07.set(tblcinqindex07);}
@@ -174,6 +200,10 @@ public class InquiryTableList {
      // 
      public String getTblcinqindex10(){return tblcinqindex10.get();}
      public void setTblcinqindex10(String tblcinqindex10){this.tblcinqindex10.set(tblcinqindex10);}
+//     public Date getTblcinqindex10() {return tblcinqindex10.get();}
+//     public void setTblcinqindex10(Date date) {this.tblcinqindex10.set(date);}
+//     public SimpleObjectProperty<Date> tblcinqindex10Property() {return tblcinqindex10;}
+
      // 
      public String getTblcinqindex11(){return tblcinqindex11.get();}
      public void setTblcinqindex11(String tblcinqindex11){this.tblcinqindex11.set(tblcinqindex11);}

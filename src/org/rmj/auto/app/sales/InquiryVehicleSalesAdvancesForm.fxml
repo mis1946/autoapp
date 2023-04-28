@@ -92,7 +92,7 @@
                            </rowConstraints>
                            <children>
                               <ComboBox fx:id="comboBox12" prefWidth="130.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                              <TextField fx:id="txtField03" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="2" />
+                              <TextField fx:id="txtField03" disable="true" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="2" />
                               <TextField fx:id="txtField05" promptText="0.00" GridPane.columnIndex="7" GridPane.rowIndex="2">
                                  <GridPane.margin>
                                     <Insets />
@@ -130,7 +130,7 @@
                               <TextField fx:id="txtField14" disable="true" GridPane.columnIndex="2" GridPane.columnSpan="3" GridPane.rowIndex="6" />
                               <TextField fx:id="txtField15" disable="true" GridPane.columnIndex="7" GridPane.rowIndex="6" />
                               <Label id="LabelDesc" text="Approved Date" GridPane.columnIndex="6" GridPane.rowIndex="6" />
-                              <TextField fx:id="txtField02" GridPane.columnIndex="7" GridPane.rowIndex="1" />
+                              <TextField fx:id="txtField02" disable="true" GridPane.columnIndex="7" GridPane.rowIndex="1" />
                            </children>
                            <opaqueInsets>
                               <Insets />

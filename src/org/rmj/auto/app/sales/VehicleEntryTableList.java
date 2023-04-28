@@ -12,7 +12,7 @@ import javafx.beans.property.SimpleStringProperty;
  * @author Arsiela
  */
 public class VehicleEntryTableList {
-        private SimpleStringProperty tblindex01; //Row
+     private SimpleStringProperty tblindex01; //Row
      private SimpleStringProperty tblindex02; //CS No
      private SimpleStringProperty tblindex03; //Plate No
      private SimpleStringProperty tblindex04; //Vehicle Description

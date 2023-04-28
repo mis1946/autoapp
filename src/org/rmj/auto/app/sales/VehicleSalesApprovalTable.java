@@ -14,7 +14,7 @@ import javafx.scene.control.CheckBox;
 
 /**
  *
- * @author User
+ * @author John Dave
  */
 public class VehicleSalesApprovalTable {
     

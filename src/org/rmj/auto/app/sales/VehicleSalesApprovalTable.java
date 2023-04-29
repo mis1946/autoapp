@@ -30,7 +30,7 @@ public class VehicleSalesApprovalTable {
     private SimpleStringProperty tblseName;
     private SimpleStringProperty tblbranch;
 
-    public VehicleSalesApprovalTable(String tblRow,String tblslipNo, String tbltype, String tblslipDate, String tblcustomerName, String tblunitDescription, String tblamount, String tblseName, String tblbranch) {
+    public VehicleSalesApprovalTable(String tblRow, String tblslipNo, String tbltype, String tblslipDate, String tblcustomerName, String tblunitDescription, String tblamount, String tblseName, String tblbranch) {
         this.tblRow = new SimpleStringProperty(tblRow);
 //        this.tblselected = new SimpleBooleanProperty(tblselected);
         this.select = new CheckBox();

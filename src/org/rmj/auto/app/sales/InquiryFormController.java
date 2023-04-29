@@ -97,10 +97,10 @@ public class InquiryFormController implements Initializable, ScreenInterface{
      private double xOffset = 0;
      private double yOffset = 0;
      private final String pxeModuleName = "Inquiry"; //Form Title
-     private int pnEditMode;//Modifying fields
+     private int pnEditMode = EditMode.UNKNOWN;;//Modifying fields
      private int pnRow = -1;
      private int oldPnRow = -1;
-     private int selectedPUnitIndex = -1;
+     private int selectedTblRowIndex = -1;
      private int lnCtr = 0;
      private int lnRow = 0;
      private int pagecounter;
@@ -265,6 +265,7 @@ public class InquiryFormController implements Initializable, ScreenInterface{
     /*INQUIRY PROCESS*/
      //Populate table
      private ObservableList<InquiryTableRequirements> inqrequirementsdata = FXCollections.observableArrayList();
+     private ObservableList<InquiryTableVehicleSalesAdvances> inqvsadata = FXCollections.observableArrayList();
 
      //Combo Box Value  
      ObservableList<String> cModeOfPayment = FXCollections.observableArrayList("Cash", "Financing", "Purchase Order"); //Mode of Payment Values
@@ -280,6 +281,10 @@ public class InquiryFormController implements Initializable, ScreenInterface{
      private TableColumn rqrmIndex01;
      @FXML
      private TableColumn rqrmIndex02;
+     @FXML
+     private TableColumn rqrmIndex03;
+     @FXML
+     private TableColumn rqrmIndex04;
      //Reserve Unit
      @FXML
      private TextField txtRsvcs06;
@@ -347,18 +352,8 @@ public class InquiryFormController implements Initializable, ScreenInterface{
      //Table View
      @FXML
      private TableView tblFollowHistory; //Table View Follow Up
-     @FXML
-     private TableColumn rqrmIndex03;
-     @FXML
-     private TableColumn rqrmIndex04;
-
      
 
-  
-  
-     
-     
-     
      private Stage getStage(){
           return (Stage) textSeek01.getScene().getWindow();
      }
@@ -376,6 +371,8 @@ public class InquiryFormController implements Initializable, ScreenInterface{
           oTrans.setWithUI(true);
           initTargetVehicle();
           initPromosOffered();
+          initInquiryRequirements();
+          initInquiryAdvances();
           
           dateSeek02.setOnAction(event -> {
                loadInquiryListTable();
@@ -385,10 +382,10 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                loadInquiryListTable();
                pagination.setPageFactory(this::createPage);
           });
-
-          dateSeek01.setValue(LocalDate.of(2023, Month.JANUARY, 1)); //birthdate
-          dateSeek02.setValue(strToDate(CommonUtils.xsDateShort((Date) oApp.getServerDate())));
           
+          //dateSeek01.setValue(LocalDate.of(2023, Month.JANUARY, 1)); //birthdate
+          dateSeek01.setValue(LocalDate.of(strToDate(CommonUtils.xsDateShort((Date) oApp.getServerDate())).getYear(), strToDate(CommonUtils.xsDateShort((Date) oApp.getServerDate())).getMonth(), 1));
+          dateSeek02.setValue(strToDate(CommonUtils.xsDateShort((Date) oApp.getServerDate())));
           
           //Populate table
           loadInquiryListTable();
@@ -482,8 +479,6 @@ public class InquiryFormController implements Initializable, ScreenInterface{
           btnPromosRemove.setOnAction(this::cmdButton_Click); 
           
           /*INQUIRY PROCESS*/
-          initInquiryRequirements();
-          initInquiryAdvances();
           cmbInqpr01.setItems(cModeOfPayment); //Mode of Payment
           cmbInqpr02.setItems(cCustomerType); //Customer Type
           //Button SetOnAction using cmdButton_Click() method
@@ -508,7 +503,6 @@ public class InquiryFormController implements Initializable, ScreenInterface{
           pnEditMode = EditMode.UNKNOWN;
           initButton(pnEditMode);
           
-          
     }    
     
      @Override
@@ -530,38 +524,46 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                          lnRow++;
                     }
                     oTrans.addVhclPrty();
+                    if (oTrans.searchVhclPrty(lnRow,"",false)){
+                    } else {
+                         oTrans.removeTargetVehicle(lnRow);
+                         ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
+                    }
                     loadTargetVehicle();
                     break;
                
                case "btnTargetVhclRemove":
-                    selectedPUnitIndex = tblPriorityUnit.getSelectionModel().getSelectedIndex() + 1;
-                    if (selectedPUnitIndex >= 1) {
-                         System.out.println(oTrans.getVhclPrty(selectedPUnitIndex, 1).toString());
-                         if ((oTrans.getVhclPrty(selectedPUnitIndex, 1).toString() != null) && (!oTrans.getVhclPrty(selectedPUnitIndex, 1).toString().trim().equals(""))){
+                    selectedTblRowIndex = tblPriorityUnit.getSelectionModel().getSelectedIndex() + 1;
+                    if (selectedTblRowIndex >= 1) {
+                         if ((oTrans.getVhclPrty(selectedTblRowIndex, 1).toString() != null) && (!oTrans.getVhclPrty(selectedTblRowIndex, 1).toString().trim().equals(""))){
                          } else {
-                              oTrans.removeTargetVehicle(selectedPUnitIndex);
+                              oTrans.removeTargetVehicle(selectedTblRowIndex);
                               loadTargetVehicle();
                          }
                     }
+                    selectedTblRowIndex = 0;
                     break;     
                case "btnTargetVehicleDown":
-                    if ((selectedPUnitIndex < tblPriorityUnit.getItems().size() - 1) && selectedPUnitIndex != tblPriorityUnit.getItems().size()) {
-                         Collections.swap(tblPriorityUnit.getItems(), selectedPUnitIndex, selectedPUnitIndex + 1);
-                         tblPriorityUnit.getSelectionModel().select(selectedPUnitIndex + 1);
-                         lnCtr = 1;
-                         for (InquiryTablePriorityUnit unit : priorityunitdata) {
-                              oTrans.setVhclPrty(lnCtr, "nPriority",unit.getTblindex01());
-                              oTrans.setVhclPrty(lnCtr, "sDescript",unit.getTblindex02());
-                              lnCtr++;
+                    //if (tblPriorityUnit.getItems().size() > 0 ) {
+                         if ((selectedTblRowIndex < tblPriorityUnit.getItems().size() - 1) && selectedTblRowIndex != tblPriorityUnit.getItems().size()) {
+                              Collections.swap(tblPriorityUnit.getItems(), selectedTblRowIndex, selectedTblRowIndex + 1);
+                              tblPriorityUnit.getSelectionModel().select(selectedTblRowIndex + 1);
+                              lnCtr = 1;
+                              for (InquiryTablePriorityUnit unit : priorityunitdata) {
+                                   oTrans.setVhclPrty(lnCtr, "nPriority",unit.getTblindex01());
+                                   oTrans.setVhclPrty(lnCtr, "sDescript",unit.getTblindex02());
+                                   lnCtr++;
+                              }
+                              loadTargetVehicle();
+                         selectedTblRowIndex++;
                          }
-                         loadTargetVehicle();
-                    }
-                    selectedPUnitIndex++;
+                         
+                    //}
                     break;    
                case "btnTargetVehicleUp":
-                    if (selectedPUnitIndex > 0 ) {
-                         Collections.swap(tblPriorityUnit.getItems(), selectedPUnitIndex, selectedPUnitIndex - 1);
-                         tblPriorityUnit.getSelectionModel().select(selectedPUnitIndex - 1);
+                    if (selectedTblRowIndex > 0 ) {
+                         Collections.swap(tblPriorityUnit.getItems(), selectedTblRowIndex, selectedTblRowIndex - 1);
+                         tblPriorityUnit.getSelectionModel().select(selectedTblRowIndex - 1);
                          lnCtr = 1;
                          for (InquiryTablePriorityUnit unit : priorityunitdata) {
                               oTrans.setVhclPrty(lnCtr, "nPriority",unit.getTblindex01());
@@ -569,14 +571,36 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                               lnCtr++;
                          }
                          loadTargetVehicle();
+                         selectedTblRowIndex--;
                     }
-                    selectedPUnitIndex--;
                     break;
                
                /*CUSTOMER INDQUIRY: PROMO OFFERED*/
                case "btnPromosAdd":
+                    lnRow = promosoffereddata.size();
+                    if (lnRow == 0){
+                         lnRow = 1;
+                    } else {
+                         lnRow++;
+                    }
+                    oTrans.addVhclPrty();
+                    if (oTrans.searchVhclPrty(lnRow,"",false)){
+                    } else {
+                         oTrans.removeTargetVehicle(lnRow);
+                         ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
+                    }
+                    loadPromosOfferred();
                     break;
                case "btnPromosRemove":
+                    selectedTblRowIndex = tblPromosOffered.getSelectionModel().getSelectedIndex() + 1;
+                    if (selectedTblRowIndex >= 1) {
+                         if ((oTrans.getVhclPrty(selectedTblRowIndex, 1).toString() != null) && (!oTrans.getVhclPrty(selectedTblRowIndex, 1).toString().trim().equals(""))){
+                         } else {
+                              oTrans.removeTargetVehicle(selectedTblRowIndex);
+                              loadTargetVehicle();
+                         }
+                    }
+                    selectedTblRowIndex = 0;
                     break;
                /*CUSTOMER INQUIRY: GENERAL BUTTON*/
                case "btnAdd":
@@ -586,7 +610,7 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                          clearFields(); 
                          loadCustomerInquiry();
                          loadTargetVehicle();
-
+                         loadPromosOfferred();
                          textSeek01.clear(); // Client Search
                          pnEditMode = oTrans.getEditMode();
                     } else 
@@ -640,7 +664,19 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                /*INQUIRY PROCESS*/
                case "btnASadd":
                     //Open window for inquiry reservation
-                    loadVehicleSalesAdvances(0);
+                    lnRow = inqvsadata.size();
+                    if (lnRow == 0){
+                         lnRow = 1;
+                    } else {
+                         lnRow++;
+                    }
+                    oTrans.addVhclPrty();
+                    if (oTrans.searchVhclPrty(lnRow,"",false)){
+                    } else {
+                         oTrans.removeTargetVehicle(lnRow);
+                         ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
+                    }
+                    loadVehicleSalesAdvances(lnRow, true);
                     break; 
                 
                /*INQUIRY BANK APPLICATION*/
@@ -699,7 +735,11 @@ public class InquiryFormController implements Initializable, ScreenInterface{
      }
      
      /*INQUIRY PROCESS*/
-     private void loadVehicleSalesAdvances(int fnRow) throws SQLException{
+     private void loadVehicleSalesAdvances(int fnRow, boolean fstate) throws SQLException{
+          /**
+           * if state = true : ADD
+           * else if state = false : UPDATE
+          ***/
           try {
                Stage stage = new Stage();
 
@@ -710,6 +750,7 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                loControl.setGRider(oApp);
                loControl.setVSAObject(oTrans);
                loControl.setTableRows(fnRow);
+               loControl.setState(fstate);
 
                fxmlLoader.setController(loControl);
 
@@ -1146,7 +1187,7 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                       }
                     });
                } 
-               pnEditMode = EditMode.READY;
+               
                initButton(pnEditMode);  
           }  
      }
@@ -1155,6 +1196,8 @@ public class InquiryFormController implements Initializable, ScreenInterface{
      private void getSelectedItem(String TransNo) {
           oldTransNo = TransNo;
           if (oTrans.OpenRecord(TransNo)){
+               pnEditMode = oTrans.getEditMode();
+               
                txtField02.setText(inqlistdata.get(pagecounter).getTblcinqindex02()); // sBranchCD
                txtField03.setText(inqlistdata.get(pagecounter).getTblcinqindex03()); //
                txtField04.setText(inqlistdata.get(pagecounter).getTblcinqindex34()); // sSalesExe
@@ -1234,7 +1277,7 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                txtField32.setText(inqlistdata.get(pagecounter).getTblcinqindex32()); // sEmailAdd
                txtField33.setText(inqlistdata.get(pagecounter).getTblcinqindex33()); // sAddressx
                loadTargetVehicle();
-               oldPnRow = pagecounter;   
+               oldPnRow = pagecounter;  
           }
 
      }
@@ -1335,7 +1378,7 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                     oTrans.getVhclPrty(lnCtr,"sDescript").toString() // Vehicle Description
                     ));
                }
-                    
+                     
           } catch (SQLException e) {
                ShowMessageFX.Warning(getStage(),e.getMessage(), "Warning", null);
           }
@@ -1343,107 +1386,99 @@ public class InquiryFormController implements Initializable, ScreenInterface{
      }   
     // Load Customer Inquiry Target Vehicle Data
     public void initTargetVehicle(){
-          try {
-               boolean lbShow = (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE);
-               if (lbShow) {
-                    tblPriorityUnit.setEditable(true);
-               } else { 
-                    tblPriorityUnit.setEditable(false);
-               }
+//          boolean lbShow = (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE);
+//          if (lbShow) {
+//               tblPriorityUnit.setEditable(true);
+//          } else { 
+//               tblPriorityUnit.setEditable(false);
+//          }
+          
+          tblPriorityUnit.setEditable(true);
+          trgvIndex01.setCellValueFactory(new PropertyValueFactory<>("tblindex01"));
+          trgvIndex02.setCellValueFactory(new PropertyValueFactory<>("tblindex02"));
 
-               trgvIndex01.setCellValueFactory(new PropertyValueFactory<>("tblindex01"));
-               trgvIndex02.setCellValueFactory(new PropertyValueFactory<>("tblindex02"));
-//               String svhcldescr = "";
-//               
-//               if (oTrans.getInquiryMasterCount() > 0 ) {
-//                    svhcldescr = oTrans.getVhclPrty(tblPriorityUnit.getSelectionModel().getSelectedIndex() + 1,"sDescript").toString();
-//               } 
-               
-               if (lbShow) {
-                    trgvIndex02.setCellFactory(TextFieldTableCell.forTableColumn()); // make the cells editable
-                    // Set the event handler to store the edited value
-                    trgvIndex02.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<InquiryTablePriorityUnit, String>>() {
-                         @Override
-                         public void handle(TableColumn.CellEditEvent<InquiryTablePriorityUnit, String> event) {
-                              // Code to handle edit event
-                              InquiryTablePriorityUnit detail = event.getRowValue();
-                              detail.setTblindex02(event.getNewValue());
-                              sValue = event.getNewValue();
-                         }
-                    });
-
-                    if ((oTrans.getVhclPrty(tblPriorityUnit.getSelectionModel().getSelectedIndex() + 1, 1).toString() != null) 
-                         &&  (!oTrans.getVhclPrty(tblPriorityUnit.getSelectionModel().getSelectedIndex() + 1, 1).toString().trim().equals(""))){
-                         trgvIndex02.setEditable(false);// make the column editable
-                    } else 
-                         trgvIndex02.setEditable(true);// make the column editable
-
-                         tblPriorityUnit.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
-                              TablePosition<?, ?> focusedCell = tblPriorityUnit.getFocusModel().getFocusedCell();
-                              //String columnId = focusedCell.getTableColumn().getId();
-                              int lnIndex = Integer.parseInt(focusedCell.getTableColumn().getId().substring(9,11));
-                              switch (event.getCode()){
-                                   case F3:
-                                   case ENTER:
-                                        // Check if the focused cell is editable
-                                        if (focusedCell.getTableColumn().isEditable()) {
-                                             switch (lnIndex){
-                                                  case 2: //Vehicle Description
-                                                       try {
-                                                            if ((oTrans.getVhclPrty(tblPriorityUnit.getSelectionModel().getSelectedIndex() + 1, 1).toString() != null) 
-                                                            &&  (!oTrans.getVhclPrty(tblPriorityUnit.getSelectionModel().getSelectedIndex() + 1, 1).toString().trim().equals(""))){
-                                                            } else 
-                                                                 if (oTrans.searchVhclPrty(tblPriorityUnit.getSelectionModel().getSelectedIndex() + 1,sValue,false)){
-                                                                      loadTargetVehicle();
-                                                                 } else
-                                                                      ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
-
-                                                       } catch (SQLException ex) {
-                                                            Logger.getLogger(InquiryFormController.class.getName()).log(Level.SEVERE, null, ex);
-                                                       }
-                                                  break;
-                                             }
-                                        }
-                                        break;
-                              }
-                         });
-               }
-               tblPriorityUnit.widthProperty().addListener((ObservableValue<? extends Number> source, Number oldWidth, Number newWidth) -> {
-                    TableHeaderRow header = (TableHeaderRow) tblPriorityUnit.lookup("TableHeaderRow");
-                    header.reorderingProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
-                         header.setReordering(false);
-                    });
+//          trgvIndex02.setCellFactory(TextFieldTableCell.forTableColumn()); // make the cells editable
+//          // Set the event handler to store the edited value
+//          trgvIndex02.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<InquiryTablePriorityUnit, String>>() {
+//               @Override
+//               public void handle(TableColumn.CellEditEvent<InquiryTablePriorityUnit, String> event) {
+//                    // Code to handle edit event
+//                    InquiryTablePriorityUnit detail = event.getRowValue();
+//                    detail.setTblindex02(event.getNewValue());
+//                    sValue = event.getNewValue();
+//               }
+//          });
+//          trgvIndex02.setEditable(true);// make the column editable
+//          
+//          tblPriorityUnit.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+//               TablePosition<?, ?> focusedCell = tblPriorityUnit.getFocusModel().getFocusedCell();
+//               //String columnId = focusedCell.getTableColumn().getId();
+//               switch (event.getCode()){
+//                    case F3:
+//                    case ENTER:
+//                         // Check if the focused cell is editable
+//                         if (tblPriorityUnit.getItems().size() > 0) {
+//                              if (focusedCell.getTableColumn().isEditable()) {
+//                                   int lnIndex = Integer.parseInt(focusedCell.getTableColumn().getId().substring(9,11));
+//                                   switch (lnIndex){
+//                                        case 2: //Vehicle Description
+//                                             try {
+//                                             if ((oTrans.getVhclPrty(tblPriorityUnit.getSelectionModel().getSelectedIndex() + 1, 1).toString() != null) 
+//                                             &&  (!oTrans.getVhclPrty(tblPriorityUnit.getSelectionModel().getSelectedIndex() + 1, 1).toString().trim().equals(""))){
+//                                             } else { 
+//                                                  if (lbShow) {
+//                                                       if (oTrans.searchVhclPrty(tblPriorityUnit.getSelectionModel().getSelectedIndex() + 1,"",false)){
+//                                                            loadTargetVehicle();
+//                                                       } else {
+//                                                            ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
+//                                                       }
+//                                                  }
+//                                             }
+//
+//                                             } catch (SQLException ex) {
+//                                                  Logger.getLogger(InquiryFormController.class.getName()).log(Level.SEVERE, null, ex);
+//                                             }
+//                                   break;
+//                                   }
+//                              }
+//                         }
+//                    break;
+//               }
+//          });
+          tblPriorityUnit.widthProperty().addListener((ObservableValue<? extends Number> source, Number oldWidth, Number newWidth) -> {
+               TableHeaderRow header = (TableHeaderRow) tblPriorityUnit.lookup("TableHeaderRow");
+               header.reorderingProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+                    header.setReordering(false);
                });
+          });
 
-               tblPriorityUnit.setItems(priorityunitdata);
-          } catch (SQLException ex) {
-               Logger.getLogger(InquiryFormController.class.getName()).log(Level.SEVERE, null, ex);
-          }
+          tblPriorityUnit.setItems(priorityunitdata);
      }
     
     
      @FXML
      private void tblPriorityUnit_Clicked(MouseEvent event) {
           if(event.getClickCount() > 0){
-               selectedPUnitIndex = tblPriorityUnit.getSelectionModel().getSelectedIndex();
-//               //ShowMessageFX.Information(null, pxeModuleName, selectedPUnitIndex + ""); 
+               selectedTblRowIndex = tblPriorityUnit.getSelectionModel().getSelectedIndex();
+               
+//               //ShowMessageFX.Information(null, pxeModuleName, selectedTblRowIndex + ""); 
 //               tblPriorityUnit.setOnKeyReleased((KeyEvent t)-> {
 //                    try {
 //                         KeyCode key = t.getCode();
 //                         switch (key){
 //                               case DOWN:
-//                                   if (selectedPUnitIndex > 0) {
+//                                   if (selectedTblRowIndex > 0) {
 ////                                       tblPriorityUnit.getSelectionModel().select(selectedIndex - 1);
 ////                                       tblPriorityUnit.scrollTo(selectedIndex - 1);
-////                                        oTrans.setVehiclePriority(selectedPUnitIndex, false);
+////                                        oTrans.setVehiclePriority(selectedTblRowIndex, false);
 //                                   }
 //                                   event.consume();
 //                                   break;
 //                               case UP:
-//                                    if (selectedPUnitIndex < tblPriorityUnit.getItems().size() - 1) {
+//                                    if (selectedTblRowIndex < tblPriorityUnit.getItems().size() - 1) {
 //                                        //tblPriorityUnit.getSelectionModel().select(selectedIndex + 1);
 //                                        //tblPriorityUnit.scrollTo(selectedIndex + 1);
-// //                                       oTrans.setVehiclePriority(selectedPUnitIndex, true);
+// //                                       oTrans.setVehiclePriority(selectedTblRowIndex, true);
 //                                   }
 //                                   event.consume();
 //                                   break;
@@ -1585,13 +1620,13 @@ public class InquiryFormController implements Initializable, ScreenInterface{
      }
      
      public void initInquiryRequirements(){
-          boolean lbShow = (pnEditMode == EditMode.UPDATE);
-          if (lbShow) {
-               tblRequirementsInfo.setEditable(true);
-          } else { 
-               tblRequirementsInfo.setEditable(false);
-          }
-          
+          boolean lbShow = (pnEditMode == EditMode.READY || pnEditMode == EditMode.UPDATE );
+//          if (lbShow) {
+//               
+//          } else { 
+//               tblRequirementsInfo.setEditable(false);
+//          }
+          tblRequirementsInfo.setEditable(true);
           //tblRequirementsInfo.getSelectionModel().setCellSelectionEnabled(true);
           tblRequirementsInfo.setSelectionModel(null);
           rqrmIndex01.setCellValueFactory(new PropertyValueFactory<>("tblindex01"));
@@ -1602,29 +1637,31 @@ public class InquiryFormController implements Initializable, ScreenInterface{
           rqrmIndex01.setCellFactory(CheckBoxTableCell.forTableColumn(new Callback<Integer, ObservableValue<Boolean>>() {
                @Override
                public ObservableValue<Boolean> call(Integer index) {
-                   InquiryTableRequirements requirement = inqrequirementsdata.get(index);
-                   BooleanProperty selected = requirement.selectedProperty();
+                    InquiryTableRequirements requirement = inqrequirementsdata.get(index);
+                    BooleanProperty selected = requirement.selectedProperty();
                          selected.addListener((obs, oldValue, newValue) -> {
                               requirement.setTblindex01(newValue);
                               System.out.println("tblindex01 is set to " + newValue + " at row " + (index + 1));
-                              
-                              if (lbShow) {
+                              try {
                                    if (newValue) {
-                                        try {
+                                        if (lbShow) {
+                                             oTrans.setVhclPrty(index + 1, "nPriority",1);
                                              if (oTrans.searchVhclPrty(index + 1,sValue,false)){
 
-                                             } else
-                                             ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
-                                        } catch (SQLException ex) {
-                                             Logger.getLogger(InquiryFormController.class.getName()).log(Level.SEVERE, null, ex);
+                                             } else {
+                                                  ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
+                                             }
                                         }
                                    } else {
-
-
+                                        if (lbShow) {
+                                             oTrans.setVhclPrty(index + 1, "nPriority",0);
+                                        }
+                                        
                                    }
+                              } catch (SQLException ex) {
+                                   Logger.getLogger(InquiryFormController.class.getName()).log(Level.SEVERE, null, ex);
                               }
-                              
-                         loadInquiryRequirements();
+                              loadInquiryRequirements();
                          });
                     return selected;
                }
@@ -1878,8 +1915,8 @@ public class InquiryFormController implements Initializable, ScreenInterface{
           txtField02.setDisable(true); //Branch Code 
           txtField03.setDisable(true);//Inqiury Date
           txtField04.setDisable(!lbShow); // Sales Executive
-          txtField07.setDisable(!lbShow); //Customer ID 
-          txtField29.setDisable(!lbShow); //Company ID 
+          txtField07.setDisable(true); //Customer ID 
+          txtField29.setDisable(true); //Company ID 
           txtField30.setDisable(true); //Contact Number
           txtField31.setDisable(true); //Social Media
           txtField32.setDisable(true); //Email
@@ -1950,6 +1987,8 @@ public class InquiryFormController implements Initializable, ScreenInterface{
           if (fnValue == EditMode.ADDNEW) {
                btnClear.setVisible(lbShow);
                btnClear.setManaged(lbShow);
+               txtField07.setDisable(!lbShow); //Customer ID 
+               txtField29.setDisable(!lbShow); //Company ID 
           }
           
           if (fnValue == EditMode.READY) { //show edit if user clicked save / browse
@@ -1966,9 +2005,9 @@ public class InquiryFormController implements Initializable, ScreenInterface{
           boolean lbTab = (fnValue == EditMode.READY);
           
           //tabCustomerInquiry.setDisable(!lbTab);
-          //tabInquiryProcess.setDisable(!lbTab);
-          //tabBankHistory.setDisable(!lbTab);
-          //tabFollowingHistory.setDisable(!lbTab);
+          tabInquiryProcess.setDisable(!lbTab);
+          tabBankHistory.setDisable(!lbTab);
+          tabFollowingHistory.setDisable(!lbTab);
           
      }
      
@@ -2034,7 +2073,7 @@ public class InquiryFormController implements Initializable, ScreenInterface{
      //Method for clearing Fields
      public void clearFields(){
            pnRow = 0;
-           selectedPUnitIndex= 0;
+           selectedTblRowIndex= 0;
 
            /*Inquiry*/
            txtField02.clear(); //Branch Code 

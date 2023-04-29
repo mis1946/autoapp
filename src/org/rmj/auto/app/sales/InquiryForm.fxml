@@ -738,10 +738,10 @@
                                                                                                 <TableView fx:id="tblAdvanceSlip" GridPane.columnIndex="1" GridPane.columnSpan="6" GridPane.rowIndex="1">
                                                                                                    <columns>
                                                                                                       <TableColumn fx:id="vsasIndex01" prefWidth="30.0" text="Row" />
-                                                                                                      <TableColumn fx:id="vsasIndex02" prefWidth="82.0" text="Slip Type" />
-                                                                                                      <TableColumn fx:id="vsasIndex03" prefWidth="168.0" text="Adv Slip No" />
-                                                                                                      <TableColumn fx:id="vsasIndex04" prefWidth="75.0" text="Res Date" />
-                                                                                                      <TableColumn fx:id="vsasIndex05" text="Amount" />
+                                                                                                      <TableColumn fx:id="vsasIndex02" text="Date" />
+                                                                                                      <TableColumn fx:id="vsasIndex03" prefWidth="90.0" text="Type" />
+                                                                                                      <TableColumn fx:id="vsasIndex04" prefWidth="150.0" text="Advances Slip No" />
+                                                                                                      <TableColumn fx:id="vsasIndex05" prefWidth="90.0" text="Amount" />
                                                                                                       <TableColumn fx:id="vsasIndex06" prefWidth="70.0" text="Status" />
                                                                                                       <TableColumn fx:id="vsasIndex07" prefWidth="259.0" text="Remarks" />
                                                                                                    </columns>

@@ -7,10 +7,15 @@ package org.rmj.auto.app.sales;
 
 import java.net.URL;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
+import javafx.beans.property.ReadOnlyBooleanPropertyBase;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -21,6 +26,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 import org.rmj.appdriver.GRider;
 import org.rmj.appdriver.agentfx.CommonUtils;
 import org.rmj.appdriver.agentfx.ShowMessageFX;
@@ -77,8 +83,8 @@ public class InquiryVehicleSalesAdvancesFormController implements Initializable 
      private TextField txtField15; //Approved Date
      
      public void setGRider(GRider foValue) {
-        
-    }
+        oApp = foValue;
+     }
      public static void setData(InquiryTableVehicleSalesAdvances inqvsadata){
         incModel = inqvsadata;    
     }
@@ -96,6 +102,9 @@ public class InquiryVehicleSalesAdvancesFormController implements Initializable 
     public void setState(boolean fsValue){
         state = fsValue;
     }
+    private Stage getStage(){
+          return (Stage) txtField02.getScene().getWindow();
+     }
 
      /**
       * Initializes the controller class.
@@ -109,8 +118,29 @@ public class InquiryVehicleSalesAdvancesFormController implements Initializable 
           pattern = Pattern.compile("^\\d*(\\.\\d{0,2})?$");
           txtField05.setTextFormatter(new InputTextFormatter(pattern)); //Amount
           
+          txtField02.focusedProperty().addListener(txtField_Focus);  
+          txtField05.focusedProperty().addListener(txtField_Focus);
+          textArea06.focusedProperty().addListener(txtArea_Focus);
+          
           btnClose.setOnAction(this::cmdButton_Click);
-     } 
+          
+          loadInquiryReservation();
+     }
+     
+     private void loadInquiryReservation() {
+          /**
+           * User can edit VSA only if not yet Approved and not Cancelled.
+           *
+           **/
+          if(state){ //Add
+               txtField02.setText(CommonUtils.xsDateShort((Date) oApp.getServerDate()));
+          } else { 
+               
+               
+          
+          }
+          
+     }
      
      private void cmdButton_Click(ActionEvent event) {
 //          try{
@@ -131,6 +161,75 @@ public class InquiryVehicleSalesAdvancesFormController implements Initializable 
 //          Logger.getLogger(InquiryVehicleSalesAdvancesFormController.class.getName()).log(Level.SEVERE, null, ex);
 //          }   
     } 
+     
+     /*Convert Date to String*/
+     private LocalDate strToDate(String val){
+          DateTimeFormatter date_formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+          LocalDate localDate = LocalDate.parse(val, date_formatter);
+          return localDate;
+     }
+     
+     /*Set TextField Value to Master Class*/
+     final ChangeListener<? super Boolean> txtField_Focus = (o,ov,nv)->{
+          try{
+            TextField txtField = (TextField)((ReadOnlyBooleanPropertyBase)o).getBean();
+            int lnIndex = Integer.parseInt(txtField.getId().substring(8, 10));
+            String lsValue = txtField.getText();
+            
+            if (lsValue == null) return;
+            if(!nv){ /*Lost Focus*/
+                    switch (lnIndex){
+                         case 2: //
+                         case 5: //
+                         case 6: //
+                              oTrans.setMaster(lnIndex, lsValue); //Handle Encoded Value
+                              break;
+                    }
+                
+            } else
+               txtField.selectAll();
+          } catch (SQLException ex) {
+            Logger.getLogger(InquiryFormController.class.getName()).log(Level.SEVERE, null, ex);
+          }
+     };
+     
+     /*Set TextArea to Master Class*/
+     final ChangeListener<? super Boolean> txtArea_Focus = (o,ov,nv)->{
+          TextArea txtField = (TextArea)((ReadOnlyBooleanPropertyBase)o).getBean();
+          int lnIndex = Integer.parseInt(txtField.getId().substring(8, 10));
+          String lsValue = txtField.getText();
+          
+          if (lsValue == null) return;
+          try {
+             if(!nv){ /*Lost Focus*/
+               switch (lnIndex){
+                   case 6:
+                      oTrans.setMaster(lnIndex, lsValue); break;
+               }
+             } else
+                 txtField.selectAll();
+          } catch (SQLException e) {
+             ShowMessageFX.Warning(getStage(),e.getMessage(), "Warning", null);
+             System.exit(1);
+          }
+     };
+     
+     /*Set ComboBox Value to Master Class*/ 
+     @SuppressWarnings("ResultOfMethodCallIgnored")
+     private boolean setSelection(){
+          try {
+               if (comboBox12.getSelectionModel().getSelectedIndex() < 0){
+                   ShowMessageFX.Warning("No `Slip Type` selected.", pxeModuleName, "Please select `Slip Type` value.");
+                   comboBox12.requestFocus();
+                   return false;
+               }else 
+                  oTrans.setMaster(12, String.valueOf(comboBox12.getSelectionModel().getSelectedIndex()));
+               
+          } catch (SQLException ex) {
+          ShowMessageFX.Warning(getStage(),ex.getMessage(), "Warning", null);
+          }
+          return true;
+     }
      
      
 }

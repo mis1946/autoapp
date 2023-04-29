@@ -19,6 +19,8 @@ import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
@@ -33,6 +35,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import org.rmj.appdriver.GRider;
+import org.rmj.appdriver.agentfx.CommonUtils;
 import org.rmj.appdriver.agentfx.ShowMessageFX;
 import org.rmj.auto.app.bank.BankEntryTableList;
 import org.rmj.auto.app.views.ScreenInterface;
@@ -106,12 +109,17 @@ public class VehicleSalesApprovalController implements Initializable,ScreenInter
     @FXML
     private TableColumn<VehicleSalesApprovalTable, String> tblslipDate;
     @FXML
-    private Button btnFilter1; // For filtering with txtField
+    private Button btnFilterType;
     @FXML
-    private Button btnFilter2; // For Filteriing with Combo Box
+    private Button btnFilterDate;
     @FXML
-    private Button btnFilter3; // For Filteriing with Date
-
+    private Button btnFilterSlip;
+    @FXML
+    private Button btnFilterCustomer;
+    @FXML
+    private Button btnFilterUnit;
+    @FXML
+    private Button btnFilterEmployee;
      
     ObservableList<VehicleSalesApprovalTable> slipDataList = FXCollections.observableArrayList();
     // Create sample SlipData objects
@@ -123,31 +131,41 @@ public class VehicleSalesApprovalController implements Initializable,ScreenInter
         "Unit C", "3000.0", "SE 3", "Branch 3");
    
    
+   
   
 
     
     @Override
     public void initialize(URL url, ResourceBundle rb) { 
         
-        btnFilter3.setVisible(false);
-        btnFilter3.setManaged(false);
-        btnFilter1.setVisible(false);
-        btnFilter1.setManaged(false);
-        btnFilter2.setVisible(false);
-        btnFilter2.setManaged(false);
+        btnFilterDate.setVisible(false);
+        btnFilterDate.setManaged(false);
+        btnFilterSlip.setVisible(false);
+        btnFilterSlip.setManaged(false);
+        btnFilterCustomer.setVisible(false);
+        btnFilterCustomer.setManaged(false);
+        btnFilterUnit.setVisible(false);
+        btnFilterUnit.setManaged(false);
+        btnFilterEmployee.setVisible(false);
+        btnFilterEmployee.setManaged(false);
+        btnFilterType.setVisible(false);
+        btnFilterType.setManaged(false);
         txtFieldSearch.setVisible(false);
         txtFieldSearch.setManaged(false);
         lFrom.setManaged(false);
         lFrom.setVisible(false);
         fromDate.setVisible(false);
+        fromDate.setValue(LocalDate.of(2023, 4, 1));
         fromDate.setManaged(false);
         lTo.setVisible(false);
         lTo.setManaged(false);
         toDate.setVisible(false);
+        toDate.setValue(LocalDate.now());
         toDate.setManaged(false);
         comboType.setVisible(false);
         comboType.setManaged(false);
             
+           
         initCombo();
         comboFilter.setItems(cFilter);
         comboType.setItems(cType);
@@ -158,9 +176,12 @@ public class VehicleSalesApprovalController implements Initializable,ScreenInter
         tblVhclApproval.setItems(slipDataList);
         btnClose.setOnAction(this::cmdButton_Click);
         btnApproved.setOnAction(this::cmdButton_Click);
-        btnFilter1.setOnAction(this::cmdButton_Click);
-        btnFilter2.setOnAction(this::cmdButton_Click);
-        btnFilter3.setOnAction(this::cmdButton_Click);
+        btnFilterSlip.setOnAction(this::cmdButton_Click);
+        btnFilterType.setOnAction(this::cmdButton_Click);
+        btnFilterDate.setOnAction(this::cmdButton_Click);
+        btnFilterCustomer.setOnAction(this::cmdButton_Click);
+        btnFilterUnit.setOnAction(this::cmdButton_Click);
+        btnFilterEmployee.setOnAction(this::cmdButton_Click);
         btnRefresh.setOnAction(this::cmdButton_Click);
 
         
@@ -222,35 +243,106 @@ public class VehicleSalesApprovalController implements Initializable,ScreenInter
                 return;
             }
             break;
-        case "btnFilter1": //btn filter for txtfield
-            
-                String filterText = txtFieldSearch.getText().trim().toLowerCase();
+        case "btnFilterSlip": //btn filter for Slip No
+                String filterSlip = txtFieldSearch.getText().trim().toLowerCase();
 
                  // Initialize the filteredData variable
-                     FilteredList<VehicleSalesApprovalTable> filteredTxtField = new FilteredList<>(slipDataList);
+                     FilteredList<VehicleSalesApprovalTable> filteredTxtFieldSlip = new FilteredList<>(slipDataList);
 
                      // Apply the filter predicate based on the entered text
-                     filteredTxtField.setPredicate(slipData -> {
-                         if (filterText.isEmpty()) {
+                     filteredTxtFieldSlip.setPredicate(slipData -> {
+                         if (filterSlip.isEmpty()) {
                              // No filter text entered, show all data
                              return true;
                          } else {
                              // Filter based on Slip No, Customer Name, Unit Description, and SE Name
                              String slipNo = slipData.getTblslipNo().toLowerCase();
-                             String customerName = slipData.getTblcustomerName().toLowerCase();
-                             String unitDescription = slipData.getTblunitDescription().toLowerCase();
-                             String seName = slipData.getTblseName().toLowerCase();
-
-                             return slipNo.contains(filterText)
-                                     || customerName.contains(filterText)
-                                     || unitDescription.contains(filterText)
-                                     || seName.contains(filterText);
+                             return slipNo.contains(filterSlip);
                          }
                      });
 
-                 tblVhclApproval.setItems(filteredTxtField);
+                 tblVhclApproval.setItems(filteredTxtFieldSlip);
+                 
+                if (filteredTxtFieldSlip.isEmpty()) {
+                     ShowMessageFX.Information(null, pxeModuleName, "Data input is invalid! Please try again.");
+                }
         break;
-        case "btnFilter2": //btn filter for comboBox
+        case "btnFilterCustomer": //btn filter for Customer Name
+                String filterCustomer  = txtFieldSearch.getText().trim().toLowerCase();
+
+                 // Initialize the filteredData variable
+                     FilteredList<VehicleSalesApprovalTable> filteredTxtFieldCustomer = new FilteredList<>(slipDataList);
+
+                     // Apply the filter predicate based on the entered text
+                     filteredTxtFieldCustomer.setPredicate(slipData -> {
+                         if (filterCustomer.isEmpty()) {
+                             // No filter text entered, show all data
+                             return true;
+                         } else {
+              
+                         
+                             String customerName = slipData.getTblcustomerName().toLowerCase();
+                             return customerName.contains(filterCustomer);
+                         }
+                     });
+
+                 tblVhclApproval.setItems(filteredTxtFieldCustomer);
+                 
+                if (filteredTxtFieldCustomer.isEmpty()) {
+                     ShowMessageFX.Information(null, pxeModuleName, "Data input is invalid! Please try again.");
+                }
+        break;
+         case "btnFilterUnit": //btn filter for Unit Description
+                String filterUnit  = txtFieldSearch.getText().trim().toLowerCase();
+
+                 // Initialize the filteredData variable
+                     FilteredList<VehicleSalesApprovalTable> filteredTxtFieldUnit = new FilteredList<>(slipDataList);
+
+                     // Apply the filter predicate based on the entered text
+                      filteredTxtFieldUnit.setPredicate(slipData -> {
+                         if (filterUnit.isEmpty()) {
+                             // No filter text entered, show all data
+                             return true;
+                         } else {
+                     
+                         
+                             String unitDescription = slipData.getTblunitDescription().toLowerCase();
+                             return unitDescription.contains(filterUnit);
+                         }
+                     });
+
+                 tblVhclApproval.setItems(filteredTxtFieldUnit);
+                 
+                if ( filteredTxtFieldUnit.isEmpty()) {
+                     ShowMessageFX.Information(null, pxeModuleName, "Data input is invalid! Please try again.");
+                }
+        break;
+         case "btnFilterEmployee": //btn filter for Employee Name
+                String filterEmployee  = txtFieldSearch.getText().trim().toLowerCase();
+
+                 // Initialize the filteredData variable
+                     FilteredList<VehicleSalesApprovalTable> filteredTxtFieldEmployee = new FilteredList<>(slipDataList);
+
+                     // Apply the filter predicate based on the entered text
+                      filteredTxtFieldEmployee.setPredicate(slipData -> {
+                         if (filterEmployee.isEmpty()) {
+                             // No filter text entered, show all data
+                             return true;
+                         } else {
+                     
+                             String seName = slipData.getTblseName().toLowerCase();
+
+                             return seName.contains(filterEmployee);
+                         }
+                     });
+
+                 tblVhclApproval.setItems(filteredTxtFieldEmployee);
+                 
+                if (filteredTxtFieldEmployee.isEmpty()) {
+                     ShowMessageFX.Information(null, pxeModuleName, "Data input is invalid! Please try again.");
+                }
+        break;
+        case "btnFilterType": //btn filter for comboBox
          String selectedType = comboType.getValue();
                     if (selectedType == null) {
                         // No type selected, show all data
@@ -263,12 +355,14 @@ public class VehicleSalesApprovalController implements Initializable,ScreenInter
                                 filteredCombo.add(slipData);
                             }
                         }
-                        tblVhclApproval.setItems(filteredCombo);
+                     tblVhclApproval.setItems(filteredCombo);
+                     if (filteredCombo.isEmpty()) {
+                        ShowMessageFX.Information(null, pxeModuleName, "Data input is invalid! Please try again.");
                     }
-        
+                }
         break;
-        case "btnFilter3":
-                btnFilter3.setOnAction(clients -> {
+        case "btnFilterDate":
+                btnFilterDate.setOnAction(clients -> {
                     LocalDate filterFromDate = fromDate.getValue();
                     LocalDate filterToDate = toDate.getValue();
 
@@ -284,30 +378,32 @@ public class VehicleSalesApprovalController implements Initializable,ScreenInter
                     }
 
                     tblVhclApproval.setItems(filteredDate);
+                     if (filteredDate.isEmpty()) {
+                        ShowMessageFX.Information(null, pxeModuleName, "Data input is invalid! Please try again.");
+                    }
                 });
         break;   
-        case "btnApproved":
-                    btnApproved.setOnAction(clients -> {
-                    if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure you want to approve?")) {
+       case "btnApproved":
+                btnApproved.setOnAction(clients -> {
+                ObservableList<VehicleSalesApprovalTable> selectedItems = FXCollections.observableArrayList();
 
-                    ObservableList<VehicleSalesApprovalTable> selectedItems = FXCollections.observableArrayList();
-                        
-                    for (VehicleSalesApprovalTable item : tblVhclApproval.getItems()) {
-                        if (item.getSelect().isSelected()) {
-                            selectedItems.add(item);
-                        }
+                for (VehicleSalesApprovalTable item : tblVhclApproval.getItems()) {
+                    if (item.getSelect().isSelected()) {
+                        selectedItems.add(item);
                     }
+                }
 
-                    if (selectedItems.isEmpty()) {
-                         ShowMessageFX.Information(null, pxeModuleName, "No items selected to approve.");
-                     } else {
-                         // Perform approval logic here
-                         tblVhclApproval.getItems().removeAll(selectedItems);
-                         tblVhclApproval.refresh();
-                     }
-                 }
-             });
-        break;
+            if (selectedItems.isEmpty()) {
+                ShowMessageFX.Information(null, pxeModuleName, "No items selected to approve.");
+            } else {
+                if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure you want to approve?")) {
+                    // Perform approval logic here
+                    tblVhclApproval.getItems().removeAll(selectedItems);
+                    tblVhclApproval.refresh();
+                }
+            }
+    });
+    break;
         case "btnRefresh":
 
                 // Clear the combo box selection
@@ -317,10 +413,11 @@ public class VehicleSalesApprovalController implements Initializable,ScreenInter
                 txtFieldSearch.clear();
 
                 // Clear the date picker values
-                fromDate.setValue(null);
-                toDate.setValue(null);
+                fromDate.setValue(LocalDate.of(2023, 4, 1));
+                toDate.setValue(LocalDate.now());
 
                 // Set the table items back to the original data
+                
                 tblVhclApproval.setItems(slipDataList);
 
             break;
@@ -340,12 +437,20 @@ public class VehicleSalesApprovalController implements Initializable,ScreenInter
             txtFieldSearch.setVisible(false);
             txtFieldSearch.setManaged(false);
             
-            btnFilter1.setVisible(false);
-            btnFilter1.setManaged(false);
-            btnFilter2.setVisible(false);
-            btnFilter2.setManaged(false);
-            btnFilter3.setVisible(false);
-            btnFilter3.setManaged(false);
+            btnFilterDate.setVisible(false);
+            btnFilterDate.setManaged(false);
+            btnFilterSlip.setVisible(false);
+            btnFilterSlip.setManaged(false);
+            btnFilterCustomer.setVisible(false);
+            btnFilterCustomer.setManaged(false);
+            btnFilterUnit.setVisible(false);
+            btnFilterUnit.setManaged(false);
+            btnFilterEmployee.setVisible(false);
+            btnFilterEmployee.setManaged(false);
+            btnFilterType.setVisible(false);
+            btnFilterType.setManaged(false);
+            txtFieldSearch.setVisible(false);
+            txtFieldSearch.setManaged(false);
             lFrom.setManaged(false);
             lFrom.setVisible(false);
             fromDate.setVisible(false);
@@ -364,15 +469,17 @@ public class VehicleSalesApprovalController implements Initializable,ScreenInter
                     txtFieldSearch.setText("");
                     txtFieldSearch.setVisible(true);
                     txtFieldSearch.setManaged(true);
-                    btnFilter1.setVisible(true);
-                    btnFilter1.setManaged(true);
+                    btnFilterSlip.setVisible(true);
+                    btnFilterSlip.setManaged(true);
                     tblVhclApproval.setItems(slipDataList);
+                    
                     break;
                 case "Advance Slip Date":
-                    btnFilter3.setVisible(true);
-                    btnFilter3.setManaged(true);
+                    btnFilterDate.setVisible(true);
+                    btnFilterDate.setManaged(true);
                     lFrom.setVisible(true);
                     lFrom.setManaged(true);
+                   
                     fromDate.setVisible(true);
                     fromDate.setManaged(true);
                     lTo.setVisible(true);
@@ -384,16 +491,16 @@ public class VehicleSalesApprovalController implements Initializable,ScreenInter
                 case "Advances Type":
                     comboType.setVisible(true);
                     comboType.setManaged(true);
-                    btnFilter2.setVisible(true);
-                    btnFilter2.setManaged(true);
+                    btnFilterType.setVisible(true);
+                    btnFilterType.setManaged(true);
                     tblVhclApproval.setItems(slipDataList);
                     break;
                 case "Customer Name":
                     txtFieldSearch.setText("");
                     txtFieldSearch.setVisible(true);
                     txtFieldSearch.setManaged(true);
-                    btnFilter1.setVisible(true);
-                    btnFilter1.setManaged(true);
+                    btnFilterCustomer.setVisible(true);
+                    btnFilterCustomer.setManaged(true);
                     tblVhclApproval.setItems(slipDataList);
        
                     break;
@@ -401,8 +508,8 @@ public class VehicleSalesApprovalController implements Initializable,ScreenInter
                     txtFieldSearch.setText("");
                     txtFieldSearch.setVisible(true);
                     txtFieldSearch.setManaged(true);
-                    btnFilter1.setVisible(true);
-                    btnFilter1.setManaged(true);
+                    btnFilterEmployee.setVisible(true);
+                    btnFilterEmployee.setManaged(true);
                     tblVhclApproval.setItems(slipDataList);
               
                     break;
@@ -410,8 +517,8 @@ public class VehicleSalesApprovalController implements Initializable,ScreenInter
                     txtFieldSearch.setText("");
                     txtFieldSearch.setVisible(true);
                     txtFieldSearch.setManaged(true);
-                    btnFilter1.setVisible(true);
-                    btnFilter1.setManaged(true);
+                    btnFilterUnit.setVisible(true);
+                    btnFilterUnit.setManaged(true);
                     tblVhclApproval.setItems(slipDataList);
                     break;
             }

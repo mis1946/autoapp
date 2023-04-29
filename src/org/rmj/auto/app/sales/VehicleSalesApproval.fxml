@@ -22,13 +22,13 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" fx:id="AnchorMain" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane id="AnchorPane" fx:id="AnchorMain" prefHeight="582.0" prefWidth="1360.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
    <stylesheets>
       <URL value="@../css/FrameStyle.css" />
       <URL value="@../css/MainPanelStyle.css" />
    </stylesheets>
    <children>
-      <StackPane layoutX="10.0" layoutY="10.0" prefHeight="150.0" prefWidth="988.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <StackPane layoutX="10.0" layoutY="10.0" prefHeight="453.0" prefWidth="1220.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <BorderPane prefHeight="320.0" prefWidth="968.0">
                <StackPane.margin>
@@ -60,9 +60,9 @@
                                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="159.0" minWidth="-Infinity" prefWidth="48.333335876464844" />
                                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="150.0" />
                                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="272.3333282470703" minWidth="10.0" prefWidth="158.66665649414062" />
-                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="966.0" minWidth="-Infinity" prefWidth="957.0" />
-                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="533.3333435058594" minWidth="-Infinity" prefWidth="14.0" />
-                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="533.3333435058594" minWidth="0.0" prefWidth="16.66668701171875" />
+                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="1067.0" minWidth="-Infinity" prefWidth="1038.6666259765625" />
+                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="533.3333435058594" minWidth="-Infinity" prefWidth="28.3333740234375" />
+                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="533.3333435058594" minWidth="0.0" prefWidth="0.0" />
                                              </columnConstraints>
                                              <rowConstraints>
                                                 <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -103,9 +103,12 @@
                                                       </Label>
                                                       <DatePicker fx:id="toDate" prefHeight="24.0" prefWidth="136.0" />
                                                       <ComboBox fx:id="comboType" prefHeight="24.0" prefWidth="115.0" promptText="Choose Type" />
-                                                      <Button fx:id="btnFilter1" mnemonicParsing="false" prefHeight="24.0" text="Filter" />
-                                                      <Button fx:id="btnFilter2" mnemonicParsing="false" prefHeight="24.0" text="Filter" />
-                                                      <Button fx:id="btnFilter3" mnemonicParsing="false" prefHeight="24.0" text="Filter" />
+                                                      <Button fx:id="btnFilterType" mnemonicParsing="false" prefHeight="24.0" text="Filter" />
+                                                      <Button fx:id="btnFilterDate" mnemonicParsing="false" prefHeight="24.0" text="Filter" />
+                                                      <Button fx:id="btnFilterSlip" mnemonicParsing="false" prefHeight="24.0" text="Filter" />
+                                                      <Button fx:id="btnFilterCustomer" mnemonicParsing="false" prefHeight="24.0" text="Filter" />
+                                                      <Button fx:id="btnFilterUnit" mnemonicParsing="false" prefHeight="24.0" text="Filter" />
+                                                      <Button fx:id="btnFilterEmployee" mnemonicParsing="false" prefHeight="24.0" text="Filter" />
                                                       <Button fx:id="btnRefresh" mnemonicParsing="false" prefHeight="24.0" text="Refresh" />
                                                    </children>
                                                    <GridPane.margin>

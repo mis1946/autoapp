@@ -8,7 +8,9 @@ import java.awt.Checkbox;
 import java.time.LocalDate;
 import java.util.Date;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.CheckBox;
 
@@ -20,32 +22,51 @@ public class VehicleSalesApprovalTable {
     
     private SimpleStringProperty tblRow;
 //    private SimpleBooleanProperty tblselected;
+    private SimpleStringProperty tblindex13; //sTransNox
+    
     private CheckBox select;
-    private SimpleStringProperty tblslipNo;
-    private SimpleStringProperty tbltype;
-    private SimpleStringProperty tblslipDate;
-    private SimpleStringProperty tblcustomerName;
-    private SimpleStringProperty tblunitDescription;
-    private SimpleStringProperty tblamount;
-    private SimpleStringProperty tblseName;
-    private SimpleStringProperty tblbranch;
+    private SimpleStringProperty tblindex01; //sTransNox
+    private SimpleStringProperty tblindex03; //sReferNox
+    private SimpleStringProperty tblindex12; //cResrvTyp
+    private SimpleStringProperty tblindex02; // dTransact
+    private SimpleStringProperty tblindex20; // sCompnyNm
+    private SimpleStringProperty tblindex23; // sDescript
+    private SimpleStringProperty tblindex05; // nAmountxx
+    private SimpleStringProperty tblindex24; // sSeNamexx 
+    private SimpleStringProperty tblbranch; // Branch/
 
-    public VehicleSalesApprovalTable(String tblRow, String tblslipNo, String tbltype, String tblslipDate, String tblcustomerName, String tblunitDescription, String tblamount, String tblseName, String tblbranch) {
+    public VehicleSalesApprovalTable(String tblRow, String tblindex13, String tblindex01, String tblindex03, String tblindex12, String tblindex02, String tblindex20, String tblindex23, String tblindex05, String tblindex24, String tblbranch) {
         this.tblRow = new SimpleStringProperty(tblRow);
 //        this.tblselected = new SimpleBooleanProperty(tblselected);
         this.select = new CheckBox();
-        this.tblslipNo = new SimpleStringProperty(tblslipNo);
-        this.tbltype = new SimpleStringProperty(tbltype);
-        this.tblslipDate = new SimpleStringProperty(tblslipDate);
-        this.tblcustomerName = new SimpleStringProperty(tblcustomerName);
-        this.tblunitDescription = new SimpleStringProperty(tblunitDescription);
-        this.tblamount = new SimpleStringProperty(tblamount);
-        this.tblseName = new SimpleStringProperty(tblseName);
+        this.tblindex01 = new SimpleStringProperty(tblindex13);
+        this.tblindex01 = new SimpleStringProperty(tblindex01);
+        this.tblindex03 = new SimpleStringProperty(tblindex03);
+        this.tblindex12 = new SimpleStringProperty(tblindex12);
+        this.tblindex02 = new SimpleStringProperty(tblindex02);
+        this.tblindex20= new SimpleStringProperty(tblindex20);
+        this.tblindex23 = new SimpleStringProperty(tblindex23);
+        this.tblindex05 = new SimpleStringProperty(tblindex05);
+        this.tblindex24 = new SimpleStringProperty(tblindex24);
         this.tblbranch = new SimpleStringProperty(tblbranch);
     }
 
-   
+    public String getTblindex13() {
+        return tblindex13.get();
+    }
 
+    public void setTblindex13(String tblindex13) {
+        this.tblindex13.set(tblindex13);
+    }
+    
+    public String getTblindex01() {
+        return tblindex01.get();
+    }
+
+    public void setTblindex01(String tblindex01) {
+        this.tblindex01.set(tblindex01);
+    }
+   
     public String getTblRow() {
         return tblRow.get();
     }
@@ -77,61 +98,60 @@ public class VehicleSalesApprovalTable {
 //    }
 
 //    }
-    public String getTblslipNo() {
-        return tblslipNo.get();
+    public String getTblindex03() {
+        return tblindex03.get();
     }
 
-    public void setTblslipNo(String tblslipNo) {
-        this.tblslipNo.set(tblslipNo);
+    public void setTblindex03(String  tblindex03) {
+        this. tblindex03.set(tblindex03);
     }
 
-    public String getTbltype() {
-        return tbltype.get();
+    public String getTblindex12() {
+        return  tblindex12.get();
     }
 
-    public void setTbltype(String tbltype) {
-        this.tbltype.set(tbltype);
-    }
-    
-
-    public String getTblslipDate() {
-        return tblslipDate.get();
+    public void setTblindex12(String tblindex12) {
+        this. tblindex12.set(tblindex12);
     }
 
-    public void setTblslipDate(String tblslipDate) {
-        this.tblslipDate.set(tblslipDate);
+    public String getTblindex02() {
+        return  tblindex02.get();
     }
 
-    public String getTblcustomerName() {
-        return tblcustomerName.get();
+    public void setTblindex02(String tblindex02) {
+        this.tblindex02.set(tblindex02);
     }
 
-    public void setTblcustomerName(String tblcustomerName) {
-        this.tblcustomerName.set(tblcustomerName);
+    public String getTblindex20() {
+        return tblindex20.get();
     }
 
-    public String getTblunitDescription() {
-        return tblunitDescription.get();
+    public void setTblindex20(String tblindex20) {
+        this.tblindex20.set(tblindex20);
     }
 
-    public void setTblunitDescription(String tblunitDescription) {
-        this.tblunitDescription.set(tblunitDescription);
+    public String getTblindex23() {
+        return tblindex23.get();
     }
 
-    public String getTblamount() {
-        return tblamount.get();
+    public void setTblindex23(String tblindex23) {
+        this.tblindex23.set(tblindex23);
     }
 
-    public void setTblamount(String tblamount) {
-        this.tblamount.set(tblamount);
+    public String getTblindex05() {
+        return tblindex05.get();
     }
 
-    public String getTblseName() {
-        return tblseName.get();
+    public void setTbindex5(String tblindex05) {
+        this.tblindex05.set(tblindex05);
     }
 
-    public void setTblseName(String tblseName) {
-        this.tblseName.set(tblseName);
+    public String getTblindex24() {
+        return tblindex24.get();
+    }
+
+    public void setTblseName(String tblindex24) {
+        this.tblindex24.set(tblindex24);
     }
 
     public String getTblbranch() {

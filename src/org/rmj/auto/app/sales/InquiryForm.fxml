@@ -613,7 +613,7 @@
                                                                                                 </Label>
                                                                                                 <ComboBox fx:id="cmbInqpr01" prefWidth="150.0" GridPane.columnIndex="2" />
                                                                                                 <ComboBox fx:id="cmbInqpr02" prefWidth="150.0" GridPane.columnIndex="5" />
-                                                                                                <TableView fx:id="tblRequirementsInfo" prefHeight="177.0" prefWidth="417.0" GridPane.columnIndex="1" GridPane.columnSpan="6" GridPane.rowIndex="1">
+                                                                                                <TableView fx:id="tblRequirementsInfo" GridPane.columnIndex="1" GridPane.columnSpan="6" GridPane.rowIndex="1">
                                                                                                    <columns>
                                                                                                       <TableColumn fx:id="rqrmIndex01" prefWidth="33.0" />
                                                                                                       <TableColumn fx:id="rqrmIndex02" prefWidth="255.0" text="Requirements" />

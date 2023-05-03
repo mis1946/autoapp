@@ -43,7 +43,7 @@
                <bottom>
                   <AnchorPane style="-fx-background-color: #515151;" BorderPane.alignment="CENTER">
                      <children>
-                        <Button fx:id="btnAdd" contentDisplay="TOP" layoutX="10.0" layoutY="5.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="70.0" text="Apply" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="5.0">
+                        <Button fx:id="btnApply" contentDisplay="TOP" layoutX="10.0" layoutY="5.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="70.0" text="Apply" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="5.0">
                            <effect>
                               <Blend />
                            </effect>
@@ -118,7 +118,7 @@
                                     <Insets />
                                  </GridPane.margin>
                               </Label>
-                              <Label id="LabelDesc" text="Approved Status" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                              <Label id="LabelDesc" text="Status" GridPane.columnIndex="1" GridPane.rowIndex="5">
                                  <GridPane.margin>
                                     <Insets />
                                  </GridPane.margin>

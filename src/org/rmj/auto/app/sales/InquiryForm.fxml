@@ -616,9 +616,9 @@
                                                                                                 <TableView fx:id="tblRequirementsInfo" GridPane.columnIndex="1" GridPane.columnSpan="6" GridPane.rowIndex="1">
                                                                                                    <columns>
                                                                                                       <TableColumn fx:id="rqrmIndex01" prefWidth="33.0" />
-                                                                                                      <TableColumn fx:id="rqrmIndex02" prefWidth="255.0" text="Requirements" />
-                                                                                                      <TableColumn fx:id="rqrmIndex03" prefWidth="239.0" text="Received By" />
-                                                                                                      <TableColumn fx:id="rqrmIndex04" prefWidth="110.0" text="Received Date" />
+                                                                                                      <TableColumn fx:id="rqrmIndex02" prefWidth="255.0" sortable="false" text="Requirements" />
+                                                                                                      <TableColumn fx:id="rqrmIndex03" prefWidth="239.0" sortable="false" text="Received By" />
+                                                                                                      <TableColumn fx:id="rqrmIndex04" prefWidth="110.0" sortable="false" text="Received Date" />
                                                                                                    </columns>
                                                                                                 </TableView>
                                                                                              </children>

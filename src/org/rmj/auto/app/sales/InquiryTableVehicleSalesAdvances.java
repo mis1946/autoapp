@@ -19,6 +19,8 @@ public class InquiryTableVehicleSalesAdvances {
      private SimpleStringProperty tblindex05; //Slip Amount
      private SimpleStringProperty tblindex06; //Slip Status
      private SimpleStringProperty tblindex07; //Remarks
+     private SimpleStringProperty tblindex08; //Approved By
+     private SimpleStringProperty tblindex09; //Approved Date
      
      InquiryTableVehicleSalesAdvances(  String tblindex01,
                                         String tblindex02,
@@ -26,7 +28,9 @@ public class InquiryTableVehicleSalesAdvances {
                                         String tblindex04,
                                         String tblindex05,
                                         String tblindex06,
-                                        String tblindex07
+                                        String tblindex07,
+                                        String tblindex08,
+                                        String tblindex09
                                         ){
      
           this.tblindex01 = new SimpleStringProperty(tblindex01);
@@ -36,6 +40,8 @@ public class InquiryTableVehicleSalesAdvances {
           this.tblindex05 = new SimpleStringProperty(tblindex05);
           this.tblindex06 = new SimpleStringProperty(tblindex06);
           this.tblindex07 = new SimpleStringProperty(tblindex07);
+          this.tblindex08 = new SimpleStringProperty(tblindex08);
+          this.tblindex09 = new SimpleStringProperty(tblindex09);
           
      }
      
@@ -60,4 +66,10 @@ public class InquiryTableVehicleSalesAdvances {
      //Remarks
      public String getTblindex07(){return tblindex07.get();}
      public void setTblindex07(String tblindex07){this.tblindex07.set(tblindex07);}
+     //Approved By
+     public String getTblindex08(){return tblindex08.get();}
+     public void setTblindex08(String tblindex08){this.tblindex08.set(tblindex08);}
+     //Approved Date
+     public String getTblindex09(){return tblindex09.get();}
+     public void setTblindex09(String tblindex09){this.tblindex09.set(tblindex09);}
 }

@@ -23,7 +23,6 @@ public class VehicleSalesApprovalTable {
     private SimpleStringProperty tblRow;
 //    private SimpleBooleanProperty tblselected;
     private SimpleStringProperty tblindex13; //sTransNox
-    
     private CheckBox select;
     private SimpleStringProperty tblindex01; //sTransNox
     private SimpleStringProperty tblindex03; //sReferNox

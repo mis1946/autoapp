@@ -29,7 +29,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" fx:id="AnchorMain" prefHeight="1182.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane id="AnchorPane" fx:id="AnchorMain" prefHeight="1182.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" >
    <children>
       <StackPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -166,7 +166,7 @@
                                                                               <Insets />
                                                                            </GridPane.margin>
                                                                         </TextField>
-                                                                        <TextField fx:id="txtField03" GridPane.columnIndex="2">
+                                                                        <TextField fx:id="txtField03" disable="true" GridPane.columnIndex="2">
                                                                            <GridPane.margin>
                                                                               <Insets />
                                                                            </GridPane.margin>
@@ -221,13 +221,13 @@
                                                                               <Insets />
                                                                            </GridPane.margin>
                                                                         </TextField>
-                                                                        <TextField fx:id="txtField33" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                                                                        <TextField fx:id="txtField33" disable="true" GridPane.columnIndex="2" GridPane.rowIndex="2" />
                                                                         <Label id="LabelDesc" text="Contact Number" GridPane.columnIndex="4" />
                                                                         <Label GridPane.columnIndex="4" GridPane.rowIndex="1" />
                                                                         <Label id="LabelDesc" text="Email Address" GridPane.columnIndex="4" GridPane.rowIndex="1" />
-                                                                        <TextField fx:id="txtField30" prefHeight="22.0" prefWidth="269.0" GridPane.columnIndex="5" />
-                                                                        <TextField fx:id="txtField32" GridPane.columnIndex="5" GridPane.rowIndex="1" />
-                                                                        <TextField fx:id="txtField31" GridPane.columnIndex="5" GridPane.rowIndex="2" />
+                                                                        <TextField fx:id="txtField30" disable="true" prefHeight="22.0" prefWidth="269.0" GridPane.columnIndex="5" />
+                                                                        <TextField fx:id="txtField32" disable="true" GridPane.columnIndex="5" GridPane.rowIndex="1" />
+                                                                        <TextField fx:id="txtField31" disable="true" GridPane.columnIndex="5" GridPane.rowIndex="2" />
                                                                         <Label id="LabelDesc" text="Social Media" GridPane.columnIndex="4" GridPane.rowIndex="2" />
                                                                      </children>
                                                                      <VBox.margin>
@@ -294,9 +294,9 @@
                                                                                           <Separator style="-fx-background-color: orange;" GridPane.columnSpan="11" GridPane.rowIndex="4" />
                                                                                           <TextField fx:id="txtField15" layoutX="516.0" layoutY="20.0" prefWidth="275.0" promptText="Search: F3" GridPane.columnIndex="7" GridPane.columnSpan="2" GridPane.rowIndex="2" />
                                                                                           <Label id="LabelDesc" text="Branch" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                                                                                          <TextField fx:id="txtField02" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                                                                                          <TextField fx:id="txtField02" disable="true" GridPane.columnIndex="2" GridPane.rowIndex="3" />
                                                                                           <Label id="LabelDesc" layoutX="20.0" layoutY="146.0" text="Sub Company" GridPane.columnIndex="6" GridPane.rowIndex="3" />
-                                                                                          <TextField GridPane.columnIndex="7" GridPane.columnSpan="2" GridPane.rowIndex="3" />
+                                                                                          <TextField disable="true" GridPane.columnIndex="7" GridPane.columnSpan="2" GridPane.rowIndex="3" />
                                                                                        </children>
                                                                                        <VBox.margin>
                                                                                           <Insets />
@@ -315,8 +315,8 @@
                                                                                                       <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="65.0" prefWidth="100.0" />
                                                                                                       <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="14.0" />
                                                                                                       <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="110.0" />
-                                                                                                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="120.0" />
-                                                                                                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="80.0" prefWidth="180.0" />
+                                                                                                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="150.0" />
+                                                                                                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="60.0" prefWidth="160.0" />
                                                                                                       <ColumnConstraints hgrow="SOMETIMES" minWidth="5.0" prefWidth="10.0" />
                                                                                                    </columnConstraints>
                                                                                                    <rowConstraints>
@@ -340,7 +340,7 @@
                                                                                                       <TextField fx:id="txtField14" prefHeight="22.0" prefWidth="262.0" promptText="Search: F3" GridPane.columnIndex="2" GridPane.columnSpan="3" GridPane.rowIndex="1" />
                                                                                                       <DatePicker fx:id="txtField10" GridPane.columnIndex="7" />
                                                                                                       <Label id="LabelDesc" text="Inquiry Status " GridPane.columnIndex="6" GridPane.rowIndex="1" />
-                                                                                                      <TextField fx:id="txtField24" GridPane.columnIndex="7" GridPane.rowIndex="1" />
+                                                                                                      <ComboBox fx:id="comboBox24" disable="true" prefWidth="150.0" GridPane.columnIndex="7" GridPane.rowIndex="1" />
                                                                                                    </children>
                                                                                                    <VBox.margin>
                                                                                                       <Insets top="3.0" />
@@ -552,10 +552,10 @@
                                                                                                       </Label>
                                                                                                       <Label id="LabelDesc" text="Amount" GridPane.columnIndex="4" GridPane.rowIndex="1" />
                                                                                                       <Label id="LabelDesc" text="Amount" GridPane.columnIndex="4" GridPane.rowIndex="2" />
-                                                                                                      <TextField fx:id="txtField18" GridPane.columnIndex="5" GridPane.rowIndex="1" />
-                                                                                                      <TextField GridPane.columnIndex="5" GridPane.rowIndex="2" />
-                                                                                                      <TextField fx:id="txtField17" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                                                                                                      <TextField GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                                                                                                      <TextField fx:id="txtField18" disable="true" GridPane.columnIndex="5" GridPane.rowIndex="1" />
+                                                                                                      <TextField disable="true" GridPane.columnIndex="5" GridPane.rowIndex="2" />
+                                                                                                      <TextField fx:id="txtField17" disable="true" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                                                                                      <TextField disable="true" GridPane.columnIndex="2" GridPane.rowIndex="2" />
                                                                                                    </children>
                                                                                                 </GridPane>
                                                                                              </children>
@@ -737,8 +737,9 @@
                                                                                                 </Button>
                                                                                                 <TableView fx:id="tblAdvanceSlip" GridPane.columnIndex="1" GridPane.columnSpan="6" GridPane.rowIndex="1">
                                                                                                    <columns>
-                                                                                                      <TableColumn fx:id="vsasIndex01" prefWidth="30.0" text="Row" />
-                                                                                                      <TableColumn fx:id="vsasIndex02" text="Date" />
+                                                                                                      <TableColumn fx:id="vsasIndex01" prefWidth="36.0" text="Row" />
+                                                                                                      <TableColumn fx:id="vsasCheck01" prefWidth="31.0" />
+                                                                                                      <TableColumn fx:id="vsasIndex02" prefWidth="118.0" text="Date" />
                                                                                                       <TableColumn fx:id="vsasIndex03" prefWidth="90.0" text="Type" />
                                                                                                       <TableColumn fx:id="vsasIndex04" prefWidth="150.0" text="Advances Slip No" />
                                                                                                       <TableColumn fx:id="vsasIndex05" prefWidth="90.0" text="Amount" />
@@ -773,7 +774,7 @@
                                                                                                       <Insets />
                                                                                                    </GridPane.margin>
                                                                                                 </Label>
-                                                                                                <TextField fx:id="txtPymtc01" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="1" />
+                                                                                                <TextField fx:id="txtPymtc01" disable="true" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="1" />
                                                                                                 <Button fx:id="btnPymtcon" mnemonicParsing="false" text="..." GridPane.columnIndex="5" GridPane.rowIndex="1">
                                                                                                    <GridPane.margin>
                                                                                                       <Insets />

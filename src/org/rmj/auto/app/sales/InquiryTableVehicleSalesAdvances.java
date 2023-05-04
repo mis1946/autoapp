@@ -5,6 +5,8 @@
  */
 package org.rmj.auto.app.sales;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 
 /**
@@ -12,6 +14,7 @@ import javafx.beans.property.SimpleStringProperty;
  * @author Arsiela
  */
 public class InquiryTableVehicleSalesAdvances {
+     private SimpleBooleanProperty tblcheck01; //Check box
      private SimpleStringProperty tblindex01; //Row
      private SimpleStringProperty tblindex02; //Slip Date
      private SimpleStringProperty tblindex03; //Slip Type
@@ -22,7 +25,8 @@ public class InquiryTableVehicleSalesAdvances {
      private SimpleStringProperty tblindex08; //Approved By
      private SimpleStringProperty tblindex09; //Approved Date
      
-     InquiryTableVehicleSalesAdvances(  String tblindex01,
+     InquiryTableVehicleSalesAdvances(  Boolean tblcheck01,
+                                        String tblindex01,
                                         String tblindex02,
                                         String tblindex03,
                                         String tblindex04,
@@ -32,7 +36,8 @@ public class InquiryTableVehicleSalesAdvances {
                                         String tblindex08,
                                         String tblindex09
                                         ){
-     
+          
+          this.tblcheck01 = new SimpleBooleanProperty(tblcheck01);
           this.tblindex01 = new SimpleStringProperty(tblindex01);
           this.tblindex02 = new SimpleStringProperty(tblindex02);
           this.tblindex03 = new SimpleStringProperty(tblindex03);
@@ -44,7 +49,11 @@ public class InquiryTableVehicleSalesAdvances {
           this.tblindex09 = new SimpleStringProperty(tblindex09);
           
      }
-     
+      //Check box
+     public boolean isTblcheck01() { return tblcheck01.get();}
+     public void setTblcheck01(boolean tblcheck01) { this.tblcheck01.set(tblcheck01);}
+     public BooleanProperty selectedProperty() {return tblcheck01;}
+
      //Row
      public String getTblindex01(){return tblindex01.get();}
      public void setTblindex01(String tblindex01){this.tblindex01.set(tblindex01);}

@@ -167,14 +167,36 @@ public class InquiryVehicleSalesAdvancesFormController implements Initializable 
                 **/
                if(state){ //Add
                     txtField02.setText(CommonUtils.xsDateShort((Date) oApp.getServerDate()));
+                    txtField13.setText("For Approval");
                } else { 
-                    txtField02.setText(oTransProcess.getInqRsv(tbl_row,2).toString());
+                    txtField02.setText(CommonUtils.xsDateShort((Date) oTransProcess.getInqRsv(tbl_row,2)));
                     txtField03.setText(oTransProcess.getInqRsv(tbl_row,3).toString());
-                    txtField05.setText(oTransProcess.getInqRsv(tbl_row,5).toString());
-                    txtField13.setText(oTransProcess.getInqRsv(tbl_row,13).toString());
-                    txtField14.setText(oTransProcess.getInqRsv(tbl_row,14).toString());
-                    txtField15.setText(oTransProcess.getInqRsv(tbl_row,15).toString());
-                    textArea06.setText(oTransProcess.getInqRsv(tbl_row,6).toString());
+                    txtField05.setText(String.format("%.2f", oTransProcess.getInqRsv(tbl_row,5)));
+                    switch (oTransProcess.getInqRsv(tbl_row,13).toString()) {
+                         case "0":
+                              txtField13.setText("For Approval");
+                              txtField05.setDisable(state);
+                              comboBox12.setDisable(state);
+                              break;
+                         case "1":
+                              txtField13.setText("Approved");
+                              txtField05.setDisable(!state);
+                              comboBox12.setDisable(!state);
+                              
+                              break; 
+                         case "2":
+                              txtField13.setText("Cancelled");
+                              txtField05.setDisable(!state);
+                              comboBox12.setDisable(!state);
+                              break;
+                         default:
+                              txtField13.setText("");
+                              break;
+                    }
+                    txtField14.setText((String) oTransProcess.getInqRsv(tbl_row,14));
+                    //txtField15.setText( oTransProcess.getInqRsv(tbl_row,15).toString());
+                    txtField15.setText(CommonUtils.xsDateShort((Date) oTransProcess.getInqRsv(tbl_row,15)));
+                    textArea06.setText((String) oTransProcess.getInqRsv(tbl_row,6));
                     comboBox12.getSelectionModel().select(Integer.parseInt(oTransProcess.getInqRsv(tbl_row,12).toString())); //VSA Type
                }
           }catch (SQLException ex) {
@@ -191,7 +213,9 @@ public class InquiryVehicleSalesAdvancesFormController implements Initializable 
                          CommonUtils.closeStage(btnClose);
                          break;
                     case "btnApply":
-                         oTransProcess.addReserve();
+                         if(state){
+                              oTransProcess.addReserve();
+                         }
                          if (setSelection()){
                               oTransProcess.setInqRsv(tbl_row, 2,SQLUtil.toDate(txtField02.getText(), SQLUtil.FORMAT_SHORT_DATE));
                               oTransProcess.setInqRsv(tbl_row, 5,Double.valueOf(txtField05.getText()));
@@ -270,10 +294,10 @@ public class InquiryVehicleSalesAdvancesFormController implements Initializable 
                    comboBox12.requestFocus();
                    return false;
                }else 
-                  oTransProcess.setInqRsv(tbl_row, 12,String.valueOf(comboBox12.getSelectionModel().getSelectedIndex()));
+                    oTransProcess.setInqRsv(tbl_row, 12,comboBox12.getSelectionModel().getSelectedIndex());
                
           } catch (SQLException ex) {
-          ShowMessageFX.Warning(getStage(),ex.getMessage(), "Warning", null);
+               ShowMessageFX.Warning(getStage(),ex.getMessage(), "Warning", null);
           }
           return true;
      }

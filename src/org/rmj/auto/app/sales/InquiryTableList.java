@@ -17,7 +17,7 @@ public class InquiryTableList {
      private SimpleStringProperty tbllistindex01; //Row
      private SimpleStringProperty tbllistindex02; //Inquiry Date
      private SimpleStringProperty tbllistindex03; //Customer Name
-//     private SimpleStringProperty tbllistindex04; //Inquiry Status
+     private SimpleStringProperty tbllistindex04; //Inquiry Status
 //     private SimpleStringProperty tbllistindex05; //Sales Excutive
 //     private SimpleStringProperty tbllistindex06; //Reserve slip no
      
@@ -60,7 +60,7 @@ public class InquiryTableList {
      InquiryTableList(   String tbllistindex01,
                          String tbllistindex02,
                          String tbllistindex03,
-//                         String tbllistindex04,
+                         String tbllistindex04,
 //                         String tbllistindex05,
 //                         String tbllistindex06,
                          
@@ -105,7 +105,7 @@ public class InquiryTableList {
           this.tbllistindex01 = new SimpleStringProperty(tbllistindex01);
           this.tbllistindex02 = new SimpleStringProperty(tbllistindex02);
           this.tbllistindex03 = new SimpleStringProperty(tbllistindex03);
-//          this.tbllistindex04 = new SimpleStringProperty(tbllistindex04);
+          this.tbllistindex04 = new SimpleStringProperty(tbllistindex04);
 //          this.tbllistindex05 = new SimpleStringProperty(tbllistindex05);
 //          this.tbllistindex06 = new SimpleStringProperty(tbllistindex06);
           
@@ -157,9 +157,9 @@ public class InquiryTableList {
      //
      public String getTbllistindex03(){return tbllistindex03.get();}
      public void setTbllistindex03(String tbllistindex03){this.tbllistindex03.set(tbllistindex03);}
-//     //Inquiry Status
-//     public String getTbllistindex04(){return tbllistindex04.get();}
-//     public void setTbllistindex04(String tbllistindex04){this.tbllistindex04.set(tbllistindex04);}
+     //Inquiry Status
+     public String getTbllistindex04(){return tbllistindex04.get();}
+     public void setTbllistindex04(String tbllistindex04){this.tbllistindex04.set(tbllistindex04);}
 //     //
 //     public String getTbllistindex05(){return tbllistindex05.get();}
 //     public void setTbllistindex05(String tbllistindex05){this.tbllistindex05.set(tbllistindex05);}

@@ -1673,12 +1673,13 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                //} else {
                     if (oTransProcess.loadRequirementsSource( String.valueOf(cmbInqpr02.getSelectionModel().getSelectedIndex()), String.valueOf(cmbInqpr01.getSelectionModel().getSelectedIndex()))){
                          for (lnCtr = 1; lnCtr <= oTransProcess.getInqReqSrcCount() ; lnCtr++){
-                              //to be continued tomorrow
-                              cmbInqpr01.getSelectionModel().select(Integer.parseInt(oTransProcess.getInqReq(lnCtr, "cPayModex").toString())); //Inquiry Status
-                              cmbInqpr02.getSelectionModel().select(Integer.parseInt(oTransProcess.getInqReq(lnCtr, "cCustGrpx").toString())); //Inquiry Status
-                    
+                            
                               //Display selected Item
                               for (lnCnt = 1 ; lnCnt <= oTransProcess.getInqReqCount() ; lnCnt++){
+                                   //to be continued tomorrow
+                                   cmbInqpr01.getSelectionModel().select(Integer.parseInt(oTransProcess.getInqReq(lnCnt, "cPayModex").toString())); //Inquiry Status
+                                   cmbInqpr02.getSelectionModel().select(Integer.parseInt(oTransProcess.getInqReq(lnCnt, "cCustGrpx").toString())); //Inquiry Status
+                    
                                    if (oTransProcess.getInqReq(lnCnt,"sRqrmtCde").toString().equals(oTransProcess.getInqReqSrc(lnCtr,"sRqrmtCde").toString())) {
                                         if (oTransProcess.getInqReq(lnCnt,"cSubmittd").toString().equals("1")){
                                              bSubmitted = true;

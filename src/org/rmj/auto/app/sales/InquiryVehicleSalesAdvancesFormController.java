@@ -193,7 +193,7 @@ public class InquiryVehicleSalesAdvancesFormController implements Initializable 
                               txtField13.setText("");
                               break;
                     }
-                    txtField14.setText((String) oTransProcess.getInqRsv(tbl_row,14));
+                    txtField14.setText((String) oTransProcess.getInqRsv(tbl_row,23));
                     //txtField15.setText( oTransProcess.getInqRsv(tbl_row,15).toString());
                     txtField15.setText(CommonUtils.xsDateShort((Date) oTransProcess.getInqRsv(tbl_row,15)));
                     textArea06.setText((String) oTransProcess.getInqRsv(tbl_row,6));

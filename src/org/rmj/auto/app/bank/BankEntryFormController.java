@@ -55,7 +55,7 @@ public class BankEntryFormController implements Initializable, ScreenInterface{
    private GRider oApp;
     private BankInformation oTrans;
     unloadForm unload = new unloadForm(); //Object for closing form
-    private final String pxeModuleName = "Bank Entry"; //Form Title
+    private final String pxeModuleName = "Bank"; //Form Title
     private MasterCallback oListener;
     
     
@@ -119,6 +119,8 @@ public class BankEntryFormController implements Initializable, ScreenInterface{
     private TextField txtField17; //ssBankBrch
     @FXML
     private TextField textSeek02; //for search 
+    @FXML
+    private Button btnCancel;
     
         
     @Override
@@ -138,7 +140,7 @@ public class BankEntryFormController implements Initializable, ScreenInterface{
 
           /*Set Focus to set Value to Class*/
           txtField02.focusedProperty().addListener(txtField_Focus); // sBankName
-          txtField03.focusedProperty().addListener(txtField_Focus); // sBankCode
+//          txtField03.focusedProperty().addListener(txtField_Focus); // sBankAdv
           txtField17.focusedProperty().addListener(txtField_Focus); // sBankBrch
           txtField05.focusedProperty().addListener(txtField_Focus); // sAddressx
           txtField18.focusedProperty().addListener(txtField_Focus); // sTownName
@@ -158,18 +160,22 @@ public class BankEntryFormController implements Initializable, ScreenInterface{
           btnEdit.setOnAction(this::cmdButton_Click); 
           btnSave.setOnAction(this::cmdButton_Click); 
           btnClose.setOnAction(this::cmdButton_Click); 
+          btnCancel.setOnAction(this::cmdButton_Click);
           tblBankEntry.setOnMouseClicked(this::tblBankEntry_Clicked);
             
             /*Clear Fields*/
           clearFields();
+          
+          
             Pattern pattern = Pattern.compile("[\\d\\p{Punct}]*");
             TextFormatter<String> formatter = new TextFormatter<>(change -> {
             if (!change.getControlNewText().matches(pattern.pattern())) {
                 return null;
             }
             return change;
-        });
-          //Populate table
+            });
+
+     
           txtField08.setTextFormatter(new InputTextFormatter(pattern)); //sTelNoxxx
           txtField09.setTextFormatter(new InputTextFormatter(pattern)); //sFaxNoxxx
           
@@ -193,31 +199,42 @@ public class BankEntryFormController implements Initializable, ScreenInterface{
           String lsButton = ((Button)event.getSource()).getId();
           switch(lsButton){
             case "btnAdd":
-                 if (oTrans.NewRecord()) {
+                        if (oTrans.NewRecord()) {
                               clearFields(); 
                               loadBankEntryField();
                               pnEditMode = oTrans.getEditMode();
                          } else 
                              ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
+               
                           break;
+                      
             case "btnEdit":
                if (oTrans.UpdateRecord()) {
                               pnEditMode = oTrans.getEditMode(); 
                          } else 
                               ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
                          break;
+            case "btnCancel":
+                  if(ShowMessageFX.OkayCancel(null,pxeModuleName, "Are you sure, do you want to cancel?") == true){
+                             clearFields();
+                             pnEditMode = EditMode.UNKNOWN;
+                         break;
+                              }
+                  else
+                           return;
             case "btnSave":
                    //Validate before saving
+                  if(ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure, do you want to save?") == true){
                          if (txtField02.getText().trim().equals("")) {
                               ShowMessageFX.Warning(getStage(), "Please enter a value for Bank Name.","Warning", null);
                               txtField02.requestFocus();
                               return;
                          }
-                         if (txtField03.getText().trim().equals("")) {
-                              ShowMessageFX.Warning(getStage(), "Please enter a value for Bank Addev.","Warning", null);
-                              txtField03.requestFocus();
-                              return;
-                         }
+//                         if (txtField03.getText().trim().equals("")) {
+//                              ShowMessageFX.Warning(getStage(), "Please enter a value for Bank Addev.","Warning", null);
+//                              txtField03.requestFocus();
+//                              return;
+//                         }
                          if (txtField17.getText().trim().equals("")) {
                               ShowMessageFX.Warning(getStage(), "Please enter a valid value for Branch","Warning", null);
                               txtField17.requestFocus();
@@ -254,11 +271,6 @@ public class BankEntryFormController implements Initializable, ScreenInterface{
                               txtField08.requestFocus();
                               return;
                          }
-                         if (txtField09.getText().trim().equals("")) {
-                              ShowMessageFX.Warning(getStage(), "Please enter a value for Fax No.","Warning", null);
-                              txtField09.requestFocus();
-                              return;
-                         }
                          //Proceed Saving
                   
                               if (oTrans.SaveRecord()){
@@ -268,6 +280,7 @@ public class BankEntryFormController implements Initializable, ScreenInterface{
                               } else {
                                   ShowMessageFX.Warning(getStage(),oTrans.getMessage() ,"Warning", "Error while saving Bank Information");
                               }
+                  }
                 break;
             case "btnClose": //close tab
                          if(ShowMessageFX.OkayCancel(null, "Close Tab", "Are you sure, do you want to close tab?") == true){
@@ -306,7 +319,7 @@ public class BankEntryFormController implements Initializable, ScreenInterface{
                          String.valueOf(lnCtr), //ROW
                          oTrans.getDetail(lnCtr,"sBankIDxx").toString(),//BANKID
                          oTrans.getDetail(lnCtr,"sBankName").toString(),// sBankName
-                         oTrans.getDetail(lnCtr,"sBankCode").toString(),// sBankCode
+                         "",//oTrans.getDetail(lnCtr,"sBankCode").toString(),// sBankCode
                          oTrans.getDetail(lnCtr,"sBankBrch").toString(), // sBankBrch
                          oTrans.getDetail(lnCtr,"sAddressx").toString(), //sAddressx
                          oTrans.getDetail(lnCtr,"sTownProv").toString(), //sTownProv
@@ -449,7 +462,7 @@ public class BankEntryFormController implements Initializable, ScreenInterface{
           if (oTrans.OpenRecord(TransNo)){
           
           txtField02.setText(bankentrydata.get(pagecounter).getTblindex02()); // sBankName
-          txtField03.setText(bankentrydata.get(pagecounter).getTblindex03()); // sBankCode
+          txtField03.setText(bankentrydata.get(pagecounter).getTblindex03()); // sBankAdv
           txtField17.setText(bankentrydata.get(pagecounter).getTblindex17()); // sBankBrch
           txtField05.setText(bankentrydata.get(pagecounter).getTblindex05()); // sAddressx
           txtField18.setText(bankentrydata.get(pagecounter).getTblindex18()); // sTownName
@@ -463,11 +476,12 @@ public class BankEntryFormController implements Initializable, ScreenInterface{
           oldPnRow = pagecounter;
 
      }
+   
      private void loadBankEntryField(){
           try {
               
             txtField02.setText((String) oTrans.getMaster("sBankName"));// sBankName
-            txtField03.setText((String) oTrans.getMaster("sBankCode"));// sBankCode
+//            txtField03.setText((String) oTrans.getMaster("sBankCode"));// sBankAdv
             txtField17.setText((String) oTrans.getMaster("sBankBrch"));// sBankBrch
             txtField05.setText((String) oTrans.getMaster("sAddressx"));// sAddressx
             txtField18.setText((String) oTrans.getMaster("sTownName"));// sTownName
@@ -533,9 +547,9 @@ public class BankEntryFormController implements Initializable, ScreenInterface{
                          case 2: //sBankName
                               oTrans.setMaster(2, lsValue); //Handle Encoded Value
                               break;
-                         case 3: // sBankCode
-                              oTrans.setMaster(3, lsValue); //Handle Encoded Value
-                              break;
+//                         case 3: // sBankAdv
+//                              oTrans.setMaster(3, lsValue); //Handle Encoded Value
+//                              break;
                          case 17: // sBankBrch
                               oTrans.setMaster(17, lsValue); //Handle Encoded Value
                               break;
@@ -578,7 +592,7 @@ public class BankEntryFormController implements Initializable, ScreenInterface{
 
              /*Bank Entry*/
              txtField02.setDisable(!lbShow); // sBankNamexx
-             txtField03.setDisable(!lbShow); // sBankCodex
+             txtField03.setDisable(!lbShow); // sBankAdv
              txtField17.setDisable(!lbShow); // sBranchx
              txtField05.setDisable(!lbShow); // sBarangayx
              txtField18.setDisable(!lbShow); // sTownNamex
@@ -590,15 +604,22 @@ public class BankEntryFormController implements Initializable, ScreenInterface{
 
              btnAdd.setVisible(!lbShow);
              btnAdd.setManaged(!lbShow);
+                
+             btnCancel.setVisible(lbShow);
+             btnCancel.setManaged(lbShow);
              //if lbShow = false hide btn          
              btnEdit.setVisible(false); 
              btnEdit.setManaged(false);
              btnSave.setVisible(lbShow);
              btnSave.setManaged(lbShow);
-
+             
+             
+             
              if (fnValue == EditMode.READY) { //show edit if user clicked save / browse
                   btnEdit.setVisible(true); 
                   btnEdit.setManaged(true);
+               
+                  
              }
             }
     /*Clear Fields*/
@@ -606,7 +627,7 @@ public class BankEntryFormController implements Initializable, ScreenInterface{
         pnRow = 0;
           /*clear tables*/
         txtField02.clear(); // sBankName
-        txtField03.clear(); // sBankCode
+        txtField03.clear(); // sBankAdv
         txtField17.clear(); // sBankBrch
         txtField05.clear(); // sAddressx
         txtField18.clear(); // sTownName

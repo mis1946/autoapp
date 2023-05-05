@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
 
-<AnchorPane id="AnchorPane" prefHeight="300.0" prefWidth="750.0" style="-fx-background-color: #FFFFFF;" stylesheets="@../css/MainPanelStyle.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" >
+<AnchorPane id="AnchorPane" prefHeight="300.0" prefWidth="750.0" style="-fx-background-color: #FFFFFF;" stylesheets="@../css/MainPanelStyle.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <StackPane prefHeight="300.0" prefWidth="750.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -95,6 +95,7 @@
                                                 <MenuItem fx:id="mnuVhclEntry" mnemonicParsing="false" onAction="#mnuVhclEntryClick" text="Vehicle Entry" />
                                                 <MenuItem fx:id="mnuUnitRecv" mnemonicParsing="false" onAction="#mnuUnitRecvClick" text="Unit Receiving" />
                                                 <MenuItem fx:id="mnuInquiry" mnemonicParsing="false" onAction="#mnuInquiryClick" text="Inquiry" />
+                                                <MenuItem fx:id="mnuVhclRsrvApp" mnemonicParsing="false" onAction="#mnuVhclRsrvAppClick" text="Vehicle Reservation Approval" />
                                           </items>
                                         </Menu>
                                           <Menu mnemonicParsing="false" text="Bank Transactions">

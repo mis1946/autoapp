@@ -8,22 +8,16 @@ import com.sun.javafx.scene.control.skin.TableHeaderRow;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.Month;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.Date;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.animation.FadeTransition;
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanPropertyBase;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -39,17 +33,12 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
 import javafx.scene.control.Pagination;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
-import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
@@ -65,13 +54,10 @@ import static javafx.scene.input.KeyCode.ENTER;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Callback;
-import javafx.util.Duration;
 import org.rmj.appdriver.GRider;
 import org.rmj.appdriver.SQLUtil;
 import org.rmj.appdriver.agentfx.CommonUtils;
@@ -94,7 +80,6 @@ public class InquiryFormController implements Initializable, ScreenInterface{
      private InquiryMaster oTrans;
      private InquiryProcess oTransProcess;
      private GRider oApp;
-
      unloadForm unload = new unloadForm(); //Object for closing form
      private double xOffset = 0;
      private double yOffset = 0;
@@ -119,6 +104,10 @@ public class InquiryFormController implements Initializable, ScreenInterface{
      /*Populate Table Details*/
      private ObservableList<InquiryTablePriorityUnit> priorityunitdata = FXCollections.observableArrayList();
      private ObservableList<InquiryTablePromoOffered> promosoffereddata = FXCollections.observableArrayList();
+     //Combo Box Value
+     ObservableList<String> cInquiryType = FXCollections.observableArrayList("Walk-in", "Web Inquiry", "Phone-in", "Referral", "Sales Call","Event", "Service", "Office Account","Caremittance","Database","UIO"); //Inquiry Type values
+     ObservableList<String> cOnlineStore = FXCollections.observableArrayList("Facebook", "WhatsUp", "Instagram", "Tiktok", "Twitter");
+     ObservableList<String> cInqStatus = FXCollections.observableArrayList("For Follow-up", "On Process", "Lost Sale", "VSP", "Sold", "Retired" ,"Cancelled"); //Inquiry Type Values
      
      /*General Elements*/
 
@@ -258,16 +247,13 @@ public class InquiryFormController implements Initializable, ScreenInterface{
      private RadioButton rdbtnNew05;
      @FXML
      private RadioButton rdbtnPro05;
-     
-     //Combo Box Value
-     ObservableList<String> cInquiryType = FXCollections.observableArrayList("Walk-in", "Web Inquiry", "Phone-in", "Referral", "Sales Call","Event", "Service", "Office Account","Caremittance","Database","UIO"); //Inquiry Type values
-     ObservableList<String> cOnlineStore = FXCollections.observableArrayList("Facebook", "WhatsUp", "Instagram", "Tiktok", "Twitter");
+     @FXML
+     private ComboBox comboBox24; //Inquiry status
      
     /*INQUIRY PROCESS*/
      //Populate table
      private ObservableList<InquiryTableRequirements> inqrequirementsdata = FXCollections.observableArrayList();
      private ObservableList<InquiryTableVehicleSalesAdvances> inqvsadata = FXCollections.observableArrayList();
-
      //Combo Box Value  
      ObservableList<String> cModeOfPayment = FXCollections.observableArrayList("Cash", "Purchase Order", "Financing"); //Mode of Payment Values
      ObservableList<String> cCustomerType = FXCollections.observableArrayList("Business", "Employed", "OFW", "Seaman", "Any"); // Customer Type Values
@@ -296,6 +282,8 @@ public class InquiryFormController implements Initializable, ScreenInterface{
      // Table View Advance Slip
      @FXML
      private TableView tblAdvanceSlip; 
+     @FXML
+     private TableColumn vsasCheck01;
      @FXML
      private TableColumn vsasIndex01;
      @FXML
@@ -353,11 +341,8 @@ public class InquiryFormController implements Initializable, ScreenInterface{
      //Table View
      @FXML
      private TableView tblFollowHistory; //Table View Follow Up
-     ObservableList<String> cInqStatus = FXCollections.observableArrayList("For Follow-up", "On Process", "Lost Sale", "VSP", "Sold", "Retired" ,"Cancelled"); //Inquiry Type Values
-     @FXML
-     private ComboBox comboBox24;
-     @FXML
-     private TableColumn<?, ?> vsasCheck01;
+
+
      
 
      private Stage getStage(){
@@ -377,21 +362,18 @@ public class InquiryFormController implements Initializable, ScreenInterface{
           oTrans.setWithUI(true);
           initTargetVehicle();
           initPromosOffered();
-          initInquiryAdvances();
-          
-          dateSeek02.setOnAction(event -> {
-               loadInquiryListTable();
-               pagination.setPageFactory(this::createPage);
-          });
-          dateSeek01.setOnAction(event -> {
-               loadInquiryListTable();
-               pagination.setPageFactory(this::createPage);
-          });
           
           //dateSeek01.setValue(LocalDate.of(2023, Month.JANUARY, 1)); //birthdate
           dateSeek01.setValue(LocalDate.of(strToDate(CommonUtils.xsDateShort((Date) oApp.getServerDate())).getYear(), strToDate(CommonUtils.xsDateShort((Date) oApp.getServerDate())).getMonth(), 1));
           dateSeek02.setValue(strToDate(CommonUtils.xsDateShort((Date) oApp.getServerDate())));
-          
+          dateSeek01.setOnAction(event -> {
+               loadInquiryListTable();
+               pagination.setPageFactory(this::createPage);
+          });
+          dateSeek02.setOnAction(event -> {
+               loadInquiryListTable();
+               pagination.setPageFactory(this::createPage);
+          });
           //Populate table
           loadInquiryListTable();
           pagination.setPageFactory(this::createPage);
@@ -471,47 +453,10 @@ public class InquiryFormController implements Initializable, ScreenInterface{
           oTransProcess = new InquiryProcess(oApp, oApp.getBranchCode(), true); //Initialize ClientMaster
           oTransProcess.setCallback(oListener);
           oTransProcess.setWithUI(true);
+          initInquiryAdvances();
+          
           cmbInqpr01.setItems(cModeOfPayment); //Mode of Payment
           cmbInqpr02.setItems(cCustomerType); //Customer Type
-          //Button SetOnAction using cmdButton_Click() method
-          btnASadd.setOnAction(this::cmdButton_Click); 
-          btnASremove.setOnAction(this::cmdButton_Click);
-          btnAScancel.setOnAction(this::cmdButton_Click); 
-          btnASprintview.setOnAction(this::cmdButton_Click); 
-          btnASprint.setOnAction(this::cmdButton_Click);
-          btnProcess.setOnAction(this::cmdButton_Click); 
-          btnModify.setOnAction(this::cmdButton_Click); 
-          btnApply.setOnAction(this::cmdButton_Click);
-          btnPymtcon.setOnAction(this::cmdButton_Click);
-          
-          tblAdvanceSlip.setRowFactory(tv -> {
-               TableRow<InquiryTableVehicleSalesAdvances> row = new TableRow<>();
-               row.setOnMouseClicked(event -> {
-                    try {
-                         if (event.getClickCount() == 2 && !row.isEmpty()) {
-                              InquiryTableVehicleSalesAdvances rowData = row.getItem();
-                              loadVehicleSalesAdvancesWindow( row.getIndex()+1, false);
-                         }
-                         if (!row.isEmpty()) {
-                              if ((oTransProcess.getInqRsv(row.getIndex()+1, 1).toString() != null) && (!oTransProcess.getInqRsv(row.getIndex()+1, 1).toString().trim().equals(""))){
-                                   btnAScancel.setDisable(true);
-                                   btnASprintview.setDisable(true);
-                                   btnASprint.setDisable(true);
-                              } else {
-                                   btnAScancel.setDisable(false);
-                                   btnASprintview.setDisable(false);
-                                   btnASprint.setDisable(false);
-                              }
-                         }
-                         
-                    } catch (SQLException ex) {
-                         Logger.getLogger(InquiryFormController.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-               });
-               return row;
-          });
-          
-          
           //Mode of Payment
           cmbInqpr01.setOnAction(event -> {
                cmbInqpr02.setValue(null);
@@ -529,10 +474,33 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                          break;
                }
           });
-          
           //Customer Type
           cmbInqpr02.setOnAction(event -> {
                loadInquiryRequirements();
+          });
+          //Button SetOnAction using cmdButton_Click() method
+          btnASadd.setOnAction(this::cmdButton_Click); 
+          btnASremove.setOnAction(this::cmdButton_Click);
+          btnAScancel.setOnAction(this::cmdButton_Click); 
+          btnASprintview.setOnAction(this::cmdButton_Click); 
+          btnASprint.setOnAction(this::cmdButton_Click);
+          btnProcess.setOnAction(this::cmdButton_Click); 
+          btnModify.setOnAction(this::cmdButton_Click); 
+          btnApply.setOnAction(this::cmdButton_Click);
+          btnPymtcon.setOnAction(this::cmdButton_Click);
+          tblAdvanceSlip.setRowFactory(tv -> {
+               TableRow<InquiryTableVehicleSalesAdvances> row = new TableRow<>();
+               row.setOnMouseClicked(event -> {
+                    try {
+                         if (event.getClickCount() == 2 && !row.isEmpty()) {
+                              InquiryTableVehicleSalesAdvances rowData = row.getItem();
+                              loadVehicleSalesAdvancesWindow( row.getIndex()+1, false);
+                         }
+                    } catch (SQLException ex) {
+                         Logger.getLogger(InquiryFormController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+               });
+               return row;
           });
           
           /*INQUIRY BANK APPLICATION*/ 
@@ -591,21 +559,18 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                     selectedTblRowIndex = 0;
                     break;     
                case "btnTargetVehicleDown":
-                    //if (tblPriorityUnit.getItems().size() > 0 ) {
-                         if ((selectedTblRowIndex < tblPriorityUnit.getItems().size() - 1) && selectedTblRowIndex != tblPriorityUnit.getItems().size()) {
-                              Collections.swap(tblPriorityUnit.getItems(), selectedTblRowIndex, selectedTblRowIndex + 1);
-                              tblPriorityUnit.getSelectionModel().select(selectedTblRowIndex + 1);
-                              lnCtr = 1;
-                              for (InquiryTablePriorityUnit unit : priorityunitdata) {
-                                   oTrans.setVhclPrty(lnCtr, "nPriority",unit.getTblindex01());
-                                   oTrans.setVhclPrty(lnCtr, "sDescript",unit.getTblindex02());
-                                   lnCtr++;
-                              }
-                              loadTargetVehicle();
-                         selectedTblRowIndex++;
+                    if ((selectedTblRowIndex < tblPriorityUnit.getItems().size() - 1) && selectedTblRowIndex != tblPriorityUnit.getItems().size()) {
+                         Collections.swap(tblPriorityUnit.getItems(), selectedTblRowIndex, selectedTblRowIndex + 1);
+                         tblPriorityUnit.getSelectionModel().select(selectedTblRowIndex + 1);
+                         lnCtr = 1;
+                         for (InquiryTablePriorityUnit unit : priorityunitdata) {
+                              oTrans.setVhclPrty(lnCtr, "nPriority",unit.getTblindex01());
+                              oTrans.setVhclPrty(lnCtr, "sDescript",unit.getTblindex02());
+                              lnCtr++;
                          }
-                         
-                    //}
+                         loadTargetVehicle();
+                         selectedTblRowIndex++;
+                    }
                     break;    
                case "btnTargetVehicleUp":
                     if (selectedTblRowIndex > 0 ) {
@@ -672,7 +637,6 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                     break;
                case "btnSave":
                     if(ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure, do you want to save?") == true){
-                         //TODO
                          if (setSelection()) {
                               if(oTrans.SaveRecord()){
                                    ShowMessageFX.Information(getStage(), "Transaction save successfully.", pxeModuleName, null);
@@ -732,6 +696,46 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                     selectedTblRowIndex = 0;
                     break;
                case "btnAScancel":
+                    ObservableList<InquiryTableVehicleSalesAdvances> selectedItems = FXCollections.observableArrayList();
+                    lnCtr = 1;
+                    for (InquiryTableVehicleSalesAdvances item : inqvsadata) {
+                         if (item.isTblcheck01()) {
+                              switch (oTransProcess.getInqRsv(lnCtr,13).toString()) {
+                                   case "0":
+                                        selectedItems.add(item);
+                                        break;
+                                   case "1":
+                                        ShowMessageFX.Information(null, pxeModuleName, "You are not allowed to cancel Slip No. " + oTransProcess.getInqRsv(lnCtr,3).toString());
+                                        return;
+                                   case "2":
+                                        ShowMessageFX.Information(null, pxeModuleName, "Slip No. " + oTransProcess.getInqRsv(lnCtr,3).toString() + " is already Cancelled.");
+                                        return;
+                                   
+                              }   
+                         }
+                         lnCtr++;
+                    }
+                    
+                    if (selectedItems.isEmpty()) {
+                        ShowMessageFX.Information(null, pxeModuleName, "No items selected to cancel.");
+                    } else {
+                         if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure you want to cancel?")) {
+                              // Call the ApproveReservation() method here
+                              for (InquiryTableVehicleSalesAdvances item : selectedItems) {
+                                   String sRow = item.getTblindex01(); // Assuming there is a method to retrieve the transaction number
+                                   if(oTransProcess.CancelReservation(Integer.parseInt(sRow))){
+                                        //Retrieve Reservation
+                                        oTransProcess.loadReservation((String) oTrans.getMaster(1),true);
+                                   }else {
+                                        ShowMessageFX.Information(null, pxeModuleName, "Failed to cancel reservation.");
+                                        return;
+                                   }
+                              }
+                            
+                              loadInquiryAdvances();
+                              ShowMessageFX.Information(null, pxeModuleName, "Reservation cancelled successfully.");
+                         }
+                    }
                     break;
                case "btnASprintview":
                     break;    
@@ -742,21 +746,18 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                case "btnApply":
                     if ("btnProcess".equals(lsButton)){
                          if (oTransProcess.NewRecord()){
-                         } else 
+                         } else {
                               return;
+                         }
                     }
                     
                     if(ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure, do you want to save?") == true){
                          //TODO
-                         System.out.println((String) oTrans.getMaster(1));
+                         oTransProcess.setClientID((String) oTrans.getMaster(7));
                          oTransProcess.setTransNox((String) oTrans.getMaster(1));
-                         
-                         for (int lnCnt = 1 ; lnCnt <= oTransProcess.getInqReqCount() ; lnCnt++){
-                                System.out.println("setted sRqrmtCde before saving >>> " + oTransProcess.getInqReq(lnCnt,"sRqrmtCde").toString());  
-                         }
-                              
+                         System.out.println("inq code before saving >> " + (String) oTrans.getMaster(1));   
                          if(oTransProcess.SaveRecord()){
-                              System.out.println((String) oTrans.getMaster(1));
+                              System.out.println("inq code after saving >> " +(String) oTrans.getMaster(1));
                               ShowMessageFX.Information(getStage(), "Transaction save successfully.", pxeModuleName, null);
                               oTrans.OpenRecord((String) oTrans.getMaster(1));
                               loadCustomerInquiry();
@@ -779,8 +780,8 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                               //Load Table Reservation
                               loadInquiryAdvances();
                               
-                              loadInquiryListTable();
-                              pagination.setPageFactory(this::createPage);
+                              //loadInquiryListTable();
+                              //pagination.setPageFactory(this::createPage);
                               
                          } else {
                              ShowMessageFX.Warning(getStage(),oTransProcess.getMessage() ,"Warning", "Error while saving " + pxeModuleName);
@@ -792,8 +793,9 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                     
                case "btnModify":
                     if (oTransProcess.UpdateRecord()){
-                         } else 
-                              return;
+                    } else {
+                         return;
+                    }
                     initBtnProcess(oTransProcess.getEditMode());
                     break;
                case "btnPymtcon":
@@ -833,15 +835,15 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                     }else
                          return;
                case "btnClose": //close tab
-                         if(ShowMessageFX.OkayCancel(null, "Close Tab", "Are you sure, do you want to close tab?") == true){
-                              if (unload != null) {
-                                   unload.unloadForm(AnchorMain, oApp, pxeModuleName);
-                              }else {
-                                   ShowMessageFX.Warning(null, "Warning", "Notify System Admin to Configure Null value at close button.");    
-                              }
-                         break;
-                         }else
-                              return;
+                    if(ShowMessageFX.OkayCancel(null, "Close Tab", "Are you sure, do you want to close tab?") == true){
+                         if (unload != null) {
+                              unload.unloadForm(AnchorMain, oApp, pxeModuleName);
+                         }else {
+                              ShowMessageFX.Warning(null, "Warning", "Notify System Admin to Configure Null value at close button.");    
+                         }
+                    break;
+                    }else
+                         return;
                 default:
                        ShowMessageFX.Warning(null, pxeModuleName, "Button with name " + lsButton + " not registered.");
                        return;
@@ -1764,15 +1766,13 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                                              oTransProcess.addRequirements();
                                              
                                              if (oTransProcess.searchSalesExec(oTransProcess.getInqReqCount(),"",false)){
-                                                 System.out.println("sRqrmtCde >>"+ oTransProcess.getInqReqSrc(index + 1,"sRqrmtCde").toString());
                                                  
                                                   oTransProcess.setInqReq(oTransProcess.getInqReqCount(),"cSubmittd",1);
                                                   oTransProcess.setInqReq(oTransProcess.getInqReqCount(),"sRqrmtCde",oTransProcess.getInqReqSrc(index + 1,"sRqrmtCde").toString());
                                                   oTransProcess.setInqReq(oTransProcess.getInqReqCount(),"dReceived",SQLUtil.toDate(CommonUtils.xsDateShort((Date) oApp.getServerDate()), SQLUtil.FORMAT_SHORT_DATE));
                                                   oTransProcess.setInqReq(oTransProcess.getInqReqCount(),"cPayModex", cmbInqpr01.getSelectionModel().getSelectedIndex());
                                                   oTransProcess.setInqReq(oTransProcess.getInqReqCount(),"cCustGrpx", cmbInqpr02.getSelectionModel().getSelectedIndex());
-                                                  System.out.println("set on sRqrmtCde >>"+ oTransProcess.getInqReq(oTransProcess.getInqReqCount(),"sRqrmtCde").toString());
-                                             
+                                                  
                                              } else {
                                                   oTransProcess.removeInqReq( oTransProcess.getInqReqSrc(index + 1,"sRqrmtCde").toString());
                                                   ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", "No selected Employee!");
@@ -1811,7 +1811,7 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                /*Populate table*/
                inqvsadata.clear();
                String sVsaType, sVsaStat;
-               
+               boolean bSelect = false;
                for (lnCtr = 1; lnCtr <= oTransProcess.getReserveCount(); lnCtr++){
                     switch (oTransProcess.getInqRsv(lnCtr,12).toString()) {
                          case "0":
@@ -1844,8 +1844,12 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                     }
                     //String formattedPrice = String.format("%.2f", oTransProcess.getInqRsv(lnCtr,5).toString());
 //                    System.out.println((String)oTransProcess.getInqRsv(lnCtr,2));
+                    for (InquiryTableVehicleSalesAdvances item : inqvsadata) {
+                         bSelect = item.isTblcheck01();
+                    }
+
                     inqvsadata.add(new InquiryTableVehicleSalesAdvances(
-                         false   
+                         bSelect
                          ,String.valueOf(lnCtr) //Row
                          , CommonUtils.xsDateShort((Date) oTransProcess.getInqRsv(lnCtr,2)) //Date
                          //, (String) oTransProcess.getInqRsv(lnCtr,2)
@@ -1856,6 +1860,8 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                          , (String) oTransProcess.getInqRsv(lnCtr,6) // Remarks
                          , (String) oTransProcess.getInqRsv(lnCtr,13) // Approved By
                          , (String) oTransProcess.getInqRsv(lnCtr,14) // Approved Date
+                         , (String) oTransProcess.getInqRsv(lnCtr,1) // sTransNox
+                         , (String) oTransProcess.getInqRsv(lnCtr,20) // Client Name
                          
                     ));
                     

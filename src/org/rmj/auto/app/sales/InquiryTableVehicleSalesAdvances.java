@@ -24,6 +24,8 @@ public class InquiryTableVehicleSalesAdvances {
      private SimpleStringProperty tblindex07; //Remarks
      private SimpleStringProperty tblindex08; //Approved By
      private SimpleStringProperty tblindex09; //Approved Date
+     private SimpleStringProperty tblindex10; //rsvcode	sTransNox 
+     private SimpleStringProperty tblindex11; //clientname	sCompnyNm 
      
      InquiryTableVehicleSalesAdvances(  Boolean tblcheck01,
                                         String tblindex01,
@@ -34,7 +36,9 @@ public class InquiryTableVehicleSalesAdvances {
                                         String tblindex06,
                                         String tblindex07,
                                         String tblindex08,
-                                        String tblindex09
+                                        String tblindex09,
+                                        String tblindex10,
+                                        String tblindex11
                                         ){
           
           this.tblcheck01 = new SimpleBooleanProperty(tblcheck01);
@@ -47,6 +51,8 @@ public class InquiryTableVehicleSalesAdvances {
           this.tblindex07 = new SimpleStringProperty(tblindex07);
           this.tblindex08 = new SimpleStringProperty(tblindex08);
           this.tblindex09 = new SimpleStringProperty(tblindex09);
+          this.tblindex10 = new SimpleStringProperty(tblindex10);
+          this.tblindex11 = new SimpleStringProperty(tblindex11);
           
      }
       //Check box
@@ -81,4 +87,11 @@ public class InquiryTableVehicleSalesAdvances {
      //Approved Date
      public String getTblindex09(){return tblindex09.get();}
      public void setTblindex09(String tblindex09){this.tblindex09.set(tblindex09);}
+     //RSVCODE
+     public String getTblindex10(){return tblindex10.get();}
+     public void setTblindex10(String tblindex10){this.tblindex10.set(tblindex10);}
+     //Custname
+     public String getTblindex11(){return tblindex11.get();}
+     public void setTblindex11(String tblindex11){this.tblindex11.set(tblindex11);}
+
 }

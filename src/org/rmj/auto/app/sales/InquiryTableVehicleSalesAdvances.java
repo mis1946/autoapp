@@ -26,6 +26,9 @@ public class InquiryTableVehicleSalesAdvances {
      private SimpleStringProperty tblindex09; //Approved Date
      private SimpleStringProperty tblindex10; //rsvcode	sTransNox 
      private SimpleStringProperty tblindex11; //clientname	sCompnyNm 
+     private SimpleStringProperty tblindex12; //SE Name sSeName
+     private SimpleStringProperty tblindex13; //unit description sDescript     
+
      
      InquiryTableVehicleSalesAdvances(  Boolean tblcheck01,
                                         String tblindex01,
@@ -38,7 +41,9 @@ public class InquiryTableVehicleSalesAdvances {
                                         String tblindex08,
                                         String tblindex09,
                                         String tblindex10,
-                                        String tblindex11
+                                        String tblindex11,
+                                        String tblindex12,
+                                        String tblindex13
                                         ){
           
           this.tblcheck01 = new SimpleBooleanProperty(tblcheck01);
@@ -53,7 +58,8 @@ public class InquiryTableVehicleSalesAdvances {
           this.tblindex09 = new SimpleStringProperty(tblindex09);
           this.tblindex10 = new SimpleStringProperty(tblindex10);
           this.tblindex11 = new SimpleStringProperty(tblindex11);
-          
+          this.tblindex12 = new SimpleStringProperty(tblindex12);
+          this.tblindex13 = new SimpleStringProperty(tblindex13);
      }
       //Check box
      public boolean isTblcheck01() { return tblcheck01.get();}
@@ -93,5 +99,10 @@ public class InquiryTableVehicleSalesAdvances {
      //Custname
      public String getTblindex11(){return tblindex11.get();}
      public void setTblindex11(String tblindex11){this.tblindex11.set(tblindex11);}
-
+     //SE sSeName
+     public String getTblindex12(){return tblindex12.get();}
+     public void setTblindex12(String tblindex12){this.tblindex12.set(tblindex12);}
+     //Unit Description
+     public String getTblindex13(){return tblindex13.get();}
+     public void setTblindex13(String tblindex13){this.tblindex13.set(tblindex13);}
 }

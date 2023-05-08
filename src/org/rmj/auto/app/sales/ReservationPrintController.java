@@ -168,8 +168,8 @@ public class ReservationPrintController implements Initializable, ScreenInterfac
                 params.put("sBranchNm", oApp.getBranchName());
                 params.put("sAddressx", oApp.getAddress());
             vhlApprovalPrintData.clear();
-            String[] fsValues = {"02", "V00123000003", "V00123000004", "V00123000005", "V00123000006"};
-            if (oTrans.loadReservation(fsValues, false)){
+//            String[] fsValues = {"02", "V00123000003", "V00123000004", "V00123000005", "V00123000006"};
+            if (oTrans.loadReservation(psTransNox , false)){
                  for (lnCtr = 1; lnCtr <= oTrans.getReserveCount(); lnCtr++){  
                         //Iterate over the data and count the approved item
                         String amountString = oTrans.getInqRsv(lnCtr,"nAmountxx").toString();

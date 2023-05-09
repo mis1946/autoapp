@@ -34,6 +34,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Pagination;
 import javafx.scene.control.RadioButton;
@@ -66,6 +67,7 @@ import org.rmj.appdriver.callback.MasterCallback;
 import org.rmj.appdriver.constants.EditMode;
 import org.rmj.auto.app.views.ScreenInterface;
 import org.rmj.auto.app.views.unloadForm;
+import org.rmj.auto.sales.base.InquiryBankApplication;
 import org.rmj.auto.sales.base.InquiryMaster;
 import org.rmj.auto.sales.base.InquiryProcess;
 
@@ -76,1027 +78,1049 @@ import org.rmj.auto.sales.base.InquiryProcess;
  * 
  */
 public class InquiryFormController implements Initializable, ScreenInterface{
-     private MasterCallback oListener;
-     private InquiryMaster oTrans;
-     private InquiryProcess oTransProcess;
-     private GRider oApp;
-     unloadForm unload = new unloadForm(); //Object for closing form
-     private double xOffset = 0;
-     private double yOffset = 0;
-     private final String pxeModuleName = "Inquiry"; //Form Title
-     private int pnEditMode = EditMode.UNKNOWN;;//Modifying fields
-     private int pnRow = -1;
-     private int oldPnRow = -1;
-     private int selectedTblRowIndex = -1;
-     private int lnCtr = 0;
-     private int lnRow = 0;
-     private int pagecounter;
-     private String oldTransNo = "";
-     private String sTransNo = "";
-     private String sClientID = "";
-     private String sValue = "";
-     private String sInqStat = "";
-     
-     /*populate tables search List*/
-     private ObservableList<InquiryTableList> inqlistdata = FXCollections.observableArrayList();
-     private FilteredList<InquiryTableList> filteredData;
-     private static final int ROWS_PER_PAGE = 50;
-     
-     /*Populate Table Details*/
-     private ObservableList<InquiryTablePriorityUnit> priorityunitdata = FXCollections.observableArrayList();
-     private ObservableList<InquiryTablePromoOffered> promosoffereddata = FXCollections.observableArrayList();
-     //Combo Box Value
-     ObservableList<String> cInquiryType = FXCollections.observableArrayList("Walk-in", "Web Inquiry", "Phone-in", "Referral", "Sales Call","Event", "Service", "Office Account","Caremittance","Database","UIO"); //Inquiry Type values
-     ObservableList<String> cOnlineStore = FXCollections.observableArrayList("Facebook", "WhatsUp", "Instagram", "Tiktok", "Twitter");
-     ObservableList<String> cInqStatus = FXCollections.observableArrayList("For Follow-up", "On Process", "Lost Sale", "VSP", "Sold", "Retired" ,"Cancelled"); //Inquiry Type Values
-     
-     /*General Elements*/
-
-     //AnchorPane
-     @FXML
-     private AnchorPane AnchorMain;
-     //Table View
-     @FXML
-     private TableView tblInquiry; // Table View Inquiry 
-     @FXML
-     private TableColumn listIndex01;
-     @FXML
-     private TableColumn listIndex02;
-     @FXML
-     private TableColumn listIndex03;
-     @FXML
-     private TableColumn listIndex04;
-     @FXML
-     private TableColumn listIndex05;
-     @FXML
-     private TableColumn listIndex06;
-     @FXML
-     private TextField textSeek01;
-     @FXML
-     private DatePicker dateSeek01;
-     @FXML
-     private DatePicker dateSeek02;
-     @FXML
-     private Pagination pagination;
-     //Tabs
-     @FXML
-     private Tab tabCustomerInquiry; // Customer Inquiry Tab
-     @FXML
-     private Tab tabInquiryProcess; // Inquiry Process Tab
-     @FXML
-     private Tab tabBankHistory; // Bank History Tab
-     @FXML
-     private Tab tabFollowingHistory; // Following History Tab
-     //Buttons
-     @FXML
-     private Button btnClose; //Close
-     @FXML
-     private Button btnAdd; // Add
-     @FXML
-     private Button btnEdit; // Edit
-     @FXML
-     private Button btnSave; // Save
-     @FXML
-     private Button btnClear; // Clear
-     @FXML
-     private Button btnConvertSales; // Convert Sales
-     @FXML
-     private Button btnPrintRefund; // Print Refund
-     @FXML
-     private Button btnLostSale; // Lost of Sale
-     @FXML
-     private Button btnCancel; //Cancel / Revert
-     //Tables Target Vehicle
-     @FXML
-     private Button btnTargetVhclAdd;
-     @FXML
-     private Button btnTargetVhclRemove;
-     @FXML
-     private Button btnTargetVehicleUp; // Move Up Target Vehicle Up
-     @FXML
-     private Button btnTargetVehicleDown; // Move Down Target Vehicle
-     @FXML
-     private TableView tblPriorityUnit; // Table View Target Vehicle
-     @FXML
-     private TableColumn trgvIndex01;
-     @FXML
-     private TableColumn trgvIndex02;
-     //Tables Promo Offered
-     @FXML
-     private Button btnPromosAdd; // Add Promo Offered
-     @FXML
-     private Button btnPromosRemove; //Remove Promo Offered
-     @FXML
-     private TableView tblPromosOffered;
-     @FXML
-     private TableColumn prmoIndex01;
-     @FXML
-     private TableColumn prmoIndex02;
-     @FXML
-     private TableColumn prmoIndex03;
-     @FXML
-     private TableColumn prmoIndex04;
-     
-     /*Customer Inquiry Main */
-     @FXML
-     private TextField txtField02; //Branch Code 
-     @FXML
-     private TextField txtField03;//Inqiury Date
-     @FXML
-     private TextField txtField04; // Sales Executive
-     @FXML
-     private TextField txtField07; //Customer ID 
-     @FXML
-     private TextField txtField29; //Company ID 
-     @FXML
-     private TextField txtField30; //Contact Number
-     @FXML
-     private TextField txtField31; //Social Media
-     @FXML
-     private TextField txtField32; //Email
-     @FXML
-     private TextField txtField33; //Client Address
-     @FXML
-     private TextField txtField09; //Agent ID
-     @FXML
-     private TextArea textArea08; //Remarks
-     @FXML
-     private TextField txtField18; //Reserve Amount
-     @FXML
-     private TextField txtField17; //Reserved
-     @FXML
-     private ComboBox cmbOnstr13; //Online Store
-     @FXML
-     private ComboBox cmbType012; //Inquiry Type
-     @FXML
-     private TextField txtField15; //Activity ID
-     @FXML
-     private TextField txtField14; //Test Model
-     @FXML
-     private DatePicker txtField10; //Target Release Date
-     @FXML
-     private ToggleGroup targetVehicle;//Toggle Radio Button Target Vehicle 
-     @FXML
-     private ToggleGroup hotCategory;
-     @FXML
-     private RadioButton rdbtnHtA11;
-     @FXML
-     private RadioButton rdbtnHtB11;
-     @FXML
-     private RadioButton rdbtnHtC11;
-     @FXML
-     private RadioButton rdbtnNew05;
-     @FXML
-     private RadioButton rdbtnPro05;
-     @FXML
-     private ComboBox comboBox24; //Inquiry status
-     
-     /*INQUIRY PROCESS*/
-     //Populate table
-     private ObservableList<InquiryTableRequirements> inqrequirementsdata = FXCollections.observableArrayList();
-     private ObservableList<InquiryTableVehicleSalesAdvances> inqvsadata = FXCollections.observableArrayList();
-     //private ObservableList<InquiryTableVehicleSalesAdvances> selectedItems = FXCollections.observableArrayList();
-                    
-     //Combo Box Value  
-     ObservableList<String> cModeOfPayment = FXCollections.observableArrayList("Cash", "Purchase Order", "Financing"); //Mode of Payment Values
-     ObservableList<String> cCustomerType = FXCollections.observableArrayList("Business", "Employed", "OFW", "Seaman", "Any"); // Customer Type Values
-     @FXML
-     private ComboBox cmbInqpr01;
-     @FXML
-     private ComboBox cmbInqpr02;
-     // Table View Requirments Info
-     @FXML
-     private TableView tblRequirementsInfo; 
-     @FXML
-     private TableColumn rqrmIndex01;
-     @FXML
-     private TableColumn rqrmIndex02;
-     @FXML
-     private TableColumn rqrmIndex03;
-     @FXML
-     private TableColumn rqrmIndex04;
-     //Reserve Unit
-     @FXML
-     private TextField txtRsvcs06;
-     @FXML
-     private TextField txtRsvpn06;
-     @FXML
-     private TextField txtRsvmd06;
-     // Table View Advance Slip
-     @FXML
-     private TableView tblAdvanceSlip; 
-     @FXML
-     private TableColumn vsasCheck01;
-     @FXML
-     private TableColumn vsasIndex01;
-     @FXML
-     private TableColumn vsasIndex02;
-     @FXML
-     private TableColumn vsasIndex03;
-     @FXML
-     private TableColumn vsasIndex04;
-     @FXML
-     private TableColumn vsasIndex05;
-     @FXML
-     private TableColumn vsasIndex06;
-     @FXML
-     private TableColumn vsasIndex07;
-     //Buttons for Advance Slip
-     @FXML
-     private Button btnASadd; // Add Advance Slip
-     @FXML
-     private Button btnASremove; // Remove Advance Slip
-     @FXML
-     private Button btnASprint; //  Print Advance Slip
-     @FXML
-     private Button btnASprintview; // Print View Advance Slip
-     @FXML
-     private Button btnAScancel;// Cancel Advance Slip
-     //Approval and Payments
-     @FXML
-     private TextField txtField21; //Approved By
-     @FXML
-     private TextField txtPymtc01;
-     @FXML
-     private Button btnPymtcon;
-     @FXML
-     private Button btnProcess;// Process Advance Slip
-     @FXML
-     private Button btnModify; // Modify Advance Slip
-     @FXML
-     private Button btnApply; // Apply Advance Slip
-     
-     /*INQUIRY BANK APPLICATION*/
-     @FXML
-     private TableView tblBankApplication;
-     @FXML
-     private Button btnBankAppView;
-     @FXML
-     private Button btnBankAppNew;
-     @FXML
-     private Button btnBankAppUpdate;
-     @FXML
-     private Button btnBankAppCancel;
+    private MasterCallback oListener;
+    private InquiryMaster oTrans;
+    private InquiryProcess oTransProcess;
+    private InquiryBankApplication oTransBankApp;
     
-     /*INQUIRY FOLLOW-UP*/
-     @FXML
-     private Button btnFollowUp; // FollowUp
-     //Table View
-     @FXML
-     private TableView tblFollowHistory; //Table View Follow Up
-     private Stage getStage(){
-          return (Stage) textSeek01.getScene().getWindow();
-     }
+    private GRider oApp;
+    unloadForm unload = new unloadForm(); //Object for closing form
+    private double xOffset = 0;
+    private double yOffset = 0;
+    private final String pxeModuleName = "Inquiry"; //Form Title
+    private int pnEditMode = EditMode.UNKNOWN;;//Modifying fields
+    private int pnRow = -1;
+    private int oldPnRow = -1;
+    private int selectedTblRowIndex = -1;
+    private int lnCtr = 0;
+    private int lnRow = 0;
+    private int pagecounter;
+    private String oldTransNo = "";
+    private String sTransNo = "";
+    private String sClientID = "";
+    private String sValue = "";
+    private String sInqStat = "";
+    private String sInqPayMode = "";
+    
+
+    /*populate tables search List*/
+    private ObservableList<InquiryTableList> inqlistdata = FXCollections.observableArrayList();
+    private FilteredList<InquiryTableList> filteredData;
+    private static final int ROWS_PER_PAGE = 50;
+
+    /*Populate Table Details*/
+    private ObservableList<InquiryTablePriorityUnit> priorityunitdata = FXCollections.observableArrayList();
+    private ObservableList<InquiryTablePromoOffered> promosoffereddata = FXCollections.observableArrayList();
+    //Combo Box Value
+    ObservableList<String> cInquiryType = FXCollections.observableArrayList("Walk-in", "Web Inquiry", "Phone-in", "Referral", "Sales Call","Event", "Service", "Office Account","Caremittance","Database","UIO"); //Inquiry Type values
+    ObservableList<String> cOnlineStore = FXCollections.observableArrayList("Facebook", "WhatsUp", "Instagram", "Tiktok", "Twitter");
+    ObservableList<String> cInqStatus = FXCollections.observableArrayList("For Follow-up", "On Process", "Lost Sale", "VSP", "Sold", "Retired" ,"Cancelled"); //Inquiry Type Values
+
+    /*General Elements*/
+
+    //AnchorPane
+    @FXML
+    private AnchorPane AnchorMain;
+    //Table View
+    @FXML
+    private TableView tblInquiry; // Table View Inquiry 
+    @FXML
+    private TableColumn listIndex01;
+    @FXML
+    private TableColumn listIndex02;
+    @FXML
+    private TableColumn listIndex03;
+    @FXML
+    private TableColumn listIndex04;
+    @FXML
+    private TableColumn listIndex05;
+    @FXML
+    private TableColumn listIndex06;
+    @FXML
+    private TextField textSeek01;
+    @FXML
+    private DatePicker dateSeek01;
+    @FXML
+    private DatePicker dateSeek02;
+    @FXML
+    private Pagination pagination;
+    //Tabs
+    @FXML
+    private Tab tabCustomerInquiry; // Customer Inquiry Tab
+    @FXML
+    private Tab tabInquiryProcess; // Inquiry Process Tab
+    @FXML
+    private Tab tabBankHistory; // Bank History Tab
+    @FXML
+    private Tab tabFollowingHistory; // Following History Tab
+    //Buttons
+    @FXML
+    private Button btnClose; //Close
+    @FXML
+    private Button btnAdd; // Add
+    @FXML
+    private Button btnEdit; // Edit
+    @FXML
+    private Button btnSave; // Save
+    @FXML
+    private Button btnClear; // Clear
+    @FXML
+    private Button btnConvertSales; // Convert Sales
+    @FXML
+    private Button btnPrintRefund; // Print Refund
+    @FXML
+    private Button btnLostSale; // Lost of Sale
+    @FXML
+    private Button btnCancel; //Cancel / Revert
+    //Tables Target Vehicle
+    @FXML
+    private Button btnTargetVhclAdd;
+    @FXML
+    private Button btnTargetVhclRemove;
+    @FXML
+    private Button btnTargetVehicleUp; // Move Up Target Vehicle Up
+    @FXML
+    private Button btnTargetVehicleDown; // Move Down Target Vehicle
+    @FXML
+    private TableView tblPriorityUnit; // Table View Target Vehicle
+    @FXML
+    private TableColumn trgvIndex01;
+    @FXML
+    private TableColumn trgvIndex02;
+    //Tables Promo Offered
+    @FXML
+    private Button btnPromosAdd; // Add Promo Offered
+    @FXML
+    private Button btnPromosRemove; //Remove Promo Offered
+    @FXML
+    private TableView tblPromosOffered;
+    @FXML
+    private TableColumn prmoIndex01;
+    @FXML
+    private TableColumn prmoIndex02;
+    @FXML
+    private TableColumn prmoIndex03;
+    @FXML
+    private TableColumn prmoIndex04;
+
+    /*Customer Inquiry Main */
+    @FXML
+    private TextField txtField02; //Branch Code 
+    @FXML
+    private TextField txtField03;//Inqiury Date
+    @FXML
+    private TextField txtField04; // Sales Executive
+    @FXML
+    private TextField txtField07; //Customer ID 
+    @FXML
+    private TextField txtField29; //Company ID 
+    @FXML
+    private TextField txtField30; //Contact Number
+    @FXML
+    private TextField txtField31; //Social Media
+    @FXML
+    private TextField txtField32; //Email
+    @FXML
+    private TextField txtField33; //Client Address
+    @FXML
+    private TextField txtField09; //Agent ID
+    @FXML
+    private TextArea textArea08; //Remarks
+    @FXML
+    private TextField txtField18; //Reserve Amount
+    @FXML
+    private TextField txtField17; //Reserved
+    @FXML
+    private ComboBox cmbOnstr13; //Online Store
+    @FXML
+    private ComboBox cmbType012; //Inquiry Type
+    @FXML
+    private TextField txtField15; //Activity ID
+    @FXML
+    private TextField txtField14; //Test Model
+    @FXML
+    private DatePicker txtField10; //Target Release Date
+    @FXML
+    private ToggleGroup targetVehicle;//Toggle Radio Button Target Vehicle 
+    @FXML
+    private ToggleGroup hotCategory;
+    @FXML
+    private RadioButton rdbtnHtA11;
+    @FXML
+    private RadioButton rdbtnHtB11;
+    @FXML
+    private RadioButton rdbtnHtC11;
+    @FXML
+    private RadioButton rdbtnNew05;
+    @FXML
+    private RadioButton rdbtnPro05;
+    @FXML
+    private ComboBox comboBox24; //Inquiry status
+
+    /*INQUIRY PROCESS*/
+    //Populate table
+    private ObservableList<InquiryTableRequirements> inqrequirementsdata = FXCollections.observableArrayList();
+    private ObservableList<InquiryTableVehicleSalesAdvances> inqvsadata = FXCollections.observableArrayList();
+
+    //Combo Box Value  
+    ObservableList<String> cModeOfPayment = FXCollections.observableArrayList("Cash", "Purchase Order", "Financing"); //Mode of Payment Values
+    ObservableList<String> cCustomerType = FXCollections.observableArrayList("Business", "Employed", "OFW", "Seaman", "Any"); // Customer Type Values
+    @FXML
+    private ComboBox cmbInqpr01;
+    @FXML
+    private ComboBox cmbInqpr02;
+    // Table View Requirments Info
+    @FXML
+    private TableView tblRequirementsInfo; 
+    @FXML
+    private TableColumn rqrmIndex01;
+    @FXML
+    private TableColumn rqrmIndex02;
+    @FXML
+    private TableColumn rqrmIndex03;
+    @FXML
+    private TableColumn rqrmIndex04;
+    //Reserve Unit
+    @FXML
+    private TextField txtRsvcs06;
+    @FXML
+    private TextField txtRsvpn06;
+    @FXML
+    private TextField txtRsvmd06;
+    // Table View Advance Slip
+    @FXML
+    private TableView tblAdvanceSlip; 
+    @FXML
+    private TableColumn vsasCheck01;
+    @FXML
+    private TableColumn vsasIndex01;
+    @FXML
+    private TableColumn vsasIndex02;
+    @FXML
+    private TableColumn vsasIndex03;
+    @FXML
+    private TableColumn vsasIndex04;
+    @FXML
+    private TableColumn vsasIndex05;
+    @FXML
+    private TableColumn vsasIndex06;
+    @FXML
+    private TableColumn vsasIndex07;
+    //Buttons for Advance Slip
+    @FXML
+    private Button btnASadd; // Add Advance Slip
+    @FXML
+    private Button btnASremove; // Remove Advance Slip
+    @FXML
+    private Button btnASprint; //  Print Advance Slip
+    @FXML
+    private Button btnASprintview; // Print View Advance Slip
+    @FXML
+    private Button btnAScancel;// Cancel Advance Slip
+    //Approval and Payments
+    @FXML
+    private TextField txtField21; //Approved By
+    @FXML
+    private TextField txtPymtc01;
+    @FXML
+    private Button btnPymtcon;
+    @FXML
+    private Button btnProcess;// Process Advance Slip
+    @FXML
+    private Button btnModify; // Modify Advance Slip
+    @FXML
+    private Button btnApply; // Apply Advance Slip
+
+    /*INQUIRY BANK APPLICATION*/
+    private ObservableList<InquiryTableBankApplications> bankappdata = FXCollections.observableArrayList();
+    
+    @FXML
+    private TableView tblBankApplication;
+    @FXML
+    private TableColumn bankCheck01;
+    @FXML
+    private TableColumn bankIndex01;
+    @FXML
+    private TableColumn bankIndex02;
+    @FXML
+    private TableColumn bankIndex03;
+    @FXML
+    private TableColumn bankIndex04;
+    @FXML
+    private TableColumn bankIndex05;
+    @FXML
+    private Button btnBankAppView;
+    @FXML
+    private Button btnBankAppNew;
+    @FXML
+    private Button btnBankAppUpdate;
+    @FXML
+    private Button btnBankAppCancel;
+
+    /*INQUIRY FOLLOW-UP*/
+    @FXML
+    private Button btnFollowUp; // FollowUp
+    //Table View
+    @FXML
+    private TableView tblFollowHistory; //Table View Follow Up
+    
+    private Stage getStage(){
+         return (Stage) textSeek01.getScene().getWindow();
+    }
     /**
      * Initializes the controller class.
     **/
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-          oListener = (int fnIndex, Object foValue) -> {
-                 System.out.println("Set Class Value "  + fnIndex + "-->" + foValue);
-          };
-          
-          oTrans = new InquiryMaster(oApp, oApp.getBranchCode(), true); //Initialize ClientMaster
-          oTrans.setCallback(oListener);
-          oTrans.setWithUI(true);
-          initTargetVehicle();
-          initPromosOffered();
-          
-          //dateSeek01.setValue(LocalDate.of(2023, Month.JANUARY, 1)); //birthdate
-          dateSeek01.setValue(LocalDate.of(strToDate(CommonUtils.xsDateShort((Date) oApp.getServerDate())).getYear(), strToDate(CommonUtils.xsDateShort((Date) oApp.getServerDate())).getMonth(), 1));
-          dateSeek02.setValue(strToDate(CommonUtils.xsDateShort((Date) oApp.getServerDate())));
-          dateSeek01.setOnAction(event -> {
-               loadInquiryListTable();
-               pagination.setPageFactory(this::createPage);
-          });
-          dateSeek02.setOnAction(event -> {
-               loadInquiryListTable();
-               pagination.setPageFactory(this::createPage);
-          });
-          //Populate table
-          loadInquiryListTable();
-          pagination.setPageFactory(this::createPage);
-          
-          /*CUSTOMER INQUIRY*/
-          /*populate combobox*/
-          comboBox24.setItems(cInqStatus); //Inquiry Status
-          cmbType012.setItems(cInquiryType); //Inquiry Type
-          cmbOnstr13.setItems(cOnlineStore); //Web Inquiry
-          cmbType012.setOnAction(event -> {
-               cmbOnstr13.setDisable(true);
-               txtField09.setDisable(true);
-               txtField15.setDisable(true);
-               switch (cmbType012.getSelectionModel().getSelectedIndex()) {
-                    
-                    case 1:
-                         cmbOnstr13.setDisable(false);
-                         txtField15.setText("");
-                         txtField09.setText("");
-                         break;
-                    case 3:
-                         txtField09.setDisable(false);
-                         txtField15.setText("");
-                         cmbOnstr13.setValue(null);
-                         break;
-                    case 4:
-                    case 5:
-                         txtField15.setDisable(false);
-                         txtField09.setText("");
-                         cmbOnstr13.setValue(null);
-                         break;
-               }
-               
-               try {
-                    oTrans.setMaster(12, String.valueOf(cmbType012.getSelectionModel().getSelectedIndex()));
-               } catch (SQLException ex) {
-                    Logger.getLogger(InquiryFormController.class.getName()).log(Level.SEVERE, null, ex);
-               }
-               
-          });
-          
-          txtField04.focusedProperty().addListener(txtField_Focus);  // Sales Executive
-          txtField07.focusedProperty().addListener(txtField_Focus);  //Customer ID 
-          txtField29.focusedProperty().addListener(txtField_Focus);  //Company ID 
-          txtField09.focusedProperty().addListener(txtField_Focus);  //Agent ID
-          textArea08.focusedProperty().addListener(txtArea_Focus);  //Remarks
-          txtField15.focusedProperty().addListener(txtField_Focus);  //Activity ID
-          txtField14.focusedProperty().addListener(txtField_Focus);  //Test Model  
-          txtField10.setOnAction(this::getDate); 
-          
-          txtField04.setOnKeyPressed(this::txtField_KeyPressed);  // Sales Executive
-          txtField07.setOnKeyPressed(this::txtField_KeyPressed);  //Customer ID 
-          txtField29.setOnKeyPressed(this::txtField_KeyPressed);  //Company ID 
-          txtField09.setOnKeyPressed(this::txtField_KeyPressed);  //Agent ID
-          textArea08.setOnKeyPressed(this::txtArea_KeyPressed);  //Remarks
-          txtField15.setOnKeyPressed(this::txtField_KeyPressed);  //Activity ID
-          txtField14.setOnKeyPressed(this::txtField_KeyPressed);  //Test Model  
+        oListener = (int fnIndex, Object foValue) -> {
+            System.out.println("Set Class Value "  + fnIndex + "-->" + foValue);
+        };
 
-          //Button SetOnAction using cmdButton_Click() method
-          btnClose.setOnAction(this::cmdButton_Click);
-          btnAdd.setOnAction(this::cmdButton_Click);
-          btnSave.setOnAction(this::cmdButton_Click);
-          btnClear.setOnAction(this::cmdButton_Click);
-          btnEdit.setOnAction(this::cmdButton_Click);
-          btnConvertSales.setOnAction(this::cmdButton_Click);
-          btnPrintRefund.setOnAction(this::cmdButton_Click);
-          btnLostSale.setOnAction(this::cmdButton_Click); 
-          btnCancel.setOnAction(this::cmdButton_Click); 
-          btnTargetVhclAdd.setOnAction(this::cmdButton_Click); 
-          btnTargetVhclRemove.setOnAction(this::cmdButton_Click); 
-          btnTargetVehicleUp.setOnAction(this::cmdButton_Click);
-          btnTargetVehicleDown.setOnAction(this::cmdButton_Click); 
-          btnPromosAdd.setOnAction(this::cmdButton_Click); 
-          btnPromosRemove.setOnAction(this::cmdButton_Click); 
+        oTrans = new InquiryMaster(oApp, oApp.getBranchCode(), true); //Initialize ClientMaster
+        oTrans.setCallback(oListener);
+        oTrans.setWithUI(true);
+        initTargetVehicle();
+        initPromosOffered();
+
+        //dateSeek01.setValue(LocalDate.of(2023, Month.JANUARY, 1)); //birthdate
+        dateSeek01.setValue(LocalDate.of(strToDate(CommonUtils.xsDateShort((Date) oApp.getServerDate())).getYear(), strToDate(CommonUtils.xsDateShort((Date) oApp.getServerDate())).getMonth(), 1));
+        dateSeek02.setValue(strToDate(CommonUtils.xsDateShort((Date) oApp.getServerDate())));
+        dateSeek01.setOnAction(event -> {
+            loadInquiryListTable();
+            pagination.setPageFactory(this::createPage);
+        });
+        dateSeek02.setOnAction(event -> {
+            loadInquiryListTable();
+            pagination.setPageFactory(this::createPage);
+        });
+        //Populate table
+        loadInquiryListTable();
+        pagination.setPageFactory(this::createPage);
           
-          /*INQUIRY PROCESS*/
-          oTransProcess = new InquiryProcess(oApp, oApp.getBranchCode(), true); //Initialize ClientMaster
-          oTransProcess.setCallback(oListener);
-          oTransProcess.setWithUI(true);
-          initInquiryAdvances();
+        /*CUSTOMER INQUIRY*/
+        /*populate combobox*/
+        comboBox24.setItems(cInqStatus); //Inquiry Status
+        cmbType012.setItems(cInquiryType); //Inquiry Type
+        cmbOnstr13.setItems(cOnlineStore); //Web Inquiry
+        cmbType012.setOnAction(event -> {
+            cmbOnstr13.setDisable(true);
+            txtField09.setDisable(true);
+            txtField15.setDisable(true);
+            switch (cmbType012.getSelectionModel().getSelectedIndex()) {
+                case 1:
+                    cmbOnstr13.setDisable(false);
+                    txtField15.setText("");
+                    txtField09.setText("");
+                    break;
+                case 3:
+                    txtField09.setDisable(false);
+                    txtField15.setText("");
+                    cmbOnstr13.setValue(null);
+                    break;
+                case 4:
+                case 5:
+                    txtField15.setDisable(false);
+                    txtField09.setText("");
+                    cmbOnstr13.setValue(null);
+                    break;
+            }
+
+            try {
+                oTrans.setMaster(12, String.valueOf(cmbType012.getSelectionModel().getSelectedIndex()));
+            } catch (SQLException ex) {
+                Logger.getLogger(InquiryFormController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
           
-          cmbInqpr01.setItems(cModeOfPayment); //Mode of Payment
-          cmbInqpr02.setItems(cCustomerType); //Customer Type
-          //Mode of Payment
-          cmbInqpr01.setOnAction(event -> {
-               cmbInqpr02.setValue(null);
-               cmbInqpr02.setItems(cCustomerType);
-               switch (cmbInqpr01.getSelectionModel().getSelectedIndex()) {
-                    case 0:
-                    case 1:
-                         cmbInqpr02.getSelectionModel().select(4); //Set to Any
-                         cmbInqpr02.setDisable(true);
-                         break;
-                    case 2:
-                         ObservableList<String> cCustType = FXCollections.observableArrayList( "Business", "Employed", "OFW", "Seaman"); // Customer Type Values
-                         cmbInqpr02.setItems(cCustType);
-                         cmbInqpr02.setDisable(false);
-                         break;
-               }
-          });
-          //Customer Type
-          cmbInqpr02.setOnAction(event -> {
-               loadInquiryRequirements();
-          });
-          //Button SetOnAction using cmdButton_Click() method
-          btnASadd.setOnAction(this::cmdButton_Click); 
-          btnASremove.setOnAction(this::cmdButton_Click);
-          btnAScancel.setOnAction(this::cmdButton_Click); 
-          btnASprintview.setOnAction(this::cmdButton_Click); 
-          btnASprint.setOnAction(this::cmdButton_Click);
-          btnProcess.setOnAction(this::cmdButton_Click); 
-          btnModify.setOnAction(this::cmdButton_Click); 
-          btnApply.setOnAction(this::cmdButton_Click);
-          btnPymtcon.setOnAction(this::cmdButton_Click);
-          tblAdvanceSlip.setRowFactory(tv -> {
-               TableRow<InquiryTableVehicleSalesAdvances> row = new TableRow<>();
-               row.setOnMouseClicked(event -> {
-                    try {
-                         if (event.getClickCount() == 2 && !row.isEmpty()) {
-                              InquiryTableVehicleSalesAdvances rowData = row.getItem();
-                              loadVehicleSalesAdvancesWindow( row.getIndex()+1, false);
-                         }
-                    } catch (SQLException ex) {
-                         Logger.getLogger(InquiryFormController.class.getName()).log(Level.SEVERE, null, ex);
+        txtField04.focusedProperty().addListener(txtField_Focus);  // Sales Executive
+        txtField07.focusedProperty().addListener(txtField_Focus);  //Customer ID 
+        txtField29.focusedProperty().addListener(txtField_Focus);  //Company ID 
+        txtField09.focusedProperty().addListener(txtField_Focus);  //Agent ID
+        textArea08.focusedProperty().addListener(txtArea_Focus);  //Remarks
+        txtField15.focusedProperty().addListener(txtField_Focus);  //Activity ID
+        txtField14.focusedProperty().addListener(txtField_Focus);  //Test Model  
+        txtField10.setOnAction(this::getDate); 
+
+        txtField04.setOnKeyPressed(this::txtField_KeyPressed);  // Sales Executive
+        txtField07.setOnKeyPressed(this::txtField_KeyPressed);  //Customer ID 
+        txtField29.setOnKeyPressed(this::txtField_KeyPressed);  //Company ID 
+        txtField09.setOnKeyPressed(this::txtField_KeyPressed);  //Agent ID
+        textArea08.setOnKeyPressed(this::txtArea_KeyPressed);  //Remarks
+        txtField15.setOnKeyPressed(this::txtField_KeyPressed);  //Activity ID
+        txtField14.setOnKeyPressed(this::txtField_KeyPressed);  //Test Model  
+
+        //Button SetOnAction using cmdButton_Click() method
+        btnClose.setOnAction(this::cmdButton_Click);
+        btnAdd.setOnAction(this::cmdButton_Click);
+        btnSave.setOnAction(this::cmdButton_Click);
+        btnClear.setOnAction(this::cmdButton_Click);
+        btnEdit.setOnAction(this::cmdButton_Click);
+        btnConvertSales.setOnAction(this::cmdButton_Click);
+        btnPrintRefund.setOnAction(this::cmdButton_Click);
+        btnLostSale.setOnAction(this::cmdButton_Click); 
+        btnCancel.setOnAction(this::cmdButton_Click); 
+        btnTargetVhclAdd.setOnAction(this::cmdButton_Click); 
+        btnTargetVhclRemove.setOnAction(this::cmdButton_Click); 
+        btnTargetVehicleUp.setOnAction(this::cmdButton_Click);
+        btnTargetVehicleDown.setOnAction(this::cmdButton_Click); 
+        btnPromosAdd.setOnAction(this::cmdButton_Click); 
+        btnPromosRemove.setOnAction(this::cmdButton_Click); 
+          
+        /*INQUIRY PROCESS*/
+        oTransProcess = new InquiryProcess(oApp, oApp.getBranchCode(), true); //Initialize ClientMaster
+        oTransProcess.setCallback(oListener);
+        oTransProcess.setWithUI(true);
+        initInquiryAdvances();
+
+        cmbInqpr01.setItems(cModeOfPayment); //Mode of Payment
+        cmbInqpr02.setItems(cCustomerType); //Customer Type
+        //Mode of Payment
+        cmbInqpr01.setOnAction(event -> {
+            cmbInqpr02.setValue(null);
+            cmbInqpr02.setItems(cCustomerType);
+            switch (cmbInqpr01.getSelectionModel().getSelectedIndex()) {
+                case 0:
+                case 1:
+                    cmbInqpr02.getSelectionModel().select(4); //Set to Any
+                    cmbInqpr02.setDisable(true);
+                    break;
+                case 2:
+                    ObservableList<String> cCustType = FXCollections.observableArrayList( "Business", "Employed", "OFW", "Seaman"); // Customer Type Values
+                    cmbInqpr02.setItems(cCustType);
+                    cmbInqpr02.setDisable(false);
+                    break;
+            }
+        });
+        //Customer Type
+        cmbInqpr02.setOnAction(event -> {
+            loadInquiryRequirements();
+        });
+        //Button SetOnAction using cmdButton_Click() method
+        btnASadd.setOnAction(this::cmdButton_Click); 
+        btnASremove.setOnAction(this::cmdButton_Click);
+        btnAScancel.setOnAction(this::cmdButton_Click); 
+        btnASprintview.setOnAction(this::cmdButton_Click); 
+        btnASprint.setOnAction(this::cmdButton_Click);
+        btnProcess.setOnAction(this::cmdButton_Click); 
+        btnModify.setOnAction(this::cmdButton_Click); 
+        btnApply.setOnAction(this::cmdButton_Click);
+        btnPymtcon.setOnAction(this::cmdButton_Click);
+        tblAdvanceSlip.setRowFactory(tv -> {
+            TableRow<InquiryTableVehicleSalesAdvances> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                try {
+                    if (event.getClickCount() == 2 && !row.isEmpty()) {
+                         InquiryTableVehicleSalesAdvances rowData = row.getItem();
+                         loadVehicleSalesAdvancesWindow( row.getIndex()+1, false);
                     }
-               });
-               return row;
-          });
+                } catch (SQLException ex) {
+                    Logger.getLogger(InquiryFormController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            });
+            return row;
+        });
           
-          /*INQUIRY BANK APPLICATION*/ 
-          btnBankAppNew.setOnAction(this::cmdButton_Click); 
-          btnBankAppUpdate.setOnAction(this::cmdButton_Click); 
-          btnBankAppCancel.setOnAction(this::cmdButton_Click); 
-          btnBankAppView.setOnAction(this::cmdButton_Click);
-          
-          /*INQUIRY FOLLOW-UP*/
-          btnFollowUp.setOnAction(this::cmdButton_Click);
-          
-          /*Clear Fields*/
-          clearFields();
-          
-          pnEditMode = EditMode.UNKNOWN;
-          initButton(pnEditMode);
-          
+        /*INQUIRY BANK APPLICATION*/
+        oTransBankApp = new InquiryBankApplication(oApp, oApp.getBranchCode(), true); //Initialize ClientMaster
+        oTransBankApp.setCallback(oListener);
+        oTransBankApp.setWithUI(true);
+        initBankApplication();
+        
+        btnBankAppNew.setOnAction(this::cmdButton_Click); 
+        btnBankAppUpdate.setOnAction(this::cmdButton_Click); 
+        btnBankAppCancel.setOnAction(this::cmdButton_Click); 
+        btnBankAppView.setOnAction(this::cmdButton_Click);
+
+        /*INQUIRY FOLLOW-UP*/
+        btnFollowUp.setOnAction(this::cmdButton_Click);
+
+        /*Clear Fields*/
+        clearFields();
+
+        pnEditMode = EditMode.UNKNOWN;
+        initButton(pnEditMode);
+
     }    
     
-     @Override
-     public void setGRider(GRider foValue) {
-          oApp = foValue;
-     }
+    @Override
+    public void setGRider(GRider foValue) {
+        oApp = foValue;
+    }
     
-     //Method/Function for general buttons
-     private void cmdButton_Click(ActionEvent event) {
-          try {
-          String lsButton = ((Button)event.getSource()).getId();
-          switch(lsButton){
-               /*CUSTOMER INQUIRY: PRIORITY UNIT*/
-               case "btnTargetVhclAdd": 
-                    lnRow = priorityunitdata.size();
-                    if (lnRow == 0){
-                         lnRow = 1;
+    //Method/Function for general buttons
+    private void cmdButton_Click(ActionEvent event) {
+        try {
+        String lsButton = ((Button)event.getSource()).getId();
+        switch(lsButton){
+            /*CUSTOMER INQUIRY: PRIORITY UNIT*/
+            case "btnTargetVhclAdd": 
+                lnRow = priorityunitdata.size();
+                if (lnRow == 0){
+                    lnRow = 1;
+                } else {
+                    lnRow++;
+                }
+                oTrans.addVhclPrty();
+                if (oTrans.searchVhclPrty(lnRow,"",false)){
+                } else {
+                    oTrans.removeTargetVehicle(lnRow);
+                    ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
+                }
+                loadTargetVehicle();
+                break;
+               
+            case "btnTargetVhclRemove":
+                selectedTblRowIndex = tblPriorityUnit.getSelectionModel().getSelectedIndex() + 1;
+                if (selectedTblRowIndex >= 1) {
+                    if ((oTrans.getVhclPrty(selectedTblRowIndex, 1).toString() != null) && (!oTrans.getVhclPrty(selectedTblRowIndex, 1).toString().trim().equals(""))){
                     } else {
-                         lnRow++;
+                        oTrans.removeTargetVehicle(selectedTblRowIndex);
+                        loadTargetVehicle();
                     }
-                    oTrans.addVhclPrty();
-                    if (oTrans.searchVhclPrty(lnRow,"",false)){
-                    } else {
-                         oTrans.removeTargetVehicle(lnRow);
-                         ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
+                }
+                selectedTblRowIndex = 0;
+                break;     
+            case "btnTargetVehicleDown":
+                if ((selectedTblRowIndex < tblPriorityUnit.getItems().size() - 1) && selectedTblRowIndex != tblPriorityUnit.getItems().size()) {
+                    Collections.swap(tblPriorityUnit.getItems(), selectedTblRowIndex, selectedTblRowIndex + 1);
+                    tblPriorityUnit.getSelectionModel().select(selectedTblRowIndex + 1);
+                    lnCtr = 1;
+                    for (InquiryTablePriorityUnit unit : priorityunitdata) {
+                        oTrans.setVhclPrty(lnCtr, "nPriority",unit.getTblindex01());
+                        oTrans.setVhclPrty(lnCtr, "sDescript",unit.getTblindex02());
+                        lnCtr++;
                     }
                     loadTargetVehicle();
-                    break;
+                    selectedTblRowIndex++;
+                }
+                break;    
+            case "btnTargetVehicleUp":
+                if (selectedTblRowIndex > 0 ) {
+                    Collections.swap(tblPriorityUnit.getItems(), selectedTblRowIndex, selectedTblRowIndex - 1);
+                    tblPriorityUnit.getSelectionModel().select(selectedTblRowIndex - 1);
+                    lnCtr = 1;
+                    for (InquiryTablePriorityUnit unit : priorityunitdata) {
+                        oTrans.setVhclPrty(lnCtr, "nPriority",unit.getTblindex01());
+                        oTrans.setVhclPrty(lnCtr, "sDescript",unit.getTblindex02());
+                        lnCtr++;
+                    }
+                    loadTargetVehicle();
+                    selectedTblRowIndex--;
+                }
+                break;
                
-               case "btnTargetVhclRemove":
-                    selectedTblRowIndex = tblPriorityUnit.getSelectionModel().getSelectedIndex() + 1;
-                    if (selectedTblRowIndex >= 1) {
-                         if ((oTrans.getVhclPrty(selectedTblRowIndex, 1).toString() != null) && (!oTrans.getVhclPrty(selectedTblRowIndex, 1).toString().trim().equals(""))){
-                         } else {
-                              oTrans.removeTargetVehicle(selectedTblRowIndex);
-                              loadTargetVehicle();
-                         }
-                    }
-                    selectedTblRowIndex = 0;
-                    break;     
-               case "btnTargetVehicleDown":
-                    if ((selectedTblRowIndex < tblPriorityUnit.getItems().size() - 1) && selectedTblRowIndex != tblPriorityUnit.getItems().size()) {
-                         Collections.swap(tblPriorityUnit.getItems(), selectedTblRowIndex, selectedTblRowIndex + 1);
-                         tblPriorityUnit.getSelectionModel().select(selectedTblRowIndex + 1);
-                         lnCtr = 1;
-                         for (InquiryTablePriorityUnit unit : priorityunitdata) {
-                              oTrans.setVhclPrty(lnCtr, "nPriority",unit.getTblindex01());
-                              oTrans.setVhclPrty(lnCtr, "sDescript",unit.getTblindex02());
-                              lnCtr++;
-                         }
-                         loadTargetVehicle();
-                         selectedTblRowIndex++;
-                    }
-                    break;    
-               case "btnTargetVehicleUp":
-                    if (selectedTblRowIndex > 0 ) {
-                         Collections.swap(tblPriorityUnit.getItems(), selectedTblRowIndex, selectedTblRowIndex - 1);
-                         tblPriorityUnit.getSelectionModel().select(selectedTblRowIndex - 1);
-                         lnCtr = 1;
-                         for (InquiryTablePriorityUnit unit : priorityunitdata) {
-                              oTrans.setVhclPrty(lnCtr, "nPriority",unit.getTblindex01());
-                              oTrans.setVhclPrty(lnCtr, "sDescript",unit.getTblindex02());
-                              lnCtr++;
-                         }
-                         loadTargetVehicle();
-                         selectedTblRowIndex--;
-                    }
-                    break;
-               
-               /*CUSTOMER INDQUIRY: PROMO OFFERED*/
-               case "btnPromosAdd":
-                    lnRow = promosoffereddata.size();
-                    if (lnRow == 0){
-                         lnRow = 1;
+            /*CUSTOMER INDQUIRY: PROMO OFFERED*/
+            case "btnPromosAdd":
+                lnRow = promosoffereddata.size();
+                if (lnRow == 0){
+                    lnRow = 1;
+                } else {
+                    lnRow++;
+                }
+                oTrans.addVhclPrty();
+                if (oTrans.searchVhclPrty(lnRow,"",false)){
+                } else {
+                    oTrans.removeTargetVehicle(lnRow);
+                    ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
+                }
+                loadPromosOfferred();
+                break;
+            case "btnPromosRemove":
+                selectedTblRowIndex = tblPromosOffered.getSelectionModel().getSelectedIndex() + 1;
+                if (selectedTblRowIndex >= 1) {
+                    if ((oTrans.getVhclPrty(selectedTblRowIndex, 1).toString() != null) && (!oTrans.getVhclPrty(selectedTblRowIndex, 1).toString().trim().equals(""))){
                     } else {
-                         lnRow++;
+                        oTrans.removeTargetVehicle(selectedTblRowIndex);
+                        loadTargetVehicle();
                     }
-                    oTrans.addVhclPrty();
-                    if (oTrans.searchVhclPrty(lnRow,"",false)){
-                    } else {
-                         oTrans.removeTargetVehicle(lnRow);
-                         ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
-                    }
-                    loadPromosOfferred();
-                    break;
-               case "btnPromosRemove":
-                    selectedTblRowIndex = tblPromosOffered.getSelectionModel().getSelectedIndex() + 1;
-                    if (selectedTblRowIndex >= 1) {
-                         if ((oTrans.getVhclPrty(selectedTblRowIndex, 1).toString() != null) && (!oTrans.getVhclPrty(selectedTblRowIndex, 1).toString().trim().equals(""))){
-                         } else {
-                              oTrans.removeTargetVehicle(selectedTblRowIndex);
-                              loadTargetVehicle();
-                         }
-                    }
-                    selectedTblRowIndex = 0;
-                    break;
-               /*CUSTOMER INQUIRY: GENERAL BUTTON*/
-               case "btnAdd":
-                    //pnEditMode  = EditMode.ADDNEW; 
-                    if (oTrans.NewRecord()){
-                         /*Clear Fields*/
-                         clearFields(); 
-                         clearClassFields();
-                         loadCustomerInquiry();
-                         loadTargetVehicle();
-                         loadPromosOfferred();
-                         textSeek01.clear(); // Client Search
-                         pnEditMode = oTrans.getEditMode();
-                    } else 
-                        ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
-                     break;
-               case "btnEdit":
-                    if (oTrans.UpdateRecord() ){
-                         pnEditMode = oTrans.getEditMode(); 
-                    } else 
-                         ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
-                    break;
-               case "btnSave":
-                    if(ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure, do you want to save?") == true){
-                         if (setSelection()) {
-                              if(oTrans.SaveRecord()){
-                                   ShowMessageFX.Information(getStage(), "Transaction save successfully.", pxeModuleName, null);
-                                   loadCustomerInquiry();
-                                   loadTargetVehicle();
-                                   loadPromosOfferred();
-                                   loadInquiryListTable();
-                                   pagination.setPageFactory(this::createPage);
-                                   pnEditMode = oTrans.getEditMode();
-                              } else {
-                                  ShowMessageFX.Warning(getStage(),oTrans.getMessage() ,"Warning", "Error while saving " + pxeModuleName);
-                              }
-                         }
-                         break;
-                    }else
-                         return;
-               case "btnClear":
+                }
+                selectedTblRowIndex = 0;
+            break;
+            /*CUSTOMER INQUIRY: GENERAL BUTTON*/
+            case "btnAdd":
+                //pnEditMode  = EditMode.ADDNEW; 
+                if (oTrans.NewRecord()){
+                    /*Clear Fields*/
+                    clearFields(); 
                     clearClassFields();
                     loadCustomerInquiry();
                     loadTargetVehicle();
                     loadPromosOfferred();
-                    ShowMessageFX.Information(null, pxeModuleName, "You click clear button!"); 
+                    textSeek01.clear(); // Client Search
+                    pnEditMode = oTrans.getEditMode();
+                } else 
+                    ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
+                 break;
+            case "btnEdit":
+                if (oTrans.UpdateRecord() ){
+                    pnEditMode = oTrans.getEditMode(); 
+                } else 
+                    ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
+                break;
+            case "btnSave":
+                if(ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure, do you want to save?") == true){
+                    if (setSelection()) {
+                        if(oTrans.SaveRecord()){
+                            ShowMessageFX.Information(getStage(), "Transaction save successfully.", pxeModuleName, null);
+                            loadCustomerInquiry();
+                            loadTargetVehicle();
+                            loadPromosOfferred();
+                            loadInquiryListTable();
+                            pagination.setPageFactory(this::createPage);
+                            pnEditMode = oTrans.getEditMode();
+                        } else {
+                            ShowMessageFX.Warning(getStage(),oTrans.getMessage() ,"Warning", "Error while saving " + pxeModuleName);
+                        }
+                    }
                     break;
-               case "btnConvertSales":
-                    
-                    ShowMessageFX.Information(null, pxeModuleName, "You click convert to sales button"); 
-                   break;
-               case "btnPrintRefund":
-                    ShowMessageFX.Information(null, pxeModuleName, "You click print refund button"); 
-                   break;
-               case "btnLostSale":
-                    if(ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure, do you want to tag this inquiry as LOST SALE?") == true){
-                         //TODO
-                         break;
-                    }else
-                         return;
-               /*INQUIRY PROCESS: RESERVATION*/
-               case "btnASadd":
-                    //Open window for inquiry reservation
-                    lnRow = inqvsadata.size();
-                    if (lnRow == 0){
-                         lnRow = 1;
-                    } else {
-                         lnRow++;
-                    }
-                    loadVehicleSalesAdvancesWindow(lnRow, true);
-                    break; 
-               case "btnASremove":
-               case "btnAScancel":
-               case "btnASprint":
-                    lnRow = 1;
-                    lnCtr = 1;
-                    ObservableList<InquiryTableVehicleSalesAdvances> selectedItems = FXCollections.observableArrayList();
-                    for (InquiryTableVehicleSalesAdvances item : inqvsadata) {
-                         if (item.isTblcheck01()) {
-                              
-                              if ("btnASremove".equals(lsButton) && lnCtr > 1){
-                                   ShowMessageFX.Information(null, pxeModuleName, "Please select atleast 1 slip to be removed.");
-                                   return;
-                              }
-                              System.out.println(oTransProcess.getInqRsv(lnRow,13).toString());
-                              switch (oTransProcess.getInqRsv(lnRow,13).toString()) {
-                                   case "0":
-                                        if ("btnASprint".equals(lsButton)){
-                                             ShowMessageFX.Information(null, pxeModuleName, "Slip No. " + oTransProcess.getInqRsv(lnRow,3).toString() + " is not yet approved. Printing Aborted." );
-                                             return;
-                                        } else {
-                                             selectedItems.add(item);
-                                        }
-                                        break;
-                                   case "1":
-                                        switch (lsButton) {
-                                             case "btnAScancel":
-                                                  ShowMessageFX.Information(null, pxeModuleName, "You are not allowed to Cancel Slip No. " + oTransProcess.getInqRsv(lnRow,3).toString());
-                                                  return;
-                                             case "btnASremove":
-                                                  ShowMessageFX.Information(null, pxeModuleName, "You are not allowed to Remove Slip No. " + oTransProcess.getInqRsv(lnRow,3).toString());
-                                                  return;
-                                             case "btnASprint":
-                                                  selectedItems.add(item);
-                                        }
-                                        break;
-                                   case "2":
-                                        ShowMessageFX.Information(null, pxeModuleName, "Slip No. " + oTransProcess.getInqRsv(lnRow,3).toString() + " is already Cancelled.");
+                }else
+                    return;
+            case "btnClear":
+                clearClassFields();
+                loadCustomerInquiry();
+                loadTargetVehicle();
+                loadPromosOfferred();
+                ShowMessageFX.Information(null, pxeModuleName, "You click clear button!"); 
+                break;
+            case "btnConvertSales":
+                ShowMessageFX.Information(null, pxeModuleName, "You click convert to sales button"); 
+                break;
+            case "btnPrintRefund":
+                ShowMessageFX.Information(null, pxeModuleName, "You click print refund button"); 
+                break;
+            case "btnLostSale":
+                if(ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure, do you want to tag this inquiry as LOST SALE?") == true){
+                    //TODO
+                    break;
+                }else
+                    return;
+            /*INQUIRY PROCESS: RESERVATION*/
+            case "btnASadd":
+                //Open window for inquiry reservation
+                lnRow = inqvsadata.size();
+                if (lnRow == 0){
+                     lnRow = 1;
+                } else {
+                     lnRow++;
+                }
+                loadVehicleSalesAdvancesWindow(lnRow, true);
+                break; 
+            case "btnASremove":
+            case "btnAScancel":
+            case "btnASprint":
+                lnRow = 1;
+                lnCtr = 1;
+                ObservableList<InquiryTableVehicleSalesAdvances> selectedItems = FXCollections.observableArrayList();
+                for (InquiryTableVehicleSalesAdvances item : inqvsadata) {
+                    if (item.isTblcheck01()) {
+
+                        if ("btnASremove".equals(lsButton) && lnCtr > 1){
+                             ShowMessageFX.Information(null, pxeModuleName, "Please select atleast 1 slip to be removed.");
+                             return;
+                        }
+                        System.out.println(oTransProcess.getInqRsv(lnRow,13).toString());
+                        switch (oTransProcess.getInqRsv(lnRow,13).toString()) {
+                            case "0":
+                                if ("btnASprint".equals(lsButton)){
+                                     ShowMessageFX.Information(null, pxeModuleName, "Slip No. " + oTransProcess.getInqRsv(lnRow,3).toString() + " is not yet approved. Printing Aborted." );
+                                     return;
+                                } else {
+                                     selectedItems.add(item);
+                                }
+                                break;
+                            case "1":
+                                switch (lsButton) {
+                                    case "btnAScancel":
+                                        ShowMessageFX.Information(null, pxeModuleName, "You are not allowed to Cancel Slip No. " + oTransProcess.getInqRsv(lnRow,3).toString());
                                         return;
-                              } 
-                              lnCtr++;
-                         }
-                         lnRow++;
+                                    case "btnASremove":
+                                        ShowMessageFX.Information(null, pxeModuleName, "You are not allowed to Remove Slip No. " + oTransProcess.getInqRsv(lnRow,3).toString());
+                                        return;
+                                    case "btnASprint":
+                                        selectedItems.add(item);
+                                }
+                                break;
+                            case "2":
+                                ShowMessageFX.Information(null, pxeModuleName, "Slip No. " + oTransProcess.getInqRsv(lnRow,3).toString() + " is already Cancelled.");
+                                return;
+                        } 
+                        lnCtr++;
                     }
+                    lnRow++;
+                }
                     
-                    if (selectedItems.isEmpty()) {
-                        ShowMessageFX.Information(null, pxeModuleName, "No items selected!");
+                if (selectedItems.isEmpty()) {
+                    ShowMessageFX.Information(null, pxeModuleName, "No items selected!");
+                } else {
+                    switch (lsButton) {
+                        case "btnAScancel":
+                            if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure you want to cancel?")) {
+                                // Call the ApproveReservation() method here
+                                for (InquiryTableVehicleSalesAdvances item : selectedItems) {
+                                    String sRow = item.getTblindex01(); // Assuming there is a method to retrieve the transaction number
+                                    if(oTransProcess.CancelReservation(Integer.parseInt(sRow))){
+                                        //Retrieve Reservation
+                                        String[] sSourceNo = {sTransNo}; //Use array cause class is mandatory array to call even I only need 1
+                                        oTransProcess.loadReservation(sSourceNo,true);
+                                    }else {
+                                        ShowMessageFX.Information(null, pxeModuleName, "Failed to cancel reservation.");
+                                        return;
+                                    }
+                                    }
+                                    ShowMessageFX.Information(null, pxeModuleName, "Reservation cancelled successfully.");
+                               }
+                        break;
+                        case "btnASremove":
+                            for (InquiryTableVehicleSalesAdvances item : selectedItems) {
+                                String sRow = item.getTblindex01(); // Assuming there is a method to retrieve the transaction number
+                                if (Integer.parseInt(sRow) >= 1) {
+                                    if(oTransProcess.removeInqRes(Integer.parseInt(sRow))) {
+                                        break;
+                                    }else {
+                                        ShowMessageFX.Information(null, pxeModuleName, oTransProcess.getMessage());
+                                    }
+                                }
+                            }
+                            break;
+                        case "btnASprint":
+                            lnRow = 0;
+                            String[] srowdata = new String[lnCtr];
+                            for (InquiryTableVehicleSalesAdvances item : selectedItems) {
+                                String sRow = item.getTblindex01(); // Assuming there is a method to retrieve the transaction number
+                                String sTrans= item.getTblindex10();
+                                if (Integer.parseInt(sRow) >= 1) {
+                                        srowdata[lnRow] = sTrans; 
+                                    }
+                                    lnRow++;
+                            }
+                            loadVehicleSalesAdvancesPrint(srowdata);
+                            break;
+                            default:
+                                break;
+                    }
+                    loadInquiryAdvances();
+            }
+                break;  
+           /*INQUIRY PROCESS: GENERAL BUTTON*/
+            case "btnProcess":
+            case "btnApply":
+                if ("btnProcess".equals(lsButton)){
+                    if (oTransProcess.NewRecord()){
                     } else {
-                         switch (lsButton) {
-                              case "btnAScancel":
-                                   if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure you want to cancel?")) {
-                                        // Call the ApproveReservation() method here
-                                        for (InquiryTableVehicleSalesAdvances item : selectedItems) {
-                                             String sRow = item.getTblindex01(); // Assuming there is a method to retrieve the transaction number
-                                             if(oTransProcess.CancelReservation(Integer.parseInt(sRow))){
-                                                  //Retrieve Reservation
-                                                  String[] sSourceNo = {sTransNo}; //Use array cause class is mandatory array to call even I only need 1
-                                                  oTransProcess.loadReservation(sSourceNo,true);
-                                             }else {
-                                                  ShowMessageFX.Information(null, pxeModuleName, "Failed to cancel reservation.");
-                                                  return;
-                                             }
-                                        }
-                                        ShowMessageFX.Information(null, pxeModuleName, "Reservation cancelled successfully.");
-                                   }
-                                   break;
-                              case "btnASremove":
-                                   for (InquiryTableVehicleSalesAdvances item : selectedItems) {
-                                        String sRow = item.getTblindex01(); // Assuming there is a method to retrieve the transaction number
-                                        if (Integer.parseInt(sRow) >= 1) {
-                                             if(oTransProcess.removeInqRes(Integer.parseInt(sRow))) {
-                                                  break;
-                                             }else {
-                                                  ShowMessageFX.Information(null, pxeModuleName, oTransProcess.getMessage());
-                                             }
-                                        }
-                                   }
-                                   break;
-                              case "btnASprint":
-                                   lnRow = 0;
-                                   String[] srowdata = new String[lnCtr];
-                                   for (InquiryTableVehicleSalesAdvances item : selectedItems) {
-                                        String sRow = item.getTblindex01(); // Assuming there is a method to retrieve the transaction number
-                                        if (Integer.parseInt(sRow) >= 1) {
-                                             srowdata[lnRow] = sRow; 
-                                        }
-                                        lnRow++;
-                                   }
-                                   loadVehicleSalesAdvancesPrint(srowdata);
-                                   break;
-                              default:
-                                   break;
-                         }
-                         loadInquiryAdvances();
+                        return;
                     }
-                    break;  
-               /*INQUIRY PROCESS: GENERAL BUTTON*/
-               case "btnProcess":
-               case "btnApply":
-                    if ("btnProcess".equals(lsButton)){
-                         if (oTransProcess.NewRecord()){
-                         } else {
-                              return;
-                         }
-                    }
-                    if(ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure, do you want to save?") == true){
-                         //TODO
-                         oTransProcess.setClientID(sClientID);
-                         oTransProcess.setTransNox(sTransNo);
+                }
+                if(ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure, do you want to save?") == true){
+                    //TODO
+                    oTransProcess.setClientID(sClientID);
+                    oTransProcess.setTransNox(sTransNo);
 //                         System.out.println((String) oTrans.getMaster(7));
 //                         System.out.println("inq code before saving >> " + (String) oTrans.getMaster(1));   
-                         if(oTransProcess.SaveRecord()){
-                              System.out.println("inq code after saving >> " +(String) oTrans.getMaster(1));
-                              ShowMessageFX.Information(getStage(), "Transaction save successfully.", pxeModuleName, null);
-                              oTrans.OpenRecord(sTransNo);
-                              loadCustomerInquiry();
-                              loadTargetVehicle();
-                              loadPromosOfferred();
-                              
-                              //Retrieve Requirements
-                              oTransProcess.loadRequirements(sTransNo);
-                              if (oTransProcess.getInqReqCount() > 0){
-                                   cmbInqpr01.getSelectionModel().select(Integer.parseInt(oTransProcess.getInqReq(oTransProcess.getInqReqCount(), "cPayModex").toString())); //Inquiry Payment mode
-                                   cmbInqpr02.getSelectionModel().select(Integer.parseInt(oTransProcess.getInqReq(oTransProcess.getInqReqCount(), "cCustGrpx").toString())); //Inquiry Customer Type
-                              } else {
-                                   cmbInqpr01.setValue(null);
-                                   cmbInqpr02.setValue(null);
-                              }
-                              //Load Table Requirements
-                              loadInquiryRequirements();
-                              //Retrieve Reservation
-                              String[] sSourceNo = {sTransNo}; //Use array cause class is mandatory array to call even I only need 1
-                              oTransProcess.loadReservation(sSourceNo,true);
-                              //Load Table Reservation
-                              loadInquiryAdvances();
-                              
-                              loadInquiryListTable();
-                              pagination.setPageFactory(this::createPage);
-                              
-                         } else {
-                             ShowMessageFX.Warning(getStage(),oTransProcess.getMessage() ,"Warning", "Error while saving " + pxeModuleName);
-                         }
-                         initBtnProcess(oTransProcess.getEditMode());
-                         break;
-                    }else
-                         return;
-                    
-               case "btnModify":
-                    if (oTransProcess.UpdateRecord()){
+                    if(oTransProcess.SaveRecord()){
+                        System.out.println("inq code after saving >> " +(String) oTrans.getMaster(1));
+                        ShowMessageFX.Information(getStage(), "Transaction save successfully.", pxeModuleName, null);
+                        oTrans.OpenRecord(sTransNo);
+                        loadCustomerInquiry();
+                        loadTargetVehicle();
+                        loadPromosOfferred();
+
+                        //Retrieve Requirements
+                        oTransProcess.loadRequirements(sTransNo);
+                        if (oTransProcess.getInqReqCount() > 0){
+                            cmbInqpr01.getSelectionModel().select(Integer.parseInt(oTransProcess.getInqReq(oTransProcess.getInqReqCount(), "cPayModex").toString())); //Inquiry Payment mode
+                            cmbInqpr02.getSelectionModel().select(Integer.parseInt(oTransProcess.getInqReq(oTransProcess.getInqReqCount(), "cCustGrpx").toString())); //Inquiry Customer Type
+                        } else {
+                            cmbInqpr01.setValue(null);
+                            cmbInqpr02.setValue(null);
+                        }
+                        //Load Table Requirements
+                        loadInquiryRequirements();
+                        //Retrieve Reservation
+                        String[] sSourceNo = {sTransNo}; //Use array cause class is mandatory array to call even I only need 1
+                        oTransProcess.loadReservation(sSourceNo,true);
+                        //Load Table Reservation
+                        loadInquiryAdvances();
+
+                        loadInquiryListTable();
+                        pagination.setPageFactory(this::createPage);
+
                     } else {
-                         return;
+                        ShowMessageFX.Warning(getStage(),oTransProcess.getMessage() ,"Warning", "Error while saving " + pxeModuleName);
                     }
                     initBtnProcess(oTransProcess.getEditMode());
                     break;
-               case "btnPymtcon":
-                    break;
+                }else
+                    return;
                     
-               /*INQUIRY BANK APPLICATION*/
-               case "btnBankAppNew":
-                    //Open window 
-                    loadBankApplication("");
-                    break;
-               case "btnBankAppUpdate":
-                    //Open window 
-                    loadBankApplication("");
-                    break;
-               case "btnBankAppCancel":
-                    break;
-               case "btnBankAppView":
-                    //Open window 
-                    loadBankApplication("");
-                    break;
+            case "btnModify":
+                if (oTransProcess.UpdateRecord()){
+                } else {
+                    return;
+                }
+                initBtnProcess(oTransProcess.getEditMode());
+                break;
+            case "btnPymtcon":
+                break;
+                    
+            /*INQUIRY BANK APPLICATION*/
+            case "btnBankAppNew":
+                //Open window 
+                loadBankApplication("",sInqPayMode,EditMode.ADDNEW);
+                break;
+            case "btnBankAppUpdate":
+                //Open window 
+                loadBankApplication("",sInqPayMode, EditMode.UPDATE);
+                break;
+            case "btnBankAppCancel":
+                break;
+            case "btnBankAppView":
+                //Open window 
+                loadBankApplication("",sInqPayMode, EditMode.READY);
+                break;
                
-               /*INQUIRY FOR FOLLOW UP*/
-               case "btnFollowUp":
-                    //Open window 
-                    loadFollowUp("");
+            /*INQUIRY FOR FOLLOW UP*/
+            case "btnFollowUp":
+                //Open window 
+                loadFollowUp("");
+                break;
+
+            case "btnCancel":
+                if(ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure, do you want to cancel?") == true){
+                    clearFields();
+                    clearClassFields();
+                    loadCustomerInquiry();
+                    loadTargetVehicle();
+                    loadPromosOfferred();
+                    pnEditMode = EditMode.UNKNOWN;
                     break;
-                            
-               case "btnCancel":
-                    if(ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure, do you want to cancel?") == true){
-                         clearFields();
-                         clearClassFields();
-                         loadCustomerInquiry();
-                         loadTargetVehicle();
-                         loadPromosOfferred();
-                         pnEditMode = EditMode.UNKNOWN;
-                         break;
-                    }else
-                         return;
-               case "btnClose": //close tab
-                    if(ShowMessageFX.OkayCancel(null, "Close Tab", "Are you sure, do you want to close tab?") == true){
-                         if (unload != null) {
-                              unload.unloadForm(AnchorMain, oApp, pxeModuleName);
-                         }else {
-                              ShowMessageFX.Warning(null, "Warning", "Notify System Admin to Configure Null value at close button.");    
-                         }
-                    break;
-                    }else
-                         return;
-                default:
-                       ShowMessageFX.Warning(null, pxeModuleName, "Button with name " + lsButton + " not registered.");
-                       return;
-               }
-               initButton(pnEditMode); 
-          } catch (SQLException ex) {
-               Logger.getLogger(InquiryFormController.class.getName()).log(Level.SEVERE, null, ex);
-          }
-
-     }
-     
-     /*INQUIRY PROCESS: OPEN VEHICLE SALES ADVANCES*/
-     private void loadVehicleSalesAdvancesWindow(int fnRow, boolean fstate) throws SQLException{
-          /**
-           * if state = true : ADD
-           * else if state = false : UPDATE
-          ***/
-          try {
-               Stage stage = new Stage();
-
-               FXMLLoader fxmlLoader = new FXMLLoader();
-               fxmlLoader.setLocation(getClass().getResource("InquiryVehicleSalesAdvancesForm.fxml"));
-
-               InquiryVehicleSalesAdvancesFormController loControl = new InquiryVehicleSalesAdvancesFormController();
-               loControl.setGRider(oApp);
-               loControl.setVSAObject(oTransProcess);
-               loControl.setTableRows(fnRow);
-               loControl.setState(fstate);
-
-               fxmlLoader.setController(loControl);
-
-               //load the main interface
-               Parent parent = fxmlLoader.load();
-               
-               parent.setOnMousePressed(new EventHandler<MouseEvent>() {
-                    @Override
-                    public void handle(MouseEvent event) {
-                        xOffset = event.getSceneX();
-                        yOffset = event.getSceneY();
+                }else
+                    return;
+            case "btnClose": //close tab
+                if(ShowMessageFX.OkayCancel(null, "Close Tab", "Are you sure, do you want to close tab?") == true){
+                    if (unload != null) {
+                        unload.unloadForm(AnchorMain, oApp, pxeModuleName);
+                    }else {
+                        ShowMessageFX.Warning(null, "Warning", "Notify System Admin to Configure Null value at close button.");    
                     }
-               });
-               
-               parent.setOnMouseDragged(new EventHandler<MouseEvent>() {
-                   @Override
-                   public void handle(MouseEvent event) {
-                       stage.setX(event.getScreenX() - xOffset);
-                       stage.setY(event.getScreenY() - yOffset);
-                   }
-               });
+                break;
+                }else
+                    return;
+            default:
+                ShowMessageFX.Warning(null, pxeModuleName, "Button with name " + lsButton + " not registered.");
+                return;
+            }
+            initButton(pnEditMode); 
+        } catch (SQLException ex) {
+            Logger.getLogger(InquiryFormController.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
-               //set the main interface as the scene
-               Scene scene = new Scene(parent);
-               stage.setScene(scene);
-               stage.initStyle(StageStyle.TRANSPARENT);
-               stage.initModality(Modality.APPLICATION_MODAL);
-               stage.setTitle("");
-               stage.showAndWait();
-               
-               loadInquiryAdvances();
-          } catch (IOException e) {
-              e.printStackTrace();
-              ShowMessageFX.Warning(getStage(),e.getMessage(), "Warning", null);
-              System.exit(1);
-          }
      }
      
-     /*INQUIRY PROCESS: PRINT VEHICLE SALES ADVANCES*/
-     private void loadVehicleSalesAdvancesPrint(String[] sTransno) throws SQLException{
-//          try {
-//               Stage stage = new Stage();
-//
-//               FXMLLoader fxmlLoader = new FXMLLoader();
-//               fxmlLoader.setLocation(getClass().getResource("InquiryVehicleSalesAdvancesForm.fxml"));
-//
-//               InquiryVehicleSalesAdvancesFormController loControl = new InquiryVehicleSalesAdvancesFormController();
-//               loControl.setGRider(oApp);
-//               loControl.setVSAObject(oTransProcess);
-//               loControl.setsTransNo(sTransno);
-//
-//               fxmlLoader.setController(loControl);
-//
-//               //load the main interface
-//               Parent parent = fxmlLoader.load();
-//               
-//               parent.setOnMousePressed(new EventHandler<MouseEvent>() {
-//                    @Override
-//                    public void handle(MouseEvent event) {
-//                        xOffset = event.getSceneX();
-//                        yOffset = event.getSceneY();
-//                    }
-//               });
-//               
-//               parent.setOnMouseDragged(new EventHandler<MouseEvent>() {
-//                   @Override
-//                   public void handle(MouseEvent event) {
-//                       stage.setX(event.getScreenX() - xOffset);
-//                       stage.setY(event.getScreenY() - yOffset);
-//                   }
-//               });
-//
-//               //set the main interface as the scene
-//               Scene scene = new Scene(parent);
-//               stage.setScene(scene);
-//               stage.initStyle(StageStyle.TRANSPARENT);
-//               stage.initModality(Modality.APPLICATION_MODAL);
-//               stage.setTitle("");
-//               stage.showAndWait();
-//               
-//               loadInquiryAdvances();
-//          } catch (IOException e) {
-//              e.printStackTrace();
-//              ShowMessageFX.Warning(getStage(),e.getMessage(), "Warning", null);
-//              System.exit(1);
-//          }
-     }
+    /*INQUIRY PROCESS: OPEN VEHICLE SALES ADVANCES*/
+    private void loadVehicleSalesAdvancesWindow(int fnRow, boolean fstate) throws SQLException{
+        /**
+         * if state = true : ADD
+         * else if state = false : UPDATE
+        ***/
+        try {
+            Stage stage = new Stage();
+
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            fxmlLoader.setLocation(getClass().getResource("InquiryVehicleSalesAdvancesForm.fxml"));
+
+            InquiryVehicleSalesAdvancesFormController loControl = new InquiryVehicleSalesAdvancesFormController();
+            loControl.setGRider(oApp);
+            loControl.setVSAObject(oTransProcess);
+            loControl.setTableRows(fnRow);
+            loControl.setState(fstate);
+
+            fxmlLoader.setController(loControl);
+
+            //load the main interface
+            Parent parent = fxmlLoader.load();
+
+            parent.setOnMousePressed(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    xOffset = event.getSceneX();
+                    yOffset = event.getSceneY();
+                }
+            });
+
+            parent.setOnMouseDragged(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    stage.setX(event.getScreenX() - xOffset);
+                    stage.setY(event.getScreenY() - yOffset);
+                }
+            });
+
+            //set the main interface as the scene
+            Scene scene = new Scene(parent);
+            stage.setScene(scene);
+            stage.initStyle(StageStyle.TRANSPARENT);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle("");
+            stage.showAndWait();
+
+            loadInquiryAdvances();
+        } catch (IOException e) {
+            e.printStackTrace();
+            ShowMessageFX.Warning(getStage(),e.getMessage(), "Warning", null);
+            System.exit(1);
+        }
+    }
+     
+    /*INQUIRY PROCESS: PRINT VEHICLE SALES ADVANCES*/
+    private void loadVehicleSalesAdvancesPrint(String[] sTransno) throws SQLException{
+        try {
+            Stage stage = new Stage();
+
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            fxmlLoader.setLocation(getClass().getResource("ReservationPrint.fxml"));
+
+            ReservationPrintController loControl = new ReservationPrintController();
+            loControl.setGRider(oApp);
+            //loControl.setVSAObject(oTransProcess);
+            loControl.setTransNox(sTransno);
+
+            fxmlLoader.setController(loControl);
+
+            //load the main interface
+            Parent parent = fxmlLoader.load();
+
+            parent.setOnMousePressed(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    xOffset = event.getSceneX();
+                    yOffset = event.getSceneY();
+                }
+            });
+
+            parent.setOnMouseDragged(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    stage.setX(event.getScreenX() - xOffset);
+                    stage.setY(event.getScreenY() - yOffset);
+                }
+            });
+
+            //set the main interface as the scene
+            Scene scene = new Scene(parent);
+            stage.setScene(scene);
+            stage.initStyle(StageStyle.TRANSPARENT);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle("");
+            stage.showAndWait();
+
+            loadInquiryAdvances();
+        } catch (IOException e) {
+            e.printStackTrace();
+            ShowMessageFX.Warning(getStage(),e.getMessage(), "Warning", null);
+            System.exit(1);
+        }
+    }
      
      
-     /*INQUIRY BANK APPLICATION*/
-     private void loadBankApplication(String sTransno) throws SQLException{
-          try {
-               Stage stage = new Stage();
+    /*INQUIRY BANK APPLICATION*/
+    private void loadBankApplication(String sTransnox, String sPaymentMode, Integer iEditmode) throws SQLException{
+        try {
+            Stage stage = new Stage();
 
-               FXMLLoader fxmlLoader = new FXMLLoader();
-               fxmlLoader.setLocation(getClass().getResource("InquiryBankApplicationForm.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            fxmlLoader.setLocation(getClass().getResource("InquiryBankApplicationForm.fxml"));
 
-               InquiryBankApplicationFormController loControl = new InquiryBankApplicationFormController();
-               loControl.setGRider(oApp);
-               loControl.setVSAObject(oTrans);
-               //loControl.setTableRows(sTransno);
+            InquiryBankApplicationFormController loControl = new InquiryBankApplicationFormController();
+            loControl.setGRider(oApp);
+            loControl.setObject(oTransBankApp);
+            loControl.setEditMode(iEditmode);
+            loControl.setInqPaymentMode(sPaymentMode);
+            loControl.setsTransNo(sTransnox);
+            fxmlLoader.setController(loControl);
 
-               fxmlLoader.setController(loControl);
+            //load the main interface
+            Parent parent = fxmlLoader.load();
 
-               //load the main interface
-               Parent parent = fxmlLoader.load();
-                           
-               parent.setOnMousePressed(new EventHandler<MouseEvent>() {
-                    @Override
-                    public void handle(MouseEvent event) {
-                        xOffset = event.getSceneX();
-                        yOffset = event.getSceneY();
-                    }
-               });
-               
-               parent.setOnMouseDragged(new EventHandler<MouseEvent>() {
-                   @Override
-                   public void handle(MouseEvent event) {
-                       stage.setX(event.getScreenX() - xOffset);
-                       stage.setY(event.getScreenY() - yOffset);
-                   }
-               });
+            parent.setOnMousePressed(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    xOffset = event.getSceneX();
+                    yOffset = event.getSceneY();
+                }
+            });
 
-               //set the main interface as the scene
-               Scene scene = new Scene(parent);
-               stage.setScene(scene);
-               stage.initStyle(StageStyle.TRANSPARENT);
-               stage.initModality(Modality.APPLICATION_MODAL);
-               stage.setTitle("");
-               stage.showAndWait();
-               
-          } catch (IOException e) {
-              e.printStackTrace();
-              ShowMessageFX.Warning(getStage(),e.getMessage(), "Warning", null);
-              System.exit(1);
-          }
-     }
+            parent.setOnMouseDragged(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    stage.setX(event.getScreenX() - xOffset);
+                    stage.setY(event.getScreenY() - yOffset);
+                }
+            });
+
+            //set the main interface as the scene
+            Scene scene = new Scene(parent);
+            stage.setScene(scene);
+            stage.initStyle(StageStyle.TRANSPARENT);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle("");
+            stage.showAndWait();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            ShowMessageFX.Warning(getStage(),e.getMessage(), "Warning", null);
+            System.exit(1);
+        }
+    }
      
      /*INQUIRY FOR FOLLOW-UP*/
      private void loadFollowUp(String sTransno) throws SQLException{
-          try {
-               Stage stage = new Stage();
+        try {
+            Stage stage = new Stage();
 
-               FXMLLoader fxmlLoader = new FXMLLoader();
-               fxmlLoader.setLocation(getClass().getResource("InquiryFollowUpForm.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            fxmlLoader.setLocation(getClass().getResource("InquiryFollowUpForm.fxml"));
 
-               InquiryFollowUpFormController loControl = new InquiryFollowUpFormController();
-               loControl.setGRider(oApp);
-               loControl.setVSAObject(oTrans);
-               //loControl.setTableRows(sTransno);
+            InquiryFollowUpFormController loControl = new InquiryFollowUpFormController();
+            loControl.setGRider(oApp);
+            loControl.setVSAObject(oTrans);
+            //loControl.setTableRows(sTransno);
 
-               fxmlLoader.setController(loControl);
+            fxmlLoader.setController(loControl);
 
-               //load the main interface
-               Parent parent = fxmlLoader.load();
-               
-                                          
-               parent.setOnMousePressed(new EventHandler<MouseEvent>() {
-                    @Override
-                    public void handle(MouseEvent event) {
-                        xOffset = event.getSceneX();
-                        yOffset = event.getSceneY();
-                    }
-               });
-               
-               parent.setOnMouseDragged(new EventHandler<MouseEvent>() {
-                   @Override
-                   public void handle(MouseEvent event) {
-                       stage.setX(event.getScreenX() - xOffset);
-                       stage.setY(event.getScreenY() - yOffset);
-                   }
-               });
+            //load the main interface
+            Parent parent = fxmlLoader.load();
 
-               //set the main interface as the scene
-               Scene scene = new Scene(parent);
-               stage.setScene(scene);
-               stage.initStyle(StageStyle.TRANSPARENT);
-               stage.initModality(Modality.APPLICATION_MODAL);
-               stage.setTitle("");
-               stage.showAndWait();
 
-          } catch (IOException e) {
-              e.printStackTrace();
-              ShowMessageFX.Warning(getStage(),e.getMessage(), "Warning", null);
-              System.exit(1);
-          }
-     }
+            parent.setOnMousePressed(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    xOffset = event.getSceneX();
+                    yOffset = event.getSceneY();
+                }
+            });
+
+            parent.setOnMouseDragged(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    stage.setX(event.getScreenX() - xOffset);
+                    stage.setY(event.getScreenY() - yOffset);
+                }
+            });
+
+           //set the main interface as the scene
+           Scene scene = new Scene(parent);
+           stage.setScene(scene);
+           stage.initStyle(StageStyle.TRANSPARENT);
+           stage.initModality(Modality.APPLICATION_MODAL);
+           stage.setTitle("");
+           stage.showAndWait();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            ShowMessageFX.Warning(getStage(),e.getMessage(), "Warning", null);
+            System.exit(1);
+        }
+    }
      
      //Search using F3
      private void txtField_KeyPressed(KeyEvent event){
@@ -1467,8 +1491,9 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                     //Retrieve Requirements
                     oTransProcess.loadRequirements(inqlistdata.get(pagecounter).getTblcinqindex01());
                     if (oTransProcess.getInqReqCount() > 0){
-                         cmbInqpr01.getSelectionModel().select(Integer.parseInt(oTransProcess.getInqReq(oTransProcess.getInqReqCount(), "cPayModex").toString())); //Inquiry Payment mode
-                         cmbInqpr02.getSelectionModel().select(Integer.parseInt(oTransProcess.getInqReq(oTransProcess.getInqReqCount(), "cCustGrpx").toString())); //Inquiry Customer Type
+                        cmbInqpr01.getSelectionModel().select(Integer.parseInt(oTransProcess.getInqReq(oTransProcess.getInqReqCount(), "cPayModex").toString())); //Inquiry Payment mode
+                        cmbInqpr02.getSelectionModel().select(Integer.parseInt(oTransProcess.getInqReq(oTransProcess.getInqReqCount(), "cCustGrpx").toString())); //Inquiry Customer Type
+                        sInqPayMode = oTransProcess.getInqReq(oTransProcess.getInqReqCount(), "cPayModex").toString();
                     } else {
                          cmbInqpr01.setValue(null);
                          cmbInqpr02.setValue(null);
@@ -1478,13 +1503,15 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                     //Retrieve Reservation
                     String[] sSourceNo = {inqlistdata.get(pagecounter).getTblcinqindex01()};
                     oTransProcess.loadReservation(sSourceNo,true);
-//                    if (!oTransProcess.loadReservation(inqlistdata.get(pagecounter).getTblcinqindex01())){
-//                         ShowMessageFX.Warning(getStage(),oTransProcess.getMessage(), "Warning", null);
-//                    } 
-                    //Load Table Reservation
+                   //Load Table Reservation
                     loadInquiryAdvances();
+                    
+                    //Load Table Bank Application
+                    oTransBankApp.loadBankApplication(inqlistdata.get(pagecounter).getTblcinqindex01(), true);
+                    
                     sClientID = (String) oTrans.getMaster(7);
                     sTransNo = TransNo;
+                    
                     
                     //Enable button based on selected inquiry
                     initButton(pnEditMode);
@@ -1835,197 +1862,253 @@ public class InquiryFormController implements Initializable, ScreenInterface{
           }
      }
      
-     public void initInquiryRequirements(){
-          boolean lbShow = (pnEditMode == EditMode.READY || pnEditMode == EditMode.UPDATE );
-          tblRequirementsInfo.setEditable(true);
-          //tblRequirementsInfo.getSelectionModel().setCellSelectionEnabled(true);
-          tblRequirementsInfo.setSelectionModel(null);
-          rqrmIndex01.setCellValueFactory(new PropertyValueFactory<>("tblindex01"));
-          rqrmIndex02.setCellValueFactory(new PropertyValueFactory<>("tblindex02"));
-          rqrmIndex03.setCellValueFactory(new PropertyValueFactory<>("tblindex03"));
-          rqrmIndex04.setCellValueFactory(new PropertyValueFactory<>("tblindex04"));
-          
-          rqrmIndex01.setCellFactory(CheckBoxTableCell.forTableColumn(new Callback<Integer, ObservableValue<Boolean>>() {
-               @Override
-               public ObservableValue<Boolean> call(Integer index) {
-                    InquiryTableRequirements requirement = inqrequirementsdata.get(index);
-                    BooleanProperty selected = requirement.selectedProperty();
-                         selected.addListener((obs, oldValue, newValue) -> {
-                              //requirement.setTblindex01(newValue);
-//                              System.out.println("tblindex01 is set to " + newValue + " at row " + (index + 1));
-                              try {
-                                   if (newValue) {
-                                        if (lbShow) {
-                                             oTransProcess.addRequirements();
-                                             
-                                             if (oTransProcess.searchSalesExec(oTransProcess.getInqReqCount(),"",false)){
-                                                 
-                                                  oTransProcess.setInqReq(oTransProcess.getInqReqCount(),"cSubmittd",1);
-                                                  oTransProcess.setInqReq(oTransProcess.getInqReqCount(),"sRqrmtCde",oTransProcess.getInqReqSrc(index + 1,"sRqrmtCde").toString());
-                                                  oTransProcess.setInqReq(oTransProcess.getInqReqCount(),"dReceived",SQLUtil.toDate(CommonUtils.xsDateShort((Date) oApp.getServerDate()), SQLUtil.FORMAT_SHORT_DATE));
-                                                  oTransProcess.setInqReq(oTransProcess.getInqReqCount(),"cPayModex", cmbInqpr01.getSelectionModel().getSelectedIndex());
-                                                  oTransProcess.setInqReq(oTransProcess.getInqReqCount(),"cCustGrpx", cmbInqpr02.getSelectionModel().getSelectedIndex());
-                                                  
-                                             } else {
-                                                  oTransProcess.removeInqReq( oTransProcess.getInqReqSrc(index + 1,"sRqrmtCde").toString());
-                                                  ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", "No selected Employee!");
-                                             } 
-                                        }
-                                   } else {
-                                        if (lbShow) {
-                                             oTransProcess.removeInqReq( oTransProcess.getInqReqSrc(index + 1,"sRqrmtCde").toString());
-                                        }
+    public void initInquiryRequirements(){
+        boolean lbShow = (pnEditMode == EditMode.READY || pnEditMode == EditMode.UPDATE );
+        tblRequirementsInfo.setEditable(true);
+        //tblRequirementsInfo.getSelectionModel().setCellSelectionEnabled(true);
+        tblRequirementsInfo.setSelectionModel(null);
+        rqrmIndex01.setCellValueFactory(new PropertyValueFactory<>("tblindex01"));
+        rqrmIndex02.setCellValueFactory(new PropertyValueFactory<>("tblindex02"));
+        rqrmIndex03.setCellValueFactory(new PropertyValueFactory<>("tblindex03"));
+        rqrmIndex04.setCellValueFactory(new PropertyValueFactory<>("tblindex04"));
+
+        rqrmIndex01.setCellFactory(CheckBoxTableCell.forTableColumn(new Callback<Integer, ObservableValue<Boolean>>() {
+            @Override
+            public ObservableValue<Boolean> call(Integer index) {
+                InquiryTableRequirements requirement = inqrequirementsdata.get(index);
+                BooleanProperty selected = requirement.selectedProperty();
+                selected.addListener((obs, oldValue, newValue) -> {
+                    try {
+                        if (newValue) {
+                            if (lbShow) {
+                                oTransProcess.addRequirements();
+                                if (oTransProcess.searchSalesExec(oTransProcess.getInqReqCount(),"",false)){
+                                    oTransProcess.setInqReq(oTransProcess.getInqReqCount(),"cSubmittd",1);
+                                    oTransProcess.setInqReq(oTransProcess.getInqReqCount(),"sRqrmtCde",oTransProcess.getInqReqSrc(index + 1,"sRqrmtCde").toString());
+                                    oTransProcess.setInqReq(oTransProcess.getInqReqCount(),"dReceived",SQLUtil.toDate(CommonUtils.xsDateShort((Date) oApp.getServerDate()), SQLUtil.FORMAT_SHORT_DATE));
+                                    oTransProcess.setInqReq(oTransProcess.getInqReqCount(),"cPayModex", cmbInqpr01.getSelectionModel().getSelectedIndex());
+                                    oTransProcess.setInqReq(oTransProcess.getInqReqCount(),"cCustGrpx", cmbInqpr02.getSelectionModel().getSelectedIndex());
+                                } else {
+                                    oTransProcess.removeInqReq( oTransProcess.getInqReqSrc(index + 1,"sRqrmtCde").toString());
+                                    ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", "No selected Employee!");
+                                } 
+                            }
+                        } else {
+                            if (lbShow) {
+                                oTransProcess.removeInqReq( oTransProcess.getInqReqSrc(index + 1,"sRqrmtCde").toString());
+                            }
                                         
-                                   }
-                              } catch (SQLException ex) {
-                                   Logger.getLogger(InquiryFormController.class.getName()).log(Level.SEVERE, null, ex);
-                              }
-                              
-                         });
-                    loadInquiryRequirements();
-                    return selected;
-               }
-          }));
+                        }
+                    } catch (SQLException ex) {
+                         Logger.getLogger(InquiryFormController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+
+               });
+            loadInquiryRequirements();
+            return selected;
+            }
+        }));
+
           
-          
-          tblRequirementsInfo.widthProperty().addListener((ObservableValue<? extends Number> source, Number oldWidth, Number newWidth) -> {
-                    TableHeaderRow header = (TableHeaderRow) tblRequirementsInfo.lookup("TableHeaderRow");
-                    header.reorderingProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
-                         header.setReordering(false);
-                    });
-          });
-          
-          tblRequirementsInfo.setItems(inqrequirementsdata); 
-     }
+        tblRequirementsInfo.widthProperty().addListener((ObservableValue<? extends Number> source, Number oldWidth, Number newWidth) -> {
+            TableHeaderRow header = (TableHeaderRow) tblRequirementsInfo.lookup("TableHeaderRow");
+            header.reorderingProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+                header.setReordering(false);
+            });
+        });
+
+        tblRequirementsInfo.setItems(inqrequirementsdata); 
+    }
      
-     // Load Inquiry Process Advance Slip
-     public void loadInquiryAdvances(){
-         try {
-               /*Populate table*/
-               inqvsadata.clear();
-               String sVsaType, sVsaStat;
-               for (lnCtr = 1; lnCtr <= oTransProcess.getReserveCount(); lnCtr++){
-                    switch (oTransProcess.getInqRsv(lnCtr,12).toString()) {
-                         case "0":
-                              sVsaType = "Reservation";
-                              break;
-                         case "1":
-                              sVsaType = "Deposit";
-                              break; 
-                         case "2":
-                              sVsaType = "Safeguard Duty";
-                              break;
-                         default:
-                              sVsaType = "";
-                              break;
-                    }
-                    
-                    switch (oTransProcess.getInqRsv(lnCtr,13).toString()) {
-                         case "0":
-                              sVsaStat = "For Approval";
-                              break;
-                         case "1":
-                              sVsaStat = "Approved";
-                              break; 
-                         case "2":
-                              sVsaStat = "Cancelled";
-                              break;
-                         default:
-                              sVsaStat = "";
-                              break;
-                    }
-                    //String formattedPrice = String.format("%.2f", oTransProcess.getInqRsv(lnCtr,5).toString());
+    // Load Inquiry Process Advance Slip
+    public void loadInquiryAdvances(){
+        try {
+            /*Populate table*/
+            inqvsadata.clear();
+            String sVsaType, sVsaStat;
+            for (lnCtr = 1; lnCtr <= oTransProcess.getReserveCount(); lnCtr++){
+                switch (oTransProcess.getInqRsv(lnCtr,12).toString()) {
+                    case "0":
+                        sVsaType = "Reservation";
+                        break;
+                    case "1":
+                        sVsaType = "Deposit";
+                        break; 
+                    case "2":
+                        sVsaType = "Safeguard Duty";
+                        break;
+                    default:
+                        sVsaType = "";
+                        break;
+                }
 
-                    inqvsadata.add(new InquiryTableVehicleSalesAdvances(
-                         false
-                         ,String.valueOf(lnCtr) //Row
-                         , CommonUtils.xsDateShort((Date) oTransProcess.getInqRsv(lnCtr,2)) //Date
-                         //, (String) oTransProcess.getInqRsv(lnCtr,2)
-                            , sVsaType //Type
-                         , (String) oTransProcess.getInqRsv(lnCtr,3) //VSA No
-                         , String.format("%.2f", oTransProcess.getInqRsv(lnCtr,5)) //Amount
-                         , sVsaStat //Status
-                         , (String) oTransProcess.getInqRsv(lnCtr,6) // Remarks
-                         , (String) oTransProcess.getInqRsv(lnCtr,13) // Approved By
-                         , (String) oTransProcess.getInqRsv(lnCtr,14) // Approved Date
-                         , (String) oTransProcess.getInqRsv(lnCtr,1) // sTransNox
-                         , (String) oTransProcess.getInqRsv(lnCtr,20) // Client Name
-                         , (String) oTransProcess.getInqRsv(lnCtr,22) // SE Name
-                         , (String) oTransProcess.getInqRsv(lnCtr,21) // Unit Description
-                         
-                    ));
-                    
-               }  
-          initInquiryAdvances();
-          } catch (SQLException e) {
-               ShowMessageFX.Warning(getStage(),e.getMessage(), "Warning", null);
-          }
-              
-     }
+                switch (oTransProcess.getInqRsv(lnCtr,13).toString()) {
+                    case "0":
+                        sVsaStat = "For Approval";
+                        break;
+                    case "1":
+                        sVsaStat = "Approved";
+                        break; 
+                    case "2":
+                        sVsaStat = "Cancelled";
+                        break;
+                    default:
+                        sVsaStat = "";
+                        break;
+                }
+                
+                inqvsadata.add(new InquiryTableVehicleSalesAdvances(
+                    false
+                    ,String.valueOf(lnCtr) //Row
+                    , CommonUtils.xsDateShort((Date) oTransProcess.getInqRsv(lnCtr,2)) //Date
+                    //, (String) oTransProcess.getInqRsv(lnCtr,2)
+                       , sVsaType //Type
+                    , (String) oTransProcess.getInqRsv(lnCtr,3) //VSA No
+                    , String.format("%.2f", oTransProcess.getInqRsv(lnCtr,5)) //Amount
+                    , sVsaStat //Status
+                    , (String) oTransProcess.getInqRsv(lnCtr,6) // Remarks
+                    , (String) oTransProcess.getInqRsv(lnCtr,13) // Approved By
+                    , (String) oTransProcess.getInqRsv(lnCtr,14) // Approved Date
+                    , (String) oTransProcess.getInqRsv(lnCtr,1) // sTransNox
+                    , (String) oTransProcess.getInqRsv(lnCtr,20) // Client Name
+                    , (String) oTransProcess.getInqRsv(lnCtr,22) // SE Name
+                    , (String) oTransProcess.getInqRsv(lnCtr,21) // Unit Description
+
+                ));
+
+            }  
+        initInquiryAdvances();
+        } catch (SQLException e) {
+             ShowMessageFX.Warning(getStage(),e.getMessage(), "Warning", null);
+        }
+
+    }
     
-     public void initInquiryAdvances(){
-          boolean lbShow = (pnEditMode == EditMode.READY || pnEditMode == EditMode.UPDATE);
-          tblAdvanceSlip.setEditable(true);
-          //tblAdvanceSlip.getSelectionModel().setCellSelectionEnabled(true);
-          tblAdvanceSlip.setSelectionModel(null);
-          vsasIndex01.setCellValueFactory(new PropertyValueFactory<>("tblindex01"));
-          vsasIndex02.setCellValueFactory(new PropertyValueFactory<>("tblindex02"));
-          vsasIndex03.setCellValueFactory(new PropertyValueFactory<>("tblindex03"));
-          vsasIndex04.setCellValueFactory(new PropertyValueFactory<>("tblindex04"));
-          vsasIndex05.setCellValueFactory(new PropertyValueFactory<>("tblindex05"));
-          vsasIndex06.setCellValueFactory(new PropertyValueFactory<>("tblindex06"));
-          vsasIndex07.setCellValueFactory(new PropertyValueFactory<>("tblindex07"));
-          
-          vsasCheck01.setCellValueFactory(new PropertyValueFactory<>("tblcheck01"));
-          vsasCheck01.setCellFactory(CheckBoxTableCell.forTableColumn(new Callback<Integer, ObservableValue<Boolean>>() {
-               @Override
-               public ObservableValue<Boolean> call(Integer index) {
-                    InquiryTableVehicleSalesAdvances advances = inqvsadata.get(index);
-                    BooleanProperty selected = advances.selectedProperty();
-                         selected.addListener((obs, oldValue, newValue) -> {
-                              
-                              if (newValue) {
-                                   if (lbShow) {
-                                        advances.setTblcheck01(newValue);
-                                   }
-                              } else {
-                                   if (lbShow) {
-                                        advances.setTblcheck01(newValue);
-                                   }
-                              }
-                              
-                         });
-                    return selected;
-               }
-          }));
-          
-          tblAdvanceSlip.widthProperty().addListener((ObservableValue<? extends Number> source, Number oldWidth, Number newWidth) -> {
-                    TableHeaderRow header = (TableHeaderRow) tblAdvanceSlip.lookup("TableHeaderRow");
-                    header.reorderingProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
-                         header.setReordering(false);
+    public void initInquiryAdvances(){
+        boolean lbShow = (pnEditMode == EditMode.READY || pnEditMode == EditMode.UPDATE);
+        tblAdvanceSlip.setEditable(true);
+        //tblAdvanceSlip.getSelectionModel().setCellSelectionEnabled(true);
+        tblAdvanceSlip.setSelectionModel(null);
+        vsasIndex01.setCellValueFactory(new PropertyValueFactory<>("tblindex01"));
+        vsasIndex02.setCellValueFactory(new PropertyValueFactory<>("tblindex02"));
+        vsasIndex03.setCellValueFactory(new PropertyValueFactory<>("tblindex03"));
+        vsasIndex04.setCellValueFactory(new PropertyValueFactory<>("tblindex04"));
+        vsasIndex05.setCellValueFactory(new PropertyValueFactory<>("tblindex05"));
+        vsasIndex06.setCellValueFactory(new PropertyValueFactory<>("tblindex06"));
+        vsasIndex07.setCellValueFactory(new PropertyValueFactory<>("tblindex07"));
+
+        vsasCheck01.setCellValueFactory(new PropertyValueFactory<>("tblcheck01"));
+        vsasCheck01.setCellFactory(CheckBoxTableCell.forTableColumn(new Callback<Integer, ObservableValue<Boolean>>() {
+            @Override
+            public ObservableValue<Boolean> call(Integer index) {
+                InquiryTableVehicleSalesAdvances advances = inqvsadata.get(index);
+                BooleanProperty selected = advances.selectedProperty();
+                    selected.addListener((obs, oldValue, newValue) -> {
+                        if (newValue) {
+                            if (lbShow) {
+                                advances.setTblcheck01(newValue);
+                            }
+                        } else {
+                            if (lbShow) {
+                                advances.setTblcheck01(newValue);
+                            }
+                        }
                     });
-          });
+                return selected;
+            }
+        }));
 
-          tblAdvanceSlip.setItems(inqvsadata);
+        tblAdvanceSlip.widthProperty().addListener((ObservableValue<? extends Number> source, Number oldWidth, Number newWidth) -> {
+            TableHeaderRow header = (TableHeaderRow) tblAdvanceSlip.lookup("TableHeaderRow");
+            header.reorderingProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+                 header.setReordering(false);
+            });
+        });
 
-     }
+        tblAdvanceSlip.setItems(inqvsadata);
 
-    //Load Bank Application History Data
-     public void laodBankHistory(){
-         initBankHistory();
-     }
-     //Load FollowUp Data
-     public void loadFollowUp(){
-         initFollowUp();
-     }
-     //Load Bank Application Data in table
-     public void initBankHistory(){
+    }
 
-     }
-     //Load FollowUp Data
-     public void initFollowUp(){
+    //Load Bank Application Data
+    public void laodBankApplication(){
+        try {
+            /*Populate table*/
+            bankappdata.clear();
+            for (lnCtr = 1; lnCtr <= oTransBankApp.getBankAppCount(); lnCtr++){
+                
+                bankappdata.add(new InquiryTableBankApplications(
+                    false
+                    ,String.valueOf(lnCtr) //Row
+                    , (String) oTransBankApp.getBankAppDet(lnCtr,3) //Bank Name
+                    , (String) oTransBankApp.getBankAppDet(lnCtr,6) //Bank Branch
+                    , (String) oTransBankApp.getBankAppDet(lnCtr,13) //Payment Mode
+                    , (String) oTransBankApp.getBankAppDet(lnCtr,14) //Bank Address
+                    , (String) oTransBankApp.getBankAppDet(lnCtr,8) //Remarks
+                    , CommonUtils.xsDateShort((Date) oTransBankApp.getBankAppDet(lnCtr,2)) //Applied Date
+                    , (String) oTransBankApp.getBankAppDet(lnCtr,20) // Application Status
+                    , CommonUtils.xsDateShort((Date) oTransBankApp.getBankAppDet(lnCtr,2)) //Approval Date
+                    , (String) oTransBankApp.getBankAppDet(lnCtr,1) //sTransNox    
+                    , (String) oTransBankApp.getBankAppDet(lnCtr,14) //Cancelled By    
+                    , (String) oTransBankApp.getBankAppDet(lnCtr,15) //Cancelled Date  
+//                    , (String) oTransBankApp.getBankAppDet(lnCtr,1) //Cancelled 
+                ));
+            }  
+        initBankApplication();
+        } catch (SQLException e) {
+             ShowMessageFX.Warning(getStage(),e.getMessage(), "Warning", null);
+        }
+    }
+    //Load Bank Application Data in table
+    public void initBankApplication(){
+        boolean lbShow = (pnEditMode == EditMode.READY || pnEditMode == EditMode.UPDATE);
+        tblBankApplication.setEditable(true);
+        //tblAdvanceSlip.getSelectionModel().setCellSelectionEnabled(true);
+        tblBankApplication.setSelectionModel(null);
+        bankIndex01.setCellValueFactory(new PropertyValueFactory<>("tblindex01"));
+        bankIndex02.setCellValueFactory(new PropertyValueFactory<>("tblindex02"));
+        bankIndex03.setCellValueFactory(new PropertyValueFactory<>("tblindex03"));
+        bankIndex04.setCellValueFactory(new PropertyValueFactory<>("tblindex04"));
 
-     }
+        bankCheck01.setCellValueFactory(new PropertyValueFactory<>("tblcheck01"));
+        bankCheck01.setCellFactory(CheckBoxTableCell.forTableColumn(new Callback<Integer, ObservableValue<Boolean>>() {
+            @Override
+            public ObservableValue<Boolean> call(Integer index) {
+                InquiryTableBankApplications select = bankappdata.get(index);
+                BooleanProperty selected = select.selectedProperty();
+                    selected.addListener((obs, oldValue, newValue) -> {
+                        if (newValue) {
+                            if (lbShow) {
+                                select.setTblcheck01(newValue);
+                            }
+                        } else {
+                            if (lbShow) {
+                                select.setTblcheck01(newValue);
+                            }
+                        }
+                    });
+                return selected;
+            }
+        }));
+
+        tblBankApplication.widthProperty().addListener((ObservableValue<? extends Number> source, Number oldWidth, Number newWidth) -> {
+            TableHeaderRow header = (TableHeaderRow) tblBankApplication.lookup("TableHeaderRow");
+            header.reorderingProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+                 header.setReordering(false);
+            });
+        });
+
+        tblBankApplication.setItems(bankappdata);
+
+    }
+    //Load FollowUp Data
+    public void loadFollowUp(){
+        initFollowUp();
+    }
+
+    //Load FollowUp Data
+    public void initFollowUp(){
+
+    }
     
     
     /*Set TextField Value to Master Class*/
@@ -2167,22 +2250,31 @@ public class InquiryFormController implements Initializable, ScreenInterface{
           return localDate;
      }
      
-     /*Set Date Value to Master Class*/
-     public void getDate(ActionEvent event) { 
-          try {
-               //System.out.println(SQLUtil.toDate(txtField10.getValue().toString(), SQLUtil.FORMAT_LONG_DATE));
-               //SQLUtil.toDate(txtField10.getValue().toString(), SQLUtil.FORMAT_SHORT_DATE)
-               //System.out.println(txtField10.getValue().toString());
-               //oTrans.setMaster(10, strToDate(txtField10.getValue().toString()) );
-               oTrans.setMaster(10,SQLUtil.toDate(txtField10.getValue().toString(), SQLUtil.FORMAT_SHORT_DATE));
-//               String dateString = txtField10.getValue().toString();
-//               SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-//               Date date = dateFormat.parse(dateString);
-//               oTrans.setMaster(10,SQLUtil.toDate((Date) date));
-         }catch (SQLException ex) {
-               Logger.getLogger(InquiryFormController.class.getName()).log(Level.SEVERE, null, ex);
-         }
-     }
+    /*Set Date Value to Master Class*/
+    public void getDate(ActionEvent event) { 
+        try {
+            oTrans.setMaster(10,SQLUtil.toDate(txtField10.getValue().toString(), SQLUtil.FORMAT_SHORT_DATE));
+
+        }catch (SQLException ex) {
+            Logger.getLogger(InquiryFormController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    private Callback<DatePicker, DateCell> callB = new Callback<DatePicker, DateCell>() {
+        @Override
+        public DateCell call(final DatePicker param) {
+            return new DateCell() {
+                @Override
+                public void updateItem(LocalDate item, boolean empty) {
+                    super.updateItem(item, empty); //To change body of generated methods, choose Tools | Templates.
+                    LocalDate today = LocalDate.now();
+                    setDisable(empty || item.compareTo(today) < 0);
+                }
+
+            };
+        }
+
+    };
      
      /*Enabling / Disabling Fields*/
      /*INQUIRY ENTRY MAIN*/

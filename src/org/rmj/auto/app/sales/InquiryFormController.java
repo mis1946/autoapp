@@ -96,11 +96,11 @@ public class InquiryFormController implements Initializable, ScreenInterface{
     private int lnRow = 0;
     private int pagecounter;
     private String oldTransNo = "";
-    private String sTransNo = "";
+    private String sSourceNox = "";  //Inquiry Code
     private String sClientID = "";
     private String sValue = "";
     private String sInqStat = "";
-    private String sInqPayMode = "";
+    private int iInqPayMode = 0;
     
 
     /*populate tables search List*/
@@ -348,6 +348,10 @@ public class InquiryFormController implements Initializable, ScreenInterface{
     private TableColumn bankIndex04;
     @FXML
     private TableColumn bankIndex05;
+    @FXML
+    private TableColumn bankIndex06;
+    @FXML
+    private TableColumn bankIndex07;
     @FXML
     private Button btnBankAppView;
     @FXML
@@ -755,20 +759,19 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                     switch (lsButton) {
                         case "btnAScancel":
                             if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure you want to cancel?")) {
-                                // Call the ApproveReservation() method here
                                 for (InquiryTableVehicleSalesAdvances item : selectedItems) {
                                     String sRow = item.getTblindex01(); // Assuming there is a method to retrieve the transaction number
                                     if(oTransProcess.CancelReservation(Integer.parseInt(sRow))){
                                         //Retrieve Reservation
-                                        String[] sSourceNo = {sTransNo}; //Use array cause class is mandatory array to call even I only need 1
+                                        String[] sSourceNo = {sSourceNox}; //Use array cause class is mandatory array to call even I only need 1
                                         oTransProcess.loadReservation(sSourceNo,true);
                                     }else {
                                         ShowMessageFX.Information(null, pxeModuleName, "Failed to cancel reservation.");
                                         return;
                                     }
-                                    }
-                                    ShowMessageFX.Information(null, pxeModuleName, "Reservation cancelled successfully.");
-                               }
+                                }
+                                ShowMessageFX.Information(null, pxeModuleName, "Reservation cancelled successfully.");
+                            }
                         break;
                         case "btnASremove":
                             for (InquiryTableVehicleSalesAdvances item : selectedItems) {
@@ -789,9 +792,9 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                                 String sRow = item.getTblindex01(); // Assuming there is a method to retrieve the transaction number
                                 String sTrans= item.getTblindex10();
                                 if (Integer.parseInt(sRow) >= 1) {
-                                        srowdata[lnRow] = sTrans; 
-                                    }
-                                    lnRow++;
+                                    srowdata[lnRow] = sTrans; 
+                                }
+                                lnRow++;
                             }
                             loadVehicleSalesAdvancesPrint(srowdata);
                             break;
@@ -799,9 +802,9 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                                 break;
                     }
                     loadInquiryAdvances();
-            }
-                break;  
-           /*INQUIRY PROCESS: GENERAL BUTTON*/
+                }
+            break;  
+            /*INQUIRY PROCESS: GENERAL BUTTON*/
             case "btnProcess":
             case "btnApply":
                 if ("btnProcess".equals(lsButton)){
@@ -811,21 +814,18 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                     }
                 }
                 if(ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure, do you want to save?") == true){
-                    //TODO
                     oTransProcess.setClientID(sClientID);
-                    oTransProcess.setTransNox(sTransNo);
-//                         System.out.println((String) oTrans.getMaster(7));
-//                         System.out.println("inq code before saving >> " + (String) oTrans.getMaster(1));   
+                    oTransProcess.setTransNox(sSourceNox);
                     if(oTransProcess.SaveRecord()){
                         System.out.println("inq code after saving >> " +(String) oTrans.getMaster(1));
                         ShowMessageFX.Information(getStage(), "Transaction save successfully.", pxeModuleName, null);
-                        oTrans.OpenRecord(sTransNo);
+                        oTrans.OpenRecord(sSourceNox);
                         loadCustomerInquiry();
                         loadTargetVehicle();
                         loadPromosOfferred();
 
                         //Retrieve Requirements
-                        oTransProcess.loadRequirements(sTransNo);
+                        oTransProcess.loadRequirements(sSourceNox);
                         if (oTransProcess.getInqReqCount() > 0){
                             cmbInqpr01.getSelectionModel().select(Integer.parseInt(oTransProcess.getInqReq(oTransProcess.getInqReqCount(), "cPayModex").toString())); //Inquiry Payment mode
                             cmbInqpr02.getSelectionModel().select(Integer.parseInt(oTransProcess.getInqReq(oTransProcess.getInqReqCount(), "cCustGrpx").toString())); //Inquiry Customer Type
@@ -836,7 +836,7 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                         //Load Table Requirements
                         loadInquiryRequirements();
                         //Retrieve Reservation
-                        String[] sSourceNo = {sTransNo}; //Use array cause class is mandatory array to call even I only need 1
+                        String[] sSourceNo = {sSourceNox}; //Use array cause class is mandatory array to call even I only need 1
                         oTransProcess.loadReservation(sSourceNo,true);
                         //Load Table Reservation
                         loadInquiryAdvances();
@@ -864,19 +864,82 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                     
             /*INQUIRY BANK APPLICATION*/
             case "btnBankAppNew":
-                //Open window 
-                loadBankApplication("",sInqPayMode,EditMode.ADDNEW);
+                
+                if(oTransBankApp.NewRecord()){
+                    oTransBankApp.setTransNox(sSourceNox);
+                    //Open window 
+                    loadBankApplicationWindow("",iInqPayMode,oTransBankApp.getEditMode());
+                }else {
+                    ShowMessageFX.Warning(getStage(), oTransBankApp.getMessage(),"Warning", null);
+                }
                 break;
             case "btnBankAppUpdate":
-                //Open window 
-                loadBankApplication("",sInqPayMode, EditMode.UPDATE);
-                break;
+                
             case "btnBankAppCancel":
-                break;
             case "btnBankAppView":
-                //Open window 
-                loadBankApplication("",sInqPayMode, EditMode.READY);
-                break;
+                lnCtr = 1;
+                ObservableList<InquiryTableBankApplications> selBankItems = FXCollections.observableArrayList();
+                for (InquiryTableBankApplications item : bankappdata) {
+                    if (item.isTblcheck01()) {
+                        if (("btnBankAppView".equals(lsButton) && lnCtr > 1) ||
+                             "btnBankAppUpdate".equals(lsButton) && lnCtr > 1){
+                            ShowMessageFX.Information(null, pxeModuleName, "Please select atleast 1 slip to be view / updated.");
+                            return;
+                        }
+                        selBankItems.add(item);
+                        lnCtr++;
+                    }
+                }
+                    
+                if (selBankItems.isEmpty()) {
+                    ShowMessageFX.Information(null, pxeModuleName, "No items selected!");
+                } else {
+                    if ("btnBankAppCancel".equals(lsButton)){
+                        if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure you want to cancel?")) {
+                        } else {
+                            return;
+                        }
+                    }
+                    for (InquiryTableBankApplications item : selBankItems) {
+                        String sTransNo = item.getTblindex10();
+                        System.out.println(sTransNo);
+                        switch (lsButton) {
+                            case "btnBankAppCancel":
+                                if(oTransBankApp.CancelBankApp(sTransNo)){
+                                }else {
+                                    ShowMessageFX.Information(null, pxeModuleName, "Failed to cancel Bank Application.");
+                                    return;
+                                }
+                            break;
+                            case "btnBankAppUpdate":
+                                if(oTransBankApp.UpdateRecord()){
+                                    //Open window 
+                                    loadBankApplicationWindow(sTransNo,iInqPayMode,oTransBankApp.getEditMode());
+                                }else {
+                                    ShowMessageFX.Warning(getStage(), oTransBankApp.getMessage(),"Warning", null);
+                                }
+                            break;
+                            case "btnBankAppView":
+                                if(oTransBankApp.loadBankApplication(sTransNo, false)){
+                                    //Open window 
+                                    loadBankApplicationWindow(sTransNo,iInqPayMode,oTransBankApp.getEditMode());
+                                }else {
+                                    ShowMessageFX.Warning(getStage(), oTransBankApp.getMessage(),"Warning", null);
+                                }
+                            break;
+                            default:
+                            break;
+                        }
+                        sTransNo = "";
+                    }
+                    
+                    if ("btnBankAppCancel".equals(lsButton)){
+                        ShowMessageFX.Information(null, pxeModuleName, "Selected Bank Application cancelled successfully.");
+                    }
+                    oTransBankApp.loadBankApplication(sSourceNox,true);
+                    loadBankApplication();
+            }
+                break;  
                
             /*INQUIRY FOR FOLLOW UP*/
             case "btnFollowUp":
@@ -1023,7 +1086,7 @@ public class InquiryFormController implements Initializable, ScreenInterface{
      
      
     /*INQUIRY BANK APPLICATION*/
-    private void loadBankApplication(String sTransnox, String sPaymentMode, Integer iEditmode) throws SQLException{
+    private void loadBankApplicationWindow(String sTransnox, Integer iPaymentMode, Integer iEditmode) throws SQLException{
         try {
             Stage stage = new Stage();
 
@@ -1034,7 +1097,7 @@ public class InquiryFormController implements Initializable, ScreenInterface{
             loControl.setGRider(oApp);
             loControl.setObject(oTransBankApp);
             loControl.setEditMode(iEditmode);
-            loControl.setInqPaymentMode(sPaymentMode);
+            loControl.setInqPaymentMode(iPaymentMode-1);
             loControl.setsTransNo(sTransnox);
             fxmlLoader.setController(loControl);
 
@@ -1064,7 +1127,10 @@ public class InquiryFormController implements Initializable, ScreenInterface{
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setTitle("");
             stage.showAndWait();
-
+            
+            oTransBankApp.loadBankApplication(sSourceNox,true);
+            loadBankApplication();
+            
         } catch (IOException e) {
             e.printStackTrace();
             ShowMessageFX.Warning(getStage(),e.getMessage(), "Warning", null);
@@ -1429,7 +1495,6 @@ public class InquiryFormController implements Initializable, ScreenInterface{
      //Populate Text Field Based on selected transaction in table
      private void getSelectedItem(String TransNo) {
           try {
-               
                oldTransNo = TransNo;
                if (oTrans.OpenRecord(TransNo)){
                     pnEditMode = oTrans.getEditMode();
@@ -1493,7 +1558,7 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                     if (oTransProcess.getInqReqCount() > 0){
                         cmbInqpr01.getSelectionModel().select(Integer.parseInt(oTransProcess.getInqReq(oTransProcess.getInqReqCount(), "cPayModex").toString())); //Inquiry Payment mode
                         cmbInqpr02.getSelectionModel().select(Integer.parseInt(oTransProcess.getInqReq(oTransProcess.getInqReqCount(), "cCustGrpx").toString())); //Inquiry Customer Type
-                        sInqPayMode = oTransProcess.getInqReq(oTransProcess.getInqReqCount(), "cPayModex").toString();
+                        iInqPayMode = Integer.parseInt(oTransProcess.getInqReq(oTransProcess.getInqReqCount(), "cPayModex").toString());
                     } else {
                          cmbInqpr01.setValue(null);
                          cmbInqpr02.setValue(null);
@@ -1508,9 +1573,9 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                     
                     //Load Table Bank Application
                     oTransBankApp.loadBankApplication(inqlistdata.get(pagecounter).getTblcinqindex01(), true);
-                    
+                    loadBankApplication();
                     sClientID = (String) oTrans.getMaster(7);
-                    sTransNo = TransNo;
+                    sSourceNox = TransNo;
                     
                     
                     //Enable button based on selected inquiry
@@ -2030,26 +2095,58 @@ public class InquiryFormController implements Initializable, ScreenInterface{
     }
 
     //Load Bank Application Data
-    public void laodBankApplication(){
+    public void loadBankApplication(){
         try {
             /*Populate table*/
             bankappdata.clear();
             for (lnCtr = 1; lnCtr <= oTransBankApp.getBankAppCount(); lnCtr++){
+                String sPayMode, sBankAppStat;
+                switch ((String) oTransBankApp.getBankAppDet(lnCtr,4)) {
+                    case "0":
+                        sPayMode = "Purchase Order";
+                        break;
+                    case "1":
+                        sPayMode = "Financing";
+                        break;
+                    default:
+                        sPayMode = "";
+                        break;
+                }
+                
+                if (null == (String) oTransBankApp.getBankAppDet(lnCtr,9)){
+                    sBankAppStat = "";
+                } else switch ((String) oTransBankApp.getBankAppDet(lnCtr,9)) {
+                    case "0":
+                        sBankAppStat = "On-going";
+                        break;
+                    case "1":
+                        sBankAppStat = "Decline";
+                        break;
+                    case "2":
+                        sBankAppStat = "Approved";
+                        break;
+                    case "3":
+                        sBankAppStat = "Cancelled";
+                        break;
+                    default:
+                        sBankAppStat = "";
+                        break;
+                }
                 
                 bankappdata.add(new InquiryTableBankApplications(
                     false
                     ,String.valueOf(lnCtr) //Row
-                    , (String) oTransBankApp.getBankAppDet(lnCtr,3) //Bank Name
-                    , (String) oTransBankApp.getBankAppDet(lnCtr,6) //Bank Branch
-                    , (String) oTransBankApp.getBankAppDet(lnCtr,13) //Payment Mode
-                    , (String) oTransBankApp.getBankAppDet(lnCtr,14) //Bank Address
+                    , (String) oTransBankApp.getBankAppDet(lnCtr,16) //Bank Name
+                    , (String) oTransBankApp.getBankAppDet(lnCtr,18) //Bank Branch
+                    , sPayMode //Payment Mode
+                    , (String) oTransBankApp.getBankAppDet(lnCtr,19) //Bank Address
                     , (String) oTransBankApp.getBankAppDet(lnCtr,8) //Remarks
                     , CommonUtils.xsDateShort((Date) oTransBankApp.getBankAppDet(lnCtr,2)) //Applied Date
-                    , (String) oTransBankApp.getBankAppDet(lnCtr,20) // Application Status
-                    , CommonUtils.xsDateShort((Date) oTransBankApp.getBankAppDet(lnCtr,2)) //Approval Date
+                    ,  sBankAppStat // Application Status
+                    , CommonUtils.xsDateShort((Date) oTransBankApp.getBankAppDet(lnCtr,3)) //Approval Date
                     , (String) oTransBankApp.getBankAppDet(lnCtr,1) //sTransNox    
                     , (String) oTransBankApp.getBankAppDet(lnCtr,14) //Cancelled By    
-                    , (String) oTransBankApp.getBankAppDet(lnCtr,15) //Cancelled Date  
+                    , CommonUtils.xsDateShort((Date) oTransBankApp.getBankAppDet(lnCtr,15))//Cancelled Date  
 //                    , (String) oTransBankApp.getBankAppDet(lnCtr,1) //Cancelled 
                 ));
             }  
@@ -2068,7 +2165,10 @@ public class InquiryFormController implements Initializable, ScreenInterface{
         bankIndex02.setCellValueFactory(new PropertyValueFactory<>("tblindex02"));
         bankIndex03.setCellValueFactory(new PropertyValueFactory<>("tblindex03"));
         bankIndex04.setCellValueFactory(new PropertyValueFactory<>("tblindex04"));
-
+        bankIndex05.setCellValueFactory(new PropertyValueFactory<>("tblindex08")); //status
+        bankIndex06.setCellValueFactory(new PropertyValueFactory<>("tblindex11")); //cancelled by
+        bankIndex07.setCellValueFactory(new PropertyValueFactory<>("tblindex12")); //cancelled date
+        
         bankCheck01.setCellValueFactory(new PropertyValueFactory<>("tblcheck01"));
         bankCheck01.setCellFactory(CheckBoxTableCell.forTableColumn(new Callback<Integer, ObservableValue<Boolean>>() {
             @Override

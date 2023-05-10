@@ -55,16 +55,16 @@ public class InquiryBankApplicationFormController implements Initializable {
     private int pnRow = -1;
     private int pnEmp = -1;
     private int lnCtr;
-    private String sTransNo = "";
+    private String sTransNo = "";  
     private String psOldRec;
     private String psCode;
-    private String pnInqPayMode;
+    private int pnInqPayMode;
     private int pnEditMode;
     private boolean state = false;
 
     private final String pxeModuleName = "Inquiry Bank Application";
     
-    ObservableList<String> cBankPaymode = FXCollections.observableArrayList("Financing", "Purchase Order"); //Payment Mode Values
+    ObservableList<String> cBankPaymode = FXCollections.observableArrayList( "Purchase Order", "Financing"); //Mode of Payment Values
     ObservableList<String> cBankStatus = FXCollections.observableArrayList("On-going", "Decline", "Approved" ); //Bank Application Status Values
 
     @FXML
@@ -97,12 +97,11 @@ public class InquiryBankApplicationFormController implements Initializable {
        pnEditMode = fiValue;
     }
     
-     public void setsTransNo(String fsValue){
+    public void setsTransNo(String fsValue){
        sTransNo = fsValue;
     }
-    
-    public void setInqPaymentMode(String fsValue){
-       pnInqPayMode = fsValue;
+    public void setInqPaymentMode(Integer fiValue){
+       pnInqPayMode = fiValue;
     }
      
     private Stage getStage(){
@@ -116,8 +115,16 @@ public class InquiryBankApplicationFormController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         
-        comboBox04.setItems(cBankPaymode);
+        comboBox04.setItems(cBankPaymode);      
         comboBox09.setItems( cBankStatus);
+        comboBox09.setOnAction(event -> {
+            txtField03.setDisable(true);
+            if (comboBox09.getSelectionModel().getSelectedIndex() == 2) {
+                if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE){
+                    txtField03.setDisable(false);
+                } 
+            }
+        });
         
         txtField16.focusedProperty().addListener(txtField_Focus);  //Bank Name
         txtField18.focusedProperty().addListener(txtField_Focus);  //Bank Branch
@@ -126,15 +133,14 @@ public class InquiryBankApplicationFormController implements Initializable {
         txtField03.setOnAction(this::getDate); //Approved Date
         
         txtField16.setOnKeyPressed(this::txtField_KeyPressed);  //Bank Name
-        txtField18.setOnKeyPressed(this::txtField_KeyPressed);  //Bank Branch
         textArea08.setOnKeyPressed(this::txtArea_KeyPressed);  //Remarks
         txtField02.setOnKeyPressed(this::txtField_KeyPressed);  //Applied Date
         txtField03.setOnKeyPressed(this::txtField_KeyPressed);  //Approved Date
 
         btnClose.setOnAction(this::cmdButton_Click);
         btnSave.setOnAction(this::cmdButton_Click);
-
-        
+        loadBankApplication();
+        initbutton(pnEditMode);
     }
 
     private void cmdButton_Click(ActionEvent event) {
@@ -144,9 +150,14 @@ public class InquiryBankApplicationFormController implements Initializable {
                 CommonUtils.closeStage(btnClose);
             break;
             case "btnSave":
+                if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure you want to save?")) {
+                } else {
+                    return;
+                }
                 if (setSelection()){
-                    oTransBankApp.setPayMode(pnInqPayMode);
+                   // oTransBankApp.setPayMode(pnInqPayMode);
                     if(oTransBankApp.SaveRecord()){
+                        ShowMessageFX.Warning(null, pxeModuleName, "Bank Application save sucessfully.");
                     } else {
                         ShowMessageFX.Warning(null, pxeModuleName, oTransBankApp.getMessage());
                     }
@@ -158,7 +169,7 @@ public class InquiryBankApplicationFormController implements Initializable {
                 break;
                 
         }
-        initButton(pnEditMode);
+        initbutton(pnEditMode);
     }    
     
     public void loadBankApplication(){
@@ -166,24 +177,23 @@ public class InquiryBankApplicationFormController implements Initializable {
             /**
              * User can edit only if not 
              * Inquiry is not Lost Sale / Sold / Cancelled.
-             **/
-            if(pnEditMode == EditMode.ADDNEW){ //Add
-                if(oTransBankApp.addBankApplication()){
-                }
+             **/ 
+            txtField02.setValue(strToDate(CommonUtils.xsDateShort((Date) oTransBankApp.getBankApp(2))));
+            txtField03.setValue(strToDate(CommonUtils.xsDateShort((Date) oTransBankApp.getBankApp(3))));
+            txtField16.setText(oTransBankApp.getBankApp(16).toString()); //Bank Name
+            txtField18.setText(oTransBankApp.getBankApp(18).toString()); //Bank Branch
+            if (pnEditMode == EditMode.ADDNEW){
+                comboBox04.getSelectionModel().select(pnInqPayMode); //Payment Mode
             } else { 
-                txtField02.setValue( strToDate( oTransBankApp.getBankApp(2).toString())); //Applied Date
-                txtField03.setValue( strToDate( oTransBankApp.getBankApp(3).toString())); //Approved Date
-                txtField16.setText(oTransBankApp.getBankApp(16).toString()); //Bank Name
-                txtField18.setText(oTransBankApp.getBankApp(18).toString()); //Bank Branch
                 comboBox04.getSelectionModel().select(Integer.parseInt(oTransBankApp.getBankApp(4).toString())); //Payment Mode
-                if (Integer.parseInt(oTransBankApp.getBankApp(9).toString()) == 3){
-                    comboBox09.setValue("Cancelled");
-                } else {
-                    comboBox09.getSelectionModel().select(Integer.parseInt(oTransBankApp.getBankApp(9).toString())); //Bank Application Status
-                }
-                textArea08.setText(oTransBankApp.getBankApp(8).toString()); //Bank Name
-                
             }
+            if (Integer.parseInt(oTransBankApp.getBankApp(9).toString()) == 3){
+                comboBox09.setValue("Cancelled");
+            } else {
+                comboBox09.getSelectionModel().select(Integer.parseInt(oTransBankApp.getBankApp(9).toString())); //Bank Application Status
+            }
+            textArea08.setText(oTransBankApp.getBankApp(8).toString()); //Remarks
+                
         }catch (SQLException ex) {
         Logger.getLogger(InquiryVehicleSalesAdvancesFormController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -242,8 +252,21 @@ public class InquiryBankApplicationFormController implements Initializable {
     /*Set Date Value to Master Class*/
     public void getDate(ActionEvent event) { 
         try {
-            oTransBankApp.setBankApp(2,SQLUtil.toDate(txtField02.getValue().toString(), SQLUtil.FORMAT_SHORT_DATE));
-            oTransBankApp.setBankApp(3,SQLUtil.toDate(txtField03.getValue().toString(), SQLUtil.FORMAT_SHORT_DATE));
+            DatePicker datePicker = (DatePicker) event.getSource();
+            String datePickerId = datePicker.getId();
+            System.out.println(SQLUtil.toDate(txtField02.getValue().toString(), SQLUtil.FORMAT_SHORT_DATE));
+            System.out.println(SQLUtil.toDate(txtField03.getValue().toString(), SQLUtil.FORMAT_SHORT_DATE));
+            
+            switch (datePickerId) {
+                case "txtField02":
+                    oTransBankApp.setBankApp(2,SQLUtil.toDate(txtField02.getValue().toString(), SQLUtil.FORMAT_SHORT_DATE));
+                    break;
+                case "txtField03":
+                    oTransBankApp.setBankApp(3,SQLUtil.toDate(txtField03.getValue().toString(), SQLUtil.FORMAT_SHORT_DATE));
+                    break;
+                default:
+                    break;
+            }
         }catch (SQLException ex) {
             Logger.getLogger(InquiryFormController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -317,15 +340,15 @@ public class InquiryBankApplicationFormController implements Initializable {
          return true;
     }
      
-    public void initButton(int fnValue){
+    public void initbutton(int fnValue){
         boolean lbShow = (fnValue == EditMode.ADDNEW || fnValue == EditMode.UPDATE);
         txtField16.setDisable(!lbShow); //Bank Name
-        txtField18.setDisable(!lbShow); //Bank Branch
         comboBox04.setDisable(!lbShow); //Payment Mode
         comboBox09.setDisable(!lbShow); //Application Status
         txtField02.setDisable(!lbShow); //Applied Date
         txtField03.setDisable(!lbShow); //Approved Date
         textArea08.setDisable(!lbShow); //Remarks
+        btnSave.setDisable(!lbShow);
     }
      
 }

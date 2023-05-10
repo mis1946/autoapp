@@ -836,22 +836,22 @@
                                                                 </Tab>
                                                                   <Tab fx:id="tabBankHistory" style="-fx-font-weight: bold; -fx-font-family: Arial;" text="Bank Application History">
                                                                     <content>
-                                                                        <ScrollPane>
-                                                                          <content>
-                                                                            <AnchorPane>
-                                                                                 <children>
-                                                                                    <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                                        <AnchorPane>
+                                                                           <children>
+                                                                              <ScrollPane fitToWidth="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                                                <content>
+                                                                                    <VBox>
                                                                                        <children>
                                                                                           <GridPane>
                                                                                             <columnConstraints>
                                                                                               <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="10.0" />
-                                                                                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="80.0" />
+                                                                                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="75.0" />
                                                                                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="10.0" />
-                                                                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="80.0" />
+                                                                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="75.0" />
                                                                                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="10.0" />
-                                                                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="80.0" />
+                                                                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="75.0" />
                                                                                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="10.0" />
-                                                                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="80.0" />
+                                                                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="75.0" />
                                                                                                 <ColumnConstraints hgrow="SOMETIMES" minWidth="-Infinity" prefWidth="10.0" />
                                                                                             </columnConstraints>
                                                                                             <rowConstraints>
@@ -898,7 +898,7 @@
                                                                                           <GridPane>
                                                                                              <columnConstraints>
                                                                                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="10.0" />
-                                                                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="550.0" />
+                                                                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="820.0" />
                                                                                                 <ColumnConstraints hgrow="SOMETIMES" minWidth="-Infinity" prefWidth="10.0" />
                                                                                              </columnConstraints>
                                                                                              <rowConstraints>
@@ -907,10 +907,14 @@
                                                                                              <children>
                                                                                                 <TableView fx:id="tblBankApplication" prefHeight="400.0" prefWidth="200.0" GridPane.columnIndex="1">
                                                                                                    <columns>
-                                                                                                      <TableColumn prefWidth="31.0" text="Row" />
-                                                                                                      <TableColumn prefWidth="302.0" text="Bank Name" />
-                                                                                                      <TableColumn prefWidth="204.0" text="Bank Branch" />
-                                                                                                      <TableColumn prefWidth="106.0" text="Payment Mode" />
+                                                                                                      <TableColumn fx:id="bankCheck01" prefWidth="28.0" />
+                                                                                                      <TableColumn fx:id="bankIndex01" prefWidth="29.0" text="Row" />
+                                                                                                      <TableColumn fx:id="bankIndex02" prefWidth="270.0" text="Bank Name" />
+                                                                                                      <TableColumn fx:id="bankIndex03" prefWidth="200.0" text="Bank Branch" />
+                                                                                                      <TableColumn fx:id="bankIndex04" prefWidth="100.0" text="Payment Mode" />
+                                                                                                      <TableColumn fx:id="bankIndex05" prefWidth="70.0" text="Status" />
+                                                                                                      <TableColumn fx:id="bankIndex06" prefWidth="87.0" text="Cancelled by" />
+                                                                                                      <TableColumn fx:id="bankIndex07" prefWidth="106.0" text="Cancelled date" />
                                                                                                    </columns>
                                                                                                 </TableView>
                                                                                              </children>
@@ -920,17 +924,17 @@
                                                                                           </GridPane>
                                                                                        </children>
                                                                                     </VBox>
-                                                                                 </children>
-                                                                              </AnchorPane>
-                                                                          </content>
-                                                                        </ScrollPane>
+                                                                                </content>
+                                                                              </ScrollPane>
+                                                                           </children>
+                                                                        </AnchorPane>
                                                                     </content>
                                                                   </Tab>
                                                                   <Tab fx:id="tabFollowingHistory" style="-fx-font-weight: bold; -fx-font-family: Arial;" text="Following History">
                                                                     <content>
                                                                         <AnchorPane>
                                                                            <children>
-                                                                              <ScrollPane fitToWidth="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                                              <ScrollPane fitToWidth="true" layoutY="1.0" AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="1.0">
                                                                                 <content>
                                                                                     <VBox>
                                                                                        <children>

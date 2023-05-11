@@ -27,7 +27,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="696.0" prefWidth="1099.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.rmj.auto.app.views.ActivityFormController">
+<AnchorPane id="AnchorPane" fx:id="AnchorMain" prefHeight="696.0" prefWidth="1099.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <StackPane prefHeight="651.0" prefWidth="917.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -170,20 +170,20 @@
                                                          </rowConstraints>
                                                          <children>
                                                             <Label id="LabelDesc" prefHeight="34.0" prefWidth="187.0" text="Activity No" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                                            <Label prefHeight="34.0" prefWidth="186.0" text="361265465065" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                                            <Label fx:id="lblActivityNo" prefHeight="34.0" prefWidth="186.0" text="361265465065" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                                                             <Label id="LabelDesc" prefHeight="42.0" prefWidth="134.0" text="Period:" GridPane.columnIndex="4" GridPane.rowIndex="1" />
                                                             <Label id="LabelDesc" prefHeight="32.0" prefWidth="91.0" text="From" GridPane.columnIndex="5" GridPane.rowIndex="1" />
-                                                            <DatePicker GridPane.columnIndex="6" GridPane.rowIndex="1" />
+                                                            <DatePicker fx:id="DatepFrom" GridPane.columnIndex="6" GridPane.rowIndex="1" />
                                                             <Label id="LabelDesc" alignment="CENTER" prefHeight="30.0" prefWidth="58.0" text="To" GridPane.columnIndex="7" GridPane.rowIndex="1" />
-                                                            <DatePicker GridPane.columnIndex="8" GridPane.rowIndex="1" />
+                                                            <DatePicker fx:id="DatepTo" GridPane.columnIndex="8" GridPane.rowIndex="1" />
                                                             <Label id="LabelDesc" prefHeight="34.0" prefWidth="187.0" text="Activity Type" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                                                            <ComboBox prefWidth="150.0" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="2">
+                                                            <ComboBox fx:id="aType" prefHeight="24.0" prefWidth="140.0" promptText="Choose Type" GridPane.columnIndex="2" GridPane.columnSpan="3" GridPane.rowIndex="2">
                                                                <GridPane.margin>
                                                                   <Insets right="2.0" />
                                                                </GridPane.margin>
                                                             </ComboBox>
-                                                            <Label id="LabelDesc" prefHeight="17.0" prefWidth="101.0" text="Source" GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.rowIndex="2" />
-                                                            <TextField promptText="Search: F3" GridPane.columnIndex="5" GridPane.columnSpan="3" GridPane.rowIndex="2" />
+                                                            <Label id="LabelDesc" prefHeight="17.0" prefWidth="101.0" text="Source" GridPane.columnIndex="5" GridPane.columnSpan="2" GridPane.rowIndex="2" />
+                                                            <TextField promptText="Search: F3" GridPane.columnIndex="6" GridPane.columnSpan="3" GridPane.rowIndex="2" />
                                                             <Label id="LabelDesc" prefHeight="34.0" prefWidth="88.0" text="Activity Title" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                                                             <TextArea prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.columnSpan="6" GridPane.rowIndex="3" />
                                                             <Label id="LabelDesc" text="Description" GridPane.columnIndex="1" GridPane.rowIndex="4" />

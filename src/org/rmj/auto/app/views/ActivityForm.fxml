@@ -177,7 +177,7 @@
                                                             <Label id="LabelDesc" alignment="CENTER" prefHeight="30.0" prefWidth="58.0" text="To" GridPane.columnIndex="7" GridPane.rowIndex="1" />
                                                             <DatePicker fx:id="DatepTo" GridPane.columnIndex="8" GridPane.rowIndex="1" />
                                                             <Label id="LabelDesc" prefHeight="34.0" prefWidth="187.0" text="Activity Type" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                                                            <ComboBox fx:id="aType" prefHeight="24.0" prefWidth="140.0" promptText="Choose Type" GridPane.columnIndex="2" GridPane.columnSpan="3" GridPane.rowIndex="2">
+                                                            <ComboBox fx:id="comboType" prefHeight="24.0" prefWidth="140.0" promptText="Choose Type" GridPane.columnIndex="2" GridPane.columnSpan="3" GridPane.rowIndex="2">
                                                                <GridPane.margin>
                                                                   <Insets right="2.0" />
                                                                </GridPane.margin>

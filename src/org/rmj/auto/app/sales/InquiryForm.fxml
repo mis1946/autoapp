@@ -107,10 +107,10 @@
                                     </AnchorPane>
                                  </top>
                                  <left>
-                                    <AnchorPane style="-fx-border-color: orange; -fx-border-radius: 5;" BorderPane.alignment="CENTER">
+                                    <AnchorPane style="-fx-border-color: orange; -fx-border-radius: 5;">
                                        <children>
-                                          <Pagination fx:id="pagination" maxPageIndicatorCount="3" minWidth="400.0" prefWidth="440.0" AnchorPane.bottomAnchor="3.0" AnchorPane.leftAnchor="3.0" AnchorPane.rightAnchor="3.0" AnchorPane.topAnchor="3.0" />
-                                          <TableView fx:id="tblInquiry" layoutX="6.0" layoutY="25.0" minWidth="400.0" onMouseClicked="#tblInquiry_Clicked" prefWidth="440.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="3.0" AnchorPane.rightAnchor="3.0" AnchorPane.topAnchor="3.0">
+                                          <Pagination fx:id="pagination" layoutX="1.0" layoutY="1.0" maxPageIndicatorCount="3" minWidth="300.0" prefWidth="430.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                          <TableView fx:id="tblInquiry" layoutX="4.0" layoutY="4.0" minWidth="10.0" onMouseClicked="#tblInquiry_Clicked" prefWidth="430.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="3.0" AnchorPane.rightAnchor="3.0" AnchorPane.topAnchor="3.0">
                                              <columns>
                                                 <TableColumn fx:id="listIndex01" prefWidth="30.0" text="Row" />
                                                 <TableColumn fx:id="listIndex02" prefWidth="90.0" text="Inquiry Date" />
@@ -124,9 +124,6 @@
                                        <opaqueInsets>
                                           <Insets />
                                        </opaqueInsets>
-                                       <BorderPane.margin>
-                                          <Insets right="5.0" />
-                                       </BorderPane.margin>
                                     </AnchorPane>
                                  </left>
                                  <center>
@@ -711,17 +708,9 @@
                                                                                                       <Blend />
                                                                                                    </effect>
                                                                                                 </Button>
-                                                                                                <Button fx:id="btnASprint" alignment="TOP_LEFT" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefWidth="75.0" text="Print" GridPane.columnIndex="4">
+                                                                                                <Button fx:id="btnASprint" alignment="TOP_LEFT" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefWidth="75.0" text="Print" GridPane.columnIndex="5">
                                                                                                    <graphic>
                                                                                                       <FontAwesomeIconView glyphName="PRINT" />
-                                                                                                   </graphic>
-                                                                                                   <effect>
-                                                                                                      <Blend />
-                                                                                                   </effect>
-                                                                                                </Button>
-                                                                                                <Button fx:id="btnASprintview" alignment="TOP_LEFT" mnemonicParsing="false" text="Print View" GridPane.columnIndex="5">
-                                                                                                   <graphic>
-                                                                                                      <FontAwesomeIconView glyphName="EXPAND" />
                                                                                                    </graphic>
                                                                                                    <effect>
                                                                                                       <Blend />
@@ -855,7 +844,7 @@
                                                                                                 <ColumnConstraints hgrow="SOMETIMES" minWidth="-Infinity" prefWidth="10.0" />
                                                                                             </columnConstraints>
                                                                                             <rowConstraints>
-                                                                                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                                              <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
                                                                                             </rowConstraints>
                                                                                              <children>
                                                                                                 <Button fx:id="btnBankAppNew" alignment="TOP_LEFT" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefWidth="75.0" text="New" GridPane.columnIndex="1">
@@ -902,7 +891,7 @@
                                                                                                 <ColumnConstraints hgrow="SOMETIMES" minWidth="-Infinity" prefWidth="10.0" />
                                                                                              </columnConstraints>
                                                                                              <rowConstraints>
-                                                                                                <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="300.0" vgrow="SOMETIMES" />
+                                                                                                <RowConstraints minHeight="10.0" prefHeight="400.0" vgrow="SOMETIMES" />
                                                                                              </rowConstraints>
                                                                                              <children>
                                                                                                 <TableView fx:id="tblBankApplication" prefHeight="400.0" prefWidth="200.0" GridPane.columnIndex="1">
@@ -913,7 +902,6 @@
                                                                                                       <TableColumn fx:id="bankIndex03" prefWidth="200.0" text="Bank Branch" />
                                                                                                       <TableColumn fx:id="bankIndex04" prefWidth="100.0" text="Payment Mode" />
                                                                                                       <TableColumn fx:id="bankIndex05" prefWidth="70.0" text="Status" />
-                                                                                                      <TableColumn fx:id="bankIndex06" prefWidth="87.0" text="Cancelled by" />
                                                                                                       <TableColumn fx:id="bankIndex07" prefWidth="106.0" text="Cancelled date" />
                                                                                                    </columns>
                                                                                                 </TableView>
@@ -934,7 +922,7 @@
                                                                     <content>
                                                                         <AnchorPane>
                                                                            <children>
-                                                                              <ScrollPane fitToWidth="true" layoutY="1.0" AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="1.0">
+                                                                              <ScrollPane fitToWidth="true" layoutY="1.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                                                 <content>
                                                                                     <VBox>
                                                                                        <children>
@@ -945,7 +933,7 @@
                                                                                                 <ColumnConstraints hgrow="SOMETIMES" minWidth="5.0" prefWidth="10.0" />
                                                                                              </columnConstraints>
                                                                                              <rowConstraints>
-                                                                                                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                                                                                                <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
                                                                                              </rowConstraints>
                                                                                              <children>
                                                                                                 <Button fx:id="btnFollowUp" mnemonicParsing="false" text="Followup" GridPane.columnIndex="1" />
@@ -964,18 +952,17 @@
                                                                                                 <ColumnConstraints hgrow="SOMETIMES" minWidth="-Infinity" prefWidth="10.0" />
                                                                                              </columnConstraints>
                                                                                              <rowConstraints>
-                                                                                                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                                                                                                <RowConstraints minHeight="10.0" prefHeight="400.0" vgrow="SOMETIMES" />
                                                                                              </rowConstraints>
                                                                                              <children>
                                                                                                 <TableView fx:id="tblFollowHistory" GridPane.columnIndex="1">
                                                                                                    <columns>
-                                                                                                      <TableColumn prefWidth="34.0" text="Row" />
-                                                                                                      <TableColumn prefWidth="90.0" text="Followup Date" />
-                                                                                                      <TableColumn prefWidth="126.0" text="Next Follow-up Date" />
-                                                                                                      <TableColumn prefWidth="216.0" text="Follow-up By " />
-                                                                                                      <TableColumn prefWidth="69.0" text="Medium" />
-                                                                                                      <TableColumn prefWidth="74.0" text="Platform" />
-                                                                                                      <TableColumn prefWidth="394.0" text="Remarks" />
+                                                                                                      <TableColumn fx:id="flwpIndex01" prefWidth="34.0" text="Row" />
+                                                                                                      <TableColumn fx:id="flwpIndex02" prefWidth="90.0" text="Followup Date" />
+                                                                                                      <TableColumn fx:id="flwpIndex03" prefWidth="126.0" text="Next Follow-up Date" />
+                                                                                                      <TableColumn fx:id="flwpIndex04" prefWidth="216.0" text="Medium" />
+                                                                                                      <TableColumn fx:id="flwpIndex05" prefWidth="69.0" text="Platform" />
+                                                                                                      <TableColumn fx:id="flwpIndex06" prefWidth="319.0" text="Remarks" />
                                                                                                    </columns>
                                                                                                 </TableView>
                                                                                              </children>

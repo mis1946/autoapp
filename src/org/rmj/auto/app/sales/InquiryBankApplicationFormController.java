@@ -22,6 +22,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -30,6 +31,7 @@ import static javafx.scene.input.KeyCode.DOWN;
 import static javafx.scene.input.KeyCode.ENTER;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import org.rmj.appdriver.GRider;
 import org.rmj.appdriver.SQLUtil;
 import org.rmj.appdriver.agentfx.CommonUtils;
@@ -46,21 +48,12 @@ import org.rmj.auto.sales.base.InquiryMaster;
  */
 public class InquiryBankApplicationFormController implements Initializable {
     private GRider oApp;
-    private boolean pbLoaded = false;
     private MasterCallback oListener;
     private InquiryBankApplication oTransBankApp;
 
-    public int tbl_row = 0;
-    private int pnIndex = -1;    
-    private int pnRow = -1;
-    private int pnEmp = -1;
-    private int lnCtr;
-    private String sTransNo = "";  
-    private String psOldRec;
-    private String psCode;
+    private String sTransNo = "";
     private int pnInqPayMode;
     private int pnEditMode;
-    private boolean state = false;
 
     private final String pxeModuleName = "Inquiry Bank Application";
     
@@ -107,14 +100,11 @@ public class InquiryBankApplicationFormController implements Initializable {
     private Stage getStage(){
         return (Stage) txtField16.getScene().getWindow();
     }
-    
-    
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        
         comboBox04.setItems(cBankPaymode);      
         comboBox09.setItems( cBankStatus);
         comboBox09.setOnAction(event -> {
@@ -131,6 +121,8 @@ public class InquiryBankApplicationFormController implements Initializable {
         textArea08.focusedProperty().addListener(txtArea_Focus);  //Remarks
         txtField02.setOnAction(this::getDate); //Applied Date
         txtField03.setOnAction(this::getDate); //Approved Date
+        txtField02.setDayCellFactory(callA);
+        txtField03.setDayCellFactory(callA);
         
         txtField16.setOnKeyPressed(this::txtField_KeyPressed);  //Bank Name
         textArea08.setOnKeyPressed(this::txtArea_KeyPressed);  //Remarks
@@ -157,9 +149,10 @@ public class InquiryBankApplicationFormController implements Initializable {
                 if (setSelection()){
                    // oTransBankApp.setPayMode(pnInqPayMode);
                     if(oTransBankApp.SaveRecord()){
-                        ShowMessageFX.Warning(null, pxeModuleName, "Bank Application save sucessfully.");
+                        ShowMessageFX.Information(null, pxeModuleName, "Bank Application save sucessfully.");
                     } else {
                         ShowMessageFX.Warning(null, pxeModuleName, oTransBankApp.getMessage());
+                        return;
                     }
                 }
                 CommonUtils.closeStage(btnSave);
@@ -189,6 +182,7 @@ public class InquiryBankApplicationFormController implements Initializable {
             }
             if (Integer.parseInt(oTransBankApp.getBankApp(9).toString()) == 3){
                 comboBox09.setValue("Cancelled");
+                pnEditMode = EditMode.UNKNOWN;
             } else {
                 comboBox09.getSelectionModel().select(Integer.parseInt(oTransBankApp.getBankApp(9).toString())); //Bank Application Status
             }
@@ -242,7 +236,7 @@ public class InquiryBankApplicationFormController implements Initializable {
         }
     }
     
-    /*Convert Date to String*/
+    /*Convert String to LocalDate*/
     private LocalDate strToDate(String val){
         DateTimeFormatter date_formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate localDate = LocalDate.parse(val, date_formatter);
@@ -342,6 +336,7 @@ public class InquiryBankApplicationFormController implements Initializable {
      
     public void initbutton(int fnValue){
         boolean lbShow = (fnValue == EditMode.ADDNEW || fnValue == EditMode.UPDATE);
+        
         txtField16.setDisable(!lbShow); //Bank Name
         comboBox04.setDisable(!lbShow); //Payment Mode
         comboBox09.setDisable(!lbShow); //Application Status
@@ -351,4 +346,20 @@ public class InquiryBankApplicationFormController implements Initializable {
         btnSave.setDisable(!lbShow);
     }
      
+    private Callback<DatePicker, DateCell> callA = new Callback<DatePicker, DateCell>() {
+       @Override
+       public DateCell call(final DatePicker param) {
+           return new DateCell() {
+               @Override
+               public void updateItem(LocalDate item, boolean empty) {
+                   super.updateItem(item, empty); //To change body of generated methods, choose Tools | Templates.
+                   LocalDate today = LocalDate.now();
+                   setDisable(empty || item.compareTo(today) > 0 );
+               }
+
+           };
+       }
+
+    };
+    
 }

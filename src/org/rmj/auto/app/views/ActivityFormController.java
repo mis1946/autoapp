@@ -10,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableView;
 import org.rmj.appdriver.GRider;
 import org.rmj.appdriver.callback.MasterCallback;
 import org.rmj.auto.clients.base.VehicleDescription;
@@ -24,6 +25,7 @@ public class ActivityFormController implements Initializable,ScreenInterface {
     private GRider oApp;
     private VehicleDescription oTrans;
     private MasterCallback oListener;
+    
     @FXML
     private Button btnAdd;
     @FXML
@@ -33,12 +35,6 @@ public class ActivityFormController implements Initializable,ScreenInterface {
     @FXML
     private Button btnSearch;
     @FXML
-    private Button btnSearch1;
-    @FXML
-    private Button btnSearch2;
-    @FXML
-    private Button btnClose1;
-    @FXML
     private Label lblApprovedBy;
     @FXML
     private Label lblApprovedDate;
@@ -47,17 +43,31 @@ public class ActivityFormController implements Initializable,ScreenInterface {
     @FXML
     private Button btnActRemove;
     @FXML
-    private Button btnActSearch1;
+    private TableView<?> tblViewActivityMembers;
     @FXML
-    private Button btnActRemove1;
+    private TableView<?> tblViewVehicleModel;
     @FXML
-    private Button btnActSearch111;
+    private Button btnVchlSearch;
     @FXML
-    private Button btnActRemove111;
+    private Button btnVhclRemove;
     @FXML
-    private Button btnActSearch11;
+    private Button btnAddRowTasks;
     @FXML
-    private Button btnActRemove11;
+    private Button btnAddRowBudget;
+    @FXML
+    private Button btnActivityHistory;
+    @FXML
+    private Button btnPrint;
+    @FXML
+    private Button btnClose;
+    @FXML
+    private TableView<?> tblViewTasks;
+    @FXML
+    private TableView<?> tblViewBudget;
+    @FXML
+    private Button btnRemoveTasks;
+    @FXML
+    private Button btnRemoveBudget;
     /**
      * Initializes the controller class.
      */

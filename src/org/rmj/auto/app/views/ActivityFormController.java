@@ -87,11 +87,11 @@ public class ActivityFormController implements Initializable,ScreenInterface {
     private DatePicker DatepFrom;
     @FXML
     private DatePicker DatepTo;
-    @FXML
-    private ComboBox aType;
     ObservableList<String> cType = FXCollections.observableArrayList("Event", "Sales Call", "Promo");
     @FXML
     private AnchorPane AnchorMain;
+    @FXML
+    private ComboBox comboType;
 
     /**
      * Initializes the controller class.
@@ -102,7 +102,7 @@ public class ActivityFormController implements Initializable,ScreenInterface {
           
           
           btnClose.setOnAction(this::cmdButton_Click);
-          aType.setItems(cType);
+          comboType.setItems(cType);
     
     }    
     @Override
@@ -165,7 +165,13 @@ public class ActivityFormController implements Initializable,ScreenInterface {
 //                                  ShowMessageFX.Warning(getStage(),oTrans.getMessage() ,"Warning", "Error while saving Vehicle Description");
 //                              }
 //                         }
-                         break;                        
+                         break;
+                    case "btnSearch":
+                        break;
+                    case "btnActivityHistory":
+                        break;
+                    case "btnPrint":
+                        break;//close tab
                     case "btnClose": //close tab
                          if(ShowMessageFX.OkayCancel(null, "Close Tab", "Are you sure you want to close this Tab?") == true){
                                if (unload != null) {

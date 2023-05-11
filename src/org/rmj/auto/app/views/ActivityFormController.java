@@ -47,9 +47,17 @@ public class ActivityFormController implements Initializable,ScreenInterface {
     @FXML
     private Button btnActRemove;
     @FXML
-    private Button btnVhclSearch;
+    private Button btnActSearch1;
     @FXML
-    private Button btnVhclRemove;
+    private Button btnActRemove1;
+    @FXML
+    private Button btnActSearch111;
+    @FXML
+    private Button btnActRemove111;
+    @FXML
+    private Button btnActSearch11;
+    @FXML
+    private Button btnActRemove11;
     /**
      * Initializes the controller class.
      */

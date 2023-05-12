@@ -228,8 +228,9 @@ public class InquiryFormController implements Initializable, ScreenInterface{
     private TextField txtField18; //Reserve Amount
     @FXML
     private TextField txtField17; //Reserved
+    //private ComboBox cmbOnstr13;
     @FXML
-    private ComboBox cmbOnstr13; //Online Store
+    private TextField txtField13; //Online Store
     @FXML
     private ComboBox cmbType012; //Inquiry Type
     @FXML
@@ -254,6 +255,7 @@ public class InquiryFormController implements Initializable, ScreenInterface{
     private RadioButton rdbtnPro05;
     @FXML
     private ComboBox comboBox24; //Inquiry status
+    
 
     /*INQUIRY PROCESS*/
     //Populate table
@@ -376,6 +378,7 @@ public class InquiryFormController implements Initializable, ScreenInterface{
     @FXML
     private TableColumn flwpIndex06;
     
+    
     private Stage getStage(){
          return (Stage) textSeek01.getScene().getWindow();
     }
@@ -413,27 +416,27 @@ public class InquiryFormController implements Initializable, ScreenInterface{
         /*populate combobox*/
         comboBox24.setItems(cInqStatus); //Inquiry Status
         cmbType012.setItems(cInquiryType); //Inquiry Type
-        cmbOnstr13.setItems(cOnlineStore); //Web Inquiry
+        //cmbOnstr13.setItems(cOnlineStore); //Web Inquiry
         cmbType012.setOnAction(event -> {
-            cmbOnstr13.setDisable(true);
+            txtField13.setDisable(true);
             txtField09.setDisable(true);
             txtField15.setDisable(true);
             switch (cmbType012.getSelectionModel().getSelectedIndex()) {
                 case 1:
-                    cmbOnstr13.setDisable(false);
+                    txtField13.setDisable(false);
                     txtField15.setText("");
                     txtField09.setText("");
                     break;
                 case 3:
                     txtField09.setDisable(false);
                     txtField15.setText("");
-                    cmbOnstr13.setValue(null);
+                    txtField13.setText("");
                     break;
                 case 4:
                 case 5:
                     txtField15.setDisable(false);
                     txtField09.setText("");
-                    cmbOnstr13.setValue(null);
+                    txtField13.setText("");
                     break;
             }
 
@@ -460,6 +463,7 @@ public class InquiryFormController implements Initializable, ScreenInterface{
         textArea08.setOnKeyPressed(this::txtArea_KeyPressed);  //Remarks
         txtField15.setOnKeyPressed(this::txtField_KeyPressed);  //Activity ID
         txtField14.setOnKeyPressed(this::txtField_KeyPressed);  //Test Model  
+        txtField13.setOnKeyPressed(this::txtField_KeyPressed);  //Web Inquiry
 
         //Button SetOnAction using cmdButton_Click() method
         btnClose.setOnAction(this::cmdButton_Click);
@@ -547,6 +551,20 @@ public class InquiryFormController implements Initializable, ScreenInterface{
         oTransFollowUp.setCallback(oListener);
         oTransFollowUp.setWithUI(true);
         initFollowUp();
+        tblFollowHistory.setRowFactory(tv -> {
+            TableRow<InquiryTableVehicleSalesAdvances> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                try {
+                    if (event.getClickCount() == 2 && !row.isEmpty()) {
+                        String sTransno = oTransFollowUp.getDetail(row.getIndex()+1, 1).toString();
+                        loadFollowUpWindow(sTransno, true);
+                    }
+                } catch (SQLException ex) {
+                    Logger.getLogger(InquiryFormController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            });
+            return row;
+        });
         
         btnFollowUp.setOnAction(this::cmdButton_Click);
 
@@ -963,10 +981,13 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                
             /*INQUIRY FOR FOLLOW UP*/
             case "btnFollowUp":
-                //Open window 
-                loadFollowUp("");
+                if (oTransFollowUp.NewRecord()) {
+                    //Open window 
+                    loadFollowUpWindow("", false);
+                } else {
+                    ShowMessageFX.Warning(getStage(), oTransFollowUp.getMessage(),"Warning", null);
+                }
                 break;
-
             case "btnCancel":
                 if(ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure, do you want to cancel?") == true){
                     clearFields();
@@ -1159,7 +1180,7 @@ public class InquiryFormController implements Initializable, ScreenInterface{
     }
      
      /*INQUIRY FOR FOLLOW-UP*/
-     private void loadFollowUp(String sTransno) throws SQLException{
+     private void loadFollowUpWindow(String sTransno, Boolean bEntmode) throws SQLException{
         try {
             Stage stage = new Stage();
 
@@ -1170,7 +1191,7 @@ public class InquiryFormController implements Initializable, ScreenInterface{
             loControl.setGRider(oApp);
             loControl.setObject(oTransFollowUp);
             loControl.setsTransNo(sTransno);
-
+            loControl.setState(bEntmode);
             fxmlLoader.setController(loControl);
 
             //load the main interface
@@ -1201,6 +1222,8 @@ public class InquiryFormController implements Initializable, ScreenInterface{
            stage.setTitle("");
            stage.showAndWait();
 
+           oTransFollowUp.loadFollowUp(sSourceNox, true);
+           loadFollowUp();
         } catch (IOException e) {
             e.printStackTrace();
             ShowMessageFX.Warning(getStage(),e.getMessage(), "Warning", null);
@@ -1245,7 +1268,12 @@ public class InquiryFormController implements Initializable, ScreenInterface{
 //                                   } else 
 //                                       ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);                            
                               break;
-                              
+                              case 13: //Web Inquiry 
+                                   if (oTrans.searchPlatform(txtField14.getText(),false)){
+                                        loadCustomerInquiry();
+                                   } else 
+                                       ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
+                              break;
                               case 14: //Model 
                                    if (oTrans.searchVhclPrty(0,txtField14.getText(),false)){
                                         loadCustomerInquiry();
@@ -1346,7 +1374,8 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                          CommonUtils.xsDateShort((Date) oTrans.getInqDetail(lnCtr,"dTargetDt")), //Target date
                          oTrans.getInqDetail(lnCtr, "cIntrstLv").toString(), //
                          oTrans.getInqDetail(lnCtr, "sSourceCD").toString(), //
-                         oTrans.getInqDetail(lnCtr, "sSourceNo").toString(), //
+                         //oTrans.getInqDetail(lnCtr, "sSourceNo").toString(), //
+                        oTrans.getInqDetail(lnCtr, "sPlatform").toString(), // Web Inquiry
                          oTrans.getInqDetail(lnCtr, "sTestModl").toString(), //
                          oTrans.getInqDetail(lnCtr, "sActvtyID").toString(), //
                          //oTrans.getInqDetail(lnCtr, "dLastUpdt").toString(), //
@@ -1556,9 +1585,10 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                              break;
                     }
                     cmbType012.getSelectionModel().select(Integer.parseInt(inqlistdata.get(pagecounter).getTblcinqindex12())); //Inquiry Type sSourceCD
-                    if (Integer.parseInt(inqlistdata.get(pagecounter).getTblcinqindex12()) == 1) {
-                         cmbOnstr13.getSelectionModel().select(Integer.parseInt(inqlistdata.get(pagecounter).getTblcinqindex13())); //Online Store sSourceNo
-                    }
+//                    if (Integer.parseInt(inqlistdata.get(pagecounter).getTblcinqindex12()) == 1) {
+//                         cmbOnstr13.getSelectionModel().select(Integer.parseInt(inqlistdata.get(pagecounter).getTblcinqindex13())); //Online Store sSourceNo
+//                    }
+                    txtField13.setText(inqlistdata.get(pagecounter).getTblcinqindex13()); //Web Inquiry
                     txtField14.setText(inqlistdata.get(pagecounter).getTblcinqindex14()); //sTestModl
                     txtField15.setText(inqlistdata.get(pagecounter).getTblcinqindex15()); //
                     txtField17.setText(inqlistdata.get(pagecounter).getTblcinqindex17()); // nReserved
@@ -1594,9 +1624,13 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                     //Load Table Bank Application
                     oTransBankApp.loadBankApplication(inqlistdata.get(pagecounter).getTblcinqindex01(), true);
                     loadBankApplication();
+                    
+                    //Load Table Follow Up History
+                    oTransFollowUp.loadFollowUp(inqlistdata.get(pagecounter).getTblcinqindex01(), true);
+                    loadFollowUp();
+                    
                     sClientID = (String) oTrans.getMaster(7);
                     sSourceNox = TransNo;
-                    
                     
                     //Enable button based on selected inquiry
                     initButton(pnEditMode);
@@ -1622,9 +1656,10 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                txtField33.setText((String) oTrans.getMaster(33)); //Client Address
                txtField31.setText((String) oTrans.getMaster(31)); //Social Media
                cmbType012.getSelectionModel().select(Integer.parseInt(oTrans.getMaster(12).toString())); //Inquiry Type
-               if (Integer.parseInt(oTrans.getMaster(12).toString()) == 1) {
-                    cmbOnstr13.getSelectionModel().select(Integer.parseInt(oTrans.getMaster(13).toString())); //Online Store
-               }
+//               if (Integer.parseInt(oTrans.getMaster(12).toString()) == 1) {
+//                    cmbOnstr13.getSelectionModel().select(Integer.parseInt(oTrans.getMaster(13).toString())); //Online Store
+//               }
+               txtField13.setText((String) oTrans.getMaster(36)); //Web Inquiry
                txtField10.setValue(strToDate(CommonUtils.xsDateShort((Date) oTrans.getMaster(10)))); //Target Release Date
                txtField09.setText((String) oTrans.getMaster(35)); //Agent ID
                txtField15.setText((String) oTrans.getMaster(15)); //Activity ID
@@ -2361,14 +2396,14 @@ public class InquiryFormController implements Initializable, ScreenInterface{
             }else 
                oTrans.setMaster(12, String.valueOf(cmbType012.getSelectionModel().getSelectedIndex()));
             
-            if (cmbType012.getSelectionModel().getSelectedIndex() == 1){
-                if (cmbOnstr13.getSelectionModel().getSelectedIndex() < 0){
-                    ShowMessageFX.Warning("No `Online Store` selected.", pxeModuleName, "Please select `Online Store` value.");
-                    cmbOnstr13.requestFocus();
-                    return false;
-                }else 
-                   oTrans.setMaster(13, String.valueOf(cmbOnstr13.getSelectionModel().getSelectedIndex()));
-            } 
+//            if (cmbType012.getSelectionModel().getSelectedIndex() == 1){
+//                if (cmbOnstr13.getSelectionModel().getSelectedIndex() < 0){
+//                    ShowMessageFX.Warning("No `Online Store` selected.", pxeModuleName, "Please select `Online Store` value.");
+//                    cmbOnstr13.requestFocus();
+//                    return false;
+//                }else 
+//                   oTrans.setMaster(13, String.valueOf(cmbOnstr13.getSelectionModel().getSelectedIndex()));
+//            } 
 
             if (cmbType012.getSelectionModel().getSelectedIndex() == 3){
                 if (txtField09.getText().equals("") || txtField09.getText() == null){
@@ -2448,25 +2483,29 @@ public class InquiryFormController implements Initializable, ScreenInterface{
         //Enable or Disable fields for online store, agent, activity based of selected inquiry type
         switch (cmbType012.getSelectionModel().getSelectedIndex()) {
             case 1:
-                cmbOnstr13.setDisable(!lbShow);
+//                cmbOnstr13.setDisable(!lbShow);
+                txtField13.setDisable(!lbShow);
                 txtField15.setText("");
                 txtField09.setText("");
                 break;
             case 3:
                 txtField09.setDisable(!lbShow);
                 txtField15.setText("");
-                cmbOnstr13.setValue(null);
+                txtField13.setText("");
+                //cmbOnstr13.setValue(null);
                 break;
             case 4:
             case 5:
                 txtField15.setDisable(!lbShow);
                 txtField09.setText("");
-                cmbOnstr13.setValue(null);
+                txtField13.setText("");
+                //cmbOnstr13.setValue(null);
                 break;
             default:
                 txtField15.setDisable(true); //Activity ID
                 txtField09.setDisable(true); //Agent ID
-                cmbOnstr13.setDisable(true); //Online Store             
+                txtField13.setDisable(true); //Online Store  
+                //cmbOnstr13.setDisable(true); //Online Store             
         }
         //Inquiry button
         btnTargetVhclAdd.setVisible(lbShow);
@@ -2500,11 +2539,17 @@ public class InquiryFormController implements Initializable, ScreenInterface{
         //For Follow up
         btnFollowUp.setVisible(false);
         
+        boolean lbTab = (fnValue == EditMode.READY);
+        //tabCustomerInquiry.setDisable(!lbTab);
+        tabInquiryProcess.setDisable(!lbTab);
+        tabBankHistory.setDisable(!lbTab);
+        tabFollowingHistory.setDisable(!lbTab);
+        
         if (fnValue == EditMode.ADDNEW) {
-             btnClear.setVisible(lbShow);
-             btnClear.setManaged(lbShow);
-             txtField07.setDisable(!lbShow); //Customer ID 
-             txtField29.setDisable(!lbShow); //Company ID 
+            btnClear.setVisible(lbShow);
+            btnClear.setManaged(lbShow);
+            txtField07.setDisable(!lbShow); //Customer ID 
+            txtField29.setDisable(!lbShow); //Company ID 
         }
 
         if (fnValue == EditMode.READY) { //show edit if user clicked save / browse
@@ -2544,20 +2589,17 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                     btnPrintRefund.setVisible(true);
                     btnPrintRefund.setManaged(true);
                 break;
-                case 4: //Sold
                 case 5: //Retired
+                    tabInquiryProcess.setDisable(true);
+                    tabBankHistory.setDisable(true);
+                    btnFollowUp.setVisible(true);
+                    break;
+                case 4: //Sold
                 case 6: //Cancelled
                 break;
             }
         }
-
-        boolean lbTab = (fnValue == EditMode.READY);
-        //tabCustomerInquiry.setDisable(!lbTab);
-        tabInquiryProcess.setDisable(!lbTab);
-        tabBankHistory.setDisable(!lbTab);
-        tabFollowingHistory.setDisable(!lbTab);
-          
-     }
+    }
      
     /*INQUIRY PROCESS*/
     private void initBtnProcess(int fnValue){
@@ -2635,9 +2677,9 @@ public class InquiryFormController implements Initializable, ScreenInterface{
 //                         btnApply.setVisible(false);
 //                         btnApply.setManaged(false);
 //                         break;
+                case 5: //Retired    
                 case 2: //Lost Sale
                 case 4: //Sold
-                case 5: //Retired
                 case 6: //Cancelled
                     //Requirements
                     cmbInqpr01.setDisable(true);
@@ -2740,7 +2782,8 @@ public class InquiryFormController implements Initializable, ScreenInterface{
         comboBox24.setValue(null);  //Inquiry Status
         txtField18.clear(); //Reserve Amount
         txtField17.clear(); //Reserved
-        cmbOnstr13.setValue(null); //Online Store
+//        cmbOnstr13.setValue(null); 
+        txtField13.clear();//Online Store
         cmbType012.setValue(null); //Inquiry Type
         txtField15.clear(); //Activity ID
         txtField14.clear(); //Test Model

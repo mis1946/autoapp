@@ -39,7 +39,6 @@ import org.rmj.appdriver.agentfx.ShowMessageFX;
 import org.rmj.appdriver.callback.MasterCallback;
 import org.rmj.appdriver.constants.EditMode;
 import org.rmj.auto.sales.base.InquiryBankApplication;
-import org.rmj.auto.sales.base.InquiryMaster;
 
 /**
  * FXML Controller class
@@ -52,6 +51,7 @@ public class InquiryBankApplicationFormController implements Initializable {
     private InquiryBankApplication oTransBankApp;
 
     private String sTransNo = "";
+    private String sOApplieddate = "";
     private int pnInqPayMode;
     private int pnEditMode;
 
@@ -108,10 +108,10 @@ public class InquiryBankApplicationFormController implements Initializable {
         comboBox04.setItems(cBankPaymode);      
         comboBox09.setItems( cBankStatus);
         comboBox09.setOnAction(event -> {
-            txtField03.setDisable(true);
             if (comboBox09.getSelectionModel().getSelectedIndex() == 2) {
                 if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE){
                     txtField03.setDisable(false);
+                    txtField03.setValue(strToDate(CommonUtils.xsDateShort((Date) oApp.getServerDate())));
                 } 
             }
         });
@@ -121,8 +121,8 @@ public class InquiryBankApplicationFormController implements Initializable {
         textArea08.focusedProperty().addListener(txtArea_Focus);  //Remarks
         txtField02.setOnAction(this::getDate); //Applied Date
         txtField03.setOnAction(this::getDate); //Approved Date
-        txtField02.setDayCellFactory(callA);
-        txtField03.setDayCellFactory(callA);
+        txtField02.setDayCellFactory(callApplied);
+        txtField03.setDayCellFactory(callApprove);
         
         txtField16.setOnKeyPressed(this::txtField_KeyPressed);  //Bank Name
         textArea08.setOnKeyPressed(this::txtArea_KeyPressed);  //Remarks
@@ -154,6 +154,8 @@ public class InquiryBankApplicationFormController implements Initializable {
                         ShowMessageFX.Warning(null, pxeModuleName, oTransBankApp.getMessage());
                         return;
                     }
+                } else {
+                    return;
                 }
                 CommonUtils.closeStage(btnSave);
             break;
@@ -187,7 +189,14 @@ public class InquiryBankApplicationFormController implements Initializable {
                 comboBox09.getSelectionModel().select(Integer.parseInt(oTransBankApp.getBankApp(9).toString())); //Bank Application Status
             }
             textArea08.setText(oTransBankApp.getBankApp(8).toString()); //Remarks
-                
+            
+            //Get the original applied date
+            if (pnEditMode == EditMode.UPDATE) {
+                if (sOApplieddate.isEmpty()) {
+                    sOApplieddate = oTransBankApp.getBankApp(2).toString();
+                } 
+            }
+            
         }catch (SQLException ex) {
         Logger.getLogger(InquiryVehicleSalesAdvancesFormController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -248,9 +257,6 @@ public class InquiryBankApplicationFormController implements Initializable {
         try {
             DatePicker datePicker = (DatePicker) event.getSource();
             String datePickerId = datePicker.getId();
-            System.out.println(SQLUtil.toDate(txtField02.getValue().toString(), SQLUtil.FORMAT_SHORT_DATE));
-            System.out.println(SQLUtil.toDate(txtField03.getValue().toString(), SQLUtil.FORMAT_SHORT_DATE));
-            
             switch (datePickerId) {
                 case "txtField02":
                     oTransBankApp.setBankApp(2,SQLUtil.toDate(txtField02.getValue().toString(), SQLUtil.FORMAT_SHORT_DATE));
@@ -262,7 +268,7 @@ public class InquiryBankApplicationFormController implements Initializable {
                     break;
             }
         }catch (SQLException ex) {
-            Logger.getLogger(InquiryFormController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(InquiryBankApplicationFormController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     /*Set TextField Value to Master Class*/
@@ -284,7 +290,7 @@ public class InquiryBankApplicationFormController implements Initializable {
             } else
                txtField.selectAll();
         } catch (SQLException ex) {
-          Logger.getLogger(InquiryFormController.class.getName()).log(Level.SEVERE, null, ex);
+          Logger.getLogger(InquiryBankApplicationFormController.class.getName()).log(Level.SEVERE, null, ex);
         }
     };
      
@@ -337,29 +343,58 @@ public class InquiryBankApplicationFormController implements Initializable {
     public void initbutton(int fnValue){
         boolean lbShow = (fnValue == EditMode.ADDNEW || fnValue == EditMode.UPDATE);
         
-        txtField16.setDisable(!lbShow); //Bank Name
+        txtField16.setDisable(fnValue == EditMode.UPDATE); //Bank Name
         comboBox04.setDisable(!lbShow); //Payment Mode
         comboBox09.setDisable(!lbShow); //Application Status
         txtField02.setDisable(!lbShow); //Applied Date
-        txtField03.setDisable(!lbShow); //Approved Date
+        txtField03.setDisable(true); //Approved Date
         textArea08.setDisable(!lbShow); //Remarks
         btnSave.setDisable(!lbShow);
+        
+        if (fnValue == EditMode.UPDATE) {
+            if ( (comboBox09.getSelectionModel().getSelectedIndex() == 1) || (comboBox09.getSelectionModel().getSelectedIndex() == 2)) {
+                comboBox04.setDisable(true); //Payment Mode
+                comboBox09.setDisable(true); //Application Status
+                txtField02.setDisable(true); //Applied Date
+            }
+        }
+        
     }
      
-    private Callback<DatePicker, DateCell> callA = new Callback<DatePicker, DateCell>() {
-       @Override
-       public DateCell call(final DatePicker param) {
-           return new DateCell() {
-               @Override
-               public void updateItem(LocalDate item, boolean empty) {
-                   super.updateItem(item, empty); //To change body of generated methods, choose Tools | Templates.
-                   LocalDate today = LocalDate.now();
-                   setDisable(empty || item.compareTo(today) > 0 );
-               }
-
-           };
-       }
-
+    private Callback<DatePicker, DateCell> callApplied = new Callback<DatePicker, DateCell>() {
+        @Override
+        public DateCell call(final DatePicker param) {
+            return new DateCell() {
+                @Override
+                public void updateItem(LocalDate item, boolean empty) {
+                    super.updateItem(item, empty); //To change body of generated methods, choose Tools | Templates.
+                    LocalDate today = LocalDate.now();
+                    if ( pnEditMode == EditMode.ADDNEW) {
+                        LocalDate minDate = LocalDate.now().minusDays(7);
+                        setDisable(empty || item.isBefore(minDate) || item.compareTo(today) > 0 );
+                    } else if ( pnEditMode == EditMode.UPDATE) {
+                        LocalDate minDate = strToDate(sOApplieddate).minusDays(7);
+                        setDisable(empty || item.isBefore(minDate) || item.compareTo(strToDate(sOApplieddate)) > 0 );
+                    }
+                }
+            };
+        }
     };
+    
+    private Callback<DatePicker, DateCell> callApprove = new Callback<DatePicker, DateCell>() {
+        @Override
+        public DateCell call(final DatePicker param) {
+            return new DateCell() {
+                @Override
+                public void updateItem(LocalDate item, boolean empty) {
+                    super.updateItem(item, empty); //To change body of generated methods, choose Tools | Templates.
+                    LocalDate today = LocalDate.now();
+                    LocalDate minDate = LocalDate.now().minusDays(7);
+                    setDisable(empty || item.isBefore(minDate) || item.compareTo(today) > 0 );
+                }
+            };
+        }
+    };
+    
     
 }

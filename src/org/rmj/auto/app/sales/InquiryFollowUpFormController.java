@@ -22,6 +22,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -29,15 +30,15 @@ import javafx.scene.input.KeyCode;
 import static javafx.scene.input.KeyCode.DOWN;
 import static javafx.scene.input.KeyCode.ENTER;
 import javafx.scene.input.KeyEvent;
+import javafx.stage.Stage;
+import javafx.util.Callback;
 import org.rmj.appdriver.GRider;
 import org.rmj.appdriver.SQLUtil;
 import org.rmj.appdriver.agentfx.CommonUtils;
 import org.rmj.appdriver.agentfx.ShowMessageFX;
 import org.rmj.appdriver.callback.MasterCallback;
 import org.rmj.appdriver.constants.EditMode;
-import org.rmj.auto.sales.base.InquiryBankApplication;
 import org.rmj.auto.sales.base.InquiryFollowUp;
-import org.rmj.auto.sales.base.InquiryMaster;
 
 /**
  * FXML Controller class
@@ -48,7 +49,7 @@ public class InquiryFollowUpFormController implements Initializable {
     private GRider oApp;
     private boolean pbLoaded = false;
     private MasterCallback oListener;
-    private InquiryFollowUp oTransFollowup;
+    private InquiryFollowUp oTransFollowUp;
 
     private String sTransNo;
     private boolean state = false;
@@ -66,26 +67,29 @@ public class InquiryFollowUpFormController implements Initializable {
     @FXML
     private DatePicker txtField08;
     @FXML
-    private ComboBox comboBox07;
-    @FXML
-    private DatePicker txtField03;
+    private TextField txtField03;
     @FXML
     private TextArea textArea04;
     @FXML
     private TextArea textArea05;
+    @FXML
+    private TextField txtField07;
      
     public void setGRider(GRider foValue) {
         oApp = foValue;
     }
     
     public void setObject(InquiryFollowUp foValue){
-       oTransFollowup = foValue;
+       oTransFollowUp = foValue;
     }
     public void setState(boolean fsValue){
        state = fsValue;
     }
     public void setsTransNo(String fsValue){
        sTransNo = fsValue;
+    }
+    private Stage getStage(){
+        return (Stage) txtField03.getScene().getWindow();
     }
 
 
@@ -94,105 +98,135 @@ public class InquiryFollowUpFormController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        comboBox06.setItems(cMedium);      
-        comboBox07.setItems( cPlatforms);
+        if (state) {
+            oTransFollowUp.loadFollowUp(sTransNo, true);
+        }
+        comboBox06.setItems(cMedium); 
         comboBox06.setOnAction(event -> {
-            comboBox07.setDisable(false);
+            if (comboBox06.getSelectionModel().getSelectedIndex() == 2) {
+                txtField07.setDisable(false);
+            }
         });
         
+        txtField07.focusedProperty().addListener(txtField_Focus);  //Platform
         textArea04.focusedProperty().addListener(txtArea_Focus);  //Remarks
         textArea05.focusedProperty().addListener(txtArea_Focus);  //Follow up abouts
-        txtField03.setOnAction(this::getDate); //Follow up Date
         txtField08.setOnAction(this::getDate); //Next Follow up Date
-        
+        txtField08.setDayCellFactory(callDate);
         textArea04.setOnKeyPressed(this::txtArea_KeyPressed);  //Remarks
         textArea05.setOnKeyPressed(this::txtArea_KeyPressed);  //Follow up abouts
-        txtField03.setOnKeyPressed(this::txtField_KeyPressed);  //Applied Date
-        txtField08.setOnKeyPressed(this::txtField_KeyPressed);  //Approved Date
-
+        txtField07.setOnKeyPressed(this::txtField_KeyPressed); //Platform
+        
         btnClose.setOnAction(this::cmdButton_Click);
         btnSave.setOnAction(this::cmdButton_Click);
+        
         loadFollowUp();
         initbutton();
     }  
 
     private void cmdButton_Click(ActionEvent event) {
-//          try{
-            String lsButton = ((Button)event.getSource()).getId();
-            switch (lsButton){
-                case "btnClose":
-                    CommonUtils.closeStage(btnClose);
-                   break;
+        String lsButton = ((Button)event.getSource()).getId();
+        switch (lsButton){
+            case "btnSave":
+                if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure you want to save?")) {
+                } else {
+                    return;
+                }
+                if (setSelection()){
+                    if (oTransFollowUp.SaveRecord()){
+                        ShowMessageFX.Information(null, pxeModuleName, oTransFollowUp.getMessage());
+                    } else {
+                        ShowMessageFX.Warning(null, pxeModuleName, "Failed to Save Follow Up.");
+                        return;
+                    }
+                } else {
+                    return;
+                }
+                CommonUtils.closeStage(btnSave);
+               break;
+            case "btnClose":
+                CommonUtils.closeStage(btnClose);
+               break;
 
-                default:
-                    ShowMessageFX.Warning(null, pxeModuleName, "Button with name " + lsButton + " not registered.");
-                    break;
-            }
-//          }catch (SQLException ex) {
-//          Logger.getLogger(InquiryVehicleSalesAdvancesFormController.class.getName()).log(Level.SEVERE, null, ex);
-//          }   
+            default:
+                ShowMessageFX.Warning(null, pxeModuleName, "Button with name " + lsButton + " not registered.");
+                break;
+        }
     }
     
      public void loadFollowUp(){
-//        try{
+        try{
             /**
              * User can edit only if not 
              * Inquiry is not Lost Sale / Sold / Cancelled.
              **/ 
-//            txtField03.setValue(strToDate(CommonUtils.xsDateShort((Date) oTransBankApp.getBankApp(2))));
-//            txtField08.setValue(strToDate(CommonUtils.xsDateShort((Date) oTransBankApp.getBankApp(3))));
-//            txtField16.setText(oTransBankApp.getBankApp(16).toString()); //Bank Name
-//            txtField18.setText(oTransBankApp.getBankApp(18).toString()); //Bank Branch
-//            if (pnEditMode == EditMode.ADDNEW){
-//                comboBox04.getSelectionModel().select(pnInqPayMode); //Payment Mode
-//            } else { 
-//                comboBox04.getSelectionModel().select(Integer.parseInt(oTransBankApp.getBankApp(4).toString())); //Payment Mode
-//            }
-//            if (Integer.parseInt(oTransBankApp.getBankApp(9).toString()) == 3){
-//                comboBox09.setValue("Cancelled");
-//                pnEditMode = EditMode.UNKNOWN;
-//            } else {
-//                comboBox09.getSelectionModel().select(Integer.parseInt(oTransBankApp.getBankApp(9).toString())); //Bank Application Status
-//            }
-//            textArea08.setText(oTransBankApp.getBankApp(8).toString()); //Remarks
-//                
-//        }catch (SQLException ex) {
-//        Logger.getLogger(InquiryVehicleSalesAdvancesFormController.class.getName()).log(Level.SEVERE, null, ex);
-//        }
+            txtField03.setText(CommonUtils.xsDateMedium((Date) oTransFollowUp.getFollowUp(3)));
+            txtField08.setValue(strToDate(CommonUtils.xsDateShort((Date) oTransFollowUp.getFollowUp(8))));
+            comboBox06.getSelectionModel().select(Integer.parseInt(oTransFollowUp.getFollowUp(6).toString())); 
+            txtField07.setText(oTransFollowUp.getFollowUp(16).toString()); 
+            textArea05.setText(oTransFollowUp.getFollowUp(5).toString()); 
+            textArea04.setText(oTransFollowUp.getFollowUp(4).toString()); 
+                
+        }catch (SQLException ex) {
+        Logger.getLogger(InquiryVehicleSalesAdvancesFormController.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
     }
-     //Search using F3
-    private void txtField_KeyPressed(KeyEvent event){
-//        TextField txtField = (TextField)event.getSource();
-//        int lnIndex = Integer.parseInt(((TextField)event.getSource()).getId().substring(8,10));
-//          
-//        try{
-//            switch (event.getCode()){
-//                case F3:
-//                case TAB:
-//                case ENTER:
-//                    switch (lnIndex){ 
-//                        case 16: //Bank Name
-//                            if (oTransBankApp.searchBank(txtField16.getText(), false)){
-//                                loadBankApplication();
-//                            } else 
-//                                ShowMessageFX.Warning(getStage(), oTransBankApp.getMessage(),"Warning", null);
-//                        break;
-//                    }
-//               }
-//            }catch(SQLException e){
-//                  ShowMessageFX.Warning(getStage(),e.getMessage(), "Warning", null);
-//            }
-//        switch (event.getCode()){
-//        case ENTER:
-//        case DOWN:
-//            CommonUtils.SetNextFocus(txtField);
-//            break;
-//        case UP:
-//            CommonUtils.SetPreviousFocus(txtField);
-//        }
-    }
      
+    /*Set TextField Value to Master Class*/
+    final ChangeListener<? super Boolean> txtField_Focus = (o,ov,nv)->{
+        try{
+            TextField txtField = (TextField)((ReadOnlyBooleanPropertyBase)o).getBean();
+            int lnIndex = Integer.parseInt(txtField.getId().substring(8, 10));
+            String lsValue = txtField.getText();
+
+            if (lsValue == null) return;
+            if(!nv){ /*Lost Focus*/
+                switch (lnIndex){
+                    case 7: //
+                        oTransFollowUp.setFollowUp(lnIndex, lsValue); //Handle Encoded Value
+                        break;
+                }
+
+            } else
+               txtField.selectAll();
+        } catch (SQLException ex) {
+          Logger.getLogger(InquiryFollowUpFormController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    };
+    
+    //Search using F3
+    private void txtField_KeyPressed(KeyEvent event){
+        TextField txtField = (TextField)event.getSource();
+        int lnIndex = Integer.parseInt(((TextField)event.getSource()).getId().substring(8,10));
+          
+        try{
+            switch (event.getCode()){
+                case F3:
+                case TAB:
+                case ENTER:
+                    switch (lnIndex){ 
+                        case 7: //Platform
+                            if (oTransFollowUp.searchPlatform(txtField07.getText(), false)){
+                                loadFollowUp();
+                            } else 
+                                ShowMessageFX.Warning(getStage(), oTransFollowUp.getMessage(),"Warning", null);
+                        break;
+                    }
+               }
+            }catch(SQLException e){
+                  ShowMessageFX.Warning(getStage(),e.getMessage(), "Warning", null);
+            }
+        switch (event.getCode()){
+        case ENTER:
+        case DOWN:
+            CommonUtils.SetNextFocus(txtField);
+            break;
+        case UP:
+            CommonUtils.SetPreviousFocus(txtField);
+        }
+    }
+    
     /*TRIGGER FOCUS*/
     private void txtArea_KeyPressed(KeyEvent event){
         if (event.getCode() == ENTER || event.getCode() == DOWN){ 
@@ -213,103 +247,83 @@ public class InquiryFollowUpFormController implements Initializable {
      
     /*Set Date Value to Master Class*/
     public void getDate(ActionEvent event) { 
-//        try {
-//            DatePicker datePicker = (DatePicker) event.getSource();
-//            String datePickerId = datePicker.getId();
-//            System.out.println(SQLUtil.toDate(txtField02.getValue().toString(), SQLUtil.FORMAT_SHORT_DATE));
-//            System.out.println(SQLUtil.toDate(txtField03.getValue().toString(), SQLUtil.FORMAT_SHORT_DATE));
-//            
-//            switch (datePickerId) {
-//                case "txtField02":
-//                    oTransBankApp.setBankApp(2,SQLUtil.toDate(txtField02.getValue().toString(), SQLUtil.FORMAT_SHORT_DATE));
-//                    break;
-//                case "txtField03":
-//                    oTransBankApp.setBankApp(3,SQLUtil.toDate(txtField03.getValue().toString(), SQLUtil.FORMAT_SHORT_DATE));
-//                    break;
-//                default:
-//                    break;
-//            }
-//        }catch (SQLException ex) {
-//            Logger.getLogger(InquiryFormController.class.getName()).log(Level.SEVERE, null, ex);
-//        }
+        try {
+            oTransFollowUp.setFollowUp(8,SQLUtil.toDate(txtField08.getValue().toString(), SQLUtil.FORMAT_SHORT_DATE));
+        }catch (SQLException ex) {
+            Logger.getLogger(InquiryFollowUpFormController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
-    /*Set TextField Value to Master Class*/
-    final ChangeListener<? super Boolean> txtField_Focus = (o,ov,nv)->{
-//        try{
-//            TextField txtField = (TextField)((ReadOnlyBooleanPropertyBase)o).getBean();
-//            int lnIndex = Integer.parseInt(txtField.getId().substring(8, 10));
-//            String lsValue = txtField.getText();
-//
-//            if (lsValue == null) return;
-//            if(!nv){ /*Lost Focus*/
-//                switch (lnIndex){
-//                    case 16: //
-//                    case 18: //
-//                        oTransBankApp.setBankApp(lnIndex, lsValue); //Handle Encoded Value
-//                        break;
-//                }
-//
-//            } else
-//               txtField.selectAll();
-//        } catch (SQLException ex) {
-//          Logger.getLogger(InquiryFormController.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-    };
-     
+    
     /*Set TextArea to Master Class*/
     final ChangeListener<? super Boolean> txtArea_Focus = (o,ov,nv)->{
-//        TextArea txtField = (TextArea)((ReadOnlyBooleanPropertyBase)o).getBean();
-//        int lnIndex = Integer.parseInt(txtField.getId().substring(8, 10));
-//        String lsValue = txtField.getText();
-//
-//        if (lsValue == null) return;
-//        try {
-//           if(!nv){ /*Lost Focus*/
-//                switch (lnIndex){
-//                    case 8:
-//                       oTransBankApp.setBankApp(lnIndex, lsValue); //Handle Encoded Value
-//                    break;
-//                }
-//            } else
-//                txtField.selectAll();
-//        } catch (SQLException e) {
-//           ShowMessageFX.Warning(getStage(),e.getMessage(), "Warning", null);
-//           System.exit(1);
-//        }
+        TextArea txtField = (TextArea)((ReadOnlyBooleanPropertyBase)o).getBean();
+        int lnIndex = Integer.parseInt(txtField.getId().substring(8, 10));
+        String lsValue = txtField.getText();
+
+        if (lsValue == null) return;
+        try {
+           if(!nv){ /*Lost Focus*/
+                switch (lnIndex){
+                    case 4:
+                    case 5:
+                       oTransFollowUp.setFollowUp(lnIndex, lsValue); //Handle Encoded Value
+                    break;
+                }
+            } else
+                txtField.selectAll();
+        } catch (SQLException e) {
+           ShowMessageFX.Warning(getStage(),e.getMessage(), "Warning", null);
+           System.exit(1);
+        }
     };
      
     /*Set ComboBox Value to Master Class*/ 
     @SuppressWarnings("ResultOfMethodCallIgnored")
-//    private boolean setSelection(){
-//        try {
-//            if (comboBox04.getSelectionModel().getSelectedIndex() < 0){
-//                ShowMessageFX.Warning("No `Payment Mode` selected.", pxeModuleName, "Please select `Payment Mode` value.");
-//                comboBox04.requestFocus();
-//                return false;
-//            }else 
-//                oTransBankApp.setBankApp(4,comboBox04.getSelectionModel().getSelectedIndex());
-//            
-//            if (comboBox09.getSelectionModel().getSelectedIndex() < 0){
-//                ShowMessageFX.Warning("No `Application Status` selected.", pxeModuleName, "Please select `Application Status` value.");
-//                comboBox09.requestFocus();
-//                return false;
-//            }else 
-//                oTransBankApp.setBankApp(9,comboBox09.getSelectionModel().getSelectedIndex());
-//
-//        } catch (SQLException ex) {
-//             ShowMessageFX.Warning(getStage(),ex.getMessage(), "Warning", null);
-//        }
-//         return true;
-//    }
-     
-    public void initbutton(){
-//        txtField16.setDisable(!lbShow); //Bank Name
-//        comboBox04.setDisable(!lbShow); //Payment Mode
-//        comboBox09.setDisable(!lbShow); //Application Status
-//        txtField02.setDisable(!lbShow); //Applied Date
-//        txtField03.setDisable(!lbShow); //Approved Date
-//        textArea08.setDisable(!lbShow); //Remarks
-//        btnSave.setDisable(!lbShow);
+    private boolean setSelection(){
+        try {
+            if (comboBox06.getSelectionModel().getSelectedIndex() < 0){
+                ShowMessageFX.Warning("No `Medium Used` selected.", pxeModuleName, "Please select `Medium Used` value.");
+                comboBox06.requestFocus();
+                return false;
+            }else 
+                oTransFollowUp.setFollowUp(6,comboBox06.getSelectionModel().getSelectedIndex());
+            
+//            if (comboBox07.getSelectionModel().getSelectedIndex() == 2){
+//                if (comboBox07.getSelectionModel().getSelectedIndex() < 0){
+//                    ShowMessageFX.Warning("No `Social Media` selected.", pxeModuleName, "Please select `Social Media` value.");
+//                    comboBox07.requestFocus();
+//                    return false;
+//                }else 
+//                    oTransFollowUp.setFollowUp(7,comboBox07.getSelectionModel().getSelectedIndex());
+//            }
+        } catch (SQLException ex) {
+             ShowMessageFX.Warning(getStage(),ex.getMessage(), "Warning", null);
+        }
+         return true;
     }
      
+    public void initbutton(){
+        txtField08.setDisable(state); //Next Follow Date
+        comboBox06.setDisable(state); //Medium Used
+        txtField07.setDisable(true); //Platforms
+        textArea05.setDisable(state); //Follow up About
+        textArea04.setDisable(state); //Remarks
+        btnSave.setDisable(state);
+    }
+    
+     private Callback<DatePicker, DateCell> callDate = new Callback<DatePicker, DateCell>() {
+        @Override
+        public DateCell call(final DatePicker param) {
+            return new DateCell() {
+                @Override
+                public void updateItem(LocalDate item, boolean empty) {
+                    super.updateItem(item, empty); //To change body of generated methods, choose Tools | Templates.
+                    LocalDate today = LocalDate.now();
+                    setDisable(empty || item.compareTo(today) < 0 );
+                    
+                }
+            };
+        }
+    };
+    
 }

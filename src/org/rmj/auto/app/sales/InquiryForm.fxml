@@ -29,7 +29,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" fx:id="AnchorMain" prefHeight="1182.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" >
+<AnchorPane id="AnchorPane" fx:id="AnchorMain" prefHeight="1182.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <StackPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -286,7 +286,6 @@
                                                                                           <Label GridPane.columnIndex="6" GridPane.rowIndex="1" />
                                                                                           <Label id="LabelDesc" text="Event" GridPane.columnIndex="6" GridPane.rowIndex="2" />
                                                                                           <Label id="LabelDesc" text="Ref Agent" GridPane.columnIndex="6" GridPane.rowIndex="1" />
-                                                                                          <ComboBox fx:id="cmbOnstr13" prefHeight="24.0" prefWidth="279.0" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="2" />
                                                                                           <ComboBox fx:id="cmbType012" prefHeight="24.0" prefWidth="260.0" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="1" />
                                                                                           <Separator style="-fx-background-color: orange;" GridPane.columnSpan="11" GridPane.rowIndex="4" />
                                                                                           <TextField fx:id="txtField15" layoutX="516.0" layoutY="20.0" prefWidth="275.0" promptText="Search: F3" GridPane.columnIndex="7" GridPane.columnSpan="2" GridPane.rowIndex="2" />
@@ -294,6 +293,7 @@
                                                                                           <TextField fx:id="txtField02" disable="true" GridPane.columnIndex="2" GridPane.rowIndex="3" />
                                                                                           <Label id="LabelDesc" layoutX="20.0" layoutY="146.0" text="Sub Company" GridPane.columnIndex="6" GridPane.rowIndex="3" />
                                                                                           <TextField disable="true" GridPane.columnIndex="7" GridPane.columnSpan="2" GridPane.rowIndex="3" />
+                                                                                          <TextField fx:id="txtField13" promptText="Search: F3" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="2" />
                                                                                        </children>
                                                                                        <VBox.margin>
                                                                                           <Insets />

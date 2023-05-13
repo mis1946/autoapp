@@ -27,7 +27,7 @@
          <children>
             <BorderPane>
                <top>
-                  <AnchorPane style="-fx-background-color: #FACEA1;" BorderPane.alignment="CENTER">
+                  <AnchorPane style="-fx-background-color: #FACEA1; -fx-border-color: #F88222;" BorderPane.alignment="CENTER">
                      <children>
                         <Label alignment="CENTER" layoutX="101.0" prefHeight="17.0" text="Inquiry Vehicles Sales Advances Form" textFill="#5b5b5b" AnchorPane.bottomAnchor="3.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="3.0">
                            <font>

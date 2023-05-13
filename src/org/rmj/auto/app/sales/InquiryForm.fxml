@@ -29,7 +29,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" fx:id="AnchorMain" prefHeight="1182.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane id="AnchorPane" fx:id="AnchorMain" prefHeight="1182.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" >
    <children>
       <StackPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -936,7 +936,7 @@
                                                                                                 <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
                                                                                              </rowConstraints>
                                                                                              <children>
-                                                                                                <Button fx:id="btnFollowUp" mnemonicParsing="false" text="Followup" GridPane.columnIndex="1" />
+                                                                                                <Button fx:id="btnFollowUp" mnemonicParsing="false" text="Follow-Up" GridPane.columnIndex="1" />
                                                                                              </children>
                                                                                              <VBox.margin>
                                                                                                 <Insets bottom="5.0" top="5.0" />

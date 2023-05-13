@@ -52,6 +52,7 @@ public class InquiryFollowUpFormController implements Initializable {
     private InquiryFollowUp oTransFollowUp;
 
     private String sTransNo;
+    private String sSourceNo;
     private boolean state = false;
 
     private final String pxeModuleName = "Inquiry Follow-Up";
@@ -88,6 +89,11 @@ public class InquiryFollowUpFormController implements Initializable {
     public void setsTransNo(String fsValue){
        sTransNo = fsValue;
     }
+    
+    public void setsSourceNo(String fsValue){
+       sSourceNo = fsValue;
+    }
+    
     private Stage getStage(){
         return (Stage) txtField03.getScene().getWindow();
     }
@@ -99,13 +105,22 @@ public class InquiryFollowUpFormController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         if (state) {
-            oTransFollowUp.loadFollowUp(sTransNo, true);
+            oTransFollowUp.loadFollowUp(sTransNo, false);
+            
         }
         comboBox06.setItems(cMedium); 
         comboBox06.setOnAction(event -> {
             if (comboBox06.getSelectionModel().getSelectedIndex() == 2) {
                 txtField07.setDisable(false);
+                txtField07.clear();
             }
+            
+            try {
+                oTransFollowUp.setFollowUp(6,comboBox06.getValue().toString());
+            } catch (SQLException ex) {
+                Logger.getLogger(InquiryFollowUpFormController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
         });
         
         txtField07.focusedProperty().addListener(txtField_Focus);  //Platform
@@ -132,7 +147,28 @@ public class InquiryFollowUpFormController implements Initializable {
                 } else {
                     return;
                 }
+                
+                if (strToDate(CommonUtils.xsDateShort((Date)oApp.getServerDate())).equals(
+                    strToDate(CommonUtils.xsDateShort((Date) SQLUtil.toDate(txtField08.getValue().toString(), SQLUtil.FORMAT_SHORT_DATE))))    
+                    ) {
+                    ShowMessageFX.Warning(null, pxeModuleName, "You cannot save a Follow-Up entry with the same Follow-Up Date as the Next Follow-Up Date.");
+                    txtField08.requestFocus();
+                    return;
+                }
+                
+                if (textArea05.getText().length() < 20){
+                    ShowMessageFX.Warning(null, pxeModuleName, "Please enter at least 20 characters.");
+                    textArea05.requestFocus();
+                    return;
+                }
+                if (textArea04.getText().length() < 20){
+                    ShowMessageFX.Warning(null, pxeModuleName, "Please enter at least 20 characters.");
+                    textArea04.requestFocus();
+                    return;
+                }
+                
                 if (setSelection()){
+                    oTransFollowUp.setTransNox(sSourceNo);
                     if (oTransFollowUp.SaveRecord()){
                         ShowMessageFX.Information(null, pxeModuleName, oTransFollowUp.getMessage());
                     } else {
@@ -162,7 +198,11 @@ public class InquiryFollowUpFormController implements Initializable {
              **/ 
             txtField03.setText(CommonUtils.xsDateMedium((Date) oTransFollowUp.getFollowUp(3)));
             txtField08.setValue(strToDate(CommonUtils.xsDateShort((Date) oTransFollowUp.getFollowUp(8))));
-            comboBox06.getSelectionModel().select(Integer.parseInt(oTransFollowUp.getFollowUp(6).toString())); 
+            //comboBox06.getSelectionModel().select(Integer.parseInt(oTransFollowUp.getFollowUp(6).toString())); 
+            comboBox06.setValue(oTransFollowUp.getFollowUp(6).toString()); 
+            System.out.println("sPlatform "+ oTransFollowUp.getFollowUp(16).toString());
+            System.out.println("a.sSclMedia "+ oTransFollowUp.getFollowUp(7).toString());
+            
             txtField07.setText(oTransFollowUp.getFollowUp(16).toString()); 
             textArea05.setText(oTransFollowUp.getFollowUp(5).toString()); 
             textArea04.setText(oTransFollowUp.getFollowUp(4).toString()); 
@@ -184,7 +224,7 @@ public class InquiryFollowUpFormController implements Initializable {
             if(!nv){ /*Lost Focus*/
                 switch (lnIndex){
                     case 7: //
-                        oTransFollowUp.setFollowUp(lnIndex, lsValue); //Handle Encoded Value
+                        oTransFollowUp.setFollowUp(16, lsValue); //Handle Encoded Value
                         break;
                 }
 
@@ -286,7 +326,8 @@ public class InquiryFollowUpFormController implements Initializable {
                 comboBox06.requestFocus();
                 return false;
             }else 
-                oTransFollowUp.setFollowUp(6,comboBox06.getSelectionModel().getSelectedIndex());
+                //oTransFollowUp.setFollowUp(6,comboBox06.getSelectionModel().getSelectedIndex());
+                oTransFollowUp.setFollowUp(6,comboBox06.getValue().toString());
             
 //            if (comboBox07.getSelectionModel().getSelectedIndex() == 2){
 //                if (comboBox07.getSelectionModel().getSelectedIndex() < 0){

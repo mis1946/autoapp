@@ -343,7 +343,7 @@ public class InquiryBankApplicationFormController implements Initializable {
     public void initbutton(int fnValue){
         boolean lbShow = (fnValue == EditMode.ADDNEW || fnValue == EditMode.UPDATE);
         
-        txtField16.setDisable(fnValue == EditMode.UPDATE); //Bank Name
+        txtField16.setDisable(fnValue != EditMode.ADDNEW); //Bank Name
         comboBox04.setDisable(!lbShow); //Payment Mode
         comboBox09.setDisable(!lbShow); //Application Status
         txtField02.setDisable(!lbShow); //Applied Date

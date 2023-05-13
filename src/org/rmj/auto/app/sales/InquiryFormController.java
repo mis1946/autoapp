@@ -525,8 +525,8 @@ public class InquiryFormController implements Initializable, ScreenInterface{
             row.setOnMouseClicked(event -> {
                 try {
                     if (event.getClickCount() == 2 && !row.isEmpty()) {
-                         InquiryTableVehicleSalesAdvances rowData = row.getItem();
-                         loadVehicleSalesAdvancesWindow( row.getIndex()+1, false);
+                        int nStat = comboBox24.getSelectionModel().getSelectedIndex();
+                        loadVehicleSalesAdvancesWindow( row.getIndex()+1, false, nStat, oTransProcess.getEditMode());
                     }
                 } catch (SQLException ex) {
                     Logger.getLogger(InquiryFormController.class.getName()).log(Level.SEVERE, null, ex);
@@ -556,8 +556,7 @@ public class InquiryFormController implements Initializable, ScreenInterface{
             row.setOnMouseClicked(event -> {
                 try {
                     if (event.getClickCount() == 2 && !row.isEmpty()) {
-                        String sTransno = oTransFollowUp.getDetail(row.getIndex()+1, 1).toString();
-                        loadFollowUpWindow(sTransno, true);
+                        loadFollowUpWindow(oTransFollowUp.getDetail(row.getIndex()+1, 1).toString(), true);
                     }
                 } catch (SQLException ex) {
                     Logger.getLogger(InquiryFormController.class.getName()).log(Level.SEVERE, null, ex);
@@ -737,7 +736,7 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                 } else {
                      lnRow++;
                 }
-                loadVehicleSalesAdvancesWindow(lnRow, true);
+                loadVehicleSalesAdvancesWindow(lnRow, true,comboBox24.getSelectionModel().getSelectedIndex(),oTransProcess.getEditMode());
                 break; 
             case "btnASremove":
             case "btnAScancel":
@@ -931,8 +930,25 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                     }
                     for (InquiryTableBankApplications item : selBankItems) {
                         String sTransNo = item.getTblindex10();
+                        
                         switch (lsButton) {
                             case "btnBankAppCancel":
+                                String sTransStat = (String) oTransBankApp.getBankAppDet( Integer.parseInt(item.getTblindex01()),9);
+                                switch (sTransStat) {
+                                    case "1":
+                                        ShowMessageFX.Warning(null, pxeModuleName, "Selected Bank Application has already been declined.");
+                                        return;
+                                    case "2":
+                                        ShowMessageFX.Warning(null, pxeModuleName, "Approved bank applications cannot be cancelled.");
+                                        return;
+                                    case "3":
+                                        ShowMessageFX.Warning(null, pxeModuleName, "Selected Bank Application has already been cancelled.");
+                                        return;
+                                    
+                                    default:
+                                        break;
+                                }
+                                
                                 if(oTransBankApp.CancelBankApp(sTransNo)){
                                 }else {
                                     //ShowMessageFX.Warning(null, pxeModuleName, "Failed to cancel Bank Application.");
@@ -940,6 +956,7 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                                     return;
                                 }
                             break;
+
                             case "btnBankAppUpdate":
                                 if(oTransBankApp.loadBankApplication(sTransNo, false)){
                                     if (Integer.parseInt(oTransBankApp.getBankApp(9).toString()) == 3){
@@ -972,7 +989,7 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                     }
                     
                     if ("btnBankAppCancel".equals(lsButton)){
-                        ShowMessageFX.Information(null, pxeModuleName, "Selected Bank Application cancelled successfully.");
+                        ShowMessageFX.Information(null, pxeModuleName, oTransBankApp.getMessage());
                     }
                     oTransBankApp.loadBankApplication(sSourceNox,true);
                     loadBankApplication();
@@ -1021,7 +1038,7 @@ public class InquiryFormController implements Initializable, ScreenInterface{
      }
      
     /*INQUIRY PROCESS: OPEN VEHICLE SALES ADVANCES*/
-    private void loadVehicleSalesAdvancesWindow(int fnRow, boolean fstate) throws SQLException{
+    private void loadVehicleSalesAdvancesWindow(int fnRow, boolean fstate, Integer fnStat, Integer fEditMode) throws SQLException{
         /**
          * if state = true : ADD
          * else if state = false : UPDATE
@@ -1037,7 +1054,8 @@ public class InquiryFormController implements Initializable, ScreenInterface{
             loControl.setVSAObject(oTransProcess);
             loControl.setTableRows(fnRow);
             loControl.setState(fstate);
-
+            loControl.setInqStat(fnStat);
+            loControl.setEditMode(fEditMode);
             fxmlLoader.setController(loControl);
 
             //load the main interface
@@ -1191,6 +1209,7 @@ public class InquiryFormController implements Initializable, ScreenInterface{
             loControl.setGRider(oApp);
             loControl.setObject(oTransFollowUp);
             loControl.setsTransNo(sTransno);
+            loControl.setsSourceNo(sSourceNox);
             loControl.setState(bEntmode);
             fxmlLoader.setController(loControl);
 
@@ -2266,7 +2285,7 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                     , CommonUtils.xsDateShort((Date) oTransFollowUp.getDetail(lnCtr,3)) //Follow up Date
                     , CommonUtils.xsDateShort((Date) oTransFollowUp.getDetail(lnCtr,8)) //Next Follow up Date
                     , (String) oTransFollowUp.getDetail(lnCtr,6) //Medium
-                    , (String) oTransFollowUp.getDetail(lnCtr,7) //Platform
+                    , (String) oTransFollowUp.getDetail(lnCtr,16) //Platform
                     , (String) oTransFollowUp.getDetail(lnCtr,4) //Remarks
                     
                 ));

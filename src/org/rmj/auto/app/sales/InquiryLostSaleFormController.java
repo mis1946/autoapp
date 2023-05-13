@@ -10,6 +10,7 @@ import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 
 /**
  * FXML Controller class
@@ -24,6 +25,8 @@ public class InquiryLostSaleFormController implements Initializable {
      private Button btnAdd1;
      @FXML
      private Button btnClose;
+    @FXML
+    private Label lblClientName;
 
      /**
       * Initializes the controller class.

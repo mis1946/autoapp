@@ -36,6 +36,7 @@ import org.rmj.appdriver.SQLUtil;
 import org.rmj.appdriver.agentfx.CommonUtils;
 import org.rmj.appdriver.agentfx.ShowMessageFX;
 import org.rmj.appdriver.callback.MasterCallback;
+import org.rmj.appdriver.constants.EditMode;
 import org.rmj.auto.app.views.InputTextFormatter;
 import org.rmj.auto.sales.base.InquiryProcess;
 
@@ -45,68 +46,56 @@ import org.rmj.auto.sales.base.InquiryProcess;
  * @author Arsiela
  */
 public class InquiryVehicleSalesAdvancesFormController implements Initializable {
-     private GRider oApp;
-     private boolean pbLoaded = false;
-     private MasterCallback oListener;
-     private InquiryProcess oTransProcess;
-     
-     public int tbl_row = 0;
-     private int pnIndex = -1;    
-     private int pnRow = -1;
-     private int pnEmp = -1;
-     private int lnCtr;
-     private String oTransnox = "";
-     private String psOldRec;
-     private String psCode;
-     private int pnEditMode;
-     private boolean state = false;
-    
-     private final String pxeModuleName = "Inquiry Vehicle Sales Advances";
-     public static InquiryTableVehicleSalesAdvances incModel;
-     
-     ObservableList<String> cSlipType = FXCollections.observableArrayList("Reservation", "Deposit", "Safeguard Duty");
-     
-     private Button btnAdd;
-     @FXML
-     private Button btnClose;
-     @FXML
-     private ComboBox comboBox12; //Slip Type
-     @FXML
-     private TextField txtField02; //RSV Date
-     @FXML
-     private TextField txtField03; //Slip No
-     @FXML
-     private TextField txtField05; //Slip Amount
-     @FXML
-     private TextArea textArea06; //Remarks
-     @FXML
-     private TextField txtField13; //Approved Status
-     @FXML
-     private TextField txtField14; //Approved By
-     @FXML
-     private TextField txtField15; //Approved Date
-     @FXML
-     private Button btnApply;
-     
-     public void setGRider(GRider foValue) {
-        oApp = foValue;
-     }
-     public static void setData(InquiryTableVehicleSalesAdvances inqvsadata){
-        incModel = inqvsadata;    
+    private GRider oApp;
+    private MasterCallback oListener;
+    private InquiryProcess oTransProcess;
+
+    public int tbl_row = 0;
+    private int iInqStat;
+    private int iEditMode;
+    private boolean state = false;
+
+    private final String pxeModuleName = "Inquiry Vehicle Sales Advances";
+    ObservableList<String> cSlipType = FXCollections.observableArrayList("Reservation", "Deposit", "Safeguard Duty");
+
+    @FXML
+    private Button btnClose;
+    @FXML
+    private ComboBox comboBox12; //Slip Type
+    @FXML
+    private TextField txtField02; //RSV Date
+    @FXML
+    private TextField txtField03; //Slip No
+    @FXML
+    private TextField txtField05; //Slip Amount
+    @FXML
+    private TextArea textArea06; //Remarks
+    @FXML
+    private TextField txtField13; //Approved Status
+    @FXML
+    private TextField txtField14; //Approved By
+    @FXML
+    private TextField txtField15; //Approved Date
+    @FXML
+    private Button btnApply;
+
+    public void setGRider(GRider foValue) {
+       oApp = foValue;
     }
     public void setVSAObject(InquiryProcess foValue){
         oTransProcess = foValue;
     }
-    
-    public void setDeductionCode(String fsValue){
-        psCode = fsValue;
-    }
     public void setTableRows(int row){
         tbl_row = row;
     }
-
-    public void setState(boolean fsValue){
-        state = fsValue;
+    public void setState(boolean flValue){
+        state = flValue;
+    }
+    public void setInqStat(Integer fnValue){
+        iInqStat = fnValue;
+    }
+    public void setEditMode(Integer fnValue){
+        iEditMode = fnValue;
     }
     private Stage getStage(){
           return (Stage) txtField02.getScene().getWindow();
@@ -132,7 +121,7 @@ public class InquiryVehicleSalesAdvancesFormController implements Initializable 
           btnApply.setOnAction(this::cmdButton_Click);
           
           loadInquiryReservation();
-          pnEditMode = oTransProcess.getEditMode();
+          
      }
      
      //Search using F3
@@ -159,154 +148,138 @@ public class InquiryVehicleSalesAdvancesFormController implements Initializable 
         }
      }
      
-     private void loadInquiryReservation() {
-          try{
-               /**
-                * User can edit VSA only if not yet Approved and not Cancelled.
-                *
-                **/
-               if(state){ //Add
-                    txtField02.setText(CommonUtils.xsDateShort((Date) oApp.getServerDate()));
-                    txtField13.setText("For Approval");
-               } else { 
-                    txtField02.setText(CommonUtils.xsDateShort((Date) oTransProcess.getInqRsv(tbl_row,2)));
-                    txtField03.setText(oTransProcess.getInqRsv(tbl_row,3).toString());
-                    txtField05.setText(String.format("%.2f", oTransProcess.getInqRsv(tbl_row,5)));
-                    switch (oTransProcess.getInqRsv(tbl_row,13).toString()) {
-                         case "0":
-                              txtField13.setText("For Approval");
-                              txtField05.setDisable(state);
-                              comboBox12.setDisable(state);
-                              textArea06.setDisable(state);
-                              btnApply.setDisable(state);
-                              break;
-                         case "1":
-                              txtField13.setText("Approved");
-                              txtField05.setDisable(!state);
-                              comboBox12.setDisable(!state);
-                              textArea06.setDisable(!state);
-                              btnApply.setDisable(!state);
-                              
-                              break; 
-                         case "2":
-                              txtField13.setText("Cancelled");
-                              txtField05.setDisable(!state);
-                              comboBox12.setDisable(!state);
-                              textArea06.setDisable(!state);
-                              btnApply.setDisable(!state);
-                              break;
-                         default:
-                              txtField13.setText("");
-                              break;
-                    }
-                    txtField14.setText((String) oTransProcess.getInqRsv(tbl_row,23));
-                    //txtField15.setText( oTransProcess.getInqRsv(tbl_row,15).toString());
-                    txtField15.setText(CommonUtils.xsDateShort((Date) oTransProcess.getInqRsv(tbl_row,15)));
-                    textArea06.setText((String) oTransProcess.getInqRsv(tbl_row,6));
-                    comboBox12.getSelectionModel().select(Integer.parseInt(oTransProcess.getInqRsv(tbl_row,12).toString())); //VSA Type
-               }
-          }catch (SQLException ex) {
-          Logger.getLogger(InquiryVehicleSalesAdvancesFormController.class.getName()).log(Level.SEVERE, null, ex);
-          }
-          
-     }
-     
-     private void cmdButton_Click(ActionEvent event) {
-          try{
-               String lsButton = ((Button)event.getSource()).getId();
-               switch (lsButton){
-                    case "btnClose":
-                         CommonUtils.closeStage(btnClose);
-                         break;
-                    case "btnApply":
-                         if(state){
-                              oTransProcess.addReserve();
-                         }
-                         if (setSelection()){
-                              oTransProcess.setInqRsv(tbl_row, 2,SQLUtil.toDate(txtField02.getText(), SQLUtil.FORMAT_SHORT_DATE));
-                              oTransProcess.setInqRsv(tbl_row, 5,Double.valueOf(txtField05.getText()));
-                              oTransProcess.setInqRsv(tbl_row, 6,textArea06.getText());
-                         }
-                         CommonUtils.closeStage(btnApply);
-                         break;
-
-                    default:
-                        ShowMessageFX.Warning(null, pxeModuleName, "Button with name " + lsButton + " not registered.");
+    private void loadInquiryReservation() {
+    try{
+          /**
+           * User can edit VSA only if not yet Approved and not Cancelled.
+           *
+           **/
+            if(state){ //Add
+                txtField02.setText(CommonUtils.xsDateShort((Date) oApp.getServerDate()));
+                txtField13.setText("For Approval");
+            } else { 
+                txtField02.setText(CommonUtils.xsDateShort((Date) oTransProcess.getInqRsv(tbl_row,2)));
+                txtField03.setText(oTransProcess.getInqRsv(tbl_row,3).toString());
+                txtField05.setText(String.format("%.2f", oTransProcess.getInqRsv(tbl_row,5)));
+                switch (oTransProcess.getInqRsv(tbl_row,13).toString()) {
+                    case "0":
+                        txtField13.setText("For Approval");
+                        
+                        switch (iInqStat) {
+                            case 0: //For Follow up
+                                txtField05.setDisable(state);
+                                comboBox12.setDisable(state);
+                                textArea06.setDisable(state);
+                                btnApply.setDisable(state);
+                                break;
+                            case 1: //On Process
+                            case 3: //VSP
+                                if ((iEditMode == EditMode.UPDATE)){
+                                    txtField05.setDisable(state);
+                                    comboBox12.setDisable(state);
+                                    textArea06.setDisable(state);
+                                    btnApply.setDisable(state);
+                                }else {
+                                    txtField05.setDisable(!state);
+                                    comboBox12.setDisable(!state);
+                                    textArea06.setDisable(!state);
+                                    btnApply.setDisable(!state);
+                                }
+                                break;
+                            case 2: //Lost Sale
+                            case 4: //Sold
+                            case 5: //Retired
+                            case 6: //Cancelled 
+                                txtField05.setDisable(!state);
+                                comboBox12.setDisable(!state);
+                                textArea06.setDisable(!state);
+                                btnApply.setDisable(!state);
+                                break;
+                        }
+                        break;
+                    case "1":
+                        txtField13.setText("Approved");
+                        txtField05.setDisable(!state);
+                        comboBox12.setDisable(!state);
+                        textArea06.setDisable(!state);
+                        btnApply.setDisable(!state);
                         break; 
-               }
-          }catch (SQLException ex) {
-          Logger.getLogger(InquiryVehicleSalesAdvancesFormController.class.getName()).log(Level.SEVERE, null, ex);
-          }   
+                    case "2":
+                        txtField13.setText("Cancelled");
+                        txtField05.setDisable(!state);
+                        comboBox12.setDisable(!state);
+                        textArea06.setDisable(!state);
+                        btnApply.setDisable(!state);
+                        break;
+                    default:
+                        txtField13.setText("");
+                        break;
+                }
+                txtField14.setText((String) oTransProcess.getInqRsv(tbl_row,23));
+                //txtField15.setText( oTransProcess.getInqRsv(tbl_row,15).toString());
+                txtField15.setText(CommonUtils.xsDateShort((Date) oTransProcess.getInqRsv(tbl_row,15)));
+                textArea06.setText((String) oTransProcess.getInqRsv(tbl_row,6));
+                comboBox12.getSelectionModel().select(Integer.parseInt(oTransProcess.getInqRsv(tbl_row,12).toString())); //VSA Type
+            }
+        }catch (SQLException ex) {
+        Logger.getLogger(InquiryVehicleSalesAdvancesFormController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+     
+    private void cmdButton_Click(ActionEvent event) {
+        try{
+            String lsButton = ((Button)event.getSource()).getId();
+            switch (lsButton){
+                case "btnClose":
+                    CommonUtils.closeStage(btnClose);
+                    break;
+                case "btnApply":
+                    if(state){
+                         oTransProcess.addReserve();
+                    }
+                    if (setSelection()){
+                         oTransProcess.setInqRsv(tbl_row, 2,SQLUtil.toDate(txtField02.getText(), SQLUtil.FORMAT_SHORT_DATE));
+                         oTransProcess.setInqRsv(tbl_row, 5,Double.valueOf(txtField05.getText()));
+                         oTransProcess.setInqRsv(tbl_row, 6,textArea06.getText());
+                    }
+                    CommonUtils.closeStage(btnApply);
+                    break;
+
+                default:
+                    ShowMessageFX.Warning(null, pxeModuleName, "Button with name " + lsButton + " not registered.");
+                    break; 
+            }
+        }catch (SQLException ex) {
+        Logger.getLogger(InquiryVehicleSalesAdvancesFormController.class.getName()).log(Level.SEVERE, null, ex);
+        }   
     } 
      
-     /*Convert Date to String*/
-     private LocalDate strToDate(String val){
-          DateTimeFormatter date_formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-          LocalDate localDate = LocalDate.parse(val, date_formatter);
-          return localDate;
-     }
+    /*Convert Date to String*/
+    private LocalDate strToDate(String val){
+         DateTimeFormatter date_formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+         LocalDate localDate = LocalDate.parse(val, date_formatter);
+         return localDate;
+    }
      
-     /*Set TextField Value to Master Class*/
-//     final ChangeListener<? super Boolean> txtField_Focus = (o,ov,nv)->{
-//          try{
-//            TextField txtField = (TextField)((ReadOnlyBooleanPropertyBase)o).getBean();
-//            int lnIndex = Integer.parseInt(txtField.getId().substring(8, 10));
-//            String lsValue = txtField.getText();
-//            
-//            if (lsValue == null) return;
-//            if(!nv){ /*Lost Focus*/
-//                    switch (lnIndex){
-//                         case 2: //
-//                         case 5: //
-//                         case 6: //
-//                              oTrans.setMaster(lnIndex, lsValue); //Handle Encoded Value
-//                              break;
-//                    }
-//                
-//            } else
-//               txtField.selectAll();
-//          } catch (SQLException ex) {
-//            Logger.getLogger(InquiryFormController.class.getName()).log(Level.SEVERE, null, ex);
-//          }
-//     };
-     
-     /*Set TextArea to Master Class*/
-//     final ChangeListener<? super Boolean> txtArea_Focus = (o,ov,nv)->{
-//          TextArea txtField = (TextArea)((ReadOnlyBooleanPropertyBase)o).getBean();
-//          int lnIndex = Integer.parseInt(txtField.getId().substring(8, 10));
-//          String lsValue = txtField.getText();
-//          
-//          if (lsValue == null) return;
-//          try {
-//             if(!nv){ /*Lost Focus*/
-//               switch (lnIndex){
-//                   case 6:
-//                      oTrans.setMaster(lnIndex, lsValue); break;
-//               }
-//             } else
-//                 txtField.selectAll();
-//          } catch (SQLException e) {
-//             ShowMessageFX.Warning(getStage(),e.getMessage(), "Warning", null);
-//             System.exit(1);
-//          }
-//     };
-     
-     /*Set ComboBox Value to Master Class*/ 
-     @SuppressWarnings("ResultOfMethodCallIgnored")
-     private boolean setSelection(){
-          try {
-               if (comboBox12.getSelectionModel().getSelectedIndex() < 0){
-                   ShowMessageFX.Warning("No `Slip Type` selected.", pxeModuleName, "Please select `Slip Type` value.");
-                   comboBox12.requestFocus();
-                   return false;
-               }else 
-                    oTransProcess.setInqRsv(tbl_row, 12,comboBox12.getSelectionModel().getSelectedIndex());
-               
-          } catch (SQLException ex) {
-               ShowMessageFX.Warning(getStage(),ex.getMessage(), "Warning", null);
-          }
-          return true;
-     }
+    /*Set ComboBox Value to Master Class*/ 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    private boolean setSelection(){
+         try {
+              if (comboBox12.getSelectionModel().getSelectedIndex() < 0){
+                  ShowMessageFX.Warning("No `Slip Type` selected.", pxeModuleName, "Please select `Slip Type` value.");
+                  comboBox12.requestFocus();
+                  return false;
+              }else 
+                   oTransProcess.setInqRsv(tbl_row, 12,comboBox12.getSelectionModel().getSelectedIndex());
+
+         } catch (SQLException ex) {
+              ShowMessageFX.Warning(getStage(),ex.getMessage(), "Warning", null);
+         }
+         return true;
+    }
+
+    
      
      
 }

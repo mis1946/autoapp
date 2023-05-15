@@ -883,6 +883,7 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                     
             case "btnModify":
                 if (oTransProcess.UpdateRecord()){
+                    loadInquiryRequirements();
                 } else {
                     return;
                 }
@@ -1650,7 +1651,6 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                     
                     sClientID = (String) oTrans.getMaster(7);
                     sSourceNox = TransNo;
-                    
                     //Enable button based on selected inquiry
                     initButton(pnEditMode);
                     initBtnProcess(pnEditMode);
@@ -1948,6 +1948,7 @@ public class InquiryFormController implements Initializable, ScreenInterface{
      }
      // Load Inquiry Process Requirements
      public void loadInquiryRequirements(){
+        
           try {
                /*Populate table*/
                inqrequirementsdata.clear();
@@ -2002,7 +2003,24 @@ public class InquiryFormController implements Initializable, ScreenInterface{
      }
      
     public void initInquiryRequirements(){
-        boolean lbShow = (pnEditMode == EditMode.READY || pnEditMode == EditMode.UPDATE );
+        boolean lbShow = false;
+        switch (comboBox24.getSelectionModel().getSelectedIndex()) {
+            case 0: //For Follow up
+                lbShow = oTransProcess.getEditMode() == EditMode.READY;
+                break;
+            case 1: //On Process
+            case 3: //VSP
+                lbShow = oTransProcess.getEditMode() == EditMode.UPDATE;
+                break;
+            case 2: //Lost Sale
+            case 4: //Sold
+            case 5: //Retired
+            case 6: //Cancelled 
+                lbShow = false;
+                break;
+        }
+        
+        boolean lbMode = lbShow;
         tblRequirementsInfo.setEditable(true);
         //tblRequirementsInfo.getSelectionModel().setCellSelectionEnabled(true);
         tblRequirementsInfo.setSelectionModel(null);
@@ -2019,7 +2037,7 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                 selected.addListener((obs, oldValue, newValue) -> {
                     try {
                         if (newValue) {
-                            if (lbShow) {
+                            if (lbMode) {
                                 oTransProcess.addRequirements();
                                 if (oTransProcess.searchSalesExec(oTransProcess.getInqReqCount(),"",false)){
                                     oTransProcess.setInqReq(oTransProcess.getInqReqCount(),"cSubmittd",1);
@@ -2033,7 +2051,7 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                                 } 
                             }
                         } else {
-                            if (lbShow) {
+                            if (lbMode) {
                                 oTransProcess.removeInqReq( oTransProcess.getInqReqSrc(index + 1,"sRqrmtCde").toString());
                             }
                                         

@@ -15,6 +15,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.AnchorPane;
 import org.rmj.appdriver.GRider;
@@ -92,6 +93,8 @@ public class ActivityFormController implements Initializable,ScreenInterface {
     private AnchorPane AnchorMain;
     @FXML
     private ComboBox comboType;
+    @FXML
+    private TabPane tabPane;
 
     /**
      * Initializes the controller class.
@@ -102,7 +105,9 @@ public class ActivityFormController implements Initializable,ScreenInterface {
           
           
           btnClose.setOnAction(this::cmdButton_Click);
-          comboType.setItems(cType);
+          comboType.setItems(cType); 
+
+          
     
     }    
     @Override
@@ -154,7 +159,7 @@ public class ActivityFormController implements Initializable,ScreenInterface {
 //                              txtField08.requestFocus();
 //                              return;
 //                         }
-//                         
+//   
 //                         //Proceed Saving
 //                         if (setSelection()) {
 //                              if (oTrans.SaveRecord()){
@@ -168,7 +173,7 @@ public class ActivityFormController implements Initializable,ScreenInterface {
                          break;
                     case "btnSearch":
                         break;
-                    case "btnActivityHistory":
+                    case "btnActivityHistory": 
                         break;
                     case "btnPrint":
                         break;//close tab

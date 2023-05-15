@@ -198,7 +198,7 @@ public class InquiryBankApplicationFormController implements Initializable {
             }
             
         }catch (SQLException ex) {
-        Logger.getLogger(InquiryVehicleSalesAdvancesFormController.class.getName()).log(Level.SEVERE, null, ex);
+        Logger.getLogger(InquiryBankApplicationFormController.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }

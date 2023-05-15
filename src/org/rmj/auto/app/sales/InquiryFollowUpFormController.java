@@ -208,7 +208,7 @@ public class InquiryFollowUpFormController implements Initializable {
             textArea04.setText(oTransFollowUp.getFollowUp(4).toString()); 
                 
         }catch (SQLException ex) {
-        Logger.getLogger(InquiryVehicleSalesAdvancesFormController.class.getName()).log(Level.SEVERE, null, ex);
+        Logger.getLogger(InquiryFollowUpFormController.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }

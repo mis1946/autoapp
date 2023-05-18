@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/javafx/FXMLController.java to edit this template
- */
 package org.rmj.auto.app.sales;
 import java.net.URL;
 import java.sql.SQLException;
@@ -57,7 +53,7 @@ public class VehicleSalesApprovalController implements Initializable,ScreenInter
     ObservableList<String> cFilter = FXCollections.observableArrayList("Advance Slip Date", "Advances Slip No.", "Advances Type",
                                                                        "Customer Name","Employee Name","Unit Description");
         
-    ObservableList<String> cType = FXCollections.observableArrayList("Reservation","Deposit","Safeguard Duty");
+    ObservableList<String> cType = FXCollections.observableArrayList("RESERVATION","DEPOSIT","SAFEGUARD DUTY");
     private ObservableList<VehicleSalesApprovalTable> vhlApprovalData = FXCollections.observableArrayList();
     @FXML
     private Button btnApproved;
@@ -304,14 +300,14 @@ public class VehicleSalesApprovalController implements Initializable,ScreenInter
                             String.valueOf(lnCtr),
                             oTrans.getInqRsv(lnCtr,"cTranStat").toString(),
                             oTrans.getInqRsv(lnCtr,"sTransNox").toString(),
-                            oTrans.getInqRsv(lnCtr,"sReferNox").toString(),
-                            res,
-                            CommonUtils.xsDateShort((Date) oTrans.getInqRsv(lnCtr,"dTransact")),
-                            oTrans.getInqRsv(lnCtr,"sCompnyNm").toString(),
-                            oTrans.getInqRsv(lnCtr,"sDescript").toString(),
+                            oTrans.getInqRsv(lnCtr,"sReferNox").toString().toUpperCase(),
+                            res.toUpperCase(),
+                            CommonUtils.xsDateShort((Date)oTrans.getInqRsv(lnCtr,"dTransact")),
+                            oTrans.getInqRsv(lnCtr,"sCompnyNm").toString().toUpperCase(),
+                            oTrans.getInqRsv(lnCtr,"sDescript").toString().toUpperCase(),
                             formattedAmount,
-                            oTrans.getInqRsv(lnCtr,"sSeNamexx").toString(),
-                            ""
+                            oTrans.getInqRsv(lnCtr,"sSeNamexx").toString().toUpperCase(),
+                            "".toUpperCase()
                     ));
                 }
                 tblVhclApproval.setItems(vhlApprovalData);

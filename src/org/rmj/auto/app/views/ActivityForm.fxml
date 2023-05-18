@@ -149,10 +149,11 @@
                                                       <GridPane prefHeight="286.0" prefWidth="629.0" vgap="3.0">
                                                          <columnConstraints>
                                                             <ColumnConstraints hgrow="SOMETIMES" maxWidth="128.6666717529297" minWidth="-Infinity" prefWidth="120.0" />
-                                                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="82.33332824707031" />
+                                                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="90.0" />
                                                             <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="15.333328247070312" />
-                                                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="200.0" />
-                                                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="30.0" />
+                                                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="90.0" />
+                                                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="122.0" minWidth="-Infinity" prefWidth="60.0" />
+                                                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="23.0" minWidth="-Infinity" prefWidth="0.0" />
                                                             <ColumnConstraints hgrow="SOMETIMES" maxWidth="182.66665649414062" minWidth="-Infinity" prefWidth="102.0" />
                                                             <ColumnConstraints hgrow="SOMETIMES" maxWidth="91.66668701171875" minWidth="-Infinity" prefWidth="20.0" />
                                                             <ColumnConstraints hgrow="SOMETIMES" maxWidth="142.0" minWidth="-Infinity" prefWidth="90.0" />
@@ -183,12 +184,12 @@
                                                             <Label id="LabelDesc" prefHeight="46.0" prefWidth="132.0" text="Description" GridPane.rowIndex="5" />
                                                             <Label id="LabelDesc" prefHeight="49.0" prefWidth="130.0" text="Logistic Remarks" GridPane.rowIndex="7" />
                                                             <Label id="LabelDesc" prefHeight="53.0" prefWidth="139.0" text="Activity Remarks" GridPane.rowIndex="8" />
-                                                            <Label id="LabelDesc" prefHeight="62.0" prefWidth="127.0" text="Department in charge" GridPane.columnIndex="5" GridPane.columnSpan="2" />
-                                                            <Label id="LabelDesc" prefHeight="66.0" prefWidth="149.0" text="Person in charge" GridPane.columnIndex="5" GridPane.rowIndex="1" />
-                                                            <Label id="LabelDesc" prefHeight="60.0" prefWidth="146.0" text="Branch in charge" GridPane.columnIndex="5" GridPane.rowIndex="2" />
-                                                            <Label id="LabelDesc" prefHeight="66.0" prefWidth="133.0" text="No. of Target Clients" GridPane.columnIndex="5" GridPane.rowIndex="4" />
-                                                            <Label id="LabelDesc" prefHeight="77.0" prefWidth="130.0" text="Branch" GridPane.columnIndex="5" GridPane.rowIndex="3" />
-                                                            <Label id="LabelDesc" prefHeight="124.0" prefWidth="139.0" text="Total Event Budget " GridPane.columnIndex="5" GridPane.rowIndex="5" />
+                                                            <Label id="LabelDesc" prefHeight="62.0" prefWidth="127.0" text="Department in charge" GridPane.columnIndex="6" GridPane.columnSpan="2" />
+                                                            <Label id="LabelDesc" prefHeight="66.0" prefWidth="149.0" text="Person in charge" GridPane.columnIndex="6" GridPane.rowIndex="1" />
+                                                            <Label id="LabelDesc" prefHeight="60.0" prefWidth="146.0" text="Branch in charge" GridPane.columnIndex="6" GridPane.rowIndex="2" />
+                                                            <Label id="LabelDesc" prefHeight="66.0" prefWidth="133.0" text="No. of Target Clients" GridPane.columnIndex="6" GridPane.columnSpan="2" GridPane.rowIndex="4" />
+                                                            <Label id="LabelDesc" prefHeight="77.0" prefWidth="130.0" text="Branch" GridPane.columnIndex="6" GridPane.rowIndex="3" />
+                                                            <Label id="LabelDesc" prefHeight="124.0" prefWidth="139.0" text="Total Event Budget " GridPane.columnIndex="6" GridPane.rowIndex="5" />
                                                             <Label prefHeight="45.0" prefWidth="99.0" text="12312313231" GridPane.columnIndex="1" />
                                                             <DatePicker GridPane.columnIndex="1" GridPane.rowIndex="2" />
                                                             <DatePicker GridPane.columnIndex="3" GridPane.rowIndex="2">
@@ -219,20 +220,20 @@
                                                                   <Insets right="5.0" top="2.0" />
                                                                </GridPane.margin>
                                                             </TextArea>
-                                                            <TextField promptText="Search: F3" GridPane.columnIndex="7" GridPane.columnSpan="3">
+                                                            <TextField promptText="Search: F3" GridPane.columnIndex="8" GridPane.columnSpan="4">
                                                                <GridPane.margin>
                                                                   <Insets />
                                                                </GridPane.margin>
                                                             </TextField>
-                                                            <TextField promptText="Search: F3" GridPane.columnIndex="7" GridPane.columnSpan="3" GridPane.rowIndex="1">
+                                                            <TextField promptText="Search: F3" GridPane.columnIndex="8" GridPane.columnSpan="4" GridPane.rowIndex="1">
                                                                <GridPane.margin>
                                                                   <Insets />
                                                                </GridPane.margin>
                                                             </TextField>
-                                                            <TextField GridPane.columnIndex="7" GridPane.rowIndex="3" />
-                                                            <TextField GridPane.columnIndex="7" GridPane.rowIndex="4" />
-                                                            <TextField GridPane.columnIndex="7" GridPane.rowIndex="5" />
-                                                            <TextField prefHeight="22.0" prefWidth="86.0" promptText="Search: F3" GridPane.columnIndex="7" GridPane.columnSpan="3" GridPane.rowIndex="2" />
+                                                            <TextField GridPane.columnIndex="8" GridPane.rowIndex="3" />
+                                                            <TextField GridPane.columnIndex="8" GridPane.rowIndex="4" />
+                                                            <TextField GridPane.columnIndex="8" GridPane.rowIndex="5" />
+                                                            <TextField prefHeight="22.0" prefWidth="86.0" promptText="Search: F3" GridPane.columnIndex="8" GridPane.columnSpan="4" GridPane.rowIndex="2" />
                                                          </children>
                                                          <VBox.margin>
                                                             <Insets bottom="10.0" left="20.0" right="20.0" top="20.0" />

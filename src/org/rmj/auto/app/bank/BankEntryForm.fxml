@@ -85,7 +85,7 @@
                                                 <TableColumn fx:id="tblindexRow" prefWidth="38.0" text="Row" />
                                               <TableColumn fx:id="tblindex02" maxWidth="297.0" minWidth="35.0" prefWidth="236.0" resizable="false" text="Bank Name" />
                                               <TableColumn fx:id="tblindex03" minWidth="17.0" prefWidth="201.0" text="Bank Abbrev" />
-                                                <TableColumn fx:id="tblindex17" minWidth="72.0" prefWidth="143.0" text="Branch" />
+                                                <TableColumn fx:id="tblindex17" minWidth="-Infinity" prefWidth="195.0" text="Branch" />
                                                 <TableColumn fx:id="tblindex16" prefWidth="200.0" text="Address" />
                                             </columns>
                                           </TableView>

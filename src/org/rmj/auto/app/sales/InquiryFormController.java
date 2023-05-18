@@ -112,9 +112,9 @@ public class InquiryFormController implements Initializable, ScreenInterface{
     private ObservableList<InquiryTablePriorityUnit> priorityunitdata = FXCollections.observableArrayList();
     private ObservableList<InquiryTablePromoOffered> promosoffereddata = FXCollections.observableArrayList();
     //Combo Box Value
-    ObservableList<String> cInquiryType = FXCollections.observableArrayList("Walk-in", "Web Inquiry", "Phone-in", "Referral", "Sales Call","Event", "Service", "Office Account","Caremittance","Database","UIO"); //Inquiry Type values
-    ObservableList<String> cOnlineStore = FXCollections.observableArrayList("Facebook", "WhatsUp", "Instagram", "Tiktok", "Twitter");
-    ObservableList<String> cInqStatus = FXCollections.observableArrayList("For Follow-up", "On Process", "Lost Sale", "VSP", "Sold", "Retired" ,"Cancelled"); //Inquiry Type Values
+    ObservableList<String> cInquiryType = FXCollections.observableArrayList("WALK-IN", "WEB INQUIRY", "PHONE-IN", "REFERRAL", "SALES CALL","EVENT", "SERVICE", "OFFICE ACCOUNT","CAREMITTANCE","DATABASE","UIO"); //Inquiry Type values
+    //ObservableList<String> cOnlineStore = FXCollections.observableArrayList("Facebook", "WhatsUp", "Instagram", "Tiktok", "Twitter");
+    ObservableList<String> cInqStatus = FXCollections.observableArrayList("FOR FOLLOW-UP", "ON PROCESS", "LOST SALE", "VSP", "SOLD", "RETIRED" ,"CANCELLED"); //Inquiry Type Values
 
     //AnchorPane
     @FXML
@@ -263,8 +263,8 @@ public class InquiryFormController implements Initializable, ScreenInterface{
     private ObservableList<InquiryTableVehicleSalesAdvances> inqvsadata = FXCollections.observableArrayList();
 
     //Combo Box Value  
-    ObservableList<String> cModeOfPayment = FXCollections.observableArrayList("Cash", "Purchase Order", "Financing"); //Mode of Payment Values
-    ObservableList<String> cCustomerType = FXCollections.observableArrayList("Business", "Employed", "OFW", "Seaman", "Any"); // Customer Type Values
+    ObservableList<String> cModeOfPayment = FXCollections.observableArrayList("CASH", "PURCHASE ORDER", "FINANCING"); //Mode of Payment Values
+    ObservableList<String> cCustomerType = FXCollections.observableArrayList("BUSINESS", "EMPLOYED", "OFW", "SEAMAN", "ANY"); // Customer Type Values
     @FXML
     private ComboBox cmbInqpr01;
     @FXML
@@ -398,7 +398,8 @@ public class InquiryFormController implements Initializable, ScreenInterface{
         initPromosOffered();
 
         //dateSeek01.setValue(LocalDate.of(2023, Month.JANUARY, 1)); //birthdate
-        dateSeek01.setValue(LocalDate.of(strToDate(CommonUtils.xsDateShort((Date) oApp.getServerDate())).getYear(), strToDate(CommonUtils.xsDateShort((Date) oApp.getServerDate())).getMonth(), 1));
+        //dateSeek01.setValue(LocalDate.of(strToDate(CommonUtils.xsDateShort((Date) oApp.getServerDate())).getYear(), strToDate(CommonUtils.xsDateShort((Date) oApp.getServerDate())).getMonth(), 1));
+        dateSeek01.setValue(strToDate(CommonUtils.xsDateShort((Date) oApp.getServerDate())));
         dateSeek02.setValue(strToDate(CommonUtils.xsDateShort((Date) oApp.getServerDate())));
         dateSeek01.setOnAction(event -> {
             loadInquiryListTable();
@@ -446,7 +447,15 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                 Logger.getLogger(InquiryFormController.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
-          
+        
+        setCapsLockBehavior(txtField04);
+        setCapsLockBehavior(txtField07);
+        setCapsLockBehavior(txtField29);
+        setCapsLockBehavior(txtField09);
+        setCapsLockBehavior(textArea08);
+        setCapsLockBehavior(txtField15);
+        setCapsLockBehavior(txtField14);
+        setCapsLockBehavior(txtField33);
         txtField04.focusedProperty().addListener(txtField_Focus);  // Sales Executive
         txtField07.focusedProperty().addListener(txtField_Focus);  //Customer ID 
         txtField29.focusedProperty().addListener(txtField_Focus);  //Company ID 
@@ -501,7 +510,7 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                     cmbInqpr02.setDisable(true);
                     break;
                 case 2:
-                    ObservableList<String> cCustType = FXCollections.observableArrayList( "Business", "Employed", "OFW", "Seaman"); // Customer Type Values
+                    ObservableList<String> cCustType = FXCollections.observableArrayList( "BUSINESS", "EMPLOYED", "OFW", "SEAMAN"); // Customer Type Values
                     cmbInqpr02.setItems(cCustType);
                     cmbInqpr02.setDisable(false);
                     break;
@@ -574,6 +583,22 @@ public class InquiryFormController implements Initializable, ScreenInterface{
         initButton(pnEditMode);
 
     }    
+    
+    private static void setCapsLockBehavior(TextField textField) {
+          textField.textProperty().addListener((observable, oldValue, newValue) -> {
+               if (textField.getText() != null) {
+                    textField.setText(newValue.toUpperCase());
+               }
+          });
+     }
+     
+     private static void setCapsLockBehavior(TextArea textArea) {
+          textArea.textProperty().addListener((observable, oldValue, newValue) -> {
+               if (textArea.getText() != null) {
+                    textArea.setText(newValue.toUpperCase());
+               }
+          });
+     }
     
     @Override
     public void setGRider(GRider foValue) {
@@ -1350,25 +1375,25 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                          //Inquiry Status
                          switch (oTrans.getInqDetail(lnCtr, "cTranStat").toString()) { // cTranStat
                               case "0":
-                                   sInqStat = "For Follow-up";
+                                   sInqStat = "FOR FOLLOW-UP";
                                    break;
                               case "1":
-                                   sInqStat = "On Process" ; 
+                                   sInqStat = "ON PROCESS" ; 
                                    break;
                               case "2":
-                                   sInqStat = "Lost Sale";
+                                   sInqStat = "LOST SALE";
                                    break;
                               case "3":
                                    sInqStat = "VSP";
                                    break;
                               case "4":
-                                   sInqStat = "Sold";
+                                   sInqStat = "SOLD";
                                    break;
                               case "5":
-                                   sInqStat = "Retired" ;
+                                   sInqStat = "RETIRED" ;
                                    break;
                               case "6":
-                                   sInqStat = "Cancelled" ; 
+                                   sInqStat = "CANCELLED" ; 
                                    break;
                               default:
                                    sInqStat = "" ; //Inquiry Status
@@ -1416,7 +1441,7 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                          oTrans.getInqDetail(lnCtr, "sMobileNo").toString(), //
                          oTrans.getInqDetail(lnCtr, "sAccountx").toString(), //        
                          oTrans.getInqDetail(lnCtr, "sEmailAdd").toString(), //        
-                         oTrans.getInqDetail(lnCtr, "sAddressx").toString(), //
+                         oTrans.getInqDetail(lnCtr, "sAddressx").toString().toUpperCase(), //
                          oTrans.getInqDetail(lnCtr, "sSalesExe").toString(), //        
                          oTrans.getInqDetail(lnCtr, "sSalesAgn").toString() //       
                                  
@@ -1672,7 +1697,7 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                txtField04.setText((String) oTrans.getMaster(34)); //Sales Executive ID //Employee ID
                txtField30.setText((String) oTrans.getMaster(30)); //Contact No
                txtField32.setText((String) oTrans.getMaster(32)); //Email Address
-               txtField33.setText((String) oTrans.getMaster(33)); //Client Address
+               txtField33.setText(oTrans.getMaster(33).toString().toUpperCase()); //Client Address
                txtField31.setText((String) oTrans.getMaster(31)); //Social Media
                cmbType012.getSelectionModel().select(Integer.parseInt(oTrans.getMaster(12).toString())); //Inquiry Type
 //               if (Integer.parseInt(oTrans.getMaster(12).toString()) == 1) {
@@ -1680,8 +1705,8 @@ public class InquiryFormController implements Initializable, ScreenInterface{
 //               }
                txtField13.setText((String) oTrans.getMaster(36)); //Web Inquiry
                txtField10.setValue(strToDate(CommonUtils.xsDateShort((Date) oTrans.getMaster(10)))); //Target Release Date
-               txtField09.setText((String) oTrans.getMaster(35)); //Agent ID
-               txtField15.setText((String) oTrans.getMaster(15)); //Activity ID
+               txtField09.setText(oTrans.getMaster(35).toString()); //Agent ID
+               txtField15.setText(oTrans.getMaster(15).toString()); //Activity ID
                txtField02.setText((String) oTrans.getMaster(2)); //Branch Code
                comboBox24.getSelectionModel().select(Integer.parseInt(oTrans.getMaster(24).toString())); //Inquiry Status
                switch (oTrans.getMaster(5).toString()) {
@@ -2086,13 +2111,13 @@ public class InquiryFormController implements Initializable, ScreenInterface{
             for (lnCtr = 1; lnCtr <= oTransProcess.getReserveCount(); lnCtr++){
                 switch (oTransProcess.getInqRsv(lnCtr,12).toString()) {
                     case "0":
-                        sVsaType = "Reservation";
+                        sVsaType = "RESERVATION";
                         break;
                     case "1":
-                        sVsaType = "Deposit";
+                        sVsaType = "DEPOSIT";
                         break; 
                     case "2":
-                        sVsaType = "Safeguard Duty";
+                        sVsaType = "SAFEGUARD DUTY";
                         break;
                     default:
                         sVsaType = "";
@@ -2101,13 +2126,13 @@ public class InquiryFormController implements Initializable, ScreenInterface{
 
                 switch (oTransProcess.getInqRsv(lnCtr,13).toString()) {
                     case "0":
-                        sVsaStat = "For Approval";
+                        sVsaStat = "FOR APPROVAL";
                         break;
                     case "1":
-                        sVsaStat = "Approved";
+                        sVsaStat = "APPROVED";
                         break; 
                     case "2":
-                        sVsaStat = "Cancelled";
+                        sVsaStat = "CANCELLED";
                         break;
                     default:
                         sVsaStat = "";
@@ -2122,6 +2147,7 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                        , sVsaType //Type
                     , (String) oTransProcess.getInqRsv(lnCtr,3) //VSA No
                     , String.format("%.2f", oTransProcess.getInqRsv(lnCtr,5)) //Amount
+                      //  ,CommonUtils.NumberFormat(0.00, oTransProcess.getInqRsv(lnCtr,5).toString())
                     , sVsaStat //Status
                     , (String) oTransProcess.getInqRsv(lnCtr,6) // Remarks
                     , (String) oTransProcess.getInqRsv(lnCtr,13) // Approved By
@@ -2195,10 +2221,10 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                 String sPayMode, sBankAppStat;
                 switch ((String) oTransBankApp.getBankAppDet(lnCtr,4)) {
                     case "0":
-                        sPayMode = "Purchase Order";
+                        sPayMode = "PURCHASE ORDER";
                         break;
                     case "1":
-                        sPayMode = "Financing";
+                        sPayMode = "FINANCING";
                         break;
                     default:
                         sPayMode = "";
@@ -2209,16 +2235,16 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                     sBankAppStat = "";
                 } else switch ((String) oTransBankApp.getBankAppDet(lnCtr,9)) {
                     case "0":
-                        sBankAppStat = "On-going";
+                        sBankAppStat = "ON-GOING";
                         break;
                     case "1":
-                        sBankAppStat = "Decline";
+                        sBankAppStat = "DECLINE";
                         break;
                     case "2":
-                        sBankAppStat = "Approved";
+                        sBankAppStat = "APPROVED";
                         break;
                     case "3":
-                        sBankAppStat = "Cancelled";
+                        sBankAppStat = "CANCELLED";
                         break;
                     default:
                         sBankAppStat = "";

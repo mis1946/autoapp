@@ -56,7 +56,7 @@ public class InquiryVehicleSalesAdvancesFormController implements Initializable 
     private boolean state = false;
 
     private final String pxeModuleName = "Inquiry Vehicle Sales Advances";
-    ObservableList<String> cSlipType = FXCollections.observableArrayList("Reservation", "Deposit", "Safeguard Duty");
+    ObservableList<String> cSlipType = FXCollections.observableArrayList("RESERVATION", "DEPOSIT", "SAFEGUARD DUTY");
 
     @FXML
     private Button btnClose;
@@ -150,20 +150,26 @@ public class InquiryVehicleSalesAdvancesFormController implements Initializable 
      
     private void loadInquiryReservation() {
     try{
-          /**
-           * User can edit VSA only if not yet Approved and not Cancelled.
-           *
-           **/
+        /**
+         * User can edit VSA only if not yet Approved and not Cancelled.
+         *
+         **/
+        
+        setCapsLockBehavior(txtField02);
+        setCapsLockBehavior(txtField13);
+        setCapsLockBehavior(txtField05);
+        setCapsLockBehavior(textArea06);
+          
             if(state){ //Add
                 txtField02.setText(CommonUtils.xsDateShort((Date) oApp.getServerDate()));
-                txtField13.setText("For Approval");
+                txtField13.setText("FOR APPROVAL");
             } else { 
                 txtField02.setText(CommonUtils.xsDateShort((Date) oTransProcess.getInqRsv(tbl_row,2)));
                 txtField03.setText(oTransProcess.getInqRsv(tbl_row,3).toString());
                 txtField05.setText(String.format("%.2f", oTransProcess.getInqRsv(tbl_row,5)));
                 switch (oTransProcess.getInqRsv(tbl_row,13).toString()) {
                     case "0":
-                        txtField13.setText("For Approval");
+                        txtField13.setText("FOR APPROVAL");
                         
                         switch (iInqStat) {
                             case 0: //For Follow up
@@ -198,14 +204,14 @@ public class InquiryVehicleSalesAdvancesFormController implements Initializable 
                         }
                         break;
                     case "1":
-                        txtField13.setText("Approved");
+                        txtField13.setText("APPROVED");
                         txtField05.setDisable(!state);
                         comboBox12.setDisable(!state);
                         textArea06.setDisable(!state);
                         btnApply.setDisable(!state);
                         break; 
                     case "2":
-                        txtField13.setText("Cancelled");
+                        txtField13.setText("CANCELLED");
                         txtField05.setDisable(!state);
                         comboBox12.setDisable(!state);
                         textArea06.setDisable(!state);
@@ -226,7 +232,23 @@ public class InquiryVehicleSalesAdvancesFormController implements Initializable 
         }
 
     }
+    
+    private static void setCapsLockBehavior(TextField textField) {
+          textField.textProperty().addListener((observable, oldValue, newValue) -> {
+               if (textField.getText() != null) {
+                    textField.setText(newValue.toUpperCase());
+               }
+          });
+     }
      
+     private static void setCapsLockBehavior(TextArea textArea) {
+          textArea.textProperty().addListener((observable, oldValue, newValue) -> {
+               if (textArea.getText() != null) {
+                    textArea.setText(newValue.toUpperCase());
+               }
+          });
+     }
+    
     private void cmdButton_Click(ActionEvent event) {
         try{
             String lsButton = ((Button)event.getSource()).getId();

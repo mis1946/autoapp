@@ -57,8 +57,8 @@ public class InquiryBankApplicationFormController implements Initializable {
 
     private final String pxeModuleName = "Inquiry Bank Application";
     
-    ObservableList<String> cBankPaymode = FXCollections.observableArrayList( "Purchase Order", "Financing"); //Mode of Payment Values
-    ObservableList<String> cBankStatus = FXCollections.observableArrayList("On-going", "Decline", "Approved" ); //Bank Application Status Values
+    ObservableList<String> cBankPaymode = FXCollections.observableArrayList( "PURCHASE ORDER", "FINANCING"); //Mode of Payment Values
+    ObservableList<String> cBankStatus = FXCollections.observableArrayList("ON-GOING", "DECLINE", "APPROVED" ); //Bank Application Status Values
 
     @FXML
     private Button btnClose;
@@ -116,6 +116,10 @@ public class InquiryBankApplicationFormController implements Initializable {
             }
         });
         
+        setCapsLockBehavior(txtField16);
+        setCapsLockBehavior(txtField18);
+        setCapsLockBehavior(textArea08);
+        
         txtField16.focusedProperty().addListener(txtField_Focus);  //Bank Name
         txtField18.focusedProperty().addListener(txtField_Focus);  //Bank Branch
         textArea08.focusedProperty().addListener(txtArea_Focus);  //Remarks
@@ -134,6 +138,22 @@ public class InquiryBankApplicationFormController implements Initializable {
         loadBankApplication();
         initbutton(pnEditMode);
     }
+    
+    private static void setCapsLockBehavior(TextField textField) {
+          textField.textProperty().addListener((observable, oldValue, newValue) -> {
+               if (textField.getText() != null) {
+                    textField.setText(newValue.toUpperCase());
+               }
+          });
+     }
+     
+     private static void setCapsLockBehavior(TextArea textArea) {
+          textArea.textProperty().addListener((observable, oldValue, newValue) -> {
+               if (textArea.getText() != null) {
+                    textArea.setText(newValue.toUpperCase());
+               }
+          });
+     }
 
     private void cmdButton_Click(ActionEvent event) {
         String lsButton = ((Button)event.getSource()).getId();

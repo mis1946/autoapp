@@ -123,6 +123,10 @@ public class InquiryFollowUpFormController implements Initializable {
             
         });
         
+        setCapsLockBehavior(txtField07);
+        setCapsLockBehavior(textArea04);
+        setCapsLockBehavior(textArea05);
+        
         txtField07.focusedProperty().addListener(txtField_Focus);  //Platform
         textArea04.focusedProperty().addListener(txtArea_Focus);  //Remarks
         textArea05.focusedProperty().addListener(txtArea_Focus);  //Follow up abouts
@@ -139,6 +143,22 @@ public class InquiryFollowUpFormController implements Initializable {
         initbutton();
     }  
 
+    private static void setCapsLockBehavior(TextField textField) {
+          textField.textProperty().addListener((observable, oldValue, newValue) -> {
+               if (textField.getText() != null) {
+                    textField.setText(newValue.toUpperCase());
+               }
+          });
+     }
+     
+     private static void setCapsLockBehavior(TextArea textArea) {
+          textArea.textProperty().addListener((observable, oldValue, newValue) -> {
+               if (textArea.getText() != null) {
+                    textArea.setText(newValue.toUpperCase());
+               }
+          });
+     }
+    
     private void cmdButton_Click(ActionEvent event) {
         String lsButton = ((Button)event.getSource()).getId();
         switch (lsButton){

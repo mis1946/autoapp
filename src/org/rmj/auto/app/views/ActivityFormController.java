@@ -17,6 +17,7 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import org.rmj.appdriver.GRider;
 import org.rmj.appdriver.agentfx.ShowMessageFX;
@@ -47,23 +48,9 @@ public class ActivityFormController implements Initializable,ScreenInterface {
     @FXML
     private Button btnSave;
     @FXML
-    private Button btnSearch;
-    @FXML
     private Label lblApprovedBy;
     @FXML
     private Label lblApprovedDate;
-    @FXML
-    private Button btnActSearch;
-    @FXML
-    private Button btnActRemove;
-    @FXML
-    private TableView<?> tblViewActivityMembers;
-    @FXML
-    private TableView<?> tblViewVehicleModel;
-    @FXML
-    private Button btnVchlSearch;
-    @FXML
-    private Button btnVhclRemove;
     @FXML
     private Button btnAddRowTasks;
     @FXML
@@ -83,18 +70,40 @@ public class ActivityFormController implements Initializable,ScreenInterface {
     @FXML
     private Button btnRemoveBudget;
     @FXML
-    private Label lblActivityNo;
-    @FXML
-    private DatePicker DatepFrom;
-    @FXML
-    private DatePicker DatepTo;
-    ObservableList<String> cType = FXCollections.observableArrayList("Event", "Sales Call", "Promo");
-    @FXML
     private AnchorPane AnchorMain;
     @FXML
-    private ComboBox comboType;
-    @FXML
     private TabPane tabPane;
+    @FXML
+    private TextField txtField01;
+    @FXML
+    private TextField txtField26;
+    @FXML
+    private Button btnAddRowTasks111;
+    @FXML
+    private Button btnAddRowTasks1111;
+    @FXML
+    private Button btnBrowse;
+    @FXML
+    private Label lblActivityNo;
+    @FXML
+    private DatePicker dateFrom;
+    @FXML
+    private DatePicker dateTo;
+    @FXML
+    private ComboBox comboActivityType;
+    ObservableList<String> cType = FXCollections.observableArrayList("Event", "Sales Call", "Promo");
+    @FXML
+    private Button btnActivityMembersSearch;
+    @FXML
+    private Button btnActivityMemRemove;
+    @FXML
+    private TableView<?> tblViewActivityMembers;
+    @FXML
+    private Button btnVhclModelsSearch;
+    @FXML
+    private Button btnVhlModelRemove;
+    @FXML
+    private TableView<?> tblViewVhclModels;
 
     /**
      * Initializes the controller class.
@@ -105,7 +114,7 @@ public class ActivityFormController implements Initializable,ScreenInterface {
           
           
           btnClose.setOnAction(this::cmdButton_Click);
-          comboType.setItems(cType); 
+          comboActivityType.setItems(cType); 
 
           
     
@@ -171,7 +180,7 @@ public class ActivityFormController implements Initializable,ScreenInterface {
 //                              }
 //                         }
                          break;
-                    case "btnSearch":
+                    case "btnBrowse":
                         break;
                     case "btnActivityHistory": 
                         break;

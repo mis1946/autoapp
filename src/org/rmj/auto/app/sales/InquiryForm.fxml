@@ -29,7 +29,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" fx:id="AnchorMain" prefHeight="1182.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" >
+<AnchorPane id="AnchorPane" fx:id="AnchorMain" prefHeight="1182.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <StackPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -207,6 +207,7 @@
                                                                         <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
                                                                         <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
                                                                         <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
+                                                                        <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="10.0" vgrow="SOMETIMES" />
                                                                      </rowConstraints>
                                                                      <children>
                                                                         <Label id="LabelDesc" stylesheets="@../css/FrameStyle.css" text="Customer Name" GridPane.columnIndex="1" />
@@ -218,7 +219,6 @@
                                                                               <Insets />
                                                                            </GridPane.margin>
                                                                         </TextField>
-                                                                        <TextField fx:id="txtField33" disable="true" GridPane.columnIndex="2" GridPane.rowIndex="2" />
                                                                         <Label id="LabelDesc" text="Contact Number" GridPane.columnIndex="4" />
                                                                         <Label GridPane.columnIndex="4" GridPane.rowIndex="1" />
                                                                         <Label id="LabelDesc" text="Email Address" GridPane.columnIndex="4" GridPane.rowIndex="1" />
@@ -226,6 +226,7 @@
                                                                         <TextField fx:id="txtField32" disable="true" GridPane.columnIndex="5" GridPane.rowIndex="1" />
                                                                         <TextField fx:id="txtField31" disable="true" GridPane.columnIndex="5" GridPane.rowIndex="2" />
                                                                         <Label id="LabelDesc" text="Social Media" GridPane.columnIndex="4" GridPane.rowIndex="2" />
+                                                                        <TextArea fx:id="textArea33" editable="false" prefHeight="200.0" prefWidth="200.0" wrapText="true" GridPane.columnIndex="2" GridPane.rowIndex="2" GridPane.rowSpan="2" />
                                                                      </children>
                                                                      <VBox.margin>
                                                                         <Insets bottom="3.0" top="3.0" />
@@ -586,9 +587,9 @@
                                                                                             <columnConstraints>
                                                                                               <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="5.0" prefWidth="10.0" />
                                                                                               <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="100.0" />
-                                                                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="150.0" />
+                                                                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="170.0" />
                                                                                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="10.0" />
-                                                                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="100.0" />
+                                                                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="100.0" />
                                                                                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="150.0" />
                                                                                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="165.0" />
                                                                                                 <ColumnConstraints hgrow="SOMETIMES" minWidth="5.0" prefWidth="10.0" />
@@ -608,7 +609,7 @@
                                                                                                       <Insets />
                                                                                                    </GridPane.margin>
                                                                                                 </Label>
-                                                                                                <ComboBox fx:id="cmbInqpr01" prefWidth="150.0" GridPane.columnIndex="2" />
+                                                                                                <ComboBox fx:id="cmbInqpr01" prefWidth="170.0" GridPane.columnIndex="2" />
                                                                                                 <ComboBox fx:id="cmbInqpr02" prefWidth="150.0" GridPane.columnIndex="5" />
                                                                                                 <TableView fx:id="tblRequirementsInfo" GridPane.columnIndex="1" GridPane.columnSpan="6" GridPane.rowIndex="1">
                                                                                                    <columns>
@@ -896,7 +897,7 @@
                                                                                              <children>
                                                                                                 <TableView fx:id="tblBankApplication" prefHeight="400.0" prefWidth="200.0" GridPane.columnIndex="1">
                                                                                                    <columns>
-                                                                                                      <TableColumn fx:id="bankCheck01" editable="false" prefWidth="28.0" sortable="false" />
+                                                                                                      <TableColumn fx:id="bankCheck01" prefWidth="28.0" sortable="false" />
                                                                                                       <TableColumn fx:id="bankIndex01" editable="false" prefWidth="29.0" sortable="false" text="Row" />
                                                                                                       <TableColumn fx:id="bankIndex02" editable="false" prefWidth="270.0" sortable="false" text="Bank Name" />
                                                                                                       <TableColumn fx:id="bankIndex03" editable="false" prefWidth="200.0" sortable="false" text="Bank Branch" />

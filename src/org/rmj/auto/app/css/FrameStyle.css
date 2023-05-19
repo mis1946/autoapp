@@ -49,7 +49,13 @@ and open the template in the editor.
    -fx-font-family: "Arial";
    -fx-font-size: 11.5px;
 }
-
+.text-area:disabled {
+    -fx-text-fill: black;
+    -fx-opacity: 1.0;
+    -fx-background-color:
+        grey,
+        white;
+}
 .text-field {
     -fx-text-fill: black;
     -fx-font-family: "Arial"; 

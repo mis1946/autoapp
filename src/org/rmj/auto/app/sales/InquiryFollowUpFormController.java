@@ -56,8 +56,8 @@ public class InquiryFollowUpFormController implements Initializable {
     private boolean state = false;
 
     private final String pxeModuleName = "Inquiry Follow-Up";
-    ObservableList<String> cMedium = FXCollections.observableArrayList( "Text", "Call", "Social Media" , "Email", "WhatsUp", "Viber"); 
-    ObservableList<String> cPlatforms = FXCollections.observableArrayList("Facebook", "WhatsUp", "Instagram", "Tiktok", "Twitter");
+    ObservableList<String> cMedium = FXCollections.observableArrayList( "TEXT", "CALL", "SOCIAL MEDIA" , "EMAIL", "WHATSAPP", "VIBER"); 
+    //ObservableList<String> cPlatforms = FXCollections.observableArrayList("Facebook", "WHATSAPP", "Instagram", "Tiktok", "Twitter");
     
     @FXML
     private Button btnClose;
@@ -122,7 +122,7 @@ public class InquiryFollowUpFormController implements Initializable {
             }
             
         });
-        
+        setCapsLockBehavior(txtField03);
         setCapsLockBehavior(txtField07);
         setCapsLockBehavior(textArea04);
         setCapsLockBehavior(textArea05);

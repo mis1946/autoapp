@@ -149,17 +149,20 @@ public class InquiryVehicleSalesAdvancesFormController implements Initializable 
      }
      
     private void loadInquiryReservation() {
-    try{
-        /**
-         * User can edit VSA only if not yet Approved and not Cancelled.
-         *
-         **/
-        
-        setCapsLockBehavior(txtField02);
-        setCapsLockBehavior(txtField13);
-        setCapsLockBehavior(txtField05);
-        setCapsLockBehavior(textArea06);
-          
+        try{
+            /**
+             * User can edit VSA only if not yet Approved and not Cancelled.
+             *
+             **/
+
+            setCapsLockBehavior(txtField02); //RSV Date
+            setCapsLockBehavior(txtField03); //Slip No
+            setCapsLockBehavior(txtField05); //Slip Amount
+            setCapsLockBehavior(textArea06); //Remarks
+            setCapsLockBehavior(txtField13); //Approved Status
+            setCapsLockBehavior(txtField14); //Approved By
+            setCapsLockBehavior(txtField15); //Approved Date
+
             if(state){ //Add
                 txtField02.setText(CommonUtils.xsDateShort((Date) oApp.getServerDate()));
                 txtField13.setText("FOR APPROVAL");
@@ -170,7 +173,7 @@ public class InquiryVehicleSalesAdvancesFormController implements Initializable 
                 switch (oTransProcess.getInqRsv(tbl_row,13).toString()) {
                     case "0":
                         txtField13.setText("FOR APPROVAL");
-                        
+
                         switch (iInqStat) {
                             case 0: //For Follow up
                                 txtField05.setDisable(state);

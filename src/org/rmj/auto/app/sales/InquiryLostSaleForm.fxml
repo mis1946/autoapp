@@ -19,7 +19,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" >
+<AnchorPane id="AnchorPane" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <StackPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -135,6 +135,7 @@
                                     <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
                                     <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
                                     <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="15.0" vgrow="SOMETIMES" />
                                     <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="5.0" vgrow="SOMETIMES" />
                                  </rowConstraints>
                                  <children>
@@ -171,6 +172,11 @@
                                        </GridPane.margin>
                                     </TextArea>
                                     <ComboBox fx:id="comboBox10" prefWidth="150.0" GridPane.columnIndex="3" GridPane.columnSpan="5" GridPane.rowIndex="1" />
+                                    <Label text="Minimum of 20 characters; Accepts alpha-numeric characters only." textFill="#515151" GridPane.columnIndex="3" GridPane.columnSpan="3" GridPane.rowIndex="6">
+                                       <font>
+                                          <Font name="Arial" size="11.0" />
+                                       </font>
+                                    </Label>
                                  </children>
                                  <opaqueInsets>
                                     <Insets />

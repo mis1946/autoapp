@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 import javafx.beans.property.ReadOnlyBooleanPropertyBase;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
@@ -38,6 +39,7 @@ import org.rmj.appdriver.SQLUtil;
 import org.rmj.appdriver.agentfx.CommonUtils;
 import org.rmj.appdriver.agentfx.ShowMessageFX;
 import org.rmj.appdriver.callback.MasterCallback;
+import org.rmj.auto.app.views.InputTextFormatter;
 import org.rmj.auto.sales.base.InquiryFollowUp;
 
 /**
@@ -106,6 +108,10 @@ public class InquiryLostSaleFormController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        Pattern pattern;
+        pattern = Pattern.compile("^[a-zA-Z0-9]+$");
+        textArea04.setTextFormatter(new InputTextFormatter(pattern));
+        
         lblClientName.setText(sClient); //Client Name
         
         comboBox04.setItems(cTag); 

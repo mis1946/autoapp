@@ -65,6 +65,7 @@ import org.rmj.appdriver.agentfx.CommonUtils;
 import org.rmj.appdriver.agentfx.ShowMessageFX;
 import org.rmj.appdriver.callback.MasterCallback;
 import org.rmj.appdriver.constants.EditMode;
+import org.rmj.auto.app.views.CancelForm;
 import org.rmj.auto.app.views.ScreenInterface;
 import org.rmj.auto.app.views.unloadForm;
 import org.rmj.auto.sales.base.InquiryBankApplication;
@@ -86,6 +87,7 @@ public class InquiryFormController implements Initializable, ScreenInterface{
     private InquiryFollowUp oTransFollowUp;
     private GRider oApp;
     unloadForm unload = new unloadForm(); //Object for closing form
+    CancelForm cancelform = new CancelForm(); //Object for closing form
     private double xOffset = 0;
     private double yOffset = 0;
     private final String pxeModuleName = "Inquiry"; //Form Title
@@ -836,14 +838,22 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                             if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure you want to cancel?")) {
                                 for (InquiryTableVehicleSalesAdvances item : selectedItems) {
                                     String sRow = item.getTblindex01(); // Assuming there is a method to retrieve the transaction number
-                                    if(oTransProcess.CancelReservation(Integer.parseInt(sRow))){
+                                    
+                                    if (cancelform.loadCancelWindow(oApp, sSourceNox, (String) oTransProcess.getInqRsv(Integer.parseInt(sRow),3) )) {
+                                        System.out.println("test true");
+                                        if(oTransProcess.CancelReservation(Integer.parseInt(sRow))){
                                         //Retrieve Reservation
                                         String[] sSourceNo = {sSourceNox}; //Use array cause class is mandatory array to call even I only need 1
                                         oTransProcess.loadReservation(sSourceNo,true);
-                                    }else {
-                                        ShowMessageFX.Information(null, pxeModuleName, "Failed to cancel reservation.");
-                                        return;
+                                        }else {
+                                            ShowMessageFX.Information(null, pxeModuleName, "Failed to cancel reservation.");
+                                            return;
+                                        }
+                                    } else {
+                                        System.out.println("test false");
                                     }
+                                    
+                                    
                                 }
                                 ShowMessageFX.Information(null, pxeModuleName, "Reservation cancelled successfully.");
                             }
@@ -1269,7 +1279,6 @@ public class InquiryFormController implements Initializable, ScreenInterface{
             //load the main interface
             Parent parent = fxmlLoader.load();
 
-
             parent.setOnMousePressed(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
@@ -1358,7 +1367,7 @@ public class InquiryFormController implements Initializable, ScreenInterface{
             System.exit(1);
         }
     }
-     
+    
      //Search using F3
      private void txtField_KeyPressed(KeyEvent event){
          TextField txtField = (TextField)event.getSource();

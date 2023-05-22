@@ -558,8 +558,7 @@ public class BankEntryFormController implements Initializable, ScreenInterface{
                 if(!nv){ /*Lost Focus*/
                     switch (lnIndex){
                         case 2: //sBankName
-                            break;
-//                         case 3: // sBankAdv
+//                      case 3: // sBankAdv
                         case 17: // sBankBrch
                         case 5: // sAddressx
                         case 18:// sTownNamexx
@@ -571,7 +570,6 @@ public class BankEntryFormController implements Initializable, ScreenInterface{
                             oTrans.setMaster(lnIndex, lsValue);
                             break;
                     }
-                    
                 } else
                     txtField.selectAll();
             } catch (SQLException ex) {

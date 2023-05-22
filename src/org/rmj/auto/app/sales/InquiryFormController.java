@@ -799,8 +799,12 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                              ShowMessageFX.Information(null, pxeModuleName, "Please select atleast 1 slip to be removed.");
                              return;
                         }
-                        System.out.println(oTransProcess.getInqRsv(lnRow,13).toString());
-                        switch (oTransProcess.getInqRsv(lnRow,13).toString()) {
+                        
+                        if ("btnAScancel".equals(lsButton) && lnCtr > 1){
+                             ShowMessageFX.Information(null, pxeModuleName, "Please select atleast 1 slip to be cancelled.");
+                             return;
+                        }
+                       switch (oTransProcess.getInqRsv(lnRow,13).toString()) {
                             case "0":
                                 if ("btnASprint".equals(lsButton)){
                                      ShowMessageFX.Information(null, pxeModuleName, "Slip No. " + oTransProcess.getInqRsv(lnRow,3).toString() + " is not yet approved. Printing Aborted." );
@@ -838,9 +842,7 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                             if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure you want to cancel?")) {
                                 for (InquiryTableVehicleSalesAdvances item : selectedItems) {
                                     String sRow = item.getTblindex01(); // Assuming there is a method to retrieve the transaction number
-                                    
-                                    if (cancelform.loadCancelWindow(oApp, sSourceNox, (String) oTransProcess.getInqRsv(Integer.parseInt(sRow),3) )) {
-                                        System.out.println("test true");
+                                    if (cancelform.loadCancelWindow(oApp, (String) oTransProcess.getInqRsv(Integer.parseInt(sRow),1), (String) oTransProcess.getInqRsv(Integer.parseInt(sRow),3), "VSA" )) {
                                         if(oTransProcess.CancelReservation(Integer.parseInt(sRow))){
                                         //Retrieve Reservation
                                         String[] sSourceNo = {sSourceNox}; //Use array cause class is mandatory array to call even I only need 1
@@ -850,7 +852,7 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                                             return;
                                         }
                                     } else {
-                                        System.out.println("test false");
+                                        return;
                                     }
                                     
                                     

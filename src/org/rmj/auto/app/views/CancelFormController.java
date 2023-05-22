@@ -20,7 +20,6 @@ import org.rmj.appdriver.agentfx.CommonUtils;
 import org.rmj.appdriver.agentfx.ShowMessageFX;
 import org.rmj.appdriver.callback.MasterCallback;
 import org.rmj.auto.parameters.CancellationMaster;
-import org.rmj.auto.sales.base.InquiryFollowUp;
 
 /**
  * FXML Controller class
@@ -31,11 +30,12 @@ import org.rmj.auto.sales.base.InquiryFollowUp;
 public class CancelFormController implements Initializable {
     private GRider oApp;
     private MasterCallback oListener;
-    private boolean state;
     private CancellationMaster oTrans;
+    private boolean state;
 
-    private String sSourceNo;
+    private String sSourceNox;
     private String sTransNo;
+    private String sSourceCD;
 
     private final String pxeModuleName = "Cancellation Remarks";  
     @FXML
@@ -51,8 +51,12 @@ public class CancelFormController implements Initializable {
         oApp = foValue;
     }
     
-    public void setsSourceNo(String fsValue){
-       sSourceNo = fsValue;
+    public void setsSourceNox(String fsValue){
+       sSourceNox = fsValue;
+    }
+    
+    public void setsSourceCD(String fsValue){
+       sSourceCD = fsValue;
     }
     
     public void setTransNo(String fsValue){
@@ -72,11 +76,19 @@ public class CancelFormController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        oListener = (int fnIndex, Object foValue) -> {
+            System.out.println("Set Class Value "  + fnIndex + "-->" + foValue);
+        };
+
+        oTrans = new CancellationMaster(oApp, oApp.getBranchCode(), true); //Initialize ClientMaster
+        oTrans.setCallback(oListener);
+        oTrans.setWithUI(true);
+        
         lblFormNo.setText(sTransNo);
         setCapsLockBehavior(textArea01);
         
         Pattern pattern;
-        pattern = Pattern.compile("^[a-zA-Z0-9]+$");
+        pattern = Pattern.compile("^[a-zA-Z0-9 ]+$");
         textArea01.setTextFormatter(new InputTextFormatter(pattern));
         
         btnCancel.setOnAction(this::cmdButton_Click);
@@ -106,7 +118,7 @@ public class CancelFormController implements Initializable {
                     return;
                 }
                 
-                if (oTrans.CancelForm(sTransNo, textArea01.getText(), sSourceNo, sSourceNo)){
+                if (oTrans.CancelForm(sTransNo, textArea01.getText(), sSourceCD, sSourceNox)){
                     state = true;
                 } else {
                     return;

@@ -109,7 +109,7 @@ public class InquiryLostSaleFormController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         Pattern pattern;
-        pattern = Pattern.compile("^[a-zA-Z0-9]+$");
+        pattern = Pattern.compile("^[a-zA-Z0-9 ]+$");
         textArea04.setTextFormatter(new InputTextFormatter(pattern));
         
         lblClientName.setText(sClient); //Client Name

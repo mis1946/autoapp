@@ -28,9 +28,8 @@ public class CancelForm {
     private double xOffset = 0;
     private double yOffset = 0;
     public boolean bState = false;
-    
     /*INQUIRY FOR LOST SALE*/
-    public boolean loadCancelWindow(GRider oApp, String sSourceNox, String sTransNox) throws SQLException{
+    public boolean loadCancelWindow(GRider oApp, String sSourceNox, String sTransNox, String sSourceCD ) throws SQLException{
        
         try {
             Stage stage = new Stage();
@@ -40,7 +39,8 @@ public class CancelForm {
 
             CancelFormController loControl = new CancelFormController();
             loControl.setGRider(oApp);
-            loControl.setsSourceNo(sSourceNox);
+            loControl.setsSourceNox(sSourceNox);
+            loControl.setsSourceCD(sSourceCD);
             loControl.setTransNo(sTransNox);
             fxmlLoader.setController(loControl);
             

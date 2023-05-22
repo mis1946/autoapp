@@ -194,9 +194,9 @@
                                                             <Label id="LabelDesc" prefHeight="66.0" prefWidth="133.0" text="No. of Target Clients" GridPane.columnIndex="10" GridPane.columnSpan="2" GridPane.rowIndex="6" />
                                                             <Label id="LabelDesc" prefHeight="77.0" prefWidth="130.0" text="Branch" GridPane.columnIndex="10" GridPane.rowIndex="5" />
                                                             <Label id="LabelDesc" prefHeight="124.0" prefWidth="139.0" text="Total Event Budget " GridPane.columnIndex="10" GridPane.rowIndex="7" />
-                                                            <Label fx:id="lblActivityNo" prefHeight="25.0" prefWidth="130.0" GridPane.columnIndex="1" GridPane.columnSpan="3" />
-                                                            <DatePicker fx:id="dateFrom" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="1" />
-                                                            <DatePicker fx:id="dateTo" GridPane.columnIndex="5" GridPane.columnSpan="2" GridPane.rowIndex="1">
+                                                            <Label fx:id="lbl01" prefHeight="25.0" prefWidth="130.0" GridPane.columnIndex="1" GridPane.columnSpan="3" />
+                                                            <DatePicker fx:id="dateFrom06" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="1" />
+                                                            <DatePicker fx:id="dateTo07" GridPane.columnIndex="5" GridPane.columnSpan="2" GridPane.rowIndex="1">
                                                                <GridPane.margin>
                                                                   <Insets right="5.0" />
                                                                </GridPane.margin>
@@ -205,42 +205,43 @@
                                                                <GridPane.margin>
                                                                   <Insets left="5.0" />
                                                                </GridPane.margin></Label>
-                                                            <ComboBox fx:id="comboActivityType" prefWidth="150.0" promptText="Choose Type" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="2" />
+                                                            <ComboBox fx:id="comboActivityType04" prefWidth="150.0" promptText="Choose Type" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="2" />
+                                                            <TextField fx:id="txtField05" promptText="Search: F3" GridPane.columnIndex="5" GridPane.columnSpan="3" GridPane.rowIndex="2" />
                                                             <Label id="LabelDesc" prefHeight="45.0" prefWidth="116.0" text="Activity Title" GridPane.rowIndex="3" />
-                                                            <TextArea prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="7" GridPane.rowIndex="3" GridPane.rowSpan="2">
+                                                            <TextArea fx:id="txtArea02" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="7" GridPane.rowIndex="3" GridPane.rowSpan="2">
                                                                <GridPane.margin>
                                                                   <Insets />
                                                                </GridPane.margin>
                                                             </TextArea>
-                                                            <TextArea prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="7" GridPane.rowIndex="5" GridPane.rowSpan="2">
+                                                            <TextArea fx:id="txtArea03" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="7" GridPane.rowIndex="5" GridPane.rowSpan="2">
                                                                <GridPane.margin>
                                                                   <Insets bottom="5.0" />
                                                                </GridPane.margin>
                                                             </TextArea>
-                                                            <TextArea prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="7" GridPane.rowIndex="7">
+                                                            <TextArea fx:id="txtArea17" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="7" GridPane.rowIndex="7">
                                                                <GridPane.margin>
                                                                   <Insets bottom="5.0" />
                                                                </GridPane.margin>
                                                             </TextArea>
-                                                            <TextArea prefHeight="55.0" prefWidth="134.0" GridPane.columnIndex="12" GridPane.columnSpan="4" GridPane.rowSpan="2">
+                                                            <TextArea fx:id="txtArea18" prefHeight="55.0" prefWidth="134.0" GridPane.columnIndex="12" GridPane.columnSpan="4" GridPane.rowSpan="2">
                                                                <GridPane.margin>
                                                                   <Insets />
                                                                </GridPane.margin>
                                                             </TextArea>
-                                                            <TextField promptText="Search: F3" GridPane.columnIndex="12" GridPane.columnSpan="4" GridPane.rowIndex="2">
+                                                            <TextField fx:id="txtField26" promptText="Search: F3" GridPane.columnIndex="12" GridPane.columnSpan="4" GridPane.rowIndex="2">
                                                                <GridPane.margin>
                                                                   <Insets />
                                                                </GridPane.margin>
                                                             </TextField>
-                                                            <TextField promptText="Search: F3" GridPane.columnIndex="12" GridPane.columnSpan="4" GridPane.rowIndex="3">
+                                                            <TextField fx:id="txtField27" promptText="Search: F3" GridPane.columnIndex="12" GridPane.columnSpan="4" GridPane.rowIndex="3">
                                                                <GridPane.margin>
                                                                   <Insets />
                                                                </GridPane.margin>
                                                             </TextField>
-                                                            <TextField GridPane.columnIndex="12" GridPane.rowIndex="5" />
-                                                            <TextField GridPane.columnIndex="12" GridPane.rowIndex="6" />
-                                                            <TextField alignment="CENTER_RIGHT" GridPane.columnIndex="12" GridPane.rowIndex="7" />
-                                                            <TextField prefHeight="22.0" prefWidth="86.0" promptText="Search: F3" GridPane.columnIndex="12" GridPane.columnSpan="4" GridPane.rowIndex="4" />
+                                                            <TextField fx:id="txtField28" prefHeight="22.0" prefWidth="86.0" promptText="Search: F3" GridPane.columnIndex="12" GridPane.columnSpan="4" GridPane.rowIndex="4" />
+                                                            <TextField fx:id="txtField32" GridPane.columnIndex="12" GridPane.rowIndex="5" />
+                                                            <TextField fx:id="txtField14" GridPane.columnIndex="12" GridPane.rowIndex="6" />
+                                                            <TextField fx:id="txtField0" alignment="CENTER_RIGHT" GridPane.columnIndex="12" GridPane.rowIndex="7" />
                                                             <Label id="LabelDesc" prefHeight="54.0" prefWidth="84.0" text="From" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                                                <GridPane.margin>
                                                                   <Insets />
@@ -251,7 +252,6 @@
                                                                   <Insets left="5.0" />
                                                                </GridPane.margin>
                                                             </Label>
-                                                            <TextField promptText="Search: F3" GridPane.columnIndex="5" GridPane.columnSpan="3" GridPane.rowIndex="2" />
                                                          </children>
                                                          <VBox.margin>
                                                             <Insets left="20.0" right="20.0" top="10.0" />
@@ -289,24 +289,24 @@
                                                          </VBox.margin>
                                                          <children>
                                                             <Label id="LabelDesc" prefHeight="42.0" prefWidth="136.0" text="Street" />
-                                                            <TextArea prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="3" />
+                                                            <TextArea fx:id="txtArea08" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="3" />
                                                             <Label id="LabelDesc" text="Province" GridPane.rowIndex="1" />
-                                                            <TextField promptText="Search: F3" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1">
+                                                            <TextField fx:id="txtField31" promptText="Search: F3" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1">
                                                                <GridPane.margin>
                                                                   <Insets top="5.0" />
                                                                </GridPane.margin>
                                                             </TextField>
                                                             <Label id="LabelDesc" prefHeight="42.0" prefWidth="107.0" text="Municipality" GridPane.rowIndex="2" />
                                                             <Label id="LabelDesc" prefHeight="49.0" prefWidth="113.0" text="Establishment" GridPane.rowIndex="4" />
-                                                            <TextArea prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="2" GridPane.rowSpan="2" />
-                                                            <TextArea prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="4" GridPane.rowSpan="2">
+                                                            <TextArea fx:id="txtArea29" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="2" GridPane.rowSpan="2" />
+                                                            <TextArea fx:id="txtArea11" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="4" GridPane.rowSpan="2">
                                                                <GridPane.margin>
                                                                   <Insets top="5.0" />
                                                                </GridPane.margin>
                                                             </TextArea>
                                                             <VBox prefHeight="200.0" prefWidth="100.0" spacing="3.0" GridPane.columnIndex="4" GridPane.rowIndex="2" GridPane.rowSpan="2">
                                                                <children>
-                                                                  <Button fx:id="btnAddRowTasks111" alignment="TOP_LEFT" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="22.0" prefWidth="74.0" text="Add">
+                                                                  <Button fx:id="btnAddCity" alignment="TOP_LEFT" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="22.0" prefWidth="74.0" text="Add">
                                                                      <graphic>
                                                                         <FontAwesomeIconView glyphName="PLUS" />
                                                                      </graphic>
@@ -314,7 +314,7 @@
                                                                         <Blend />
                                                                      </effect>
                                                                   </Button>
-                                                                  <Button fx:id="btnAddRowTasks1111" alignment="TOP_LEFT" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="22.0" prefWidth="74.0" text="Clear">
+                                                                  <Button fx:id="btnClearCity" alignment="TOP_LEFT" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="22.0" prefWidth="74.0" text="Clear">
                                                                      <graphic>
                                                                         <FontAwesomeIconView glyphName="REFRESH" />
                                                                      </graphic>
@@ -356,13 +356,13 @@
                                                             <Font name="Arial Bold" size="12.0" />
                                                          </font>
                                                       </Label>
-                                                      <TextField fx:id="txtField01" promptText="Search: F3" GridPane.columnIndex="2" />
+                                                      <TextField fx:id="textSeek01" promptText="Search: F3" GridPane.columnIndex="2" />
                                                       <Label text="ACTIVITY NAME" GridPane.columnIndex="4">
                                                          <font>
                                                             <Font name="Arial Bold" size="12.0" />
                                                          </font>
                                                       </Label>
-                                                      <TextField fx:id="txtField26" prefHeight="22.0" prefWidth="301.0" promptText="Search: F3" GridPane.columnIndex="6" />
+                                                      <TextField fx:id="textSeek02" prefHeight="22.0" prefWidth="301.0" promptText="Search: F3" GridPane.columnIndex="6" />
                                                    </children>
                                                 </GridPane>
                                              </children>

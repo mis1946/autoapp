@@ -35,7 +35,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import static junit.framework.Assert.fail;
 import org.rmj.appdriver.GRider;
 import org.rmj.appdriver.agentfx.CommonUtils;
 import org.rmj.appdriver.agentfx.ShowMessageFX;
@@ -121,58 +120,7 @@ public class BankEntryFormController implements Initializable, ScreenInterface{
     private TextField textSeek02; //for search 
     @FXML
     private Button btnCancel;
-
-    public BankEntryFormController() {
-        this.txtField_Focus = (o,ov,nv)->{
-            try{
-                TextField txtField = (TextField)((ReadOnlyBooleanPropertyBase)o).getBean();
-                int lnIndex = Integer.parseInt(txtField.getId().substring(8, 10));
-                String lsValue = txtField.getText().toUpperCase();
-                
-                if (lsValue == null) return;
-                if(!nv){ /*Lost Focus*/
-                    switch (lnIndex){
-                        case 2: //sBankName
-                            oTrans.setMaster(2, lsValue); //Handle Encoded Value
-                            break;
-//                         case 3: // sBankAdv
-//                              oTrans.setMaster(3, lsValue); //Handle Encoded Value
-//                              break;
-                        case 17: // sBankBrch
-                            oTrans.setMaster(17, lsValue); //Handle Encoded Value
-                            break;
-                        case 5: // sAddressx
-                            oTrans.setMaster(5, lsValue); //Handle Encoded Value
-                            break;
-                        case 18:// sTownNamexx
-                            oTrans.setMaster(18, lsValue); //Handle Encoded Value
-                            break;
-                        case 15:// sProvName
-                            oTrans.setMaster(15, lsValue); //Handle Encoded Value
-                            break;
-                        case 7: // sZipCode
-                            oTrans.setMaster(7, lsValue); //Handle Encoded Value
-                            break;
-                        case 4:// sContactP
-                            oTrans.setMaster(4, lsValue); //Handle Encoded Value
-                            break;
-                        case 8: // sTelNoxxx
-                            oTrans.setMaster(8, lsValue); //Handle Encoded Value
-                            break;
-                        case 9:// sFaxNoxx
-                            oTrans.setMaster(9, lsValue); //Handle Encoded Value
-                            break;
-                    }
-                    
-                } else
-                    txtField.selectAll();
-            } catch (SQLException ex) {
-                Logger.getLogger(BankEntryFormController.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        };
-    }
-    
-        
+ 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
@@ -601,7 +549,53 @@ public class BankEntryFormController implements Initializable, ScreenInterface{
     }
 }
     /*Set TextField Value to Master Class*/
-    final ChangeListener<? super Boolean> txtField_Focus;
+    final ChangeListener<? super Boolean> txtField_Focus = (o,ov,nv)->{
+            try{
+                TextField txtField = (TextField)((ReadOnlyBooleanPropertyBase)o).getBean();
+                int lnIndex = Integer.parseInt(txtField.getId().substring(8, 10));
+                String lsValue = txtField.getText().toUpperCase();
+                
+                if (lsValue == null) return;
+                if(!nv){ /*Lost Focus*/
+                    switch (lnIndex){
+                        case 2: //sBankName
+                            oTrans.setMaster(2, lsValue); //Handle Encoded Value
+                            break;
+//                         case 3: // sBankAdv
+//                              oTrans.setMaster(3, lsValue); //Handle Encoded Value
+//                              break;
+                        case 17: // sBankBrch
+                            oTrans.setMaster(17, lsValue); //Handle Encoded Value
+                            break;
+                        case 5: // sAddressx
+                            oTrans.setMaster(5, lsValue); //Handle Encoded Value
+                            break;
+                        case 18:// sTownNamexx
+                            oTrans.setMaster(18, lsValue); //Handle Encoded Value
+                            break;
+                        case 15:// sProvName
+                            oTrans.setMaster(15, lsValue); //Handle Encoded Value
+                            break;
+                        case 7: // sZipCode
+                            oTrans.setMaster(7, lsValue); //Handle Encoded Value
+                            break;
+                        case 4:// sContactP
+                            oTrans.setMaster(4, lsValue); //Handle Encoded Value
+                            break;
+                        case 8: // sTelNoxxx
+                            oTrans.setMaster(8, lsValue); //Handle Encoded Value
+                            break;
+                        case 9:// sFaxNoxx
+                            oTrans.setMaster(9, lsValue); //Handle Encoded Value
+                            break;
+                    }
+                    
+                } else
+                    txtField.selectAll();
+            } catch (SQLException ex) {
+                Logger.getLogger(BankEntryFormController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        };
     private void initButton(int fnValue){
              pnRow = 0;
              /* NOTE:
@@ -641,7 +635,7 @@ public class BankEntryFormController implements Initializable, ScreenInterface{
                
                   
              }
-            }
+    }
     /*Clear Fields*/
     public void clearFields(){
         pnRow = 0;

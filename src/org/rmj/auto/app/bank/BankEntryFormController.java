@@ -335,7 +335,7 @@ public class BankEntryFormController implements Initializable, ScreenInterface{
                          "",//oTrans.getDetail(lnCtr,"sBankCode").toString(),// sBankCode
                          oTrans.getDetail(lnCtr,"sBankBrch").toString().toUpperCase(), // sBankBrch
                          oTrans.getDetail(lnCtr,"sAddressx").toString(), //sAddressx
-                         oTrans.getDetail(lnCtr,"sTownProv").toString(), //sTownProv
+                         oTrans.getDetail(lnCtr,"sTownProv").toString().toUpperCase(), //sTownProv
                          oTrans.getDetail(lnCtr,"sProvName").toString(), //sProvName
                          oTrans.getDetail(lnCtr,"sZippCode").toString(), //sZipCode     
                          oTrans.getDetail(lnCtr,"sContactP").toString(), //sContactP

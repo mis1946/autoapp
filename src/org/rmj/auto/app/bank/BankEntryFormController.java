@@ -558,34 +558,17 @@ public class BankEntryFormController implements Initializable, ScreenInterface{
                 if(!nv){ /*Lost Focus*/
                     switch (lnIndex){
                         case 2: //sBankName
-                            oTrans.setMaster(2, lsValue); //Handle Encoded Value
                             break;
 //                         case 3: // sBankAdv
-//                              oTrans.setMaster(3, lsValue); //Handle Encoded Value
-//                              break;
                         case 17: // sBankBrch
-                            oTrans.setMaster(17, lsValue); //Handle Encoded Value
-                            break;
                         case 5: // sAddressx
-                            oTrans.setMaster(5, lsValue); //Handle Encoded Value
-                            break;
                         case 18:// sTownNamexx
-                            oTrans.setMaster(18, lsValue); //Handle Encoded Value
-                            break;
                         case 15:// sProvName
-                            oTrans.setMaster(15, lsValue); //Handle Encoded Value
-                            break;
                         case 7: // sZipCode
-                            oTrans.setMaster(7, lsValue); //Handle Encoded Value
-                            break;
                         case 4:// sContactP
-                            oTrans.setMaster(4, lsValue); //Handle Encoded Value
-                            break;
                         case 8: // sTelNoxxx
-                            oTrans.setMaster(8, lsValue); //Handle Encoded Value
-                            break;
                         case 9:// sFaxNoxx
-                            oTrans.setMaster(9, lsValue); //Handle Encoded Value
+                            oTrans.setMaster(lnIndex, lsValue);
                             break;
                     }
                     

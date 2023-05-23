@@ -18,7 +18,7 @@ import org.rmj.appdriver.agentfx.ShowMessageFX;
 /**
  * FXML Controller class
  *
- * @author User
+ * @author John Dave
  */
 public class ActivityMemberEntryDialogController implements Initializable,ScreenInterface {
     private GRider oApp;

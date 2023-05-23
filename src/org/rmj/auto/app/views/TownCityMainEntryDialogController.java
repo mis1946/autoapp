@@ -6,33 +6,54 @@ package org.rmj.auto.app.views;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.scene.layout.AnchorPane;
+import org.rmj.appdriver.GRider;
+import org.rmj.appdriver.agentfx.CommonUtils;
 
 /**
  * FXML Controller class
  *
- * @author User
+ * @author John Dave
  */
-public class TownCityMainEntryDialogController implements Initializable {
+public class TownCityMainEntryDialogController implements Initializable,ScreenInterface {
 
-    @FXML
-    private Button btnAdd;
-    @FXML
-    private Button btnAdd1;
     @FXML
     private Button btnClose;
     @FXML
-    private Label lblClientName;
-
+    private AnchorPane AnchorMain;
+    @FXML
+    private Button btnAddTown;
+    private GRider oApp;
+  
+    unloadForm unload = new unloadForm(); //Used in Close Button
+    private final String pxeModuleName = "ActivityMemberEntryDialogController"; //Form Title
+   
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+      
+        btnClose.setOnAction(this::cmdButton_Click);
     }    
+
+    @Override
+    public void setGRider(GRider foValue) {
+        oApp = foValue;
+    }   
+    
+     private void cmdButton_Click(ActionEvent event) {
+      
+            String lsButton = ((Button)event.getSource()).getId();
+            switch (lsButton){
+                  case "btnClose":
+                    CommonUtils.closeStage(btnClose);
+                    break;
+            }
+     } 
     
 }

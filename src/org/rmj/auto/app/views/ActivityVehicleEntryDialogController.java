@@ -17,7 +17,7 @@ import org.rmj.appdriver.agentfx.CommonUtils;
 /**
  * FXML Controller class
  *
- * @author User
+ * @author John Dave
  */
 public class ActivityVehicleEntryDialogController implements Initializable,ScreenInterface {
     private GRider oApp;

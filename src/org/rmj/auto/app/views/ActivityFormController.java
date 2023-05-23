@@ -129,10 +129,6 @@ public class ActivityFormController implements Initializable,ScreenInterface {
     double xOffset;
     double yOffset;
     @FXML
-    private Button btnAddCity;
-    @FXML
-    private Button btnClearCity;
-    @FXML
     private Label lbl01;
     @FXML
     private DatePicker dateFrom06;
@@ -140,14 +136,6 @@ public class ActivityFormController implements Initializable,ScreenInterface {
     private DatePicker dateTo07;
     @FXML
     private ComboBox comboActivityType04;
-    @FXML
-    private TextArea txtArea02; //sActTitle
-    @FXML
-    private TextArea txtArea03; //sActDescx 
-    @FXML
-    private TextArea txtArea17; //sLogRemrk 
-    @FXML
-    private TextArea txtArea18; //sRemarksx
     @FXML
     private TextField txtField26; //sDeptName
     @FXML
@@ -159,11 +147,7 @@ public class ActivityFormController implements Initializable,ScreenInterface {
     @FXML
     private TextField txtField05;
     @FXML
-    private TextArea txtArea08; //sAddressx
-    @FXML
     private TextField txtField31;
-    @FXML
-    private TextArea txtArea11;
     @FXML
     private TextField textSeek01;
     @FXML
@@ -171,9 +155,27 @@ public class ActivityFormController implements Initializable,ScreenInterface {
     @FXML
     private TextField txtField32;
     @FXML
-    private TextField txtField0;
+    private TextField txtField0; 
     @FXML
-    private TextArea txtArea29;
+    private TextArea textArea02; //sActTitle
+    @FXML
+    private TextArea textArea03; //sActDescx 
+    @FXML
+    private TextArea textArea17; //sLogRemrk 
+    @FXML
+    private TextArea textArea18; //sRemarksx
+    @FXML
+    private TextArea textArea08; //sAddressx
+    @FXML
+    private TextArea textArea11; //sCompnyNmx
+    @FXML
+    private Button btnAddSource;
+    @FXML
+    private TableView<?> tblViewCity;
+    @FXML
+    private Button btnCitySearch;
+    @FXML
+    private Button btnCityRemove;
 
     /**
      * Initializes the controller class.
@@ -192,21 +194,21 @@ public class ActivityFormController implements Initializable,ScreenInterface {
         makeAutoCapitalization(txtField28);
         makeAutoCapitalization(txtField31);
         
-        makeAutoCapitalization2(txtArea08);
-        makeAutoCapitalization2(txtArea02);
-        makeAutoCapitalization2(txtArea03);
-        makeAutoCapitalization2(txtArea11);
-        makeAutoCapitalization2(txtArea17);
-        makeAutoCapitalization2(txtArea18);
-        makeAutoCapitalization2(txtArea29);
+        makeAutoCapitalization2(textArea08);
+        makeAutoCapitalization2(textArea02);
+        makeAutoCapitalization2(textArea03);
+        makeAutoCapitalization2(textArea11);
+        makeAutoCapitalization2(textArea17);
+        makeAutoCapitalization2(textArea18);
         
         
         btnBrowse.setOnAction(this::cmdButton_Click);
-        btnAddCity.setOnAction(this::cmdButton_Click);
-        btnClearCity.setOnAction(this::cmdButton_Click);
+        btnCitySearch.setOnAction(this::cmdButton_Click);
+        btnCityRemove.setOnAction(this::cmdButton_Click);
         btnActivityMembersSearch.setOnAction(this::cmdButton_Click);
         btnVhclModelsSearch.setOnAction(this::cmdButton_Click);
         btnClose.setOnAction(this::cmdButton_Click);
+        btnAdd.setOnAction(this::cmdButton_Click);
         
         
         
@@ -217,13 +219,12 @@ public class ActivityFormController implements Initializable,ScreenInterface {
         txtField27.focusedProperty().addListener(txtField_Focus);
         txtField28.focusedProperty().addListener(txtField_Focus);
         txtField31.focusedProperty().addListener(txtField_Focus);
-        txtArea08.focusedProperty().addListener(txtArea_Focus);
-        txtArea02.focusedProperty().addListener(txtArea_Focus);
-        txtArea03.focusedProperty().addListener(txtArea_Focus);
-        txtArea11.focusedProperty().addListener(txtArea_Focus);
-        txtArea17.focusedProperty().addListener(txtArea_Focus);
-        txtArea18.focusedProperty().addListener(txtArea_Focus);
-        txtArea29.focusedProperty().addListener(txtArea_Focus);
+        textArea08.focusedProperty().addListener(txtArea_Focus);
+        textArea02.focusedProperty().addListener(txtArea_Focus);
+        textArea03.focusedProperty().addListener(txtArea_Focus);
+        textArea11.focusedProperty().addListener(txtArea_Focus);
+        textArea17.focusedProperty().addListener(txtArea_Focus);
+        textArea18.focusedProperty().addListener(txtArea_Focus);
 
         txtField05.setOnKeyPressed(this::txtField_KeyPressed);
         txtField26.setOnKeyPressed(this::txtField_KeyPressed);
@@ -231,21 +232,17 @@ public class ActivityFormController implements Initializable,ScreenInterface {
         txtField28.setOnKeyPressed(this::txtField_KeyPressed);
         txtField31.setOnKeyPressed(this::txtField_KeyPressed);
                 
-        txtArea08.setOnKeyPressed(this::txtArea_KeyPressed);
-        txtArea02.setOnKeyPressed(this::txtArea_KeyPressed);
-        txtArea03.setOnKeyPressed(this::txtArea_KeyPressed);
-        txtArea11.setOnKeyPressed(this::txtArea_KeyPressed);
-        txtArea17.setOnKeyPressed(this::txtArea_KeyPressed);
-        txtArea18.setOnKeyPressed(this::txtArea_KeyPressed);
-        txtArea29.setOnKeyPressed(this::txtArea_KeyPressed);
-                
-                
-        
-         
+        textArea08.setOnKeyPressed(this::txtArea_KeyPressed);
+        textArea02.setOnKeyPressed(this::txtArea_KeyPressed);
+        textArea03.setOnKeyPressed(this::txtArea_KeyPressed);
+        textArea11.setOnKeyPressed(this::txtArea_KeyPressed);
+        textArea17.setOnKeyPressed(this::txtArea_KeyPressed);
+        textArea18.setOnKeyPressed(this::txtArea_KeyPressed);
+        textSeek01.setOnKeyPressed(this::txtField_KeyPressed); //Customer ID Search       
+
         comboActivityType04.setItems(cType); 
         pnEditMode = EditMode.UNKNOWN;
-        textSeek01.setOnKeyPressed(this::txtField_KeyPressed); //Customer ID Search
-        initButton(pnEditMode); 
+        initButton(pnEditMode);   
           
     
     }   
@@ -331,18 +328,18 @@ public class ActivityFormController implements Initializable,ScreenInterface {
                 case "btnActivityMembersSearch":
                     loadActivityMemberDialog();     
                     break; 
+             
                 case "btnVhclModelsSearch":
                     loadActivityVehicleEntryDialog();
                     break; 
-                case "btnAddCity":
+                case "btnCitySearch":
                     loadTownDialog();
                     break;
-                case "btnClearCity":
-                    
+                case "btnCityRemove":
                     break;
                 case "btnBrowse":
                     try {
-                        if (oTrans.SearchRecord("", true)){
+                        if (oTrans.SearchRecord(textSeek01.getText(), true)){
                                 loadClientMaster();
                                 pnEditMode = oTrans.getEditMode();
                         } else {
@@ -550,7 +547,7 @@ public class ActivityFormController implements Initializable,ScreenInterface {
                         case 11:        //sCompnynx           
                         case 17:        //sLogRemrk 
                         case 18:        //sRemarksx             
-                        case 29:        //sTownxxxx
+
                          oTrans.setMaster(lnIndex, lsValue); break;
                   }
                 } else
@@ -729,14 +726,14 @@ public class ActivityFormController implements Initializable,ScreenInterface {
     private void loadClientMaster(){
           try {
                lbl01.setText((String) oTrans.getMaster(1)); 
-               txtArea02.setText((String) oTrans.getMaster(2)); //sActTitle
-               txtArea03.setText((String) oTrans.getMaster(3)); //sActDescx
+               textArea02.setText((String) oTrans.getMaster(2)); //sActTitle
+               textArea03.setText((String) oTrans.getMaster(3)); //sActDescx
                comboActivityType04.getSelectionModel().select(Integer.parseInt((String)oTrans.getMaster(4))); //sActTypID
                txtField05.setText((String) oTrans.getMaster(5)); //sActSrcex 
-               txtArea17.setText((String) oTrans.getMaster(17)); //sLogRemrk
+               textArea17.setText((String) oTrans.getMaster(17)); //sLogRemrk
                dateFrom06.setValue(strToDate(CommonUtils.xsDateShort((Date) oTrans.getMaster(11)))); //dDateFrom
                dateTo07.setValue(strToDate(CommonUtils.xsDateShort((Date) oTrans.getMaster(7)))); //dDateThru
-               txtArea18.setText((String) oTrans.getMaster(18)); //sRemarksx
+               textArea18.setText((String) oTrans.getMaster(18)); //sRemarksx
                txtField26.setText((String) oTrans.getMaster(26)); //sDeptName 
                txtField14.setText((String) oTrans.getMaster(14)); //nTrgtClnt 
                txtField27.setText((String) oTrans.getMaster(27));
@@ -769,28 +766,33 @@ public class ActivityFormController implements Initializable,ScreenInterface {
              */
              boolean lbShow = (fnValue == EditMode.ADDNEW || fnValue == EditMode.UPDATE);
 
-//             /*Bank Entry*/
-//             txtField02.setDisable(!lbShow); // sBankNamexx
-//             txtField03.setDisable(!lbShow); // sBankAdv
-//             txtField17.setDisable(!lbShow); // sBranchx
-//             txtField05.setDisable(!lbShow); // sBarangayx
-//             txtField18.setDisable(!lbShow); // sTownNamex
-//             txtField15.setDisable(!lbShow); // sProvNamexx
-//             txtField07.setDisable(!lbShow); // sZipCode
-//             txtField04.setDisable(!lbShow); // sContactP
-//             txtField08.setDisable(!lbShow); // sTeleNo
-//             txtField09.setDisable(!lbShow); // sFaxNoxx
-
-             btnAdd.setVisible(!lbShow);
-             btnAdd.setManaged(!lbShow);
+            lbl01.setText("");
+            dateFrom06.setDisable(!lbShow); //dDateFrom
+            dateTo07.setDisable(!lbShow); //dDateThru
+            comboActivityType04.setDisable(!lbShow); //sActTypID
+            txtField05.setDisable(!lbShow); //sActSrcex 
+            textArea02.setDisable(!lbShow); //sActTitle
+            textArea03.setDisable(!lbShow); //sActDescx
+            textArea17.setDisable(!lbShow); //sLogRemrk
+            textArea18.setDisable(!lbShow); //sRemarksx
+            txtField26.setDisable(!lbShow); //sDeptName
+            txtField27.setDisable(!lbShow); //sCompnyNm
+            txtField28.setDisable(!lbShow); //sBranchNm  
+            txtField14.setDisable(!lbShow); //nTrgtClnt 
+            textArea08.setDisable(!lbShow); //sAddressx 
+            txtField31.setDisable(!lbShow); //sProvName
+            textArea11.setDisable(!lbShow); //sCompnynx
+            
+            btnAdd.setVisible(!lbShow);
+            btnAdd.setManaged(!lbShow);
                 
 //             btnCancel.setVisible(lbShow);
 //             btnCancel.setManaged(lbShow);
              //if lbShow = false hide btn          
              btnEdit.setVisible(false); 
              btnEdit.setManaged(false);
-             btnSave.setVisible(lbShow);
-             btnSave.setManaged(lbShow);
+             btnSave.setVisible(false);
+             btnSave.setManaged(false);
              btnActivityHistory.setVisible(lbShow);
              btnActivityHistory.setManaged(lbShow);
              btnPrint.setVisible(lbShow);
@@ -807,19 +809,22 @@ public class ActivityFormController implements Initializable,ScreenInterface {
     }
         public void clearFields(){
 //          pnRow = 0;
-               txtArea02.clear();  //sActTitle
-               txtArea03.clear();  //sActDescx
-               comboActivityType04.setValue(null); //sActTypID
-               txtField05.clear(); //sActSrcex 
-               txtArea17.clear(); //sLogRemrk
-               dateFrom06.setValue(null); //dDateFrom
-               dateTo07.setValue(null); //dDateThru
-               txtArea18.clear(); //sRemarksx
-               txtField26.clear(); //sDeptName 
-               txtField14.clear(); //nTrgtClnt 
-               txtField27.clear(); //sCompnyNm
-               txtField28.clear(); //sBranchNm  
-               txtField31.clear();  //sProvName
+            lbl01.setText("");
+            dateFrom06.setValue(null); //dDateFrom
+            dateTo07.setValue(null); //dDateThru
+            comboActivityType04.setValue(null); //sActTypID
+            txtField05.clear(); //sActSrcex 
+            textArea02.clear(); //sActTitle
+            textArea03.clear(); //sActDescx
+            textArea17.clear(); //sLogRemrk
+            textArea18.clear(); //sRemarksx
+            txtField26.clear(); //sDeptName
+            txtField27.clear(); //sCompnyNm
+            txtField28.clear(); //sBranchNm  
+            txtField14.clear(); //nTrgtClnt 
+            textArea08.clear(); //sAddressx 
+            txtField31.clear(); //sProvName
+            textArea11.clear(); //sCompnynx
      }
 
    

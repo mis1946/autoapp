@@ -533,16 +533,6 @@ public class BankEntryFormController implements Initializable, ScreenInterface{
                     break;
             }
         }
-
-        switch (event.getCode()) {
-            case ENTER:
-            case DOWN:
-                CommonUtils.SetNextFocus(txtField);
-                break;
-            case UP:
-                CommonUtils.SetPreviousFocus(txtField);
-                break;
-        }
     } catch (SQLException e) {
         ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
     }

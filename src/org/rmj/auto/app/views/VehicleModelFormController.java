@@ -20,6 +20,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
@@ -31,33 +32,34 @@ import org.rmj.appdriver.agentfx.CommonUtils;
 import org.rmj.appdriver.agentfx.ShowMessageFX;
 import org.rmj.appdriver.callback.MasterCallback;
 import org.rmj.appdriver.constants.EditMode;
-import org.rmj.auto.parameters.VehicleMake;
+import org.rmj.auto.parameters.VehicleModel;
 
 /**
  * FXML Controller class
  *
  * @author Arsiela
- * Date Created: 05-22-2023
+ * Date Created: 05-24-2023
  */
-public class VehicleMakeFormController implements Initializable {
+public class VehicleModelFormController implements Initializable {
     private GRider oApp;
     private MasterCallback oListener;
-    private VehicleMake oTrans;
+    private VehicleModel oTrans;
     private int pnEditMode;
-    private final String pxeModuleName = "Vehicle Manufacturer";
+    private final String pxeModuleName = "Vehicle Model";
     
     private String oldTransNo = "";
     private String sTransNo = "";
+    private String sMakeID = "";
+    private String sMakeDesc = "";
     private int lnCtr;
     
     private ObservableList<VehicleDescriptionTableParameter> vhclparamdata = FXCollections.observableArrayList();
+    ObservableList<String> cUnitType = FXCollections.observableArrayList("COMMERCIAL VEHICLE", "PRIVATE VEHICLE", "LIGHT PRIVATE VEHICLE", "MEDIUM PRIVATE VEHICLE" );
+    ObservableList<String> cBodyType = FXCollections.observableArrayList("SUV", "SEDAN", "TRUCK","MOTORCYCLE" ); 
+    ObservableList<String> cUnitSize = FXCollections.observableArrayList("BANTAM" , "SMALL","MEDIUM", "LARGE"); 
 
     @FXML
     private Button btnRefresh;
-    @FXML
-    private Button btnClose;
-    @FXML
-    private TextField txtField02;
     @FXML
     private Button btnAdd;
     @FXML
@@ -65,18 +67,37 @@ public class VehicleMakeFormController implements Initializable {
     @FXML
     private Button btnSave;
     @FXML
+    private Button btnClose;
+    @FXML
+    private TextField txtField02;
+    @FXML
+    private ComboBox comboBox04;
+    @FXML
+    private ComboBox comboBox05;
+    @FXML
+    private ComboBox comboBox06;
+    @FXML
+    private TableView tblParamList;
+    @FXML
     private TableColumn tblIndex01;
     @FXML
     private TableColumn tblIndex02;
     @FXML
     private TableColumn tblIndex03;
     @FXML
-    private TableView tblParamList;
+    private TextField txtField03;
     
     private Stage getStage(){
          return (Stage) txtField02.getScene().getWindow();
     }
     
+    public void setMakeID(String fsValue){
+       sMakeID = fsValue;
+    }
+    
+    public void setMakeDesc(String fsValue){
+       sMakeDesc = fsValue;
+    }
     /**
      * Initializes the controller class.
      */
@@ -86,10 +107,14 @@ public class VehicleMakeFormController implements Initializable {
             System.out.println("Set Class Value "  + fnIndex + "-->" + foValue);
         };
 
-        oTrans = new VehicleMake(oApp, oApp.getBranchCode(), true); //Initialize ClientMaster
+        oTrans = new VehicleModel(oApp, oApp.getBranchCode(), true); //Initialize ClientMaster
         oTrans.setCallback(oListener);
         oTrans.setWithUI(true);
         loadVehicleParameterList();
+        
+        comboBox04.setItems( cUnitType);
+        comboBox05.setItems( cBodyType);
+        comboBox06.setItems( cUnitSize);
         
         setCapsLockBehavior(txtField02);
         txtField02.focusedProperty().addListener(txtField_Focus);  // Description
@@ -113,8 +138,8 @@ public class VehicleMakeFormController implements Initializable {
         
         pnEditMode = EditMode.UNKNOWN;
         initbutton(pnEditMode);
-    }  
-    
+    }
+
     public void setGRider(GRider foValue) {
         oApp = foValue;
     }
@@ -191,7 +216,7 @@ public class VehicleMakeFormController implements Initializable {
             String sRecStat = "";
             if(oTrans.LoadList()){
                 for (lnCtr = 1; lnCtr <= oTrans.getItemCount(); lnCtr++){
-                    if(oTrans.getDetail(lnCtr,4).toString().equals("1")){
+                    if(oTrans.getDetail(lnCtr,8).toString().equals("1")){
                         sRecStat = "Y";
                     } else {
                         sRecStat = "N";
@@ -201,12 +226,12 @@ public class VehicleMakeFormController implements Initializable {
                         String.valueOf(lnCtr) //Row
                         , (String) oTrans.getDetail(lnCtr,2) //Description
                         , sRecStat //Record Status
-                        , (String) oTrans.getDetail(lnCtr,1) //sSourceID
-                        , ""
-                        , ""
-                        , ""
-                        , ""
-                        , "" 
+                        , (String) oTrans.getDetail(lnCtr,4) //sSourceID
+                        , (String) oTrans.getDetail(lnCtr,5) //sUnitType
+                        , (String) oTrans.getDetail(lnCtr,6) //sBodyType
+                        , (String) oTrans.getDetail(lnCtr,7) //cVhclSize
+                        , (String) oTrans.getDetail(lnCtr,8) //sMakeIDxx
+                        , (String) oTrans.getDetail(lnCtr,9) //sMakeDesc
                     ));
                 } 
                  initVehicleMake();
@@ -245,8 +270,31 @@ public class VehicleMakeFormController implements Initializable {
             } else {
                 pnEditMode = EditMode.UNKNOWN;
             }
-            
+            txtField03.setText(vhclparamdata.get(nRow).getTblindex08()); // MakeID
             txtField02.setText(vhclparamdata.get(nRow).getTblindex02()); // Description
+            comboBox06.getSelectionModel().select(Integer.parseInt(vhclparamdata.get(nRow).getTblindex07())); //cVhclSize
+            
+            //Integer.parseInt()
+            //sUnitType
+            switch (vhclparamdata.get(nRow).getTblindex05()) {
+                case "com":
+                    comboBox04.getSelectionModel().select(0);
+                    break;
+                case "lpr":
+                    comboBox04.getSelectionModel().select(1);
+                    break;
+                case "mpr":
+                    comboBox04.getSelectionModel().select(2);
+                    break;
+                case "pr":
+                    comboBox04.getSelectionModel().select(3);
+                    break;
+                default:
+                    break;
+            }
+            //sBodyType
+            comboBox05.setValue(vhclparamdata.get(nRow).getTblindex06());
+            
         }
         initbutton(pnEditMode);
     }
@@ -284,6 +332,10 @@ public class VehicleMakeFormController implements Initializable {
         if (fnValue == EditMode.READY ){
             btnEdit.setDisable(false);
         }
+    } 
+    
+    private void clearFields(){
+        
     }
     
 }

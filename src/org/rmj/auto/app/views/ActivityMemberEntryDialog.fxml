@@ -61,18 +61,19 @@
                      <children>
                         <HBox prefHeight="100.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <children>
-                              <TableView prefHeight="200.0" prefWidth="200.0" stylesheets="@../css/FrameStyle.css">
+                              <TableView fx:id="tblViewDepart" prefHeight="200.0" prefWidth="200.0" stylesheets="@../css/FrameStyle.css">
                                 <columns>
-                                  <TableColumn prefWidth="195.0" style="-fx-alignment: CENTER-LEFT;" text="Department" />
+                                  <TableColumn fx:id="tblindex24" prefWidth="195.0" style="-fx-alignment: CENTER-LEFT;" text="Department" />
                                 </columns>
                                  <HBox.margin>
                                     <Insets right="5.0" />
                                  </HBox.margin>
                               </TableView>
-                              <TableView prefHeight="217.0" prefWidth="288.0">
+                              <TableView fx:id="tblViewEmployee" prefHeight="217.0" prefWidth="288.0">
                                 <columns>
-                                  <TableColumn prefWidth="44.0" />
-                                  <TableColumn prefWidth="239.0" text="Employee Name" />
+                                  <TableColumn fx:id="tblindexRow" prefWidth="44.0" text="Row" />
+                                    <TableColumn fx:id="tblselect" prefWidth="32.0" />
+                                  <TableColumn fx:id="tblindex25" prefWidth="251.0" text="Employee Name" />
                                 </columns>
                               </TableView>
                            </children>

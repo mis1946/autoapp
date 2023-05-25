@@ -326,8 +326,9 @@ public class VehicleDescriptionFormController implements Initializable, ScreenIn
                     loadVehicleMake();
                 break;
                 case "btnModel":
-                    if (oTrans.getMaster(3).toString().equals("") || oTrans.getMaster(3).toString().isEmpty()){
+                    if (oTrans.getMaster(3).toString().equals("") || oTrans.getMaster(3).toString().isEmpty() || oTrans.getMaster(3).toString() == null){
                         ShowMessageFX.Warning(getStage(),"Kindly ensure that the Vehicle Make is selected before proceeding to set the model." ,"Warning", "");
+                        txtField03.requestFocus();
                         return;
                     }
                     loadVehicleModel(oTrans.getMaster(3).toString(), oTrans.getMaster(15).toString());
@@ -335,6 +336,7 @@ public class VehicleDescriptionFormController implements Initializable, ScreenIn
                 case "btnType":
                 break;
                 case "btnColor":
+                    loadVehicleColor();
                 break;
 
             }
@@ -845,6 +847,52 @@ public class VehicleDescriptionFormController implements Initializable, ScreenIn
             loControl.setGRider(oApp);
             loControl.setMakeID(sSourceID);
             loControl.setMakeDesc(sSourceDesc);
+            fxmlLoader.setController(loControl);
+
+            //load the main interface
+            Parent parent = fxmlLoader.load();
+
+            parent.setOnMousePressed(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    xOffset = event.getSceneX();
+                    yOffset = event.getSceneY();
+                }
+            });
+
+            parent.setOnMouseDragged(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    stage.setX(event.getScreenX() - xOffset);
+                    stage.setY(event.getScreenY() - yOffset);
+                }
+            });
+
+            //set the main interface as the scene
+            Scene scene = new Scene(parent);
+            stage.setScene(scene);
+            stage.initStyle(StageStyle.TRANSPARENT);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle("");
+            stage.showAndWait();
+            
+        } catch (IOException e) {
+            e.printStackTrace();
+            ShowMessageFX.Warning(getStage(),e.getMessage(), "Warning", null);
+            System.exit(1);
+        }
+    }
+    
+    /*COlOR WINDOW*/
+    private void loadVehicleColor() throws SQLException{
+        try {
+            Stage stage = new Stage();
+
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            fxmlLoader.setLocation(getClass().getResource("VehicleColorForm.fxml"));
+
+            VehicleColorFormController loControl = new VehicleColorFormController();
+            loControl.setGRider(oApp);
             fxmlLoader.setController(loControl);
 
             //load the main interface

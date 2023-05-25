@@ -70,7 +70,6 @@ public class ActivityFormController implements Initializable,ScreenInterface {
     private final String pxeModuleName = "Activity"; //Form Title
     private int pnEditMode;//Modifying fields
     private int pnRow;
-    private ObservableList<ActivityMembersTableList> actmembersData = FXCollections.observableArrayList();
     @FXML
     private Button btnAdd;
     @FXML
@@ -113,7 +112,7 @@ public class ActivityFormController implements Initializable,ScreenInterface {
     @FXML
     private Button btnActivityMemRemove;
     @FXML
-    private TableView<?> tblViewActivityMembers;
+    private TableView<ActivityMemberTable> tblViewActivityMembers;
     @FXML
     private Button btnVhclModelsSearch;
     @FXML
@@ -121,15 +120,15 @@ public class ActivityFormController implements Initializable,ScreenInterface {
     @FXML
     private TableView<?> tblViewVhclModels;
     @FXML
-    private TableColumn<ActivityMembersTableList, String> tblActvtyMembersRow;
+    private TableColumn<ActivityMemberTable, String> tblActvtyMembersRow;
     @FXML
-    private TableColumn<ActivityMembersTableList,Boolean> tblselected;
+    private TableColumn<ActivityMemberTable,Boolean> tblselected;
     @FXML
     private CheckBox selectAllCheckBoxEmployee;
     @FXML
-    private TableColumn<ActivityMembersTableList, String> tblindex08;
+    private TableColumn<ActivityMemberTable, String> tblindex08;
     @FXML
-    private TableColumn<ActivityMembersTableList, String> tblindex07;
+    private TableColumn<ActivityMemberTable, String> tblindex07;
     double xOffset;
     double yOffset;
     @FXML
@@ -199,11 +198,11 @@ public class ActivityFormController implements Initializable,ScreenInterface {
         makeAutoCapitalization(txtField32); //Branch
         makeAutoCapitalization(txtField12); //nTrgtClnt
         
-        makeAutoCapitalization2(textArea09);
-        makeAutoCapitalization2(textArea02);
-        makeAutoCapitalization2(textArea03);
-        makeAutoCapitalization2(textArea15);
-        makeAutoCapitalization2(textArea16);
+//        makeAutoCapitalization2(textArea09);
+//        makeAutoCapitalization2(textArea02);
+//        makeAutoCapitalization2(textArea03);
+//        makeAutoCapitalization2(textArea15);
+//        makeAutoCapitalization2(textArea16);
         
         
         btnBrowse.setOnAction(this::cmdButton_Click);
@@ -231,12 +230,12 @@ public class ActivityFormController implements Initializable,ScreenInterface {
         txtField32.focusedProperty().addListener(txtField_Focus); //Branch
         txtField12.focusedProperty().addListener(txtField_Focus); //nTrgtClnt
     
-        textArea08.focusedProperty().addListener(txtArea_Focus);
-        textArea15.focusedProperty().addListener(txtArea_Focus);
-        textArea16.focusedProperty().addListener(txtArea_Focus);
-        textArea09.focusedProperty().addListener(txtArea_Focus);
-        textArea03.focusedProperty().addListener(txtArea_Focus);
-        textArea02.focusedProperty().addListener(txtArea_Focus);
+//        textArea08.focusedProperty().addListener(txtArea_Focus);
+//        textArea15.focusedProperty().addListener(txtArea_Focus);
+//        textArea16.focusedProperty().addListener(txtArea_Focus);
+//        textArea09.focusedProperty().addListener(txtArea_Focus);
+//        textArea03.focusedProperty().addListener(txtArea_Focus);
+//        textArea02.focusedProperty().addListener(txtArea_Focus);
         
         /* TxtField KeyPressed */
         txtField05.setOnKeyPressed(this::txtField_KeyPressed); //sActSrcex 
@@ -291,13 +290,13 @@ public class ActivityFormController implements Initializable,ScreenInterface {
             }
         });
     }
-    private void makeAutoCapitalization2(TextArea textArea) {
-        textArea.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.isEmpty()) {
-                textArea.setText(newValue.toUpperCase());
-            }
-        });
-    }
+//    private void makeAutoCapitalization2(TextArea textArea) {
+//        textArea.textProperty().addListener((observable, oldValue, newValue) -> {
+//            if (!newValue.isEmpty()) {
+//                textArea.setText(newValue.toUpperCase());
+//            }
+//        });
+//    }
     @Override
     public void setGRider(GRider foValue) {
           oApp = foValue;
@@ -305,7 +304,7 @@ public class ActivityFormController implements Initializable,ScreenInterface {
     private void cmdButton_Click(ActionEvent event) {
         try {
             String lsButton = ((Button)event.getSource()).getId();
-            switch (lsButton){
+          switch (lsButton){
                 case "btnAdd": //create
                            if (oTrans.NewRecord()) {
                               clearFields(); 
@@ -606,6 +605,7 @@ public class ActivityFormController implements Initializable,ScreenInterface {
 
                 ActivityMemberEntryDialogController loControl = new ActivityMemberEntryDialogController();
                 loControl.setGRider(oApp);
+                loControl.setObject(oTrans);
                 fxmlLoader.setController(loControl);
 
                 //load the main interface
@@ -709,6 +709,7 @@ public class ActivityFormController implements Initializable,ScreenInterface {
 
             TownCityMainEntryDialogController loControl = new TownCityMainEntryDialogController();
             loControl.setGRider(oApp);
+            loControl.setObject(oTrans);
             fxmlLoader.setController(loControl);
 
             //load the main interface

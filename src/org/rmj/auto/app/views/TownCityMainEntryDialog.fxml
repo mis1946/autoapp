@@ -70,11 +70,11 @@
                                     <Insets bottom="2.0" left="5.0" top="5.0" />
                                  </VBox.margin>
                               </Label>
-                              <TableView prefHeight="200.0" prefWidth="200.0">
+                              <TableView fx:id="tblViewTown" prefHeight="200.0" prefWidth="200.0">
                                 <columns>
-                                  <TableColumn prefWidth="42.0" text="Row" />
-                                  <TableColumn prefWidth="47.0" />
-                                    <TableColumn prefWidth="185.0" text="Municipalities/Cities" />
+                                  <TableColumn fx:id="tblRow" prefWidth="42.0" text="Row" />
+                                  <TableColumn fx:id="tblSelect" prefWidth="47.0" />
+                                    <TableColumn fx:id="tblTown" prefWidth="185.0" text="Municipalities/Cities" />
                                 </columns>
                               </TableView>
                            </children>

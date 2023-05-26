@@ -208,6 +208,17 @@
                                                                </GridPane.margin></Label>
                                                             <ComboBox fx:id="comboBox04" prefWidth="150.0" promptText="Choose Type" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="2" />
                                                             <TextField fx:id="txtField05" promptText="Search: F3" GridPane.columnIndex="5" GridPane.columnSpan="3" GridPane.rowIndex="2" />
+                                                            <Button fx:id="btnAddSource" alignment="TOP_LEFT" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="22.0" prefWidth="26.0" GridPane.columnIndex="8" GridPane.rowIndex="2">
+                                                               <graphic>
+                                                                  <FontAwesomeIconView glyphName="PLUS" text="" />
+                                                               </graphic>
+                                                               <effect>
+                                                                  <Blend />
+                                                               </effect>
+                                                               <GridPane.margin>
+                                                                  <Insets left="3.0" />
+                                                               </GridPane.margin>
+                                                            </Button>
                                                             <Label id="LabelDesc" prefHeight="45.0" prefWidth="116.0" text="Activity Title" GridPane.rowIndex="3" />
                                                             <TextArea fx:id="textArea02" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="7" GridPane.rowIndex="3" GridPane.rowSpan="2">
                                                                <GridPane.margin>
@@ -253,17 +264,6 @@
                                                                   <Insets left="5.0" />
                                                                </GridPane.margin>
                                                             </Label>
-                                                            <Button fx:id="btnAddSource" alignment="TOP_LEFT" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="22.0" prefWidth="26.0" GridPane.columnIndex="8" GridPane.rowIndex="2">
-                                                               <graphic>
-                                                                  <FontAwesomeIconView glyphName="PLUS" text="" />
-                                                               </graphic>
-                                                               <effect>
-                                                                  <Blend />
-                                                               </effect>
-                                                               <GridPane.margin>
-                                                                  <Insets left="3.0" />
-                                                               </GridPane.margin>
-                                                            </Button>
                                                          </children>
                                                          <VBox.margin>
                                                             <Insets left="20.0" right="20.0" top="10.0" />
@@ -304,13 +304,13 @@
                                                          </VBox.margin>
                                                          <children>
                                                             <Label id="LabelDesc" prefHeight="42.0" prefWidth="136.0" text="Street" GridPane.rowIndex="1" />
-                                                            <TextArea fx:id="textArea08" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="1" GridPane.rowSpan="2" />
                                                             <Label id="LabelDesc" text="Province" />
                                                             <TextField fx:id="txtField28" prefHeight="35.0" prefWidth="301.0" promptText="Search: F3" GridPane.columnIndex="1" GridPane.columnSpan="4">
                                                                <GridPane.margin>
                                                                   <Insets />
                                                                </GridPane.margin>
                                                             </TextField>
+                                                            <TextArea fx:id="textArea08" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="1" GridPane.rowSpan="2" />
                                                             <Label id="LabelDesc" prefHeight="49.0" prefWidth="113.0" text="Establishment" GridPane.rowIndex="3" />
                                                             <TextArea fx:id="textArea09" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="3" GridPane.rowSpan="3">
                                                                <GridPane.margin>

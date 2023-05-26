@@ -273,6 +273,9 @@ public class VehicleDescriptionFormController implements Initializable, ScreenIn
                           ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
                      break;
                 case "btnSave": 
+                    if (!oTrans.loadVehicleMake(txtField03.getText().trim())){
+                        txtField03.requestFocus();
+                    } 
                      //Validate before saving
                      if (txtField03.getText().trim().equals("")) {
                           ShowMessageFX.Warning(getStage(), "Please enter a value for Make.","Warning", null);
@@ -326,14 +329,17 @@ public class VehicleDescriptionFormController implements Initializable, ScreenIn
                     loadVehicleMake();
                 break;
                 case "btnModel":
+                case "btnType":
                     if (oTrans.getMaster(3).toString().equals("") || oTrans.getMaster(3).toString().isEmpty() || oTrans.getMaster(3).toString() == null){
                         ShowMessageFX.Warning(getStage(),"Kindly ensure that the Vehicle Make is selected before proceeding to set the model." ,"Warning", "");
                         txtField03.requestFocus();
                         return;
                     }
-                    loadVehicleModel(oTrans.getMaster(3).toString(), oTrans.getMaster(15).toString());
-                break;
-                case "btnType":
+                    if (lsButton.equals("btnModel")){
+                        loadVehicleModel(oTrans.getMaster(3).toString(), oTrans.getMaster(15).toString());
+                    } else if (lsButton.equals("btnType")){
+                        loadVehicleType(oTrans.getMaster(3).toString(), oTrans.getMaster(15).toString());
+                    }
                 break;
                 case "btnColor":
                     loadVehicleColor();
@@ -698,9 +704,8 @@ public class VehicleDescriptionFormController implements Initializable, ScreenIn
                             oTrans.setMaster(lnIndex,  Integer.parseInt(lsValue)); //Handle Encoded Value
                         }
                         break;
-
                 }
-
+                
             } else
                txtField.selectAll();
         } catch (SQLException ex) {
@@ -844,6 +849,54 @@ public class VehicleDescriptionFormController implements Initializable, ScreenIn
             fxmlLoader.setLocation(getClass().getResource("VehicleModelForm.fxml"));
 
             VehicleModelFormController loControl = new VehicleModelFormController();
+            loControl.setGRider(oApp);
+            loControl.setMakeID(sSourceID);
+            loControl.setMakeDesc(sSourceDesc);
+            fxmlLoader.setController(loControl);
+
+            //load the main interface
+            Parent parent = fxmlLoader.load();
+
+            parent.setOnMousePressed(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    xOffset = event.getSceneX();
+                    yOffset = event.getSceneY();
+                }
+            });
+
+            parent.setOnMouseDragged(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    stage.setX(event.getScreenX() - xOffset);
+                    stage.setY(event.getScreenY() - yOffset);
+                }
+            });
+
+            //set the main interface as the scene
+            Scene scene = new Scene(parent);
+            stage.setScene(scene);
+            stage.initStyle(StageStyle.TRANSPARENT);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle("");
+            stage.showAndWait();
+            
+        } catch (IOException e) {
+            e.printStackTrace();
+            ShowMessageFX.Warning(getStage(),e.getMessage(), "Warning", null);
+            System.exit(1);
+        }
+    }
+    
+    /*TYPE WINDOW*/
+    private void loadVehicleType(String sSourceID, String sSourceDesc) throws SQLException{
+        try {
+            Stage stage = new Stage();
+
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            fxmlLoader.setLocation(getClass().getResource("VehicleTypeForm.fxml"));
+
+            VehicleTypeFormController loControl = new VehicleTypeFormController();
             loControl.setGRider(oApp);
             loControl.setMakeID(sSourceID);
             loControl.setMakeDesc(sSourceDesc);

@@ -464,7 +464,7 @@ public class ActivityFormController implements Initializable,ScreenInterface {
         if (event.getCode() == ENTER || event.getCode() == DOWN){ 
             event.consume();
             CommonUtils.SetNextFocus((TextArea)event.getSource());
-        }else if (event.getCode() ==KeyCode.UP){
+        }else if (event.getCode() == KeyCode.UP){
         event.consume();
             CommonUtils.SetPreviousFocus((TextArea)event.getSource());
         }
@@ -475,6 +475,8 @@ public class ActivityFormController implements Initializable,ScreenInterface {
     int lnIndex = Integer.parseInt(txtField.getId().substring(8, 10));
     try {
         if (event.getCode() == KeyCode.TAB || event.getCode() == KeyCode.ENTER || event.getCode() == KeyCode.F3) {
+            event.consume();
+            CommonUtils.SetNextFocus((TextField)event.getSource());
             switch (lnIndex) {
                 case 1: 
               
@@ -504,12 +506,16 @@ public class ActivityFormController implements Initializable,ScreenInterface {
                  case 25: 
                     if(oTrans.searchEmployee(txtField.getText())){
                         loadActivityField();
-                        pnEditMode = oTrans.getEditMode();
                     } else {
                         ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
                     }
-               
-                   
+                break;
+                 case 26: 
+                    if(oTrans.searchBranch()){
+                        loadActivityField();
+                    } else {
+                        ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
+                    }
                 break;
                  case 28: 
                

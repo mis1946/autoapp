@@ -77,13 +77,13 @@ public class CustomerFormController implements Initializable, ScreenInterface {
      private ClientEMail oTransEmail;
      private ClientSocMed oTransSocMed;
      unloadForm unload = new unloadForm(); //Used in Close Button
-     private final String pxeModuleName = "Customer Information"; //Form Title
+     private final String pxeModuleName = "Customer"; //Form Title
      private int pnEditMode;//Modifying fields
      private int pnRow = -1;
      private int lnCtr;
      private int tbl_row = 0;
      private int iTabIndex = 0; //Set tab index
-     //private int iClientType;
+     //private int iCLIENTType;
      
      /*populate tables Address, Mobile, Email and Social Media*/
      private ObservableList<CustomerTableAddress> addressdata = FXCollections.observableArrayList();
@@ -92,10 +92,10 @@ public class CustomerFormController implements Initializable, ScreenInterface {
      private ObservableList<CustomerTableSocialMedia> socialmediadata = FXCollections.observableArrayList();
 
      /*populate comboxes client_master*/
-     ObservableList<String> cCvlStat = FXCollections.observableArrayList("Single", "Married", "Divorced", "Separated", "Widowed");
-     ObservableList<String> cGender = FXCollections.observableArrayList("Male", "Female", "LGBTQ");
-     ObservableList<String> cCusttype = FXCollections.observableArrayList("Client", "Company", "Institutional");
-     ObservableList<String> cTitle = FXCollections.observableArrayList("Mr.", "Miss", "Mrs.");
+     ObservableList<String> cCvlStat = FXCollections.observableArrayList("SINGLE", "MARRIED", "DIVORCED", "SEPARATED", "WIDOWED");
+     ObservableList<String> cGender = FXCollections.observableArrayList("MALE", "FEMALE", "LGBTQ");
+     ObservableList<String> cCusttype = FXCollections.observableArrayList("CLIENT", "COMPANY", "INSTITUTIONAL");
+     ObservableList<String> cTitle = FXCollections.observableArrayList("MR.", "MISS", "MRS.");
      
      @FXML
      private TextField txtField01; //client id
@@ -118,7 +118,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
      @FXML
      private TextField txtField10; //citizenship
      @FXML
-     private ComboBox comboBox18; //Client type
+     private ComboBox comboBox18; //CLIENT type
      @FXML
      private ComboBox comboBox08; //Gender
      @FXML
@@ -132,11 +132,9 @@ public class CustomerFormController implements Initializable, ScreenInterface {
      @FXML
      private TextArea textArea15; //Remarks
      @FXML
-     private TextField txtField29; //Business Style
-     @FXML
      private TextField txtField25; // Spouse
      @FXML
-     private TextField txtField26; // Client Search
+     private TextField txtField26; // CLIENT Search
      
      /*Address*/
      @FXML
@@ -165,8 +163,8 @@ public class CustomerFormController implements Initializable, ScreenInterface {
      private TextArea textArea11Addr; // Address Remarks
      
      /*Contact No*/
-     ObservableList<String> cOwnCont = FXCollections.observableArrayList("Personal", "Office", "Others");
-     ObservableList<String> cTypCont = FXCollections.observableArrayList("Mobile", "Telephone", "Fax");
+     ObservableList<String> cOwnCont = FXCollections.observableArrayList("PERSONAL", "OFFICE", "OTHERS");
+     ObservableList<String> cTypCont = FXCollections.observableArrayList("MOBILE", "TELEPHONE", "FAX");
      @FXML
      private ComboBox comboBox05Cont; // Contact Ownership
      @FXML
@@ -184,7 +182,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
      @FXML
      private TextArea textArea13Cont; // Contact Remarks
      /*Email Address*/
-     ObservableList<String> cOwnEmAd = FXCollections.observableArrayList("Personal", "Office", "Others");
+     ObservableList<String> cOwnEmAd = FXCollections.observableArrayList("PERSONAL", "OFFICE", "OTHERS");
      @FXML
      private ComboBox comboBox04EmAd; // Email Ownership
      @FXML
@@ -198,7 +196,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
      @FXML
      private TextField txtField03EmAd; // Email Address
      /*Social Media*/
-     ObservableList<String> cSocType = FXCollections.observableArrayList("Facebook", "WhatsUp", "Instagram", "Tiktok", "Twitter");
+     ObservableList<String> cSocType = FXCollections.observableArrayList("FACEBOOK", "WHATSAPP", "INSTAGRAM", "TIKTOK", "TWITTER");
      
      @FXML
      private RadioButton radiobtn05SocN; // SocMed Active status
@@ -315,6 +313,20 @@ public class CustomerFormController implements Initializable, ScreenInterface {
           oTransSocMed.setWithUI(true);
           initSocialMedia();
           
+          setCapsLockBehavior(txtField01);
+          setCapsLockBehavior(txtField02);
+          setCapsLockBehavior(txtField03);
+          setCapsLockBehavior(txtField04);
+          setCapsLockBehavior(txtField05);
+          setCapsLockBehavior(txtField06);
+          setCapsLockBehavior(txtField10);
+          setCapsLockBehavior(txtField12);
+          setCapsLockBehavior(txtField13);
+          setCapsLockBehavior(txtField14);
+          setCapsLockBehavior(txtField16);
+          setCapsLockBehavior(txtField25);
+          setCapsLockBehavior(txtField26);
+          setCapsLockBehavior(textArea15);
           /*Set Focus to set Value to Class*/
           txtField01.focusedProperty().addListener(txtField_Focus); 
           txtField02.focusedProperty().addListener(txtField_Focus);
@@ -333,7 +345,6 @@ public class CustomerFormController implements Initializable, ScreenInterface {
           CommonUtils.addTextLimiter(txtField06, 4); // Suffix
           CommonUtils.addTextLimiter(txtField13, 15); // TIN
           CommonUtils.addTextLimiter(txtField14, 15); // LTO
-          setCapsLockBehavior(txtField14); //Mandatory Capslock letters
           CommonUtils.addTextLimiter(txtField03Addr, 5); //HOUSE NO
           CommonUtils.addTextLimiter(txtField03Cont, 12); //CONTACT NO
           
@@ -367,7 +378,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
           txtField01.setOnKeyPressed(this::txtField_KeyPressed); //Customer ID Search
           txtField25.setOnKeyPressed(this::txtField_KeyPressed); //Spouse
           
-          //Client Master
+          //CLIENT Master
           txtField02.setOnKeyPressed(this::txtField_KeyPressed);
           txtField03.setOnKeyPressed(this::txtField_KeyPressed);
           txtField04.setOnKeyPressed(this::txtField_KeyPressed);
@@ -378,19 +389,27 @@ public class CustomerFormController implements Initializable, ScreenInterface {
           txtField16.setOnKeyPressed(this::txtField_KeyPressed);
           textArea15.setOnKeyPressed(this::txtField_KeyPressed);
           textArea15.setOnKeyPressed(this::txtArea_KeyPressed);
-          //Client Address
+          //CLIENT Address
+          setCapsLockBehavior(txtField03Addr);
+          setCapsLockBehavior(txtField04Addr);
+          setCapsLockBehavior(txtField05Addr);
+          setCapsLockBehavior(txtField06Addr);
+          setCapsLockBehavior(txtField07Addr);
+          setCapsLockBehavior(textArea11Addr);
           txtField03Addr.setOnKeyPressed(this::txtField_KeyPressed); //House No
           txtField04Addr.setOnKeyPressed(this::txtField_KeyPressed); //Street / Address
           txtField05Addr.setOnKeyPressed(this::txtField_KeyPressed); // Town
           txtField06Addr.setOnKeyPressed(this::txtField_KeyPressed); // Brgy
           txtField07Addr.setOnKeyPressed(this::txtField_KeyPressed); //Zip code
           textArea11Addr.setOnKeyPressed(this::txtArea_KeyPressed); // Address Remarks
-          //Client Mobile
+          //CLIENT Mobile
+          setCapsLockBehavior(txtField03Cont);
+          setCapsLockBehavior(textArea13Cont);
           txtField03Cont.setOnKeyPressed(this::txtField_KeyPressed);  //Mobile Number
           textArea13Cont.setOnKeyPressed(this::txtArea_KeyPressed); // Contact Remarks
-          //Client Email
+          //CLIENT Email
           txtField03EmAd.setOnKeyPressed(this::txtField_KeyPressed); // Email Address
-          //Client Social Media
+          //CLIENT Social Media
           txtField03Socm.setOnKeyPressed(this::txtField_KeyPressed); // SocMed Account
           
           /*Radio Button Click Event Y / N*/
@@ -427,7 +446,6 @@ public class CustomerFormController implements Initializable, ScreenInterface {
           btnSave.setOnAction(this::cmdButton_Click); 
           btnClose.setOnAction(this::cmdButton_Click); 
           btnBrowse.setOnAction(this::cmdButton_Click);
-          
           //Update Class master
           comboBox18.setOnAction(e -> {
               comboChange();
@@ -475,10 +493,19 @@ public class CustomerFormController implements Initializable, ScreenInterface {
           initButton(pnEditMode); 
      } 
      
+     
      private static void setCapsLockBehavior(TextField textField) {
           textField.textProperty().addListener((observable, oldValue, newValue) -> {
                if (textField.getText() != null) {
                     textField.setText(newValue.toUpperCase());
+               }
+          });
+     }
+     
+     private static void setCapsLockBehavior(TextArea textArea) {
+          textArea.textProperty().addListener((observable, oldValue, newValue) -> {
+               if (textArea.getText() != null) {
+                    textArea.setText(newValue.toUpperCase());
                }
           });
      }
@@ -506,9 +533,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                               } else 
                                   return;
                          }
-                         txtField26.clear(); // Client Search
-                         txtField01.clear(); // Client ID
-                         clearFields();
+                         
                          if (!txtField26.getText().isEmpty() && !txtField26.getText().trim().equals("")) {
                               
                               if (oTrans.SearchRecord(txtField26.getText(), false)){
@@ -524,10 +549,19 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                                         pnEditMode = EditMode.READY;
                                    } else {
                                         ShowMessageFX.Warning(getStage(), "There was an error while loading Contact Information Details.","Warning", null);
+                                        txtField26.clear(); // CLIENT Search
+                                        txtField01.clear(); // CLIENT ID
+                                        clearFields();
                                         pnEditMode = EditMode.UNKNOWN;
+                                        
                                    }
                               } else {
                                   ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
+                                  //if (pnEditMode == EditMode.ADDNEW ){
+                                    txtField26.clear(); // CLIENT Search
+                                    txtField01.clear(); // CLIENT ID
+                                    clearFields();
+                                  //}
                                   pnEditMode = EditMode.UNKNOWN;
                               }
                              
@@ -545,28 +579,35 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                                         pnEditMode = EditMode.READY;
                                    } else {
                                         ShowMessageFX.Warning(getStage(), "There was an error while loading Contact Information Details.","Warning", null);
+                                        txtField26.clear(); // CLIENT Search
+                                        txtField01.clear(); // CLIENT ID
+                                        clearFields();
                                         pnEditMode = EditMode.UNKNOWN;
                                    }
                               } else {
                                   ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
+                                  //if (pnEditMode == EditMode.ADDNEW ){
+                                    txtField26.clear(); // CLIENT Search
+                                    txtField01.clear(); // CLIENT ID
+                                    clearFields();
+                                  //}
                                   pnEditMode = EditMode.UNKNOWN;
                               }
                          }
                          
                          break;
                     case "btnAdd": //create new client
+                         clearFields(); 
                          if (oTrans.NewRecord() && oTransAddress.NewRecord() && oTransMobile.NewRecord() 
                              && oTransEmail.NewRecord() && oTransSocMed.NewRecord() ){
-                              
-                              clearFields(); 
                               loadClientMaster();
                               /*Clear tables*/
                               addressdata.clear(); 
                               mobiledata.clear();
                               emaildata.clear();
                               socialmediadata.clear();
-                              txtField26.clear(); // Client Search
-                              txtField01.clear(); // Client ID
+                              txtField26.clear(); // CLIENT Search
+                              txtField01.clear(); // CLIENT ID
                               pnEditMode = oTrans.getEditMode();
                          } else 
                              ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
@@ -584,7 +625,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                          clearContactInfo();
                          break;
                     case "btnSave": //save client info
-                         //Do not Allow to save Client Info if there's no Address / Mobile
+                         //Do not Allow to save CLIENT Info if there's no Address / Mobile
                          if (pnEditMode == EditMode.ADDNEW) {
                               if (oTransAddress.getItemCount() <= 1) {
                                    ShowMessageFX.Warning(null, "Warning", "Please Add atleast 1 Address.");
@@ -594,7 +635,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                                    return;
                               }
                          }
-                         //Do not Allow to save Client Info if there's no Primary Address / Mobile
+                         //Do not Allow to save CLIENT Info if there's no Primary Address / Mobile
                          for (lnCtr = 1; lnCtr <= oTransAddress.getItemCount(); lnCtr++){
                               if (oTransAddress.getAddress(lnCtr, "cPrimaryx").toString().equals("1") ) {
                                    iCntp = iCntp + 1;
@@ -866,6 +907,10 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                          }
                     break;
                     case "btnTabRem":
+                         if (pnRow == 0) {
+                            ShowMessageFX.Warning(null, "Warning", "No selected item!");
+                            return;
+                         } 
                          switch(iTabIndex){
                               case 0:
                                    if(ShowMessageFX.OkayCancel(null, "Confirmation", "Are you sure you want to remove this Client Address?") == true){
@@ -889,7 +934,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                                    textArea11Addr.clear(); // Address Remarks
                               break;
                               case 1://Mobile
-                                   if(ShowMessageFX.OkayCancel(null, "Confirmation", "Are you sure you want to remove this  Client Mobile?") == true){
+                                   if(ShowMessageFX.OkayCancel(null, "Confirmation", "Are you sure you want to remove this Client Mobile?") == true){
                                    } else 
                                        return;
                                    oTransMobile.removeMobile(pnRow);
@@ -936,6 +981,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                          } 
                         
                     break;
+                         
                }
                initButton(pnEditMode);    
           } catch (SQLException e) {
@@ -993,7 +1039,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                          String.valueOf(lnCtr), //ROW
                          sStatus,
                          oTransAddress.getAddress(lnCtr, "sHouseNox").toString(), //HOUSE NUMBER
-                         sAddress,
+                         sAddress.toUpperCase(),
                          oTransAddress.getAddress(lnCtr, "sZippCode").toString()
                          ));
                     }
@@ -1013,11 +1059,11 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                /*Set Values to Class Mobile Master*/
                for (lnCtr = 1; lnCtr <= oTransMobile.getItemCount(); lnCtr++){
                     if (oTransMobile.getMobile(lnCtr, "cOwnerxxx").toString().equals("0")) {
-                         sOwnership = "Personal";
+                         sOwnership = "PERSONAL";
                     }else if (oTransMobile.getMobile(lnCtr, "cOwnerxxx").toString().equals("1")) {
-                         sOwnership = "Office";
+                         sOwnership = "OFFICE";
                     } else {
-                         sOwnership = "Other";
+                         sOwnership = "OTHERS";
                     }
                     
                     if (oTransMobile.getMobile(lnCtr, "cPrimaryx").toString().equals("1")) {
@@ -1048,11 +1094,11 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                /*Set Values to Class Mobile Master*/
                for (lnCtr = 1; lnCtr <= oTransEmail.getItemCount(); lnCtr++){
                     if (oTransEmail.getEmail(lnCtr, "cOwnerxxx").toString().equals("0")) {
-                         sOwnership = "Personal";
+                         sOwnership = "PERSONAL";
                     }else if (oTransEmail.getEmail(lnCtr, "cOwnerxxx").toString().equals("1")) {
-                         sOwnership = "Office";
+                         sOwnership = "OFFICE";
                     } else {
-                         sOwnership = "Other";
+                         sOwnership = "OTHERS";
                     }
                     
                     if (oTransEmail.getEmail(lnCtr, "cPrimaryx").toString().equals("1")) {
@@ -1085,17 +1131,17 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                /*Set Values to Class Mobile Master*/
                for (lnCtr = 1; lnCtr <= oTransSocMed.getItemCount(); lnCtr++){
                     if (oTransSocMed.getSocMed(lnCtr, "cSocialTp").toString().equals("0")) {
-                         sSocType = "Facebook";
+                         sSocType = "FACEBOOK";
                     } else if (oTransSocMed.getSocMed(lnCtr, "cSocialTp").toString().equals("1")) {
-                         sSocType = "WhatsUp";
+                         sSocType = "WHATSAPP";
                     } else if (oTransSocMed.getSocMed(lnCtr, "cSocialTp").toString().equals("2")) {
-                         sSocType = "Instagram";
+                         sSocType = "INSTAGRAM";
                     } else if (oTransSocMed.getSocMed(lnCtr, "cSocialTp").toString().equals("3")) {
-                         sSocType = "Tiktok";
+                         sSocType = "TIKTOK";
                     } else if (oTransSocMed.getSocMed(lnCtr, "cSocialTp").toString().equals("4")) {
-                         sSocType = "Twitter";
+                         sSocType = "TWITTER";
                     } else {
-                         sSocType = "Others";
+                         sSocType = "OTHERS";
                     }
                     
                     if (!oTransSocMed.getSocMed(lnCtr, "sAccountx").toString().trim().equals("") ||
@@ -1423,6 +1469,13 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                switch(iTabIndex) {
                     /*Address*/
                     case 0: 
+                         if (pnEditMode == EditMode.UPDATE) {
+                            if(oTransAddress.getAddress(pnRow,"sAddrssID").toString().equals("")){
+                                btnTabRem.setVisible(true);
+                            }else {
+                                btnTabRem.setVisible(false);
+                            }
+                         }  
                          txtField03Addr.setText((String) oTransAddress.getAddress(pnRow,"sHouseNox" ));
                          txtField04Addr.setText((String) oTransAddress.getAddress(pnRow, "sAddressx"));
                          txtField05Addr.setText((String) oTransAddress.getAddress(pnRow, "sTownName"));
@@ -1458,6 +1511,13 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                     
                     /*Mobile*/
                     case 1:
+                         if (pnEditMode == EditMode.UPDATE) {
+                            if(oTransMobile.getMobile(pnRow,"sMobileID").toString().equals("")){
+                                btnTabRem.setVisible(true);
+                            }else {
+                                btnTabRem.setVisible(false);
+                            }
+                         } 
                          txtField03Cont.setText((String) oTransMobile.getMobile(pnRow,"sMobileNo" ));
                          textArea13Cont.setText((String) oTransMobile.getMobile(pnRow, "sRemarksx"));
                          comboBox04Cont.getSelectionModel().select(Integer.parseInt((String) oTransMobile.getMobile(pnRow,"cMobileTp" )));
@@ -1476,6 +1536,13 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                     
                     /*Email*/
                     case 2:
+                         if (pnEditMode == EditMode.UPDATE) {
+                            if(oTransEmail.getEmail(pnRow,"sEmailIDx").toString().equals("")){
+                                btnTabRem.setVisible(true);
+                            }else {
+                                btnTabRem.setVisible(false);
+                            }
+                         } 
                          txtField03EmAd.setText((String) oTransEmail.getEmail(pnRow,"sEmailAdd" ));
                          comboBox04EmAd.getSelectionModel().select(Integer.parseInt((String) oTransEmail.getEmail(pnRow,"cOwnerxxx" )));
                          if (oTransEmail.getEmail(pnRow, "cRecdStat").toString().equals("1")) {
@@ -1492,6 +1559,13 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                     
                     /*Social*/
                     case 3:
+                         if (pnEditMode == EditMode.UPDATE) {
+                            if(oTransSocMed.getSocMed(pnRow,"sSocialID").toString().equals("")){
+                                btnTabRem.setVisible(true);
+                            }else {
+                                btnTabRem.setVisible(false);
+                            }
+                         }
                          txtField03Socm.setText((String) oTransSocMed.getSocMed(pnRow,"sAccountx" ));
                          comboBox04Socm.getSelectionModel().select(Integer.parseInt((String) oTransSocMed.getSocMed(pnRow,"cSocialTp" )));
                          if (oTransSocMed.getSocMed(pnRow, "cRecdStat").toString().equals("1")) {
@@ -1814,7 +1888,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                switch (event.getCode()){
                     case F3:
                          switch (txtFieldID){ 
-                              case "txtField01":  //Search by Client ID
+                              case "txtField01":  //Search by CLIENT ID
                                    if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
                                         if(ShowMessageFX.OkayCancel(null, "Confirmation", "You have unsaved data. Are you sure you want to browse a new record?") == true){
                                              oTransAddress.removeAddress(oTransAddress.getItemCount());
@@ -1825,8 +1899,8 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                                         } else 
                                             return;
                                    }
-                                   txtField26.clear(); // Client Search
-                                   clearFields();
+//                                   txtField26.clear(); // CLIENT Search
+//                                   clearFields();
                                    if (oTrans.SearchRecord(txtField01.getText(), true)){
                                         if (oTransAddress.OpenRecord(oTrans.getMaster("sClientID").toString(), false)
                                              && oTransMobile.OpenRecord(oTrans.getMaster("sClientID").toString(), false)
@@ -1840,10 +1914,18 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                                              pnEditMode = EditMode.READY;
                                         } else {
                                              ShowMessageFX.Warning(getStage(), "There was an error while loading Contact Information Details.","Warning", null);
+                                             txtField26.clear(); // CLIENT Search
+                                             //txtField01.clear(); // CLIENT ID
+                                             clearFields();
                                              pnEditMode = EditMode.UNKNOWN;
                                         }
                                    } else {
                                        ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
+                                       //if (pnEditMode == EditMode.ADDNEW ){
+                                            txtField26.clear(); // CLIENT Search
+                                            //txtField01.clear(); // CLIENT ID
+                                            clearFields();
+                                       // }
                                        pnEditMode = EditMode.UNKNOWN;
                                    }
                                    
@@ -1860,8 +1942,8 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                                         } else 
                                             return;
                                    }
-                                   txtField01.clear(); // Client ID
-                                   clearFields();
+//                                   txtField01.clear(); // CLIENT ID
+//                                   clearFields();
                                    if (oTrans.SearchRecord(txtField26.getText(), false)){
                                         if (oTransAddress.OpenRecord(oTrans.getMaster("sClientID").toString(), false)
                                              && oTransMobile.OpenRecord(oTrans.getMaster("sClientID").toString(), false)
@@ -1875,10 +1957,17 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                                              pnEditMode = EditMode.READY;
                                         } else {
                                              ShowMessageFX.Warning(getStage(), "There was an error while loading Contact Information Details.","Warning", null);
+                                             txtField01.clear(); // CLIENT ID
+                                             clearFields();
                                              pnEditMode = EditMode.UNKNOWN;
                                         }
                                    } else {
                                        ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
+                                       //if (pnEditMode == EditMode.ADDNEW ){
+                                            //txtField26.clear(); // CLIENT Search
+                                            txtField01.clear(); // CLIENT ID
+                                            clearFields();
+                                        //}
                                        pnEditMode = EditMode.UNKNOWN;
                                    }
                                    initButton(pnEditMode); 
@@ -2100,9 +2189,9 @@ public class CustomerFormController implements Initializable, ScreenInterface {
           try {
                boolean bAction = true;
                if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
-               /*     if(ShowMessageFX.OkayCancel(null, "Confirmation", "Are you sure, you want to change Client Type?") == true){
+               /*     if(ShowMessageFX.OkayCancel(null, "Confirmation", "Are you sure, you want to change CLIENT Type?") == true){
                     } else {
-                        comboBox18.getSelectionModel().select(iClientType);      
+                        comboBox18.getSelectionModel().select(iCLIENTType);      
                         return;
                     }
                */
@@ -2131,11 +2220,10 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                          //txtField16.setDisable(true); //company name
                          //txtField29.setDisable(true); // Business Style
                          txtField16.clear(); //company name
-                         txtField29.clear(); // Business Style
                          System.out.println("ComboBox18 >>> "+comboBox18.getSelectionModel().getSelectedIndex()+" false" );
                     }
                     
-                    cmdClientType(true);
+                    cmdCLIENTType(true);
                }
           } catch (SQLException ex) {
               Logger.getLogger(CustomerFormController.class.getName()).log(Level.SEVERE, null, ex);
@@ -2154,10 +2242,10 @@ public class CustomerFormController implements Initializable, ScreenInterface {
           */
           boolean lbShow = (fnValue == EditMode.ADDNEW || fnValue == EditMode.UPDATE);
           
-          /*Client Master*/
+          /*CLIENT Master*/
           txtField14.setDisable(!lbShow); //LTO NO
           txtField13.setDisable(!lbShow); //TIN NO
-          comboBox18.setDisable(!lbShow); //Client type
+          comboBox18.setDisable(!lbShow); //CLIENT type
           textArea15.setDisable(!lbShow); //Remarks
           txtField02.setDisable(!lbShow); //last name
           txtField03.setDisable(!lbShow); //first name
@@ -2172,8 +2260,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
           comboBox07.setDisable(!lbShow); //Title
           txtField25.setDisable(!lbShow); // Spouse
           txtField16.setDisable(!lbShow); //company name
-          txtField29.setDisable(!lbShow); // Business Style
-          cmdClientType(lbShow);
+          cmdCLIENTType(lbShow);
           
           /*Address*/
           txtField03Addr.setDisable(!lbShow); //House No
@@ -2220,7 +2307,6 @@ public class CustomerFormController implements Initializable, ScreenInterface {
           btnEdit.setManaged(false);
           btnSave.setVisible(lbShow);
           btnSave.setManaged(lbShow);
-          
           btnTabAdd.setVisible(lbShow); 
           btnTabUpd.setVisible(lbShow);
           
@@ -2235,7 +2321,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
           }
           
           if (fnValue == EditMode.UPDATE || fnValue == EditMode.READY) {
-               comboBox18.setDisable(true); //Client type *Do not allow user to change client type in Edit Mode
+               comboBox18.setDisable(true); //CLIENT type *Do not allow user to change client type in Edit Mode
                //Clear Contact details fields
                /*Address*/
                txtField03Addr.clear(); //House No
@@ -2285,12 +2371,11 @@ public class CustomerFormController implements Initializable, ScreenInterface {
           }
      }
      
-     public void cmdClientType(boolean bValue){
+     public void cmdCLIENTType(boolean bValue){
           if(bValue) {
                switch (comboBox18.getSelectionModel().getSelectedIndex()) {
                     case 1:
                          txtField16.setDisable(false); //company name
-                         txtField29.setDisable(false); // Business Style
                          txtField02.setDisable(bValue); //last name
                          txtField03.setDisable(bValue); //first name
                          txtField04.setDisable(bValue); //mid name
@@ -2306,7 +2391,6 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                          break;
                     case 2:
                          txtField16.setDisable(!bValue); //company name
-                         txtField29.setDisable(!bValue); // Business Style
                          txtField02.setDisable(!bValue); //last name
                          txtField03.setDisable(!bValue); //first name
                          txtField04.setDisable(!bValue); //mid name
@@ -2322,7 +2406,6 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                          break;
                     default:
                          txtField16.setDisable(true); //company name
-                         txtField29.setDisable(true); // Business Style
                          txtField02.setDisable(!bValue); //last name
                          txtField03.setDisable(!bValue); //first name
                          txtField04.setDisable(!bValue); //mid name
@@ -2390,7 +2473,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
           emaildata.clear();
           socialmediadata.clear();
           
-          /*Client Master*/
+          /*CLIENT Master*/
           txtField02.clear(); //last name
           txtField03.clear(); //first name
           txtField04.clear(); //mid name
@@ -2403,11 +2486,10 @@ public class CustomerFormController implements Initializable, ScreenInterface {
           txtField13.clear(); //TIN NO
           textArea15.clear(); //Remarks
           txtField25.clear(); // Spouse
-          txtField29.clear(); // Business Style
           txtField11.setValue(LocalDate.of(1900, Month.JANUARY, 1)); //birthdate
               
           //txtField11.setValue(null); //bdate Do not clear bdate since script is already assigning value to prevent nullpointerexception
-          comboBox18.setValue(null); //Client type
+          comboBox18.setValue(null); //CLIENT type
           comboBox08.setValue(null); //Gender
           comboBox09.setValue(null); //Civil Stat
           comboBox07.setValue(null); //Title

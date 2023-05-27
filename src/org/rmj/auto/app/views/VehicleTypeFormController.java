@@ -20,12 +20,14 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import org.rmj.appdriver.GRider;
 import org.rmj.appdriver.agentfx.CommonUtils;
@@ -52,9 +54,15 @@ public class VehicleTypeFormController implements Initializable {
     private String sTransNo = "";
     private String sMakeID = "";
     private String sMakeDesc = "";
+    private String sFormula1 = "";
+    private String sFormula2 = "";
+    private String lsFormula = "";
+    
+    
     private int lnCtr;
     
     private ObservableList<VehicleDescriptionTableParameter> vhclparamdata = FXCollections.observableArrayList();
+    ObservableList<String> cTypeFormat = FXCollections.observableArrayList(); 
 
     @FXML
     private Button btnAdd;
@@ -67,8 +75,6 @@ public class VehicleTypeFormController implements Initializable {
     @FXML
     private Button btnConcat;
     @FXML
-    private Label lblTypeFormat;
-    @FXML
     private TableView tblParamList;
     @FXML
     private TableColumn tblIndex01;
@@ -80,6 +86,14 @@ public class VehicleTypeFormController implements Initializable {
     private Button btnRefresh;
     @FXML
     private TextField txtField02;
+    @FXML
+    private ComboBox cmbFormat;
+    @FXML
+    private TextField txtField03;
+    @FXML
+    private TextField txtField01;
+    @FXML
+    private TextField txtField04;
     
      private Stage getStage(){
          return (Stage) txtField02.getScene().getWindow();
@@ -108,8 +122,15 @@ public class VehicleTypeFormController implements Initializable {
         loadVehicleParameterList();
         
         setCapsLockBehavior(txtField02);
+        setCapsLockBehavior(txtField01);
+        setCapsLockBehavior(txtField03);
+        setCapsLockBehavior(txtField04);
         txtField02.focusedProperty().addListener(txtField_Focus);  // Description
-
+        
+        txtField01.setOnKeyPressed(this::txtField_KeyPressed); 
+        txtField03.setOnKeyPressed(this::txtField_KeyPressed); 
+        txtField04.setOnKeyPressed(this::txtField_KeyPressed); 
+        
         tblParamList.setRowFactory(tv -> {
             TableRow<VehicleDescriptionTableParameter> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
@@ -120,12 +141,41 @@ public class VehicleTypeFormController implements Initializable {
             return row;
         });
         
+        cmbFormat.setOnAction(event -> {
+            txtField01.setDisable(true);
+            txtField03.setDisable(true);
+            txtField04.setDisable(true);
+            
+            if(cmbFormat.getSelectionModel().getSelectedIndex() == 0){
+                lsFormula = sFormula1;
+            } else if(cmbFormat.getSelectionModel().getSelectedIndex() == 1){
+                lsFormula = sFormula2;
+            }
+            
+            if(lsFormula.contains("E")){
+                txtField01.setDisable(false);
+            } else {
+                txtField01.clear();
+            }
+            if(lsFormula.contains("A")){
+                txtField03.setDisable(false);
+            } else {
+                txtField03.clear();
+            }
+            if(lsFormula.contains("B")){
+                txtField04.setDisable(false);
+            } else {
+                txtField04.clear();
+            }
+        });
+        
         //Button SetOnAction using cmdButton_Click() method
         btnRefresh.setOnAction(this::cmdButton_Click);
         btnClose.setOnAction(this::cmdButton_Click);
         btnAdd.setOnAction(this::cmdButton_Click);
         btnEdit.setOnAction(this::cmdButton_Click);
         btnSave.setOnAction(this::cmdButton_Click);
+        btnConcat.setOnAction(this::cmdButton_Click);
         
         pnEditMode = EditMode.UNKNOWN;
         initbutton(pnEditMode);
@@ -136,69 +186,251 @@ public class VehicleTypeFormController implements Initializable {
     }
     
     private static void setCapsLockBehavior(TextField textField) {
-          textField.textProperty().addListener((observable, oldValue, newValue) -> {
-               if (textField.getText() != null) {
-                    textField.setText(newValue.toUpperCase());
-               }
-          });
-     }
+        textField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (textField.getText() != null) {
+                textField.setText(newValue.toUpperCase());
+            }
+        });
+    }
+    
+    private void loadTypeFormat(){
+        try {
+            String lsFormat1, lsFormat2;
+            cTypeFormat.clear();
+            cmbFormat.setItems(null);
+            if(oTrans.LoadTypeFormat(sMakeID)){
+                sFormula1 = oTrans.getFormat( 2).toString();
+                sFormula2 = oTrans.getFormat( 3).toString();
+                lsFormat1 = genFormat(sFormula1);
+                if(!lsFormat1.equals("") && !lsFormat1.isEmpty() ){
+                    cTypeFormat.add(lsFormat1);
+                }
+                lsFormat2 = genFormat(sFormula2);
+                if(!lsFormat2.equals("") && !lsFormat2.isEmpty()){
+                    cTypeFormat.add(lsFormat2);
+                }
+            cmbFormat.setItems( cTypeFormat);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(VehicleTypeFormController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    private String genFormat(String fsValue){
+        String sFormat, sCode;
+        sFormat = "";
+        sCode = "";
+        if(fsValue.equals("") || fsValue.isEmpty()){
+            return null;
+        }
+        for (lnCtr = 1; lnCtr <= fsValue.length(); lnCtr++){
+            switch (fsValue.substring(lnCtr-1, lnCtr)) {
+                case "E":
+                    sCode = "ENGINE SIZE";
+                    break;
+                case "A":
+                    sCode = "VARIANT CODE A";
+                    break;
+                case "B":
+                    sCode = "VARIANT CODE B";
+                    break;
+                default:
+                    break;
+            }
+
+            if (!sCode.equals("") && !sCode.isEmpty()){
+                if (sFormat.equals("")){
+                    sFormat = sCode;
+                } else {
+                    sFormat = sFormat + " + " + sCode;
+                }  
+            }
+            //Clear Variable
+            sCode = "";
+        }
+        return sFormat;
+    }
+    
+    private String genType(String fsValue){
+        String sFormat, sCode;
+        sFormat = "";
+        sCode = "";
+        if(fsValue.equals("") || fsValue.isEmpty()){
+            return null;
+        }
+        for (lnCtr = 1; lnCtr <= fsValue.length(); lnCtr++){
+            switch (fsValue.substring(lnCtr-1, lnCtr)) {
+                case "E":
+                    if (txtField01.getText().equals("") || txtField01.getText().isEmpty()){
+                        ShowMessageFX.Warning(null, pxeModuleName, "Please set Type Engine");
+                        txtField01.requestFocus();
+                        return null;
+                    }
+                    sCode = txtField01.getText();
+                    break;
+                case "A":
+                    if (txtField03.getText().equals("") || txtField03.getText().isEmpty()){
+                        ShowMessageFX.Warning(null, pxeModuleName, "Please set Variant Code A");
+                        txtField03.requestFocus();
+                        return null;
+                    }
+                    sCode = txtField03.getText();
+                    break;
+                case "B":
+                    if (txtField04.getText().equals("") || txtField04.getText().isEmpty()){
+                        ShowMessageFX.Warning(null, pxeModuleName, "Please set Variant Code B");
+                        txtField04.requestFocus();
+                        return null;
+                    }
+                    sCode = txtField04.getText();
+                    break;
+                default:
+                    break;
+            }
+
+            if (!sCode.equals("") && !sCode.isEmpty()){
+                if (sFormat.equals("")){
+                    sFormat = sCode;
+                } else {
+                    sFormat = sFormat + " " + sCode;
+                }  
+            }
+            //Clear Variable
+            sCode = "";
+        }
+        return sFormat;
+    }
     
     private void cmdButton_Click(ActionEvent event) {
-        String lsButton = ((Button)event.getSource()).getId();
-        switch (lsButton){
-            case "btnAdd":
-                txtField02.clear();
-                if(oTrans.NewRecord()){
-                    pnEditMode = oTrans.getEditMode();
-                } else {
-                    ShowMessageFX.Warning(null, pxeModuleName, oTrans.getMessage());
-                    return;
-                }
+        try {
+            String lsButton = ((Button)event.getSource()).getId();
+            switch (lsButton){
+                case "btnConcat":
+                    String lsType = genType(lsFormula);
+                    if (!lsType.equals("") && !lsType.isEmpty()){
+                
+                        if(!txtField02.getText().equals("") && !txtField02.getText().isEmpty()){
+                            if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure you want to change concated type?")) {
+                            } else {
+                                return;
+                            }
+                        }
+                        txtField02.setText(lsType);
+                        oTrans.setMaster(2, lsType);
+                    } else {
+                        ShowMessageFX.Warning(null, pxeModuleName, "No Type Description to be created.");
+                    }   
                 break;
-            case "btnEdit":
-                if(oTrans.UpdateRecord()){
-                    pnEditMode = oTrans.getEditMode();
-                } else {
-                    ShowMessageFX.Warning(null, pxeModuleName, oTrans.getMessage());
-                    return;
-                }
-                break;
-            case "btnSave":
-                if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure you want to save?")) {
-                } else {
-                    return;
-                }
-
-                if(oTrans.SaveRecord()){
-                ShowMessageFX.Information(null, pxeModuleName, "Vehicle Make save sucessfully.");
-                if (oTrans.OpenRecord(oTrans.getSourceID())){
-                    pnEditMode = oTrans.getEditMode();
-                } else {
+                case "btnAdd":
+                    loadTypeFormat();
                     txtField02.clear();
-                    pnEditMode = EditMode.UNKNOWN;
-                }
-                loadVehicleParameterList();
-                } else {
-                    ShowMessageFX.Warning(null, pxeModuleName, oTrans.getMessage());
-                    return;
-                }
-                break;
+                    if(oTrans.NewRecord()){
+                        pnEditMode = oTrans.getEditMode();
+                    } else {
+                        ShowMessageFX.Warning(null, pxeModuleName, oTrans.getMessage());
+                        return;
+                    }
+                    break;
+                case "btnEdit":
+                    loadTypeFormat();
+                    if(oTrans.UpdateRecord()){
+                        pnEditMode = oTrans.getEditMode();
+                    } else {
+                        ShowMessageFX.Warning(null, pxeModuleName, oTrans.getMessage());
+                        return;
+                    }
+                    break;
+                case "btnSave":
+                    if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure you want to save?")) {
+                    } else {
+                        return;
+                    }
 
-            case "btnRefresh":
-                loadVehicleParameterList();
-                break;
-            case "btnClose":
-                CommonUtils.closeStage(btnClose);
-                break;
+                    if(oTrans.SaveRecord()){
+                    ShowMessageFX.Information(null, pxeModuleName, "Vehicle Make save sucessfully.");
+                    if (oTrans.OpenRecord(oTrans.getSourceID())){
+                        pnEditMode = oTrans.getEditMode();
+                    } else {
+                        txtField02.clear();
+                        pnEditMode = EditMode.UNKNOWN;
+                    }
+                    loadVehicleParameterList();
+                    } else {
+                        ShowMessageFX.Warning(null, pxeModuleName, oTrans.getMessage());
+                        return;
+                    }
+                    break;
 
-            default:
-                ShowMessageFX.Warning(null, pxeModuleName, "Button with name " + lsButton + " not registered.");
-                break;
+                case "btnRefresh":
+                    loadVehicleParameterList();
+                    break;
+                case "btnClose":
+                    CommonUtils.closeStage(btnClose);
+                    break;
 
+                default:
+                    ShowMessageFX.Warning(null, pxeModuleName, "Button with name " + lsButton + " not registered.");
+                    break;
+
+            }
+            clearFields();
+            initbutton(pnEditMode);
+        } catch (SQLException ex) {
+            Logger.getLogger(VehicleTypeFormController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }   
+    
+    private void txtField_KeyPressed(KeyEvent event){
+        TextField txtField = (TextField)event.getSource();
+        int lnIndex = Integer.parseInt(((TextField)event.getSource()).getId().substring(8,10));
+
+        try{
+            switch (event.getCode()){
+                case F3:
+                case TAB:
+                case ENTER:
+                    switch (lnIndex){ 
+                        case 1: //Engine Size
+                            if (oTrans.searchTypeEngine(txtField01.getText())){
+                                txtField01.setText(oTrans.getMaster(9).toString());
+                            } else 
+                                ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
+                        break;
+
+                        case 3: //Variant Code A
+                            if (oTrans.searchTypeVariant(txtField03.getText(), "A")){
+                                txtField03.setText(oTrans.getMaster(10).toString());
+                            } else 
+                                ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
+                        break;
+
+                        case 4: //Variant Code B 
+                            if (oTrans.searchTypeVariant(txtField04.getText(), "B")){
+                                 txtField04.setText(oTrans.getMaster(11).toString());
+                            } else 
+                                ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);                            
+                        break;      
+                    } 
+                    break;
+            }
+        }catch(SQLException e){
+            ShowMessageFX.Warning(getStage(),e.getMessage(), "Warning", null);
         }
 
-        initbutton(pnEditMode);
-    }    
+        switch (event.getCode()){
+        case ENTER:
+        case DOWN:
+            CommonUtils.SetNextFocus(txtField);
+            break;
+        case UP:
+            CommonUtils.SetPreviousFocus(txtField);
+        }
+
+    }
+    
+    public void loadField(){
+    
+    }
     
     public void loadVehicleParameterList(){
         try {
@@ -292,14 +524,31 @@ public class VehicleTypeFormController implements Initializable {
     private void initbutton(int fnValue) {
         boolean lbShow = (fnValue == EditMode.ADDNEW || fnValue == EditMode.UPDATE);
         
-        txtField02.setDisable(!lbShow);
-        btnEdit.setDisable(true);
-        btnSave.setDisable(!lbShow);
-        btnAdd.setDisable(lbShow);
+        btnAdd.setVisible(!lbShow);
+        btnAdd.setManaged(!lbShow);
+        //if lbShow = false hide btn          
+        btnEdit.setVisible(false); 
+        btnEdit.setManaged(false);
+        btnSave.setVisible(lbShow);
+        btnSave.setManaged(lbShow);
+        cmbFormat.setDisable(!lbShow);
+        btnConcat.setDisable(!lbShow);
         
-        if (fnValue == EditMode.READY ){
-            btnEdit.setDisable(false);
+        txtField01.setDisable(true);
+        txtField03.setDisable(true);
+        txtField04.setDisable(true);
+        
+        if (fnValue == EditMode.READY) { //show edit if user clicked save / browse
+            btnEdit.setVisible(true); 
+            btnEdit.setManaged(true);
         }
     }
+    
+   private void clearFields(){
+        cmbFormat.setValue(null);
+        txtField01.clear();
+        txtField03.clear();
+        txtField04.clear();
+   }
     
 }

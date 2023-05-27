@@ -9,7 +9,6 @@ import com.sun.javafx.scene.control.skin.TableHeaderRow;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
-import java.util.Date;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -43,7 +42,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import static junit.framework.Assert.fail;
 import org.rmj.appdriver.GRider;
 import org.rmj.appdriver.agentfx.CommonUtils;
 import org.rmj.appdriver.agentfx.ShowMessageFX;
@@ -57,69 +55,69 @@ import org.rmj.auto.clients.base.VehicleDescription;
  * @author Arsiela
  */
 public class VehicleDescriptionFormController implements Initializable, ScreenInterface  {
-     private GRider oApp;
-     private VehicleDescription oTrans;
-     private MasterCallback oListener;
-     
-     unloadForm unload = new unloadForm(); //Used in Close Button
-     private final String pxeModuleName = "Vehicle Description"; //Form Title
-     private int pnEditMode;//Modifying fields
-     private int pnRow = -1;
-     private int oldPnRow = -1;
-     private int lnCtr = 0;
-     private int pagecounter;
-     
-     private String oldTransNo = "";
-     private String TransNo = "";
+    private GRider oApp;
+    private VehicleDescription oTrans;
+    private MasterCallback oListener;
+
+    unloadForm unload = new unloadForm(); //Used in Close Button
+    private final String pxeModuleName = "Vehicle Description"; //Form Title
+    private int pnEditMode;//Modifying fields
+    private int pnRow = -1;
+    private int oldPnRow = -1;
+    private int lnCtr = 0;
+    private int pagecounter;
+
+    private String oldTransNo = "";
+    private String TransNo = "";
     private double xOffset = 0;
     private double yOffset = 0;
-     
-     /*populate tables Vehicle Description List*/
-     private ObservableList<VehicleDescriptionTableList> vhcldescdata = FXCollections.observableArrayList();
-     private FilteredList<VehicleDescriptionTableList> filteredData;
-     private static final int ROWS_PER_PAGE = 50;
-     
-     ObservableList<String> cTransmission = FXCollections.observableArrayList("Automatic", "Manual", "CVT");
-     ObservableList<String> cModelsize = FXCollections.observableArrayList("Bantam", "Small", "Medium", "Large");
-     
-     @FXML
-     private AnchorPane AnchorMain;
-     @FXML
-     private Button btnAdd;
-     @FXML
-     private Button btnEdit;
-     @FXML
-     private Button btnSave;
-     @FXML
-     private Button btnClose;
-     @FXML
-     private TableView tblVehicleDesc;
-     @FXML
-     private TableColumn tblindex01;
-     @FXML
-     private TableColumn tblindex02;
-     @FXML
-     private TableColumn tblindex03;
-     @FXML
-     private TableColumn tblindex04;
-     @FXML
-     private TextField txtField02;
-     @FXML
-     private TextField txtField03;
-     @FXML
-     private TextField txtField04;
-     @FXML
-     private TextField txtField06;
-     @FXML
-     private TextField txtField05;
-     @FXML
-     private TextField txtField08;
-     @FXML
-     private ComboBox comboBox07;
-     @FXML
-     private ComboBox comboBox09;
-     @FXML
-     private Pagination pagination;
+
+    /*populate tables Vehicle Description List*/
+    private ObservableList<VehicleDescriptionTableList> vhcldescdata = FXCollections.observableArrayList();
+    private FilteredList<VehicleDescriptionTableList> filteredData;
+    private static final int ROWS_PER_PAGE = 31;
+
+    ObservableList<String> cTransmission = FXCollections.observableArrayList("AUTOMATIC", "MANUAL", "CVT");
+    ObservableList<String> cModelsize = FXCollections.observableArrayList("BANTAM", "SMALL", "MEDIUM", "LARGE");
+
+    @FXML
+    private AnchorPane AnchorMain;
+    @FXML
+    private Button btnAdd;
+    @FXML
+    private Button btnEdit;
+    @FXML
+    private Button btnSave;
+    @FXML
+    private Button btnClose;
+    @FXML
+    private TableView tblVehicleDesc;
+    @FXML
+    private TableColumn tblindex01;
+    @FXML
+    private TableColumn tblindex02;
+    @FXML
+    private TableColumn tblindex03;
+    @FXML
+    private TableColumn tblindex04;
+    @FXML
+    private TextField txtField02;
+    @FXML
+    private TextField txtField03;
+    @FXML
+    private TextField txtField04;
+    @FXML
+    private TextField txtField06;
+    @FXML
+    private TextField txtField05;
+    @FXML
+    private TextField txtField08;
+    @FXML
+    private ComboBox comboBox07;
+    @FXML
+    private ComboBox comboBox09;
+    @FXML
+    private Pagination pagination;
     @FXML
     private Button btnMake;
     @FXML
@@ -128,203 +126,234 @@ public class VehicleDescriptionFormController implements Initializable, ScreenIn
     private Button btnType;
     @FXML
     private Button btnColor;
-     
-     private Stage getStage(){
-          return (Stage) txtField02.getScene().getWindow();
-     }
+    @FXML
+    private Button btnCancel;
 
-     /**
-      * Initializes the controller class.
-      */
-     @Override
-     public void initialize(URL url, ResourceBundle rb) {
-          oListener = (int fnIndex, Object foValue) -> {
-               System.out.println("Set Class Value "  + fnIndex + "-->" + foValue);
-          };
-          
-          oTrans = new VehicleDescription(oApp, oApp.getBranchCode(), true); //Initialize ClientMaster
-          oTrans.setCallback(oListener);
-          oTrans.setWithUI(true);
-          
-          /*Set Focus to set Value to Class*/
-          txtField03.focusedProperty().addListener(txtField_Focus); // sMakeIDxx
-          txtField04.focusedProperty().addListener(txtField_Focus); // sModelIDx
-          txtField06.focusedProperty().addListener(txtField_Focus); // sColorIDx
-          txtField05.focusedProperty().addListener(txtField_Focus); // sTypeIDxx
-          txtField08.focusedProperty().addListener(txtField_Focus); // nYearModl
-          
-          /*Add limit and text formatter for year model*/
-          CommonUtils.addTextLimiter(txtField08, 4); // nYearModl
-          Pattern pattern = Pattern.compile("[0-9]*");
-          txtField08.setTextFormatter(new InputTextFormatter(pattern)); //nYearModl
-          
-          //Populate combo box
-          comboBox07.setItems(cTransmission);
-          comboBox09.setItems(cModelsize);
-          
-          //Key Pressed Event
-          txtField02.setOnKeyPressed(this::txtField_KeyPressed); // sDescript
-          txtField03.setOnKeyPressed(this::txtField_KeyPressed); // sMakeIDxx
-          txtField04.setOnKeyPressed(this::txtField_KeyPressed); // sModelIDx
-          txtField06.setOnKeyPressed(this::txtField_KeyPressed); // sColorIDx
-          txtField05.setOnKeyPressed(this::txtField_KeyPressed); // sTypeIDxx
-          txtField08.setOnKeyPressed(this::txtField_KeyPressed); // nYearModl
-          
-          //If the 'Make' field has not been filled out, disable the 'Model' text field. Otherwise, enable it.
-          txtField03.textProperty().addListener((observable, oldValue, newValue) -> {
-               try {
-                    if (newValue != null && !newValue.isEmpty()) {
-                          // Enable 
-                          if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
-                               txtField04.setDisable(false);
-                          } else {
-                               txtField04.setDisable(true);
-                          }
-                    } else {
-                         // Disable 
-                         txtField04.clear();
-                         //Set Value to Master
-                         oTrans.setMaster(4, txtField04.getText());
-                         oTrans.setMaster(16, txtField04.getText());
-                         txtField04.setDisable(true);
-                    }
-               } catch (SQLException ex) {
-                     Logger.getLogger(VehicleDescriptionFormController.class.getName()).log(Level.SEVERE, null, ex);
-               }
-          });
-          
-          txtField04.textProperty().addListener((observable, oldValue, newValue) -> {
-               if (!txtField03.getText().equals(null) && !txtField03.getText().trim().equals("")) {
+    private Stage getStage(){
+         return (Stage) txtField02.getScene().getWindow();
+    }
+
+    /**
+     * Initializes the controller class.
+     */
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        oListener = (int fnIndex, Object foValue) -> {
+            System.out.println("Set Class Value "  + fnIndex + "-->" + foValue);
+        };
+
+        oTrans = new VehicleDescription(oApp, oApp.getBranchCode(), true); //Initialize ClientMaster
+        oTrans.setCallback(oListener);
+        oTrans.setWithUI(true);
+        
+        setCapsLockBehavior(txtField03);
+        setCapsLockBehavior(txtField04);
+        setCapsLockBehavior(txtField06);
+        setCapsLockBehavior(txtField05);
+
+        /*Set Focus to set Value to Class*/
+        txtField03.focusedProperty().addListener(txtField_Focus); // sMakeIDxx
+        txtField04.focusedProperty().addListener(txtField_Focus); // sModelIDx
+        txtField06.focusedProperty().addListener(txtField_Focus); // sColorIDx
+        txtField05.focusedProperty().addListener(txtField_Focus); // sTypeIDxx
+        txtField08.focusedProperty().addListener(txtField_Focus); // nYearModl
+
+        /*Add limit and text formatter for year model*/
+        CommonUtils.addTextLimiter(txtField08, 4); // nYearModl
+        Pattern pattern = Pattern.compile("[0-9]*");
+        txtField08.setTextFormatter(new InputTextFormatter(pattern)); //nYearModl
+
+        //Populate combo box
+        comboBox07.setItems(cTransmission);
+        comboBox09.setItems(cModelsize);
+
+        //Key Pressed Event
+        txtField02.setOnKeyPressed(this::txtField_KeyPressed); // sDescript
+        txtField03.setOnKeyPressed(this::txtField_KeyPressed); // sMakeIDxx
+        txtField04.setOnKeyPressed(this::txtField_KeyPressed); // sModelIDx
+        txtField06.setOnKeyPressed(this::txtField_KeyPressed); // sColorIDx
+        txtField05.setOnKeyPressed(this::txtField_KeyPressed); // sTypeIDxx
+        txtField08.setOnKeyPressed(this::txtField_KeyPressed); // nYearModl
+
+        //If the 'Make' field has not been filled out, disable the 'Model' text field. Otherwise, enable it.
+        txtField03.textProperty().addListener((observable, oldValue, newValue) -> {
+            try {
+                if (newValue != null && !newValue.isEmpty()) {
+                    // Enable 
                     if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
                          txtField04.setDisable(false);
+                    } else {
+                         txtField04.setDisable(true);
                     }
-               } else {
+                } else {
+                    // Disable 
+                    txtField04.clear();
+                    //Set Value to Master
+                    oTrans.setMaster(4, txtField04.getText());
+                    oTrans.setMaster(16, txtField04.getText());
                     txtField04.setDisable(true);
-               } 
-          });
-          
-          //Set Value to Master
-          comboBox07.setOnAction(e -> {
-               try {
-                    //oTrans.setMaster(7, String.valueOf(comboBox07.getSelectionModel().getSelectedIndex()));
-                    if (comboBox07.getSelectionModel().getSelectedIndex() == 0){
-                         oTrans.setMaster(7, "AT");
-                    }else if  (comboBox07.getSelectionModel().getSelectedIndex() == 1){
-                         oTrans.setMaster(7, "M");
-                    }else if  (comboBox07.getSelectionModel().getSelectedIndex() == 2){
-                         oTrans.setMaster(7, "CVT");
-                    }
-               
-               } catch (SQLException ex) {
-                    Logger.getLogger(VehicleDescriptionFormController.class.getName()).log(Level.SEVERE, null, ex);
-               }
-          });
-          comboBox09.setOnAction(e -> {
-               try {
-                    oTrans.setMaster(9, comboBox09.getSelectionModel().getSelectedIndex());
-               } catch (SQLException ex) {
-                    Logger.getLogger(VehicleDescriptionFormController.class.getName()).log(Level.SEVERE, null, ex);
-               }
-          });
-          
-          //Button Click Event
-          btnAdd.setOnAction(this::cmdButton_Click);
-          btnEdit.setOnAction(this::cmdButton_Click); 
-          btnSave.setOnAction(this::cmdButton_Click); 
-          btnClose.setOnAction(this::cmdButton_Click); 
-          
-          //Parameter Entry Button
-          btnMake.setOnAction(this::cmdButton_Click);
-          btnModel.setOnAction(this::cmdButton_Click); 
-          btnType.setOnAction(this::cmdButton_Click); 
-          btnColor.setOnAction(this::cmdButton_Click); 
-          //Populate table
-          loadVehicleDescTable();
-          pagination.setPageFactory(this::createPage); 
-          
-          /*Clear Fields*/
-          clearFields();
-          
-          pnEditMode = EditMode.UNKNOWN;
-          initButton(pnEditMode); 
-     } 
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(VehicleDescriptionFormController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
+
+        txtField04.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!txtField03.getText().equals(null) && !txtField03.getText().trim().equals("")) {
+                if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
+                    txtField04.setDisable(false);
+                }
+            } else {
+                txtField04.setDisable(true);
+            } 
+        });
+
+        //Set Value to Master
+        comboBox07.setOnAction(e -> {
+            try {
+                switch (comboBox07.getSelectionModel().getSelectedIndex()) {
+                    case 0:
+                        oTrans.setMaster(7, "AT");
+                        break;
+                    case 1:
+                        oTrans.setMaster(7, "M");
+                        break;
+                    case 2:
+                        oTrans.setMaster(7, "CVT");
+                        break;
+                    default:
+                        break;
+                }
+
+            } catch (SQLException ex) {
+                Logger.getLogger(VehicleDescriptionFormController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
+        comboBox09.setOnAction(e -> {
+            try {
+                oTrans.setMaster(9, comboBox09.getSelectionModel().getSelectedIndex());
+            } catch (SQLException ex) {
+                Logger.getLogger(VehicleDescriptionFormController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
+
+        //Button Click Event
+        btnAdd.setOnAction(this::cmdButton_Click);
+        btnEdit.setOnAction(this::cmdButton_Click); 
+        btnSave.setOnAction(this::cmdButton_Click); 
+        btnClose.setOnAction(this::cmdButton_Click); 
+        btnCancel.setOnAction(this::cmdButton_Click); 
+
+        //Parameter Entry Button
+        btnMake.setOnAction(this::cmdButton_Click);
+        btnModel.setOnAction(this::cmdButton_Click); 
+        btnType.setOnAction(this::cmdButton_Click); 
+        btnColor.setOnAction(this::cmdButton_Click); 
+        //Populate table
+        loadVehicleDescTable();
+        pagination.setPageFactory(this::createPage); 
+
+        /*Clear Fields*/
+        clearFields();
+
+        pnEditMode = EditMode.UNKNOWN;
+        initButton(pnEditMode); 
+    } 
      
-     @Override
-     public void setGRider(GRider foValue) {
-          oApp = foValue;
-     }
-     
-     private void cmdButton_Click(ActionEvent event) {
+    @Override
+    public void setGRider(GRider foValue) {
+        oApp = foValue;
+    }
+    
+    
+    private static void setCapsLockBehavior(TextField textField) {
+        textField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (textField.getText() != null) {
+                textField.setText(newValue.toUpperCase());
+            }
+        });
+    }
+    
+    private void cmdButton_Click(ActionEvent event) {
         try {
         String lsButton = ((Button)event.getSource()).getId();
             switch (lsButton){
                 case "btnAdd": //create new Vehicle Description
                     if (oTrans.NewRecord()) {
-                         clearFields(); 
-                         loadVehicleDescField();
-                         pnEditMode = oTrans.getEditMode();
+                        clearFields(); 
+                        loadVehicleDescField();
+                        pnEditMode = oTrans.getEditMode();
                     } else 
                         ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
-                     break;
+                    break;
                 case "btnEdit": //modify vehicle description
-                     if (oTrans.UpdateRecord()) {
-                          pnEditMode = oTrans.getEditMode(); 
-                     } else 
-                          ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
-                     break;
+                    if (oTrans.UpdateRecord()) {
+                        pnEditMode = oTrans.getEditMode(); 
+                    } else 
+                        ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
+                    break;
                 case "btnSave": 
-                    if (!oTrans.loadVehicleMake(txtField03.getText().trim())){
-                        txtField03.requestFocus();
-                    } 
-                     //Validate before saving
-                     if (txtField03.getText().trim().equals("")) {
-                          ShowMessageFX.Warning(getStage(), "Please enter a value for Make.","Warning", null);
-                          txtField03.requestFocus();
-                          return;
-                     }
-                     if (txtField04.getText().trim().equals("")) {
-                          ShowMessageFX.Warning(getStage(), "Please enter a value for Model.","Warning", null);
-                          txtField04.requestFocus();
-                          return;
-                     }
-                     if (txtField06.getText().trim().equals("")) {
-                          ShowMessageFX.Warning(getStage(), "Please enter a value for Type.","Warning", null);
-                          txtField06.requestFocus();
-                          return;
-                     }
-                     if (txtField05.getText().trim().equals("")) {
-                          ShowMessageFX.Warning(getStage(), "Please enter a value for Color.","Warning", null);
-                          txtField05.requestFocus();
-                          return;
-                     }
+                    //Validate before saving
+                    if (txtField03.getText().trim().equals("")) {
+                       ShowMessageFX.Warning(getStage(), "Please enter a value for Make.","Warning", null);
+                       txtField03.requestFocus();
+                       return;
+                    }
+                    if (txtField04.getText().trim().equals("")) {
+                       ShowMessageFX.Warning(getStage(), "Please enter a value for Model.","Warning", null);
+                       txtField04.requestFocus();
+                       return;
+                    }
+                    if (txtField06.getText().trim().equals("")) {
+                        ShowMessageFX.Warning(getStage(), "Please enter a value for Type.","Warning", null);
+                        txtField06.requestFocus();
+                        return;
+                    }
+                    if (txtField05.getText().trim().equals("")) {
+                        ShowMessageFX.Warning(getStage(), "Please enter a value for Color.","Warning", null);
+                        txtField05.requestFocus();
+                        return;
+                    }
 
-                     if (txtField08.getText().trim().equals("") || Integer.parseInt(txtField08.getText()) < 1900) {
-                          ShowMessageFX.Warning(getStage(), "Please enter a valid value for Year.","Warning", null);
-                          txtField08.requestFocus();
-                          return;
-                     }
+                    if (txtField08.getText().trim().equals("") || Integer.parseInt(txtField08.getText()) < 1900) {
+                        ShowMessageFX.Warning(getStage(), "Please enter a valid value for Year.","Warning", null);
+                        txtField08.requestFocus();
+                        return;
+                    }
 
-                     //Proceed Saving
-                     if (setSelection()) {
-                          if (oTrans.SaveRecord()){
-                               ShowMessageFX.Information(getStage(), "Transaction save successfully.", pxeModuleName, null);
-                               loadVehicleDescTable();
-                               pnEditMode = oTrans.getEditMode();
-                          } else {
-                              ShowMessageFX.Warning(getStage(),oTrans.getMessage() ,"Warning", "Error while saving Vehicle Description");
-                          }
-                     }
-                     break;                        
+                    //Proceed Saving
+                    if (setSelection()) {
+                        if (oTrans.SaveRecord()){
+                            ShowMessageFX.Information(getStage(), "Transaction save successfully.", pxeModuleName, null);
+                            loadVehicleDescTable();
+                            if (pnEditMode == EditMode.ADDNEW){
+                                pagecounter = (oTrans.getItemCount()-1) + pagination.getCurrentPageIndex() * ROWS_PER_PAGE;
+                            }
+                            getSelectedItem(filteredData.get(pagecounter).getTblindex11());
+                            pnEditMode = oTrans.getEditMode();
+                        } else {
+                            ShowMessageFX.Warning(getStage(),oTrans.getMessage() ,"Warning", "Error while saving Vehicle Description");
+                        }
+                    }
+                     break; 
+                case "btnCancel": 
+                    if(ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure, do you want to cancel?") == true){
+                        clearFields();
+                        pnEditMode = EditMode.UNKNOWN;
+                    break;
+                }else {
+                    return;
+                }
                 case "btnClose": //close tab
-                     if(ShowMessageFX.OkayCancel(null, "Close Tab", "Are you sure you want to close this Tab?") == true){
-                           if (unload != null) {
+                    if(ShowMessageFX.OkayCancel(null, "Close Tab", "Are you sure you want to close this Tab?") == true){
+                            if (unload != null) {
                                 unload.unloadForm(AnchorMain, oApp, pxeModuleName);
-                           }else {
+                            }else {
                                 ShowMessageFX.Warning(null, "Warning", "Please notify the system administrator to configure the null value at the close button.");    
-                           }
-                           break;
-                     } else
-                         return;
+                            }
+                            break;
+                    } else
+                        return;
                 case "btnMake":
                     loadVehicleMake();
                 break;
@@ -351,6 +380,7 @@ public class VehicleDescriptionFormController implements Initializable, ScreenIn
             Logger.getLogger(VehicleDescriptionFormController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+     
     //use for creating new page on pagination 
     private Node createPage(int pageIndex) {
         int fromIndex = pageIndex * ROWS_PER_PAGE;
@@ -448,9 +478,9 @@ public class VehicleDescriptionFormController implements Initializable, ScreenIn
                     case 2:
                         if(lnIndex == 2){
                             return (clients.getTblindex10().toLowerCase().contains(lowerCaseFilter)); // Does not match.   
-                         }else {
+                        }else {
                             return (clients.getTblindex10().toLowerCase().contains(lowerCaseFilter)); // Does not match.
-                         }   
+                        }   
                     default:
                     return true;            
             }
@@ -593,39 +623,39 @@ public class VehicleDescriptionFormController implements Initializable, ScreenIn
         try{
             switch (event.getCode()){
                 case F3:
-                     switch (lnIndex){ 
-                          case 3: //Make
-                               if (oTrans.searchVehicleMake(txtField03.getText())){
-                                    loadVehicleDescField();
-                               } else 
-                                   ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
-
-                          break;
-                          case 4: //Model
-                               if (oTrans.searchVehicleModel(txtField04.getText())){
-                                    loadVehicleDescField();
-                               } else 
-                                   ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
-
-                          break;
-
-                          case 5: //Color 
-                               if (oTrans.searchVehicleColor(txtField05.getText())){
-                                    loadVehicleDescField();
-                               } else 
-                                   ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
-
-                          break;
-
-                          case 6: //Type 
-                               if (oTrans.searchVehicleType(txtField06.getText())){
-                                    loadVehicleDescField();
-                                    pnEditMode = oTrans.getEditMode();
-                               } else 
-                                   ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
-                          break;     
-                     } 
-                break;
+//                     switch (lnIndex){ 
+//                          case 3: //Make
+//                               if (oTrans.searchVehicleMake(txtField03.getText())){
+//                                    loadVehicleDescField();
+//                               } else 
+//                                   ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
+//
+//                          break;
+//                          case 4: //Model
+//                               if (oTrans.searchVehicleModel(txtField04.getText())){
+//                                    loadVehicleDescField();
+//                               } else 
+//                                   ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
+//
+//                          break;
+//
+//                          case 5: //Color 
+//                               if (oTrans.searchVehicleColor(txtField05.getText())){
+//                                    loadVehicleDescField();
+//                               } else 
+//                                   ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
+//
+//                          break;
+//
+//                          case 6: //Type 
+//                               if (oTrans.searchVehicleType(txtField06.getText())){
+//                                    loadVehicleDescField();
+//                                    pnEditMode = oTrans.getEditMode();
+//                               } else 
+//                                   ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
+//                          break;     
+//                     } 
+//                break;
                 case TAB:
                 case ENTER:
                     switch (lnIndex){ 
@@ -771,6 +801,12 @@ public class VehicleDescriptionFormController implements Initializable, ScreenIn
         btnEdit.setManaged(false);
         btnSave.setVisible(lbShow);
         btnSave.setManaged(lbShow);
+        btnCancel.setVisible(lbShow);
+        btnCancel.setManaged(lbShow);
+        btnMake.setVisible(lbShow);
+        btnModel.setVisible(lbShow);
+        btnType.setVisible(lbShow);
+        btnColor.setVisible(lbShow);
 
         if (fnValue == EditMode.READY) { //show edit if user clicked save / browse
             btnEdit.setVisible(true); 

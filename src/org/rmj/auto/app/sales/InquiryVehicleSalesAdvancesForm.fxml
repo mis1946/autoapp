@@ -17,7 +17,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" >
    <stylesheets>
       <URL value="@../css/FrameStyle.css" />
       <URL value="@../css/MainPanelStyle.css" />
@@ -72,7 +72,7 @@
                            <columnConstraints>
                               <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="10.0" />
                               <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="100.0" />
-                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="150.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="170.0" />
                               <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="50.0" />
                               <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="10.0" />
                               <ColumnConstraints hgrow="SOMETIMES" maxWidth="160.0" minWidth="10.0" prefWidth="87.0" />
@@ -90,9 +90,9 @@
                               <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="5.0" vgrow="SOMETIMES" />
                            </rowConstraints>
                            <children>
-                              <ComboBox fx:id="comboBox12" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                              <ComboBox fx:id="comboBox12" prefWidth="170.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                               <TextField fx:id="txtField03" disable="true" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-                              <TextField fx:id="txtField05" promptText="0.00" GridPane.columnIndex="6" GridPane.rowIndex="2">
+                              <TextField fx:id="txtField05" alignment="CENTER_RIGHT" promptText="0.00" GridPane.columnIndex="6" GridPane.rowIndex="2">
                                  <GridPane.margin>
                                     <Insets />
                                  </GridPane.margin>

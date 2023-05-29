@@ -13,21 +13,25 @@ import javafx.scene.control.CheckBox;
  * @author John Dave
  */
 public class ActivityMemberTable {
-    
+
     private SimpleStringProperty tblindexRow;
-    private CheckBox select; 
+    private CheckBox select;
     private SimpleStringProperty tblindex01;
     private SimpleStringProperty tblindex24; //sDeptName
+    private SimpleStringProperty tblindex14; //sDeptIDxx
     private SimpleStringProperty tblindex25; //sCompnyNm
+    private SimpleStringProperty tblindex13; //sEmployID
 
-    public ActivityMemberTable(String tblindexRow, String tblindex01, String tblindex24,String tblindex25) {
+    public ActivityMemberTable(String tblindexRow, String tblindex01, String tblindex24, String tblindex14, String tblindex25, String tblindex13) {
         this.tblindexRow = new SimpleStringProperty(tblindexRow);
         this.select = new CheckBox();
         this.tblindex01 = new SimpleStringProperty(tblindex01);
         this.tblindex24 = new SimpleStringProperty(tblindex24);
+        this.tblindex14 = new SimpleStringProperty(tblindex14);
         this.tblindex25 = new SimpleStringProperty(tblindex25);
+        this.tblindex13 = new SimpleStringProperty(tblindex13);
     }
- 
+
     public CheckBox getSelect() {
         return select;
     }
@@ -43,8 +47,6 @@ public class ActivityMemberTable {
     public void setTblindexRow(String tblindexRow) {
         this.tblindexRow.set(tblindexRow);
     }
-
- 
 
     public String getTblindex01() {
         return tblindex01.get();
@@ -62,6 +64,14 @@ public class ActivityMemberTable {
         this.tblindex24.set(tblindex24);
     }
 
+    public String getTblindex14() {
+        return tblindex14.get();
+    }
+
+    public void setTblindex14(String tblindex14) {
+        this.tblindex14.set(tblindex14);
+    }
+
     public String getTblindex25() {
         return tblindex25.get();
     }
@@ -69,8 +79,13 @@ public class ActivityMemberTable {
     public void setTblindex25(String tblindex25) {
         this.tblindex25.set(tblindex25);
     }
-    
-    
-    
-    
+
+    public String getTblindex13() {
+        return tblindex13.get();
+    }
+
+    public void setTblindex13(String tblindex13) {
+        this.tblindex13.set(tblindex13);
+    }
+
 }

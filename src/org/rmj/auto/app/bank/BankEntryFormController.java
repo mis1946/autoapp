@@ -49,44 +49,43 @@ import org.rmj.auto.clients.base.BankInformation;
  *
  * @author John Dave
  */
-public class BankEntryFormController implements Initializable, ScreenInterface{
-   private GRider oApp;
+public class BankEntryFormController implements Initializable, ScreenInterface {
+
+    private GRider oApp;
     private BankInformation oTrans;
     unloadForm unload = new unloadForm(); //Object for closing form
     private final String pxeModuleName = "Bank"; //Form Title
     private MasterCallback oListener;
-    
-    
+
     private int pnEditMode;//Modifying fields
     private int pnRow = -1;
     private int oldPnRow = -1;
     private int lnCtr = 0;
     private int pagecounter;
-    
-         
+
     private String oldTransNo = "";
     private String TransNo = "";
-    
+
     private ObservableList<BankEntryTableList> bankentrydata = FXCollections.observableArrayList();
     private FilteredList<BankEntryTableList> filteredData;
     private static final int ROWS_PER_PAGE = 50;
-    
+
     @FXML
     private AnchorPane AnchorMain;
     @FXML
     private Pagination pagination;
     @FXML
-    private TableView <BankEntryTableList> tblBankEntry;
+    private TableView<BankEntryTableList> tblBankEntry;
     @FXML
-    private TableColumn <BankEntryTableList, String> tblindexRow; //Row
+    private TableColumn<BankEntryTableList, String> tblindexRow; //Row
     @FXML
-    private TableColumn <BankEntryTableList, String> tblindex02; //sBankName
+    private TableColumn<BankEntryTableList, String> tblindex02; //sBankName
     @FXML
-    private TableColumn <BankEntryTableList, String> tblindex03; //sBankCode
+    private TableColumn<BankEntryTableList, String> tblindex03; //sBankCode
     @FXML
-    private TableColumn <BankEntryTableList, String> tblindex17; //sBankBrch
+    private TableColumn<BankEntryTableList, String> tblindex17; //sBankBrch
     @FXML
-    private TableColumn <BankEntryTableList, String> tblindex16; //sTownProv
+    private TableColumn<BankEntryTableList, String> tblindex16; //sTownProv
     @FXML
     private Button btnAdd;
     @FXML
@@ -108,7 +107,7 @@ public class BankEntryFormController implements Initializable, ScreenInterface{
     @FXML
     private TextField txtField15; //sProvName
     @FXML
-    private TextField txtField07; //sZippCode   
+    private TextField txtField07; //sZippCode
     @FXML
     private TextField txtField09; //sFaxNoxxx
     @FXML
@@ -116,104 +115,98 @@ public class BankEntryFormController implements Initializable, ScreenInterface{
     @FXML
     private TextField txtField17; //ssBankBrch
     @FXML
-    private TextField textSeek02; //for search 
+    private TextField textSeek02; //for search
     @FXML
     private Button btnCancel;
- 
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-        
-          
-         
+
         oListener = (int fnIndex, Object foValue) -> {
-               System.out.println("Set Class Value "  + fnIndex + "-->" + foValue);
-          };
-        
-          oTrans = new BankInformation(oApp, oApp.getBranchCode(), true); //Initialize ClientMaster
-          oTrans.setCallback(oListener);
-          oTrans.setWithUI(true);
-          makeAutoCapitalization(txtField02);
-          makeAutoCapitalization(txtField17);
-          makeAutoCapitalization(txtField05);
-          makeAutoCapitalization(txtField18);
-          makeAutoCapitalization(txtField15);
-          makeAutoCapitalization(txtField07);
-          makeAutoCapitalization(txtField04);
-          makeAutoCapitalization(txtField08);
-          makeAutoCapitalization(txtField09);
-          /*Set Focus to set Value to Class*/
-          txtField02.focusedProperty().addListener(txtField_Focus); // sBankName
+            System.out.println("Set Class Value " + fnIndex + "-->" + foValue);
+        };
+
+        oTrans = new BankInformation(oApp, oApp.getBranchCode(), true); //Initialize ClientMaster
+        oTrans.setCallback(oListener);
+        oTrans.setWithUI(true);
+        makeAutoCapitalization(txtField02);
+        makeAutoCapitalization(txtField17);
+        makeAutoCapitalization(txtField05);
+        makeAutoCapitalization(txtField18);
+        makeAutoCapitalization(txtField15);
+        makeAutoCapitalization(txtField07);
+        makeAutoCapitalization(txtField04);
+        makeAutoCapitalization(txtField08);
+        makeAutoCapitalization(txtField09);
+        /*Set Focus to set Value to Class*/
+        txtField02.focusedProperty().addListener(txtField_Focus); // sBankName
 //          txtField03.focusedProperty().addListener(txtField_Focus); // sBankAdv
-          txtField17.focusedProperty().addListener(txtField_Focus); // sBankBrch
-          txtField05.focusedProperty().addListener(txtField_Focus); // sAddressx
-          txtField18.focusedProperty().addListener(txtField_Focus); // sTownName
-          txtField15.focusedProperty().addListener(txtField_Focus); // sProvName
-          txtField07.focusedProperty().addListener(txtField_Focus); // sZippCode
-          txtField04.focusedProperty().addListener(txtField_Focus); // sContactP
-          txtField08.focusedProperty().addListener(txtField_Focus); // sTelNoxxx
-          txtField09.focusedProperty().addListener(txtField_Focus); // sFaxNoxxx
-    
-         
-          txtField02.setOnKeyPressed(this::txtField_KeyPressed); // sBankName
-          txtField03.setOnKeyPressed(this::txtField_KeyPressed); // sBankAdv
-          txtField17.setOnKeyPressed(this::txtField_KeyPressed); // sBankBrch
-          txtField05.setOnKeyPressed(this::txtField_KeyPressed); // sAddressx
-          txtField18.setOnKeyPressed(this::txtField_KeyPressed);// sTownName
-          txtField15.setOnKeyPressed(this::txtField_KeyPressed); // sProvName
-          txtField07.setOnKeyPressed(this::txtField_KeyPressed); // sZippCode
-          txtField04.setOnKeyPressed(this::txtField_KeyPressed); // sContactP
-          txtField08.setOnKeyPressed(this::txtField_KeyPressed);// sTelNoxxx
-          txtField09.setOnKeyPressed(this::txtField_KeyPressed); // sFaxNoxxx
-          
-          //Button Click Event
-          btnAdd.setOnAction(this::cmdButton_Click);
-          btnEdit.setOnAction(this::cmdButton_Click); 
-          btnSave.setOnAction(this::cmdButton_Click); 
-          btnClose.setOnAction(this::cmdButton_Click); 
-          btnCancel.setOnAction(this::cmdButton_Click);
-          tblBankEntry.setOnMouseClicked(this::tblBankEntry_Clicked);
-            
-            /*Clear Fields*/
-          clearFields();
-          
-          
-            Pattern pattern = Pattern.compile("[\\d\\p{Punct}]*");
-            TextFormatter<String> formatter = new TextFormatter<>(change -> {
+        txtField17.focusedProperty().addListener(txtField_Focus); // sBankBrch
+        txtField05.focusedProperty().addListener(txtField_Focus); // sAddressx
+        txtField18.focusedProperty().addListener(txtField_Focus); // sTownName
+        txtField15.focusedProperty().addListener(txtField_Focus); // sProvName
+        txtField07.focusedProperty().addListener(txtField_Focus); // sZippCode
+        txtField04.focusedProperty().addListener(txtField_Focus); // sContactP
+        txtField08.focusedProperty().addListener(txtField_Focus); // sTelNoxxx
+        txtField09.focusedProperty().addListener(txtField_Focus); // sFaxNoxxx
+
+        txtField02.setOnKeyPressed(this::txtField_KeyPressed); // sBankName
+        txtField03.setOnKeyPressed(this::txtField_KeyPressed); // sBankAdv
+        txtField17.setOnKeyPressed(this::txtField_KeyPressed); // sBankBrch
+        txtField05.setOnKeyPressed(this::txtField_KeyPressed); // sAddressx
+        txtField18.setOnKeyPressed(this::txtField_KeyPressed);// sTownName
+        txtField15.setOnKeyPressed(this::txtField_KeyPressed); // sProvName
+        txtField07.setOnKeyPressed(this::txtField_KeyPressed); // sZippCode
+        txtField04.setOnKeyPressed(this::txtField_KeyPressed); // sContactP
+        txtField08.setOnKeyPressed(this::txtField_KeyPressed);// sTelNoxxx
+        txtField09.setOnKeyPressed(this::txtField_KeyPressed); // sFaxNoxxx
+
+        //Button Click Event
+        btnAdd.setOnAction(this::cmdButton_Click);
+        btnEdit.setOnAction(this::cmdButton_Click);
+        btnSave.setOnAction(this::cmdButton_Click);
+        btnClose.setOnAction(this::cmdButton_Click);
+        btnCancel.setOnAction(this::cmdButton_Click);
+        tblBankEntry.setOnMouseClicked(this::tblBankEntry_Clicked);
+
+        /*Clear Fields*/
+        clearFields();
+
+        Pattern pattern = Pattern.compile("[\\d\\p{Punct}]*");
+        TextFormatter<String> formatter = new TextFormatter<>(change -> {
             if (!change.getControlNewText().matches(pattern.pattern())) {
                 return null;
             }
             return change;
-            });
+        });
+        txtField08.setTextFormatter(new InputTextFormatter(pattern)); //sTelNoxxx
+        txtField09.setTextFormatter(new InputTextFormatter(pattern)); //sFaxNoxxx
 
-                txtField15.textProperty().addListener((observable, oldValue, newValue) -> {
-                if (newValue.isEmpty()) {
-                    txtField18.clear(); // Clear the contents of textField18
-                    txtField18.setDisable(true);
-                    txtField07.clear(); // Clear the contents of textField18
-                    txtField07.setDisable(true);// Disable textField18 when textField15 is empty
-                }
-            });
+        txtField15.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.isEmpty()) {
+                txtField18.clear(); // Clear the contents of textField18
+                txtField18.setDisable(true);
+                txtField07.clear(); // Clear the contents of textField18
+                txtField07.setDisable(true);// Disable textField18 when textField15 is empty
+            }
+        });
 
-          txtField08.setTextFormatter(new InputTextFormatter(pattern)); //sTelNoxxx
-          txtField09.setTextFormatter(new InputTextFormatter(pattern)); //sFaxNoxxx
-          
-          loadBankEntryTable();
-        
-          pagination.setPageFactory(this::createPage); 
-          
-          
-          pnEditMode = EditMode.UNKNOWN;
-          initButton(pnEditMode); 
+        loadBankEntryTable();
+        pagination.setPageFactory(this::createPage);
+        pnEditMode = EditMode.UNKNOWN;
+        initButton(pnEditMode);
     }
-    
-    private Stage getStage(){
-          return (Stage) txtField02.getScene().getWindow();
-     }
+
+    private Stage getStage() {
+        return (Stage) txtField02.getScene().getWindow();
+    }
+
     @Override
     public void setGRider(GRider foValue) {
-          oApp = foValue;
-     }
+        oApp = foValue;
+    }
+
     private void makeAutoCapitalization(TextField textField) {
         textField.textProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue.isEmpty()) {
@@ -221,310 +214,309 @@ public class BankEntryFormController implements Initializable, ScreenInterface{
             }
         });
     }
+
     private void cmdButton_Click(ActionEvent event) {
-          String lsButton = ((Button)event.getSource()).getId();
-          switch(lsButton){
+        String lsButton = ((Button) event.getSource()).getId();
+        switch (lsButton) {
             case "btnAdd":
-                        if (oTrans.NewRecord()) {
-                              clearFields(); 
-                              loadBankEntryField();
-                              pnEditMode = oTrans.getEditMode();
-                         } else 
-                             ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
-               
-                          break;
-                      
+                if (oTrans.NewRecord()) {
+                    clearFields();
+                    loadBankEntryField();
+                    pnEditMode = oTrans.getEditMode();
+                } else {
+                    ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                }
+                break;
             case "btnEdit":
-               if (oTrans.UpdateRecord()) {
-                            if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
-                                    if(txtField15.getText().isEmpty()){
-                                        
-                                    }else
-                                    {
-                                        
-                                    }
-                            }
-                            pnEditMode = oTrans.getEditMode(); 
-                         } else 
-                              ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
-                         break;
+                if (oTrans.UpdateRecord()) {
+                    if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
+                        if (txtField15.getText().isEmpty()) {
+                            // Add your logic here when txtField15 is empty
+                            ShowMessageFX.Warning(getStage(), "Province is empty.", "Warning", null);
+                            break; // Break the switch statement or return if necessary
+                        }
+                    }
+                    pnEditMode = oTrans.getEditMode();
+                } else {
+                    ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                }
+                break;
             case "btnCancel":
-                  if(ShowMessageFX.OkayCancel(null,pxeModuleName, "Are you sure, do you want to cancel?") == true){
-                             
-                              if (txtField15.getText().isEmpty() || txtField18.getText().isEmpty()) {
-                                  clearFields();
-                              }
-                             pnEditMode = EditMode.UNKNOWN;
-                         break;
-                              }
-                            else
-                           return;
+                if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure, do you want to cancel?") == true) {
+                    clearFields();
+                }
+                pnEditMode = EditMode.UNKNOWN;
+
+                break;
             case "btnSave":
-                   //Validate before saving
-                  if(ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure, do you want to save?") == true){
-                         if (txtField02.getText().trim().equals("")) {
-                              ShowMessageFX.Warning(getStage(), "Please enter a value for Bank Name.","Warning", null);
-                              txtField02.requestFocus();
-                              return;
-                         }
+                //Validate before saving
+                if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure, do you want to save?") == true) {
+                    if (txtField02.getText().trim().equals("")) {
+                        ShowMessageFX.Warning(getStage(), "Please enter a value for Bank Name.", "Warning", null);
+                        txtField02.requestFocus();
+                        return;
+                    }
 //                         if (txtField03.getText().trim().equals("")) {
 //                              ShowMessageFX.Warning(getStage(), "Please enter a value for Bank Addev.","Warning", null);
 //                              txtField03.requestFocus();
 //                              return;
 //                         }
-                         if (txtField17.getText().trim().equals("")) {
-                              ShowMessageFX.Warning(getStage(), "Please enter a valid value for Branch","Warning", null);
-                              txtField17.requestFocus();
-                              return;
-                         }
-                         if (txtField05.getText().trim().equals("")) {
-                              ShowMessageFX.Warning(getStage(), "Please enter a value for HouseNo/Street/Barangay.","Warning", null);
-                              txtField05.requestFocus();
-                              return;
-                         }
-                         if (txtField18.getText().trim().equals("")) {
-                              ShowMessageFX.Warning(getStage(), "Please enter a value for Municipality.","Warning", null);
-                              txtField18.requestFocus();
-                              return;
-                         }
-                         
-                         if ( txtField15.getText().trim().equals("")){
-                              ShowMessageFX.Warning(getStage(), "Please enter a valid value for Province.","Warning", null);
-                              txtField15.requestFocus();
-                              return;
-                         }
-                         if (txtField07.getText().trim().equals("")) {
-                              ShowMessageFX.Warning(getStage(), "Please enter a value for Zipcode.","Warning", null);
-                              txtField07.requestFocus();
-                              return;
-                         }
-                         if (txtField04.getText().trim().equals("")) {
-                              ShowMessageFX.Warning(getStage(), "Please enter a value for Contact Person","Warning", null);
-                              txtField04.requestFocus();
-                              return;
-                         }
-                         if (txtField08.getText().trim().equals("")) {
-                              ShowMessageFX.Warning(getStage(), "Please enter a value for Telephone No.","Warning", null);
-                              txtField08.requestFocus();
-                              return;
-                         }
-                         //Proceed Saving
-                         
-                              if (oTrans.SaveRecord()){
-                                 
-                                   ShowMessageFX.Information(getStage(), "Transaction save successfully.", pxeModuleName, null);
-                                   loadBankEntryTable();
-                                
-                                   
-                                   pnEditMode = oTrans.getEditMode();
-                                   clearFields();
-                          
-                              } else {
-                                  ShowMessageFX.Warning(getStage(),oTrans.getMessage() ,"Warning", "Error while saving Bank Information");
-                              }
-                  }
-                break;
-            case "btnClose": //close tab
-                         if(ShowMessageFX.OkayCancel(null, "Close Tab", "Are you sure, do you want to close tab?") == true){
-                               if (unload != null) {
-                                    unload.unloadForm(AnchorMain, oApp, pxeModuleName);
-                               }else {
-                                    ShowMessageFX.Warning(null, "Warning", "Notify System Admin to Configure Null value at close button.");    
-                               }
-                               break;
-                               }
-                         else
-                           return;
-            }
-              
-              initButton(pnEditMode);  
-              
-           
-        }
-     
-      //use for creating new page on pagination 
-    private Node createPage(int pageIndex) {
-          int fromIndex = pageIndex * ROWS_PER_PAGE;
-          int toIndex = Math.min(fromIndex + ROWS_PER_PAGE,bankentrydata.size());
-          if(bankentrydata.size()>0){
-             tblBankEntry.setItems(FXCollections.observableArrayList(bankentrydata.subList(fromIndex, toIndex))); 
-          }
-          return tblBankEntry;
-          
-     }
-    //storing values on bankentrydata  
-    private void loadBankEntryTable(){
-          try {
-               /*Populate table*/
-               bankentrydata.clear();
-               if (oTrans.LoadList("")){
-                   System.out.println(oTrans.getItemCount());
-                    for (lnCtr = 1; lnCtr <= oTrans.getItemCount(); lnCtr++){
-                         bankentrydata.add(new BankEntryTableList(
-                         String.valueOf(lnCtr), //ROW
-                         oTrans.getDetail(lnCtr,"sBankIDxx").toString(),//BANKID
-                         oTrans.getDetail(lnCtr,"sBankName").toString().toUpperCase(),// sBankName
-                         "",//oTrans.getDetail(lnCtr,"sBankCode").toString(),// sBankCode
-                         oTrans.getDetail(lnCtr,"sBankBrch").toString().toUpperCase(), // sBankBrch
-                         oTrans.getDetail(lnCtr,"sAddressx").toString(), //sAddressx
-                         oTrans.getDetail(lnCtr,"sTownProv").toString().toUpperCase(), //sTownProv
-                         oTrans.getDetail(lnCtr,"sProvName").toString(), //sProvName
-                         oTrans.getDetail(lnCtr,"sZippCode").toString(), //sZipCode     
-                         oTrans.getDetail(lnCtr,"sContactP").toString(), //sContactP
-                         oTrans.getDetail(lnCtr,"sTelNoxxx").toString(),  //sTelNoxxx
-                         oTrans.getDetail(lnCtr,"sFaxNoxxx").toString(), //sFaxNoxx
-                         oTrans.getDetail(lnCtr,"sTownName").toString() //sTownName     
-                         ));
+                    if (txtField17.getText().trim().equals("")) {
+                        ShowMessageFX.Warning(getStage(), "Please enter a valid value for Branch", "Warning", null);
+                        txtField17.requestFocus();
+                        return;
                     }
-                    initBankEntryTable();
-               }
-               loadTab();
-               
-          } catch (SQLException e) {
-               ShowMessageFX.Warning(getStage(),e.getMessage(), "Warning", null);
-          }
-     }
-    
-      /*populate Table*/    
-    private void initBankEntryTable() {
-        
-          tblindexRow.setCellValueFactory(new PropertyValueFactory<>("tblindexRow"));  //Row
-          tblindex02.setCellValueFactory(new PropertyValueFactory<>("tblindex02")); // sBankName
-          tblindex03.setCellValueFactory(new PropertyValueFactory<>("tblindex03")); // sBankCode
-          tblindex17.setCellValueFactory(new PropertyValueFactory<>("tblindex17")); // sBankBrch
-          tblindex16.setCellValueFactory(new PropertyValueFactory<>("tblindex16")); // sTownProv
-          
-          filteredData = new FilteredList<>(bankentrydata, b -> true);
-          autoSearch(textSeek02);
-          // 3. Wrap the FilteredList in a SortedList. 
-          SortedList<BankEntryTableList> sortedData = new SortedList<>(filteredData);
-          // 4. Bind the SortedList comparator to the TableView comparator.
-          // 	  Otherwise, sorting the TableView would have no effect.
-          sortedData.comparatorProperty().bind(tblBankEntry.comparatorProperty());
-          // 5. Add sorted (and filtered) data to the table.
-          tblBankEntry.setItems(sortedData);
-        
-          tblBankEntry.widthProperty().addListener((ObservableValue<? extends Number> source, Number oldWidth, Number newWidth) -> {
-               TableHeaderRow header = (TableHeaderRow) tblBankEntry.lookup("TableHeaderRow");
-               header.reorderingProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
-               header.setReordering(false);
-               });
-                header.setDisable(true);
-          });
-          
-     
-     }
-    private void autoSearch(TextField txtField){
-          int lnIndex = Integer.parseInt(txtField.getId().substring(8, 10));
+                    if (txtField05.getText().trim().equals("")) {
+                        ShowMessageFX.Warning(getStage(), "Please enter a value for HouseNo/Street/Barangay.", "Warning", null);
+                        txtField05.requestFocus();
+                        return;
+                    }
+                    if (txtField15.getText().trim().equals("")) {
+                        ShowMessageFX.Warning(getStage(), "Please enter a valid value for Province.", "Warning", null);
+                        txtField15.requestFocus();
+                        return;
+                    }
+                    if (txtField18.getText().trim().equals("")) {
+                        ShowMessageFX.Warning(getStage(), "Please enter a value for Municipality.", "Warning", null);
+                        txtField18.requestFocus();
+                        return;
+                    }
+                    if (txtField07.getText().trim().equals("")) {
+                        ShowMessageFX.Warning(getStage(), "Please enter a value for Zipcode.", "Warning", null);
+                        txtField07.requestFocus();
+                        return;
+                    }
+                    if (txtField04.getText().trim().equals("")) {
+                        ShowMessageFX.Warning(getStage(), "Please enter a value for Contact Person", "Warning", null);
+                        txtField04.requestFocus();
+                        return;
+                    }
+                    if (txtField08.getText().trim().equals("")) {
+                        ShowMessageFX.Warning(getStage(), "Please enter a value for Telephone No.", "Warning", null);
+                        txtField08.requestFocus();
+                        return;
+                    }
+                    //Proceed Saving
+                    if (oTrans.SaveRecord()) {
+                        ShowMessageFX.Information(getStage(), "Transaction save successfully.", pxeModuleName, null);
+                        loadBankEntryTable();
+                        if (pnEditMode == EditMode.ADDNEW) {
+                            try {
+                                pagecounter = (oTrans.getItemCount() - 1) + pagination.getCurrentPageIndex() * ROWS_PER_PAGE;
+                            } catch (SQLException ex) {
+                                Logger.getLogger(BankEntryFormController.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        }
+                        getSelectedItem(filteredData.get(pagecounter).getTblindex01());
+                        pnEditMode = oTrans.getEditMode();
+                    } else {
+                        ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", "Error while saving Vehicle Description");
+                    }
+                }
+                break;
+            case "btnClose":
+                if (ShowMessageFX.OkayCancel(null, "Close Tab", "Are you sure you want to close the tab?")) {
+                    if (unload != null) {
+                        unload.unloadForm(AnchorMain, oApp, pxeModuleName);
+                    } else {
+                        ShowMessageFX.Warning(null, "Warning", "Notify the System Admin to configure a null value for the close button.");
+                    }
+                    break;
+                } else {
+                    return;
+                }
+        }
+        initButton(pnEditMode);
+    }
+    //use for creating new page on pagination
 
-          txtField.textProperty().addListener((observable, oldValue, newValue) -> {
-               filteredData.setPredicate(clients-> {
-               // If filter text is empty, display all persons.
-               if (newValue == null || newValue.isEmpty()) {
-                   return true;
-               }
-               // Compare order no. and last name of every person with filter text.
-               String lowerCaseFilter = newValue.toLowerCase();
-               switch (lnIndex){
-                       case 2:
-                           if(lnIndex == 2){
-                               return (clients.getTblindex02().toLowerCase().contains(lowerCaseFilter)); // Does not match.   
-                            }else {
-                               return (clients.getTblindex02().toLowerCase().contains(lowerCaseFilter)); // Does not match.
-                            }   
-                       default:
-                       return true;            
+    private Node createPage(int pageIndex) {
+        int fromIndex = pageIndex * ROWS_PER_PAGE;
+        int toIndex = Math.min(fromIndex + ROWS_PER_PAGE, bankentrydata.size());
+        if (bankentrydata.size() > 0) {
+            tblBankEntry.setItems(FXCollections.observableArrayList(bankentrydata.subList(fromIndex, toIndex)));
+        }
+        return tblBankEntry;
+    }
+
+    //storing values on bankentrydata
+    private void loadBankEntryTable() {
+        try {
+            /*Populate table*/
+            bankentrydata.clear();
+            if (oTrans.LoadList("")) {
+                System.out.println(oTrans.getItemCount());
+                for (lnCtr = 1; lnCtr <= oTrans.getItemCount(); lnCtr++) {
+                    bankentrydata.add(new BankEntryTableList(
+                            String.valueOf(lnCtr), //ROW
+                            oTrans.getDetail(lnCtr, "sBankIDxx").toString(),//BANKID
+                            oTrans.getDetail(lnCtr, "sBankName").toString().toUpperCase(),// sBankName
+                            "",//oTrans.getDetail(lnCtr,"sBankCode").toString(),// sBankCode
+                            oTrans.getDetail(lnCtr, "sBankBrch").toString().toUpperCase(), // sBankBrch
+                            oTrans.getDetail(lnCtr, "sAddressx").toString(), //sAddressx
+                            oTrans.getDetail(lnCtr, "sTownProv").toString().toUpperCase(), //sTownProv
+                            oTrans.getDetail(lnCtr, "sProvName").toString(), //sProvName
+                            oTrans.getDetail(lnCtr, "sZippCode").toString(), //sZipCode
+                            oTrans.getDetail(lnCtr, "sContactP").toString(), //sContactP
+                            oTrans.getDetail(lnCtr, "sTelNoxxx").toString(), //sTelNoxxx
+                            oTrans.getDetail(lnCtr, "sFaxNoxxx").toString(), //sFaxNoxx
+                            oTrans.getDetail(lnCtr, "sTownName").toString() //sTownName
+                    ));
+                }
+                initBankEntryTable();
             }
+            loadTab();
+
+        } catch (SQLException e) {
+            ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
+        }
+    }
+
+    /*populate Table*/
+    private void initBankEntryTable() {
+
+        tblindexRow.setCellValueFactory(new PropertyValueFactory<>("tblindexRow"));  //Row
+        tblindex02.setCellValueFactory(new PropertyValueFactory<>("tblindex02")); // sBankName
+        tblindex03.setCellValueFactory(new PropertyValueFactory<>("tblindex03")); // sBankCode
+        tblindex17.setCellValueFactory(new PropertyValueFactory<>("tblindex17")); // sBankBrch
+        tblindex16.setCellValueFactory(new PropertyValueFactory<>("tblindex16")); // sTownProv
+
+        filteredData = new FilteredList<>(bankentrydata, b -> true);
+        autoSearch(textSeek02);
+        // 3. Wrap the FilteredList in a SortedList.
+        SortedList<BankEntryTableList> sortedData = new SortedList<>(filteredData);
+        // 4. Bind the SortedList comparator to the TableView comparator.
+        // 	  Otherwise, sorting the TableView would have no effect.
+        sortedData.comparatorProperty().bind(tblBankEntry.comparatorProperty());
+        // 5. Add sorted (and filtered) data to the table.
+        tblBankEntry.setItems(sortedData);
+
+        tblBankEntry.widthProperty().addListener((ObservableValue<? extends Number> source, Number oldWidth, Number newWidth) -> {
+            TableHeaderRow header = (TableHeaderRow) tblBankEntry.lookup("TableHeaderRow");
+            header.reorderingProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+                header.setReordering(false);
             });
-            
+            header.setDisable(true);
+        });
+
+    }
+
+    private void autoSearch(TextField txtField) {
+        int lnIndex = Integer.parseInt(txtField.getId().substring(8, 10));
+
+        txtField.textProperty().addListener((observable, oldValue, newValue) -> {
+            filteredData.setPredicate(clients -> {
+                // If filter text is empty, display all persons.
+                if (newValue == null || newValue.isEmpty()) {
+                    return true;
+                }
+                // Compare order no. and last name of every person with filter text.
+                String lowerCaseFilter = newValue.toLowerCase();
+                switch (lnIndex) {
+                    case 2:
+                        if (lnIndex == 2) {
+                            return (clients.getTblindex02().toLowerCase().contains(lowerCaseFilter)); // Does not match.
+                        } else {
+                            return (clients.getTblindex02().toLowerCase().contains(lowerCaseFilter)); // Does not match.
+                        }
+                    default:
+                        return true;
+                }
+            });
+
             changeTableView(0, ROWS_PER_PAGE);
         });
         loadTab();
-     } 
-    private void loadTab(){
-                int totalPage = (int) (Math.ceil(bankentrydata.size() * 1.0 / ROWS_PER_PAGE));
-                pagination.setPageCount(totalPage);
-                pagination.setCurrentPageIndex(0);
-                changeTableView(0, ROWS_PER_PAGE);
-                pagination.currentPageIndexProperty().addListener(
-                        (observable, oldValue, newValue) -> changeTableView(newValue.intValue(), ROWS_PER_PAGE));
-      
-     } 
-    private void changeTableView(int index, int limit) {
-            int fromIndex = index * limit;
-            int toIndex = Math.min(fromIndex + limit, bankentrydata.size());
-
-            int minIndex = Math.min(toIndex, filteredData.size());
-            SortedList<BankEntryTableList> sortedData = new SortedList<>(
-            FXCollections.observableArrayList(filteredData.subList(Math.min(fromIndex, minIndex), minIndex)));
-            sortedData.comparatorProperty().bind(tblBankEntry.comparatorProperty());
-            tblBankEntry.setItems(sortedData); 
     }
+
+    private void loadTab() {
+        int totalPage = (int) (Math.ceil(bankentrydata.size() * 1.0 / ROWS_PER_PAGE));
+        pagination.setPageCount(totalPage);
+        pagination.setCurrentPageIndex(0);
+        changeTableView(0, ROWS_PER_PAGE);
+        pagination.currentPageIndexProperty().addListener(
+                (observable, oldValue, newValue) -> changeTableView(newValue.intValue(), ROWS_PER_PAGE));
+
+    }
+
+    private void changeTableView(int index, int limit) {
+        int fromIndex = index * limit;
+        int toIndex = Math.min(fromIndex + limit, bankentrydata.size());
+
+        int minIndex = Math.min(toIndex, filteredData.size());
+        SortedList<BankEntryTableList> sortedData = new SortedList<>(
+                FXCollections.observableArrayList(filteredData.subList(Math.min(fromIndex, minIndex), minIndex)));
+        sortedData.comparatorProperty().bind(tblBankEntry.comparatorProperty());
+        tblBankEntry.setItems(sortedData);
+    }
+
     private void tblBankEntry_Clicked(MouseEvent event) {
-          if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
-               if(ShowMessageFX.OkayCancel(null, pxeModuleName, "You have unsaved data, are you sure you want to continue?") == true){   
-              } else
-                  return;
-          }
-          pnRow = tblBankEntry.getSelectionModel().getSelectedIndex(); 
-          pagecounter = pnRow + pagination.getCurrentPageIndex() * ROWS_PER_PAGE;
-          if (pagecounter >= 0){
-               if(event.getClickCount() > 0){
-                    getSelectedItem(filteredData.get(pagecounter).getTblindex01()); //Populate field based on selected Item
+        if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
+            if (ShowMessageFX.OkayCancel(null, pxeModuleName, "You have unsaved data, are you sure you want to continue?") == true) {
+            } else {
+                return;
+            }
+        }
+        pnRow = tblBankEntry.getSelectionModel().getSelectedIndex();
+        pagecounter = pnRow + pagination.getCurrentPageIndex() * ROWS_PER_PAGE;
+        if (pagecounter >= 0) {
+            if (event.getClickCount() > 0) {
+                getSelectedItem(filteredData.get(pagecounter).getTblindex01()); //Populate field based on selected Item
 
-                    tblBankEntry.setOnKeyReleased((KeyEvent t)-> {
-                        KeyCode key = t.getCode();
-                        switch (key){
-                            case DOWN:
-                                pnRow = tblBankEntry.getSelectionModel().getSelectedIndex();
-                                pagecounter = pnRow + pagination.getCurrentPageIndex() * ROWS_PER_PAGE;
-                                if (pagecounter == tblBankEntry.getItems().size()) {
-                                    pagecounter = tblBankEntry.getItems().size();
-                                    getSelectedItem(filteredData.get(pagecounter).getTblindex01());
-                                }else {
-                                   int y = 1;
-                                  pnRow = pnRow + y;
-                                    getSelectedItem(filteredData.get(pagecounter).getTblindex01());
-                                }
-                                break;
-                            case UP:
-                                pnRow = tblBankEntry.getSelectionModel().getSelectedIndex();
-                                pagecounter = pnRow + pagination.getCurrentPageIndex() * ROWS_PER_PAGE;
+                tblBankEntry.setOnKeyReleased((KeyEvent t) -> {
+                    KeyCode key = t.getCode();
+                    switch (key) {
+                        case DOWN:
+                            pnRow = tblBankEntry.getSelectionModel().getSelectedIndex();
+                            pagecounter = pnRow + pagination.getCurrentPageIndex() * ROWS_PER_PAGE;
+                            if (pagecounter == tblBankEntry.getItems().size()) {
+                                pagecounter = tblBankEntry.getItems().size();
                                 getSelectedItem(filteredData.get(pagecounter).getTblindex01());
-                                break;
-                            default:
-                              return; 
-                      }
-                    });
-               } 
-               pnEditMode = EditMode.READY;
-               initButton(pnEditMode);  
-          }     
-     }
-    /*Populate Text Field Based on selected address in table*/
-    private void getSelectedItem(String TransNo){
-          oldTransNo = TransNo;
-          if (oTrans.OpenRecord(TransNo)){
-          
-          txtField02.setText(bankentrydata.get(pagecounter).getTblindex02()); // sBankName
-          txtField03.setText(bankentrydata.get(pagecounter).getTblindex03()); // sBankAdv
-          txtField17.setText(bankentrydata.get(pagecounter).getTblindex17()); // sBankBrch
-          txtField05.setText(bankentrydata.get(pagecounter).getTblindex05()); // sAddressx
-          txtField18.setText(bankentrydata.get(pagecounter).getTblindex18()); // sTownName
-          txtField15.setText(bankentrydata.get(pagecounter).getTblindex15()); // sProvName
-          txtField07.setText(bankentrydata.get(pagecounter).getTblindex07()); // sZippCode
-          txtField04.setText(bankentrydata.get(pagecounter).getTblindex04()); // sContactP
-          txtField08.setText(bankentrydata.get(pagecounter).getTblindex08()); // sTelNoxxx
-          txtField09.setText(bankentrydata.get(pagecounter).getTblindex09()); // sFaxNoxxx
-          
-          }
-          oldPnRow = pagecounter;
+                            } else {
+                                int y = 1;
+                                pnRow = pnRow + y;
+                                getSelectedItem(filteredData.get(pagecounter).getTblindex01());
+                            }
+                            break;
+                        case UP:
+                            pnRow = tblBankEntry.getSelectionModel().getSelectedIndex();
+                            pagecounter = pnRow + pagination.getCurrentPageIndex() * ROWS_PER_PAGE;
+                            getSelectedItem(filteredData.get(pagecounter).getTblindex01());
+                            break;
+                        default:
+                            return;
+                    }
+                });
+            }
+            pnEditMode = EditMode.READY;
+            initButton(pnEditMode);
+        }
+    }
 
-     }
-   
-     private void loadBankEntryField(){
-          try {
-              
+    /*Populate Text Field Based on selected address in table*/
+    private void getSelectedItem(String TransNo) {
+        oldTransNo = TransNo;
+        if (oTrans.OpenRecord(TransNo)) {
+
+            txtField02.setText(bankentrydata.get(pagecounter).getTblindex02()); // sBankName
+            txtField03.setText(bankentrydata.get(pagecounter).getTblindex03()); // sBankAdv
+            txtField17.setText(bankentrydata.get(pagecounter).getTblindex17()); // sBankBrch
+            txtField05.setText(bankentrydata.get(pagecounter).getTblindex05()); // sAddressx
+            txtField18.setText(bankentrydata.get(pagecounter).getTblindex18()); // sTownName
+            txtField15.setText(bankentrydata.get(pagecounter).getTblindex15()); // sProvName
+            txtField07.setText(bankentrydata.get(pagecounter).getTblindex07()); // sZippCode
+            txtField04.setText(bankentrydata.get(pagecounter).getTblindex04()); // sContactP
+            txtField08.setText(bankentrydata.get(pagecounter).getTblindex08()); // sTelNoxxx
+            txtField09.setText(bankentrydata.get(pagecounter).getTblindex09()); // sFaxNoxxx
+
+        }
+        oldPnRow = pagecounter;
+
+    }
+
+    private void loadBankEntryField() {
+        try {
+
             txtField02.setText((String) oTrans.getMaster("sBankName"));// sBankName
             txtField03.setText((String) oTrans.getMaster("sBankCode"));// sBankAdv
             txtField17.setText((String) oTrans.getMaster("sBankBrch"));// sBankBrch
@@ -535,151 +527,124 @@ public class BankEntryFormController implements Initializable, ScreenInterface{
             txtField04.setText((String) oTrans.getMaster("sContactP"));// sContactP
             txtField08.setText((String) oTrans.getMaster("sTelNoxxx"));// sTelNoxxx
             txtField09.setText((String) oTrans.getMaster("sFaxNoxxx"));// sFaxNoxxx
-               
-          } catch (SQLException e) {
-               ShowMessageFX.Warning(getStage(),e.getMessage(), "Warning", null);
-          }
-     }
+
+        } catch (SQLException e) {
+            ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
+        }
+    }
+
     private void txtField_KeyPressed(KeyEvent event) {
-    TextField txtField = (TextField) event.getSource();
-    int lnIndex = Integer.parseInt(txtField.getId().substring(8, 10));
-
-    try {
-        if (event.getCode() == KeyCode.TAB || event.getCode() == KeyCode.ENTER || event.getCode() == KeyCode.F3) {
-            switch (lnIndex) {
-                            case 18: // sTownNamexx
-                                 if (oTrans.searchTown(txtField.getText(), false)) {
-                                        loadBankEntryField();
-                                    } else {
-                                        ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
-                                    }
-                                    break;
-                            case 15: // sProvName
-                                if (oTrans.searchProvince(txtField.getText(), false)) {
-                                    txtField18.setDisable(false);
-                                    txtField07.setDisable(false);
-                                    loadBankEntryField();
-                                    txtField18.clear();
-                                    txtField07.clear();
-                                } else {
-                                    ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
-                                }
-                                
-                                break;
-                            }
-            event.consume();
-            CommonUtils.SetNextFocus((TextField)event.getSource());
-        }else if (event.getCode() == KeyCode.UP){
-        event.consume();
-        CommonUtils.SetPreviousFocus((TextField)event.getSource());
-        }
-    } catch (SQLException e) {
-        ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
-    }
-}
-  /* Set TextField Value to Master Class */
-final ChangeListener<? super Boolean> txtField_Focus = (o, ov, nv) -> {
-    try {
-        TextField txtField = (TextField) ((ReadOnlyBooleanPropertyBase) o).getBean();
+        TextField txtField = (TextField) event.getSource();
         int lnIndex = Integer.parseInt(txtField.getId().substring(8, 10));
-        String lsValue = txtField.getText().toUpperCase();
 
-        if (lsValue == null)
-            return;
-        if (!nv) { /* Lost Focus */
-            switch (lnIndex) {
-                case 2: // sBankName
-                case 17: // sBankBrch
-                case 5: // sAddressx
-                case 7: // sZipCode
-                case 4: // sContactP
-                case 15: // sProvName
-                case 18: // sTownNamexx
-                case 8: // sTelNoxxx
-                case 9: // sFaxNoxx
-                    oTrans.setMaster(lnIndex, lsValue);
-//                    break;
-//                case 18: // sTownNamexx
-//                    if (oTrans.searchTown(txtField.getText(), false)) {
-//                        loadBankEntryField();
-//                    } else {
-//                        ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
-//                    }
-//                    oTrans.setMaster(lnIndex, lsValue);
-//                    txtField.requestFocus();
-//                    break;
-//                case 15: // sProvName
-//                    if (oTrans.searchProvince(txtField.getText(), false)) {
-//                        txtField18.setDisable(false);
-//                        txtField07.setDisable(false);
-//                        loadBankEntryField();
-//                        txtField18.clear();
-//                        txtField07.clear();
-//                        txtField18.requestFocus();
-//                    } else {
-//                        ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
-//                    }
-//                    oTrans.setMaster(lnIndex, lsValue);
-                    break;
+        try {
+            if (event.getCode() == KeyCode.TAB || event.getCode() == KeyCode.ENTER || event.getCode() == KeyCode.F3) {
+                switch (lnIndex) {
+                    case 18: // sTownNamexx
+                        if (oTrans.searchTown(txtField.getText(), false)) {
+                            loadBankEntryField();
+                        } else {
+                            ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                        }
+                        break;
+                    case 15: // sProvName
+                        if (oTrans.searchProvince(txtField.getText(), false)) {
+                            txtField18.setDisable(false);
+                            txtField07.setDisable(false);
+                            loadBankEntryField();
+                            txtField18.clear();
+                            txtField07.clear();
+                        } else {
+                            ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                        }
+                        break;
+                }
+                event.consume();
+                CommonUtils.SetNextFocus((TextField) event.getSource());
+            } else if (event.getCode() == KeyCode.UP) {
+                event.consume();
+                CommonUtils.SetPreviousFocus((TextField) event.getSource());
             }
-        } else {
-            txtField.selectAll();
+        } catch (SQLException e) {
+            ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
         }
-    } catch (SQLException ex) {
-        Logger.getLogger(BankEntryFormController.class.getName()).log(Level.SEVERE, null, ex);
     }
-};
+    /* Set TextField Value to Master Class */
+    final ChangeListener<? super Boolean> txtField_Focus = (o, ov, nv) -> {
+        try {
+            TextField txtField = (TextField) ((ReadOnlyBooleanPropertyBase) o).getBean();
+            int lnIndex = Integer.parseInt(txtField.getId().substring(8, 10));
+            String lsValue = txtField.getText().toUpperCase();
 
-    
-    
-    
-    
-    private void initButton(int fnValue){
-             pnRow = 0;
-             /* NOTE:
+            if (lsValue == null) {
+                return;
+            }
+            if (!nv) {
+                /* Lost Focus */
+                switch (lnIndex) {
+                    case 2: // sBankName
+                    case 17: // sBankBrch
+                    case 5: // sAddressx
+                    case 7: // sZipCode
+                    case 4: // sContactP
+                    case 15: // sProvName
+                    case 18: // sTownNamexx
+                    case 8: // sTelNoxxx
+                    case 9: // sFaxNoxx
+                        oTrans.setMaster(lnIndex, lsValue);
+                        break;
+                }
+            } else {
+                txtField.selectAll();
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(BankEntryFormController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    };
+
+    private void initButton(int fnValue) {
+        pnRow = 0;
+        /* NOTE:
                   lbShow (FALSE)= invisible
                   !lbShow (TRUE)= visible
-             */
+         */
 
-             boolean lbShow = (fnValue == EditMode.ADDNEW || fnValue == EditMode.UPDATE);
+        boolean lbShow = (fnValue == EditMode.ADDNEW || fnValue == EditMode.UPDATE);
 
-             /*Bank Entry*/
-             txtField02.setDisable(!lbShow); // sBankNamexx
-             txtField03.setDisable(!lbShow); // sBankAdv
-             txtField17.setDisable(!lbShow); // sBranchx
-             txtField05.setDisable(!lbShow); // sBarangayx
-             txtField18.setDisable(!(lbShow && !txtField15.getText().isEmpty()));
-             txtField15.setDisable(!lbShow); // sProvNamexx
-             txtField07.setDisable(!(lbShow && !txtField15.getText().isEmpty()));
-             txtField04.setDisable(!lbShow); // sContactP
-             txtField08.setDisable(!lbShow); // sTeleNo
-             txtField09.setDisable(!lbShow); // sFaxNoxx
+        /*Bank Entry*/
+        txtField02.setDisable(!lbShow); // sBankNamexx
+        txtField03.setDisable(!lbShow); // sBankAdv
+        txtField17.setDisable(!lbShow); // sBranchx
+        txtField05.setDisable(!lbShow); // sBarangayx
+        txtField18.setDisable(!(lbShow && !txtField15.getText().isEmpty()));
+        txtField15.setDisable(!lbShow); // sProvNamexx
+        txtField07.setDisable(!(lbShow && !txtField15.getText().isEmpty()));
+        txtField04.setDisable(!lbShow); // sContactP
+        txtField08.setDisable(!lbShow); // sTeleNo
+        txtField09.setDisable(!lbShow); // sFaxNoxx
 
-             btnAdd.setVisible(!lbShow);
-             btnAdd.setManaged(!lbShow);
-                
-             btnCancel.setVisible(lbShow);
-             btnCancel.setManaged(lbShow);
-             //if lbShow = false hide btn          
-             btnEdit.setVisible(false); 
-             btnEdit.setManaged(false);
-             btnSave.setVisible(lbShow);
-             btnSave.setManaged(lbShow);
-             
-             
-             
-             if (fnValue == EditMode.READY) { //show edit if user clicked save / browse
-                  btnEdit.setVisible(true); 
-                  btnEdit.setManaged(true);
-                 
-               
-                  
-             }
+        btnAdd.setVisible(!lbShow);
+        btnAdd.setManaged(!lbShow);
+
+        btnCancel.setVisible(lbShow);
+        btnCancel.setManaged(lbShow);
+        //if lbShow = false hide btn
+        btnEdit.setVisible(false);
+        btnEdit.setManaged(false);
+        btnSave.setVisible(lbShow);
+        btnSave.setManaged(lbShow);
+
+        if (fnValue == EditMode.READY) { //show edit if user clicked save / browse
+            btnEdit.setVisible(true);
+            btnEdit.setManaged(true);
+
+        }
     }
+
     /*Clear Fields*/
-    public void clearFields(){
+    public void clearFields() {
         pnRow = 0;
-          /*clear tables*/
+        /*clear tables*/
         txtField02.clear(); // sBankName
         txtField03.clear(); // sBankAdv
         txtField17.clear(); // sBankBrch
@@ -690,5 +655,5 @@ final ChangeListener<? super Boolean> txtField_Focus = (o, ov, nv) -> {
         txtField04.clear(); // sContactP
         txtField08.clear(); // sTeleNoxxx
         txtField09.clear();// sFaxNoxxx
-       }
+    }
 }

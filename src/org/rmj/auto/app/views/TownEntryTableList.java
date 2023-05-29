@@ -12,10 +12,10 @@ import javafx.scene.control.CheckBox;
  * @author John Dave
  */
 public class TownEntryTableList {
-    
-    
+
     private SimpleStringProperty tblRow;
     private CheckBox select;
+    private SimpleStringProperty tbl; //sTownIDxx
     private SimpleStringProperty tblCity;
 
     public TownEntryTableList(String tblRow, String tblCity) {
@@ -24,7 +24,6 @@ public class TownEntryTableList {
         this.tblCity = new SimpleStringProperty(tblCity);
     }
 
-    
     public String getTblRow() {
         return tblRow.get();
     }
@@ -48,6 +47,5 @@ public class TownEntryTableList {
     public void setTblCity(String tblCity) {
         this.tblCity.set(tblCity);
     }
-    
-    
+
 }

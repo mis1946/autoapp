@@ -34,7 +34,8 @@ import org.rmj.auto.sales.base.InquiryFollowUp;
  *
  * @author John Dave
  */
-public class TownCityMainEntryDialogController implements Initializable,ScreenInterface {
+public class TownCityMainEntryDialogController implements Initializable, ScreenInterface {
+
     private Activity oTransTown;
     @FXML
     private Button btnClose;
@@ -54,66 +55,66 @@ public class TownCityMainEntryDialogController implements Initializable,ScreenIn
     private TableColumn<TownEntryTableList, String> tblTown;
     @FXML
     private TableView tblViewTown;
-   
+
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-      
+
         btnClose.setOnAction(this::cmdButton_Click);
         btnAddTown.setOnAction(this::cmdButton_Click);
         loadTownTable();
-    }    
-    
-     public void setObject(Activity foValue){
-       oTransTown = foValue;
+    }
+
+    public void setObject(Activity foValue) {
+        oTransTown = foValue;
     }
 
     @Override
     public void setGRider(GRider foValue) {
         oApp = foValue;
-    }   
-    
-     private void cmdButton_Click(ActionEvent event) {
-      
-            String lsButton = ((Button)event.getSource()).getId();
-            switch (lsButton){
-                  case "btnClose":
-                    CommonUtils.closeStage(btnClose);
-                    break;
+    }
+
+    private void cmdButton_Click(ActionEvent event) {
+
+        String lsButton = ((Button) event.getSource()).getId();
+        switch (lsButton) {
+            case "btnClose":
+                CommonUtils.closeStage(btnClose);
+                break;
+        }
+    }
+
+    //storing values on bankentrydata
+    private void loadTownTable() {
+        try {
+            /*Populate table*/
+            townCitydata.clear();
+            if (oTransTown.loadTown("", true)) {
+                for (int lnCtr = 1; lnCtr <= oTransTown.getTownCount(); lnCtr++) {
+                    System.out.println(oTransTown.getTown(lnCtr, "sTownName").toString());
+                    townCitydata.add(new TownEntryTableList(
+                            String.valueOf(lnCtr), //ROW
+                            oTransTown.getTown(lnCtr, "sTownName").toString()
+                    ));
+                }
+                tblViewTown.setItems(townCitydata);
+                initTownTable();
             }
-     } 
-     
-     
-     
-    //storing values on bankentrydata  
-    private void loadTownTable(){
-          try {
-               /*Populate table*/
-               townCitydata.clear();
-               if (oTransTown.loadTown("",false)){
-                    for (int lnCtr = 1; lnCtr <= oTransTown.getTownCount(); lnCtr++){
-                         System.out.println(oTransTown.getTown(lnCtr,"sTownName").toString());
-                         townCitydata.add(new TownEntryTableList(
-                         String.valueOf(lnCtr), //ROW
-                         oTransTown.getTown(lnCtr,"sTownName").toString()
-                         ));
-                    }
-                    tblViewTown.setItems(townCitydata);
-                    initTownTable();
-               }
-          } catch (SQLException e) {
-               ShowMessageFX.Warning(getStage(),e.getMessage(), "Warning", null);
-          }
-     }
-     private Stage getStage(){
-          return (Stage) tblViewTown.getScene().getWindow();
-     }
-       private void initTownTable() {
-          tblRow.setCellValueFactory(new PropertyValueFactory<>("tblRow"));  //Row
-          tblSelect.setCellValueFactory(new PropertyValueFactory<>("select"));
-          tblTown.setCellValueFactory(new PropertyValueFactory<>("tblTown")); // sBankName
-          
-       }
+        } catch (SQLException e) {
+            ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
+        }
+    }
+
+    private Stage getStage() {
+        return (Stage) tblViewTown.getScene().getWindow();
+    }
+
+    private void initTownTable() {
+        tblRow.setCellValueFactory(new PropertyValueFactory<>("tblRow"));  //Row
+        tblSelect.setCellValueFactory(new PropertyValueFactory<>("select"));
+        tblTown.setCellValueFactory(new PropertyValueFactory<>("tblTown")); // sBankName
+
+    }
 }

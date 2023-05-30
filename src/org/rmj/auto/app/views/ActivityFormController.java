@@ -10,6 +10,8 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -106,7 +108,7 @@ public class ActivityFormController implements Initializable, ScreenInterface {
     private TabPane tabPane;
     @FXML
     private Button btnBrowse;
-    ObservableList<String> cType = FXCollections.observableArrayList("Event", "Sales Call", "Promo");
+    ObservableList<String> cType = FXCollections.observableArrayList("EVENT", "SALES CALL", "PROMO");
     @FXML
     private Button btnActivityMembersSearch;
     @FXML
@@ -128,8 +130,6 @@ public class ActivityFormController implements Initializable, ScreenInterface {
     double xOffset;
     double yOffset;
     @FXML
-    private Label lbl01; //sActvtyID
-    @FXML
     private TextArea textArea02;    //sActTitle
     @FXML
     private TextArea textArea03;  //sActDescx
@@ -142,7 +142,7 @@ public class ActivityFormController implements Initializable, ScreenInterface {
     @FXML
     private TextField txtField28;  //sProvName
     @FXML
-    private TextField txtField05;  //sActSrcex
+    private TextField txtField05;  //sActTypDs
     @FXML
     private TextField textSeek01; //Search Activity No
     @FXML
@@ -157,8 +157,6 @@ public class ActivityFormController implements Initializable, ScreenInterface {
     private Button btnCitySearch;
     @FXML
     private Button btnCityRemove;
-    @FXML
-    private ComboBox comboBox04;  //sActTypID
     @FXML
     private TextArea textArea15; //sLogRemrk
     @FXML
@@ -177,6 +175,10 @@ public class ActivityFormController implements Initializable, ScreenInterface {
     private TableColumn<ActivityMemberTable, String> tblindex25;
     @FXML
     private TableColumn<ActivityMemberTable, String> tblindex24;
+    @FXML
+    private ComboBox<String> comboBox29; //sEventTyp
+    @FXML
+    private TextField txtField01; //sActvtyID
 
     /**
      * Initializes the controller class.
@@ -189,20 +191,23 @@ public class ActivityFormController implements Initializable, ScreenInterface {
         oTrans = new Activity(oApp, oApp.getBranchCode(), true); //Initialize ClientMaster
         oTrans.setCallback(oListener);
         oTrans.setWithUI(true);
-        makeAutoCapitalization(txtField05); //sActSrcex
-        makeAutoCapitalization(txtField26); //sBranchNm
-        makeAutoCapitalization(txtField12); //nTrgtClnt
-        makeAutoCapitalization(txtField28); //sProvName
-        makeAutoCapitalization(txtField24); //sDeptName
-        makeAutoCapitalization(txtField11); //nRcvdBdgt
-        makeAutoCapitalization(txtField32); //Branch
-        makeAutoCapitalization(txtField12); //nTrgtClnt
+        txtField32.setDisable(true);
+        setCapsLockBehavior(txtField25); //sCompyNm
+        setCapsLockBehavior(txtField05); //sActTypDs
+        setCapsLockBehavior(txtField26); //sBranchNm
+        setCapsLockBehavior(txtField12); //nTrgtClnt
+        setCapsLockBehavior(txtField28); //sProvName
+        setCapsLockBehavior(txtField24); //sDeptName
+        setCapsLockBehavior(txtField11); //nRcvdBdgt
+        setCapsLockBehavior(txtField32); //Branch
+        setCapsLockBehavior(txtField12); //nTrgtClnt
 
-//        makeAutoCapitalization2(textArea09);
-//        makeAutoCapitalization2(textArea02);
-//        makeAutoCapitalization2(textArea03);
-//        makeAutoCapitalization2(textArea15);
-//        makeAutoCapitalization2(textArea16);
+        setCapsLockBehavior(textArea09);
+        setCapsLockBehavior(textArea02);
+        setCapsLockBehavior(textArea03);
+        setCapsLockBehavior(textArea15);
+        setCapsLockBehavior(textArea16);
+
         btnBrowse.setOnAction(this::cmdButton_Click);
         btnCitySearch.setOnAction(this::cmdButton_Click);
         btnCityRemove.setOnAction(this::cmdButton_Click);
@@ -215,29 +220,29 @@ public class ActivityFormController implements Initializable, ScreenInterface {
         btnAddSource.setOnAction(this::cmdButton_Click);
 
         /*Set Focus to set Value to Class*/
-        txtField05.focusedProperty().addListener(txtField_Focus); //sActSrcex
+        txtField05.focusedProperty().addListener(txtField_Focus); //sActTypDs
         txtField26.focusedProperty().addListener(txtField_Focus); //sBranchNm
         txtField12.focusedProperty().addListener(txtField_Focus); //nTrgtClnt
         txtField28.focusedProperty().addListener(txtField_Focus); //sProvName
         txtField24.focusedProperty().addListener(txtField_Focus); //sDeptName
         txtField11.focusedProperty().addListener(txtField_Focus); //nRcvdBdgt
-        txtField32.focusedProperty().addListener(txtField_Focus); //Branch
+//        txtField32.focusedProperty().addListener(txtField_Focus); //Branch
         txtField12.focusedProperty().addListener(txtField_Focus); //nTrgtClnt
 
-//        textArea08.focusedProperty().addListener(txtArea_Focus);
-//        textArea15.focusedProperty().addListener(txtArea_Focus);
-//        textArea16.focusedProperty().addListener(txtArea_Focus);
-//        textArea09.focusedProperty().addListener(txtArea_Focus);
-//        textArea03.focusedProperty().addListener(txtArea_Focus);
-//        textArea02.focusedProperty().addListener(txtArea_Focus);
+        textArea08.focusedProperty().addListener(txtArea_Focus);
+        textArea15.focusedProperty().addListener(txtArea_Focus);
+        textArea16.focusedProperty().addListener(txtArea_Focus);
+        textArea09.focusedProperty().addListener(txtArea_Focus);
+        textArea03.focusedProperty().addListener(txtArea_Focus);
+        textArea02.focusedProperty().addListener(txtArea_Focus);
         /* TxtField KeyPressed */
-        txtField05.setOnKeyPressed(this::txtField_KeyPressed); //sActSrcex
+        txtField05.setOnKeyPressed(this::txtField_KeyPressed); //sActTypDs
         txtField26.setOnKeyPressed(this::txtField_KeyPressed); //sBranchNm
         txtField12.setOnKeyPressed(this::txtField_KeyPressed); //nTrgtClnt
         txtField28.setOnKeyPressed(this::txtField_KeyPressed);//sProvName
         txtField24.setOnKeyPressed(this::txtField_KeyPressed); //sDeptName
         txtField11.setOnKeyPressed(this::txtField_KeyPressed); //nRcvdBdgt
-        txtField32.setOnKeyPressed(this::txtField_KeyPressed); //Branch
+//        txtField32.setOnKeyPressed(this::txtField_KeyPressed); //Branch
         txtField12.setOnKeyPressed(this::txtField_KeyPressed); //nTrgtClnt
         txtField25.setOnKeyPressed(this::txtField_KeyPressed); //sCompyNm
 
@@ -251,17 +256,18 @@ public class ActivityFormController implements Initializable, ScreenInterface {
         textSeek01.setOnKeyPressed(this::txtField_KeyPressed); //Activity No Search
         textSeek02.setOnKeyPressed(this::txtField_KeyPressed); //Activity Title Search
 
-        comboBox04.setItems(cType);
-        pnEditMode = EditMode.UNKNOWN;
-        initButton(pnEditMode);
-
-        comboBox04.setOnAction(e -> {
+        comboBox29.setItems(cType);
+        comboBox29.setOnAction(e -> {
+            String selectedType = comboBox29.getValue();// Retrieve the type ID for the selected type
+            // Set the type ID in the text field
             try {
-                oTrans.setMaster(4, comboBox04.getSelectionModel().getSelectedIndex());
+                oTrans.setMaster(29, selectedType); // Pass the selected type to the setMaster method
             } catch (SQLException ex) {
                 Logger.getLogger(ActivityFormController.class.getName()).log(Level.SEVERE, null, ex);
             }
-        });
+
+        }
+        );
 
         Pattern pattern = Pattern.compile("[\\d\\p{Punct}]*");
         TextFormatter<String> formatter = new TextFormatter<>(change -> {
@@ -273,23 +279,26 @@ public class ActivityFormController implements Initializable, ScreenInterface {
 
         txtField12.setTextFormatter(new InputTextFormatter(pattern));  //nTrgtClnt
         txtField11.setTextFormatter(new InputTextFormatter(pattern));  //nRcvdBdgt
-
+        pnEditMode = EditMode.UNKNOWN;
+        initButton(pnEditMode);
     }
 
-    private void makeAutoCapitalization(TextField textField) {
+    private static void setCapsLockBehavior(TextField textField) {
         textField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.isEmpty()) {
+            if (textField.getText() != null) {
                 textField.setText(newValue.toUpperCase());
             }
         });
     }
-//    private void makeAutoCapitalization2(TextArea textArea) {
-//        textArea.textProperty().addListener((observable, oldValue, newValue) -> {
-//            if (!newValue.isEmpty()) {
-//                textArea.setText(newValue.toUpperCase());
-//            }
-//        });
-//    }
+
+    private static void setCapsLockBehavior(TextArea textArea) {
+        textArea.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (textArea.getText() != null) {
+                textArea.setText(newValue.toUpperCase());
+            }
+        });
+
+    }
 
     @Override
     public void setGRider(GRider foValue) {
@@ -401,11 +410,11 @@ public class ActivityFormController implements Initializable, ScreenInterface {
                     }
                     break;
                 case "btnAddSource":
+                    loadActTypeAddSourceDialog();
                     break;
                 case "btnActivityMembersSearch":
                     loadActivityMemberDialog();
                     break;
-
                 case "btnVhclModelsSearch":
                     loadActivityVehicleEntryDialog();
                     break;
@@ -494,6 +503,28 @@ public class ActivityFormController implements Initializable, ScreenInterface {
                             ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
                         }
                         break;
+                    case 5:
+                        String selectedType = comboBox29.getValue();
+                        switch (selectedType) {
+                            case "EVENT":
+                                selectedType = "eve";
+                                break;
+                            case "SALES CALL":
+                                selectedType = "sal";
+                                break;
+                            case "PROMO":
+                                selectedType = "pro";
+                                break;
+                            default:
+                                break;
+                        }
+                        if (oTrans.searchEventType(selectedType)) {
+                            loadActivityField();
+                        } else {
+                            ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                        }
+                        break;
+
                     case 24:
                         if (oTrans.searchDepartment(txtField.getText())) {
                             loadActivityField();
@@ -516,7 +547,6 @@ public class ActivityFormController implements Initializable, ScreenInterface {
                         }
                         break;
                     case 28:
-
                         if (oTrans.searchProvince(txtField.getText())) {
                             loadActivityField();
                             pnEditMode = oTrans.getEditMode();
@@ -546,21 +576,23 @@ public class ActivityFormController implements Initializable, ScreenInterface {
             if (!nv) {
                 /* Lost Focus */
                 switch (lnIndex) {
-                    case 5:  // sActSrcex
-                    case 24: // sDeptName
-                    case 25: // sCompnyNm
+                    case 5:  //sActTypDs
+                    case 24: //sDeptName
+                    case 25: //sCompnyNm
                     case 26: //sBranchNm
-                    case 28: //sProvName
                     case 12: //nTrgtClnt
                     case 11: //nRcvdBdgt
+                    case 28: //sProvName
                         oTrans.setMaster(lnIndex, lsValue); // Handle Encoded Value
                         break;
                 }
             } else {
                 txtField.selectAll();
+
             }
         } catch (SQLException ex) {
-            Logger.getLogger(CustomerFormController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CustomerFormController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     };
 
@@ -569,7 +601,7 @@ public class ActivityFormController implements Initializable, ScreenInterface {
 
         TextArea textArea = (TextArea) ((ReadOnlyBooleanPropertyBase) o).getBean();
         int lnIndex = Integer.parseInt(textArea.getId().substring(8, 10));
-        String lsValue = textArea.getText().toUpperCase();
+        String lsValue = textArea.getText();
 
         if (lsValue == null) {
             return;
@@ -581,10 +613,9 @@ public class ActivityFormController implements Initializable, ScreenInterface {
                     case 2:        //sActTitle
                     case 3:        //sActDescx
 //                        case 8:        //sAddressx
-                    case 9:        //sCompnynx
                     case 15:        //sLogRemrk
                     case 16:        //sRemarksx
-
+                    case 9:        //sCompnynx
                         oTrans.setMaster(lnIndex, lsValue);
                         break;
                 }
@@ -596,6 +627,58 @@ public class ActivityFormController implements Initializable, ScreenInterface {
             System.exit(1);
         }
     };
+    //Act Type Add Source Dialog
+
+    private void loadActTypeAddSourceDialog() throws IOException {
+        /**
+         * if state = true : ADD else if state = false : UPDATE *
+         */
+        try {
+            Stage stage = new Stage();
+
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            fxmlLoader.setLocation(getClass().getResource("ActivityTypeAddSource.fxml"));
+
+            ActivityTypeAddSourceController loControl = new ActivityTypeAddSourceController();
+            loControl.setGRider(oApp);
+            loControl.setObject(oTrans);
+            fxmlLoader.setController(loControl);
+
+            //load the main interface
+            Parent parent = fxmlLoader.load();
+
+            parent.setOnMousePressed(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    xOffset = event.getSceneX();
+                    yOffset = event.getSceneY();
+                }
+            });
+
+            parent.setOnMouseDragged(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    double xOffset = 0;
+                    stage.setX(event.getScreenX() - xOffset);
+                    double yOffset = 0;
+                    stage.setY(event.getScreenY() - yOffset);
+                }
+            });
+
+            //set the main interface as the scene/*
+            Scene scene = new Scene(parent);
+            stage.setScene(scene);
+            stage.initStyle(StageStyle.TRANSPARENT);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle("");
+            stage.showAndWait();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
+            System.exit(1);
+        }
+    }
 
     //Activity Members Entry Dialog
     private void loadActivityMemberDialog() throws IOException {
@@ -799,22 +882,20 @@ public class ActivityFormController implements Initializable, ScreenInterface {
 
     private void loadActivityField() {
         try {
-            lbl01.setText((String) oTrans.getMaster(1)); //sActvtyID
+            txtField01.setText((String) oTrans.getMaster(1)); //sActvtyID
             dateFrom06.setValue(strToDate(CommonUtils.xsDateShort((Date) oTrans.getMaster(6)))); //dDateFrom
             dateTo07.setValue(strToDate(CommonUtils.xsDateShort((Date) oTrans.getMaster(7)))); //dDateThru
-            switch (oTrans.getMaster(4).toString()) {
-                case "Event":
-                    comboBox04.getSelectionModel().select(0);
-                    break;
-                case "Promo":
-                    comboBox04.getSelectionModel().select(1);
-                    break;
-                case "Sales Call":
-                    comboBox04.getSelectionModel().select(2);
-                    break;
-                default:
-                    break;
-            }//sActTypID
+            String selectedItem = oTrans.getMaster(29).toString();
+            if (selectedItem.equals("sal")) {
+                selectedItem = "SALES CALL";
+            }
+            if (selectedItem.equals("eve")) {
+                selectedItem = "EVENT";
+            }
+            if (selectedItem.equals("pro")) {
+                selectedItem = "PROMO";
+            }// Assuming oTrans.getMaster(29) returns the selected item as a string
+            comboBox29.getSelectionModel().select(selectedItem);
             txtField05.setText((String) oTrans.getMaster(5)); //sActSrcex
             textArea02.setText((String) oTrans.getMaster(2)); //sActTitle
             textArea03.setText((String) oTrans.getMaster(3)); //sActDescx
@@ -860,11 +941,11 @@ public class ActivityFormController implements Initializable, ScreenInterface {
         boolean lbShow = (fnValue == EditMode.ADDNEW || fnValue == EditMode.UPDATE);
 
         //Fields
-        lbl01.setText(""); //sActvtyID
+        txtField01.setText(""); //sActvtyID
         dateFrom06.setDisable(!lbShow); //dDateFrom
         dateTo07.setDisable(!lbShow); //dDateThru
-        comboBox04.setDisable(!lbShow); //sActTypID
-        txtField05.setDisable(!lbShow); //sActSrcex
+        comboBox29.setDisable(!lbShow); //sEventTyp
+        txtField05.setDisable(!lbShow); //sActTypDs
         textArea02.setDisable(!lbShow); //sActTitle
         textArea03.setDisable(!lbShow); //sActDescx
         textArea15.setDisable(!lbShow); //sLogRemrk
@@ -872,7 +953,7 @@ public class ActivityFormController implements Initializable, ScreenInterface {
         txtField24.setDisable(!lbShow);//sDeptName
         txtField25.setDisable(!lbShow); //sCompnyNm
         txtField26.setDisable(!lbShow); //sBranchNm
-        txtField32.setDisable(!lbShow); //Branch
+//        txtField32.setDisable(!lbShow); //Branch
         txtField12.setDisable(!lbShow); //nTrgtClnt
         txtField11.setDisable(!lbShow);  //nRcvdBdg
         txtField28.setDisable(!lbShow); //sProvName
@@ -911,11 +992,11 @@ public class ActivityFormController implements Initializable, ScreenInterface {
 
     public void clearFields() {
         pnRow = 0;
-        lbl01.setText(""); //sActvtyID
+        txtField01.setText(""); //sActvtyID
         dateFrom06.setValue(null); //dDateFrom
         dateTo07.setValue(null); //dDateThru
-        comboBox04.setValue(null); //sActTypID
-        txtField05.clear(); //sActSrcex
+        comboBox29.setValue(null); //sEventTyp
+        txtField05.clear(); //sActTypDs
         textArea02.clear(); //sActTitle
         textArea03.clear(); //sActDescx
         textArea15.clear(); //sLogRemrk
@@ -923,7 +1004,7 @@ public class ActivityFormController implements Initializable, ScreenInterface {
         txtField24.clear();//sDeptName
         txtField25.clear(); //sCompnyNm
         txtField26.clear(); //sBranchNm
-        txtField32.clear(); //Branch
+//        txtField32.clear(); //Branch
         txtField12.clear(); //nTrgtClnt
         txtField11.clear();  //nRcvdBdg
         txtField28.clear(); //sProvName

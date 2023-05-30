@@ -195,7 +195,6 @@
                                                                                 <Label id="LabelDesc" prefHeight="66.0" prefWidth="133.0" text="No. of Target Clients" GridPane.columnIndex="11" GridPane.columnSpan="2" GridPane.rowIndex="6" />
                                                                                 <Label id="LabelDesc" prefHeight="77.0" prefWidth="130.0" text="Branch" GridPane.columnIndex="11" GridPane.rowIndex="5" />
                                                                                 <Label id="LabelDesc" prefHeight="124.0" prefWidth="139.0" text="Total Event Budget " GridPane.columnIndex="11" GridPane.rowIndex="7" />
-                                                                                <Label fx:id="lbl01" prefHeight="25.0" prefWidth="130.0" GridPane.columnIndex="1" GridPane.columnSpan="3" />
                                                                                 <DatePicker fx:id="dateFrom06" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="1" />
                                                                                 <DatePicker fx:id="dateTo07" GridPane.columnIndex="5" GridPane.columnSpan="2" GridPane.rowIndex="1">
                                                                                     <GridPane.margin>
@@ -207,7 +206,7 @@
                                                                                         <Insets left="5.0" />
                                                                                     </GridPane.margin>
                                                                                 </Label>
-                                                                                <ComboBox fx:id="comboBox04" prefWidth="150.0" promptText="Choose Type" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="2" />
+                                                                                <ComboBox fx:id="comboBox29" prefWidth="150.0" promptText="Choose Type" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="2" />
                                                                                 <TextField fx:id="txtField05" promptText="Search: F3" GridPane.columnIndex="5" GridPane.columnSpan="3" GridPane.rowIndex="2" />
                                                                                 <Button fx:id="btnAddSource" alignment="TOP_LEFT" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="22.0" prefWidth="26.0" GridPane.columnIndex="8" GridPane.rowIndex="2">
                                                                                     <graphic>
@@ -265,6 +264,7 @@
                                                                                         <Insets left="5.0" />
                                                                                     </GridPane.margin>
                                                                                 </Label>
+                                                                                <TextField fx:id="txtField01" editable="false" GridPane.columnIndex="1" GridPane.columnSpan="3" />
                                                                             </children>
                                                                             <VBox.margin>
                                                                                 <Insets left="20.0" right="20.0" top="10.0" />

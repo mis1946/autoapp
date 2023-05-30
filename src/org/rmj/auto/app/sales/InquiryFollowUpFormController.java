@@ -56,8 +56,8 @@ public class InquiryFollowUpFormController implements Initializable {
     private boolean state = false;
 
     private final String pxeModuleName = "Inquiry Follow-Up";
-    ObservableList<String> cMedium = FXCollections.observableArrayList( "Text", "Call", "Social Media" , "Email", "WhatsUp", "Viber"); 
-    ObservableList<String> cPlatforms = FXCollections.observableArrayList("Facebook", "WhatsUp", "Instagram", "Tiktok", "Twitter");
+    ObservableList<String> cMedium = FXCollections.observableArrayList( "TEXT", "CALL", "SOCIAL MEDIA" , "EMAIL", "WHATSAPP", "VIBER"); 
+    //ObservableList<String> cPlatforms = FXCollections.observableArrayList("Facebook", "WHATSAPP", "Instagram", "Tiktok", "Twitter");
     
     @FXML
     private Button btnClose;
@@ -122,6 +122,10 @@ public class InquiryFollowUpFormController implements Initializable {
             }
             
         });
+        setCapsLockBehavior(txtField03);
+        setCapsLockBehavior(txtField07);
+        setCapsLockBehavior(textArea04);
+        setCapsLockBehavior(textArea05);
         
         txtField07.focusedProperty().addListener(txtField_Focus);  //Platform
         textArea04.focusedProperty().addListener(txtArea_Focus);  //Remarks
@@ -139,6 +143,22 @@ public class InquiryFollowUpFormController implements Initializable {
         initbutton();
     }  
 
+    private static void setCapsLockBehavior(TextField textField) {
+          textField.textProperty().addListener((observable, oldValue, newValue) -> {
+               if (textField.getText() != null) {
+                    textField.setText(newValue.toUpperCase());
+               }
+          });
+     }
+     
+     private static void setCapsLockBehavior(TextArea textArea) {
+          textArea.textProperty().addListener((observable, oldValue, newValue) -> {
+               if (textArea.getText() != null) {
+                    textArea.setText(newValue.toUpperCase());
+               }
+          });
+     }
+    
     private void cmdButton_Click(ActionEvent event) {
         String lsButton = ((Button)event.getSource()).getId();
         switch (lsButton){
@@ -208,7 +228,7 @@ public class InquiryFollowUpFormController implements Initializable {
             textArea04.setText(oTransFollowUp.getFollowUp(4).toString()); 
                 
         }catch (SQLException ex) {
-        Logger.getLogger(InquiryVehicleSalesAdvancesFormController.class.getName()).log(Level.SEVERE, null, ex);
+        Logger.getLogger(InquiryFollowUpFormController.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }

@@ -27,7 +27,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" fx:id="AnchorMain" prefHeight="400.0" prefWidth="600.0" stylesheets="@../css/FrameStyle.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" >
+<AnchorPane id="AnchorPane" fx:id="AnchorMain" prefHeight="600.0" prefWidth="600.0" stylesheets="@../css/FrameStyle.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" >
    <children>
       <StackPane prefHeight="150.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -109,11 +109,11 @@
                                        <children>
                                           <GridPane prefHeight="30.0" prefWidth="279.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="0.0">
                                              <columnConstraints>
-                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="133.0" minWidth="133.0" prefWidth="133.0" />
-                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="220.0" minWidth="220.0" prefWidth="220.0" />
-                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="81.0" />
-                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="98.0" />
-                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="300.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="130.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="220.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="80.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="95.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="350.0" />
                                              </columnConstraints>
                                              <rowConstraints>
                                                 <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -146,29 +146,25 @@
                                              <children>
                                                 <VBox spacing="3.0" AnchorPane.bottomAnchor="5.0" AnchorPane.topAnchor="5.0">
                                                    <children>
-                                                      <GridPane hgap="3.0" vgap="3.0">
+                                                      <GridPane vgap="3.0">
                                                          <columnConstraints>
-                                                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="130.0" minWidth="130.0" prefWidth="130.0" />
-                                                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="120.0" minWidth="120.0" prefWidth="120.0" />
-                                                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="150.0" minWidth="150.0" prefWidth="150.0" />
-                                                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="22.0" minWidth="22.0" prefWidth="22.0" />
-                                                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="95.0" minWidth="95.0" prefWidth="95.0" />
-                                                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="299.0" minWidth="299.0" prefWidth="299.0" />
+                                                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="130.0" />
+                                                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="160.0" />
+                                                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="140.0" />
+                                                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="95.0" />
+                                                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="350.0" />
                                                          </columnConstraints>
                                                          <rowConstraints>
-                                                            <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="23.0" vgrow="SOMETIMES" />
                                                             <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="23.0" vgrow="SOMETIMES" />
                                                          </rowConstraints>
                                                          <children>
                                                             <Label id="LabelDesc" stylesheets="@../css/FrameStyle.css" text="Customer Type" />
-                                                            <Label id="LabelDesc" stylesheets="@../css/FrameStyle.css" text="Company Name" GridPane.rowIndex="1" />
-                                                            <ComboBox fx:id="comboBox18" prefHeight="24.0" prefWidth="130.0" GridPane.columnIndex="1" />
-                                                            <TextField fx:id="txtField16" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1" />
-                                                            <TextField fx:id="txtField29" promptText="Search: F3" GridPane.columnIndex="5" GridPane.rowIndex="1" />
-                                                            <Label id="LabelDesc" stylesheets="@../css/FrameStyle.css" text="Business Style" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                                                            <Label id="LabelDesc" stylesheets="@../css/FrameStyle.css" text="Company Name" GridPane.columnIndex="3" />
+                                                            <ComboBox fx:id="comboBox18" prefHeight="24.0" prefWidth="160.0" GridPane.columnIndex="1" />
+                                                            <TextField fx:id="txtField16" GridPane.columnIndex="4" />
                                                          </children>
                                                          <VBox.margin>
-                                                            <Insets left="20.0" right="10.0" />
+                                                            <Insets bottom="2.0" left="20.0" right="10.0" />
                                                          </VBox.margin>
                                                       </GridPane>
                                                       <AnchorPane prefHeight="17.0" style="-fx-background-color: #FACEA1;">
@@ -180,21 +176,21 @@
                                                             </Label>
                                                          </children>
                                                       </AnchorPane>
-                                                      <GridPane hgap="3.0" vgap="3.0">
+                                                      <GridPane vgap="3.0">
                                                          <columnConstraints>
                                                             <ColumnConstraints hgrow="SOMETIMES" maxWidth="130.0" minWidth="130.0" prefWidth="130.0" />
-                                                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="150.0" minWidth="150.0" prefWidth="150.0" />
-                                                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="5.0" minWidth="5.0" prefWidth="5.0" />
-                                                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="35.0" minWidth="35.0" prefWidth="35.0" />
-                                                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="75.0" minWidth="75.0" prefWidth="75.0" />
-                                                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="20.0" minWidth="20.0" prefWidth="20.0" />
-                                                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="95.0" minWidth="95.0" prefWidth="95.0" />
-                                                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="110.0" minWidth="110.0" prefWidth="110.0" />
+                                                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="180.0" />
+                                                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="5.0" />
+                                                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="35.0" />
+                                                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="70.0" />
+                                                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="10.0" />
+                                                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="95.0" />
+                                                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="120.0" />
                                                             <ColumnConstraints hgrow="SOMETIMES" maxWidth="5.0" minWidth="5.0" prefWidth="5.0" />
                                                             <ColumnConstraints hgrow="SOMETIMES" maxWidth="60.0" minWidth="60.0" prefWidth="60.0" />
-                                                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="115.0" minWidth="115.0" prefWidth="115.0" />
+                                                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="115.0" />
                                                             <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="50.0" />
-                                                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="45.0" minWidth="45.0" prefWidth="45.0" />
+                                                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="45.0" prefWidth="70.0" />
                                                          </columnConstraints>
                                                          <rowConstraints>
                                                             <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="23.0" vgrow="SOMETIMES" />
@@ -249,7 +245,7 @@
                                                                      <content>
                                                                         <AnchorPane>
                                                                            <children>
-                                                                              <ScrollPane prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                                              <ScrollPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                                                  <content>
                                                                                     <AnchorPane>
                                                                                        <children>
@@ -259,14 +255,14 @@
                                                                                                    <children>
                                                                                                       <VBox layoutX="1.0" layoutY="1.0" spacing="5.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="10.0">
                                                                                                          <children>
-                                                                                                            <GridPane hgap="3.0" vgap="3.0">
+                                                                                                            <GridPane vgap="3.0">
                                                                                                                <columnConstraints>
-                                                                                                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="5.0" minWidth="5.0" prefWidth="5.0" />
+                                                                                                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="5.0" />
                                                                                                                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="80.0" minWidth="80.0" prefWidth="80.0" />
-                                                                                                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" />
-                                                                                                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="10.0" minWidth="10.0" prefWidth="10.0" />
+                                                                                                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="45.0" />
+                                                                                                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="10.0" />
                                                                                                                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="10.0" minWidth="10.0" prefWidth="100.0" />
-                                                                                                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="50.0" minWidth="50.0" prefWidth="50.0" />
+                                                                                                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="40.0" />
                                                                                                                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" />
                                                                                                                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="50.0" minWidth="50.0" prefWidth="50.0" />
                                                                                                                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="5.0" minWidth="5.0" prefWidth="5.0" />
@@ -276,7 +272,7 @@
                                                                                                                </columnConstraints>
                                                                                                                <rowConstraints>
                                                                                                                   <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="23.0" vgrow="SOMETIMES" />
-                                                                                                                  <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="23.0" vgrow="SOMETIMES" />
+                                                                                                                  <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="23.0" vgrow="SOMETIMES" />
                                                                                                                   <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="23.0" vgrow="SOMETIMES" />
                                                                                                                   <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="23.0" vgrow="SOMETIMES" />
                                                                                                                   <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="23.0" vgrow="SOMETIMES" />
@@ -285,34 +281,34 @@
                                                                                                                   <Label id="LabelDesc" stylesheets="@../css/FrameStyle.css" text="House No." GridPane.columnIndex="1" GridPane.columnSpan="2" />
                                                                                                                   <Label id="LabelDesc" stylesheets="@../css/FrameStyle.css" text="Town" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                                                                                                                   <Label id="LabelDesc" stylesheets="@../css/FrameStyle.css" text="Barangay" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                                                                                                                  <TextField fx:id="txtField03Addr" GridPane.columnIndex="2" GridPane.columnSpan="4" />
+                                                                                                                  <TextField fx:id="txtField03Addr" GridPane.columnIndex="2" GridPane.columnSpan="2" />
                                                                                                                   <TextField fx:id="txtField04Addr" GridPane.columnIndex="2" GridPane.columnSpan="9" GridPane.rowIndex="1" />
-                                                                                                                  <TextField fx:id="txtField05Addr" promptText="Search: F3" GridPane.columnIndex="2" GridPane.columnSpan="6" GridPane.rowIndex="2" />
+                                                                                                                  <TextField fx:id="txtField05Addr" promptText="Search: F3" GridPane.columnIndex="2" GridPane.columnSpan="9" GridPane.rowIndex="2" />
                                                                                                                   <TextField fx:id="txtField06Addr" promptText="Search: F3" GridPane.columnIndex="2" GridPane.columnSpan="6" GridPane.rowIndex="3" />
-                                                                                                                  <Label id="LabelDesc" stylesheets="@../css/FrameStyle.css" text="ZIP Code" GridPane.columnIndex="9" GridPane.rowIndex="2" />
-                                                                                                                  <TextField fx:id="txtField07Addr" GridPane.columnIndex="10" GridPane.rowIndex="2" />
+                                                                                                                  <Label id="LabelDesc" stylesheets="@../css/FrameStyle.css" text="ZIP Code" GridPane.columnIndex="9" GridPane.rowIndex="3" />
+                                                                                                                  <TextField fx:id="txtField07Addr" GridPane.columnIndex="10" GridPane.rowIndex="3" />
                                                                                                                   <Label id="LabelDesc" stylesheets="@../css/FrameStyle.css" text="Active" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                                                                                                                   <RadioButton fx:id="radiobtn18AddY" mnemonicParsing="false" text="Yes" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="4" />
-                                                                                                                  <RadioButton fx:id="radiobtn18AddN" mnemonicParsing="false" text="No" GridPane.columnIndex="5" GridPane.rowIndex="4" />
+                                                                                                                  <RadioButton fx:id="radiobtn18AddN" mnemonicParsing="false" text="No" GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.rowIndex="4" />
                                                                                                                   <Label id="LabelDesc" layoutX="18.0" layoutY="23.0" stylesheets="@../css/FrameStyle.css" text="Street Name" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                                                                                                </children>
                                                                                                             </GridPane>
-                                                                                                            <GridPane hgap="3.0" vgap="3.0">
+                                                                                                            <GridPane vgap="3.0">
                                                                                                                <columnConstraints>
-                                                                                                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="5.0" minWidth="5.0" prefWidth="5.0" />
+                                                                                                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="5.0" />
+                                                                                                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="80.0" minWidth="80.0" prefWidth="80.0" />
                                                                                                                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="70.0" minWidth="70.0" prefWidth="70.0" />
-                                                                                                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="70.0" minWidth="70.0" prefWidth="70.0" />
-                                                                                                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="20.0" minWidth="20.0" prefWidth="20.0" />
+                                                                                                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="20.0" minWidth="-Infinity" prefWidth="15.0" />
                                                                                                                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="80.0" />
                                                                                                                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="80.0" />
-                                                                                                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="65.0" />
+                                                                                                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="55.0" />
                                                                                                                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="5.0" minWidth="5.0" prefWidth="5.0" />
                                                                                                                </columnConstraints>
                                                                                                                <rowConstraints>
                                                                                                                   <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="23.0" vgrow="SOMETIMES" />
                                                                                                                   <RowConstraints maxHeight="10.0" minHeight="10.0" prefHeight="10.0" vgrow="SOMETIMES" />
-                                                                                                                  <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="23.0" vgrow="SOMETIMES" />
-                                                                                                                  <RowConstraints maxHeight="15.0" minHeight="15.0" prefHeight="15.0" vgrow="SOMETIMES" />
+                                                                                                                  <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="20.0" vgrow="SOMETIMES" />
+                                                                                                                  <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="20.0" vgrow="SOMETIMES" />
                                                                                                                   <RowConstraints maxHeight="5.0" minHeight="5.0" prefHeight="5.0" vgrow="SOMETIMES" />
                                                                                                                </rowConstraints>
                                                                                                                <children>
@@ -331,13 +327,13 @@
                                                                                                 </AnchorPane>
                                                                                                 <AnchorPane style="-fx-border-color: orange; -fx-border-radius: 5;">
                                                                                                    <children>
-                                                                                                      <TableView fx:id="tblAddress" layoutX="7.0" layoutY="7.0" onMouseClicked="#tblAddress_Clicked" prefHeight="100.0" prefWidth="400.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
+                                                                                                      <TableView fx:id="tblAddress" layoutX="7.0" layoutY="7.0" onMouseClicked="#tblAddress_Clicked" prefHeight="100.0" prefWidth="415.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
                                                                                                          <columns>
-                                                                                                            <TableColumn fx:id="addrindex01" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" text="Row" />
-                                                                                                            <TableColumn fx:id="addrindex02" maxWidth="60.0" minWidth="60.0" prefWidth="60.0" text="Primary" />
-                                                                                                            <TableColumn fx:id="addrindex03" maxWidth="70.0" minWidth="70.0" prefWidth="70.0" text="House No." />
-                                                                                                            <TableColumn fx:id="addrindex04" maxWidth="350.0" minWidth="350.0" prefWidth="350.0" text="Address" />
-                                                                                                            <TableColumn fx:id="addrindex05" maxWidth="70.0" minWidth="70.0" prefWidth="70.0" text="Zip Code" />
+                                                                                                            <TableColumn fx:id="addrindex01" editable="false" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" sortable="false" text="Row" />
+                                                                                                            <TableColumn fx:id="addrindex02" editable="false" maxWidth="60.0" minWidth="60.0" prefWidth="60.0" sortable="false" text="Primary" />
+                                                                                                            <TableColumn fx:id="addrindex03" editable="false" maxWidth="70.0" minWidth="70.0" prefWidth="70.0" sortable="false" text="House No." />
+                                                                                                            <TableColumn fx:id="addrindex04" editable="false" maxWidth="350.0" minWidth="350.0" prefWidth="350.0" sortable="false" text="Address" />
+                                                                                                            <TableColumn fx:id="addrindex05" editable="false" maxWidth="70.0" minWidth="70.0" prefWidth="70.0" sortable="false" text="Zip Code" />
                                                                                                          </columns>
                                                                                                       </TableView>
                                                                                                    </children>
@@ -364,7 +360,7 @@
                                                                                              <children>
                                                                                                 <AnchorPane style="-fx-border-color: orange; -fx-border-radius: 5;">
                                                                                                    <children>
-                                                                                                      <GridPane hgap="3.0" vgap="3.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="10.0">
+                                                                                                      <GridPane vgap="3.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="10.0">
                                                                                                          <columnConstraints>
                                                                                                             <ColumnConstraints hgrow="SOMETIMES" maxWidth="5.0" minWidth="5.0" prefWidth="5.0" />
                                                                                                             <ColumnConstraints hgrow="SOMETIMES" maxWidth="80.0" minWidth="80.0" prefWidth="80.0" />
@@ -404,12 +400,12 @@
                                                                                                 </AnchorPane>
                                                                                                 <AnchorPane style="-fx-border-color: orange; -fx-border-radius: 5;">
                                                                                                    <children>
-                                                                                                      <TableView fx:id="tblContact" onMouseClicked="#tblContact_Clicked" prefHeight="150.0" prefWidth="480.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
+                                                                                                      <TableView fx:id="tblContact" onMouseClicked="#tblContact_Clicked" prefHeight="150.0" prefWidth="495.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
                                                                                                          <columns>
-                                                                                                            <TableColumn fx:id="contindex01" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" text="Row" />
-                                                                                                            <TableColumn fx:id="contindex04" maxWidth="60.0" minWidth="60.0" prefWidth="60.0" text="Primary" />
-                                                                                                            <TableColumn fx:id="contindex02" maxWidth="70.0" minWidth="70.0" prefWidth="70.0" text="Ownership" />
-                                                                                                            <TableColumn fx:id="contindex03" maxWidth="300.0" minWidth="300.0" prefWidth="300.0" text="Contact No" />
+                                                                                                            <TableColumn fx:id="contindex01" editable="false" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" sortable="false" text="Row" />
+                                                                                                            <TableColumn fx:id="contindex04" editable="false" maxWidth="60.0" minWidth="60.0" prefWidth="60.0" sortable="false" text="Primary" />
+                                                                                                            <TableColumn fx:id="contindex02" editable="false" maxWidth="70.0" minWidth="70.0" prefWidth="70.0" sortable="false" text="Ownership" />
+                                                                                                            <TableColumn fx:id="contindex03" editable="false" maxWidth="300.0" minWidth="300.0" prefWidth="300.0" sortable="false" text="Contact No" />
                                                                                                          </columns>
                                                                                                       </TableView>
                                                                                                    </children>
@@ -436,7 +432,7 @@
                                                                                              <children>
                                                                                                 <AnchorPane style="-fx-border-color: orange; -fx-border-radius: 5;">
                                                                                                    <children>
-                                                                                                      <GridPane hgap="3.0" vgap="3.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="10.0">
+                                                                                                      <GridPane vgap="3.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="10.0">
                                                                                                          <columnConstraints>
                                                                                                             <ColumnConstraints hgrow="SOMETIMES" maxWidth="5.0" minWidth="5.0" prefWidth="5.0" />
                                                                                                             <ColumnConstraints hgrow="SOMETIMES" maxWidth="80.0" minWidth="80.0" prefWidth="80.0" />
@@ -469,12 +465,12 @@
                                                                                                 </AnchorPane>
                                                                                                 <AnchorPane style="-fx-border-color: orange; -fx-border-radius: 5;">
                                                                                                    <children>
-                                                                                                      <TableView fx:id="tblEmail" onMouseClicked="#tblEmail_Clicked" prefHeight="155.0" prefWidth="480.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
+                                                                                                      <TableView fx:id="tblEmail" onMouseClicked="#tblEmail_Clicked" prefHeight="155.0" prefWidth="495.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
                                                                                                          <columns>
-                                                                                                            <TableColumn fx:id="emadindex01" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" text="Row" />
-                                                                                                            <TableColumn fx:id="emadindex04" maxWidth="60.0" minWidth="60.0" prefWidth="60.0" text="Primary" />
-                                                                                                            <TableColumn fx:id="emadindex02" maxWidth="70.0" minWidth="70.0" prefWidth="70.0" text="Ownership" />
-                                                                                                            <TableColumn fx:id="emadindex03" maxWidth="300.0" minWidth="300.0" prefWidth="300.0" text="Email Address" />
+                                                                                                            <TableColumn fx:id="emadindex01" editable="false" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" sortable="false" text="Row" />
+                                                                                                            <TableColumn fx:id="emadindex04" editable="false" maxWidth="60.0" minWidth="60.0" prefWidth="60.0" sortable="false" text="Primary" />
+                                                                                                            <TableColumn fx:id="emadindex02" editable="false" maxWidth="70.0" minWidth="70.0" prefWidth="70.0" sortable="false" text="Ownership" />
+                                                                                                            <TableColumn fx:id="emadindex03" editable="false" maxWidth="300.0" minWidth="300.0" prefWidth="300.0" sortable="false" text="Email Address" />
                                                                                                          </columns>
                                                                                                       </TableView>
                                                                                                    </children>
@@ -501,7 +497,7 @@
                                                                                              <children>
                                                                                                 <AnchorPane style="-fx-border-color: orange; -fx-border-radius: 5;">
                                                                                                    <children>
-                                                                                                      <GridPane hgap="3.0" vgap="3.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="10.0">
+                                                                                                      <GridPane vgap="3.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="10.0">
                                                                                                          <columnConstraints>
                                                                                                             <ColumnConstraints hgrow="SOMETIMES" maxWidth="5.0" minWidth="5.0" prefWidth="5.0" />
                                                                                                             <ColumnConstraints hgrow="SOMETIMES" maxWidth="80.0" minWidth="80.0" prefWidth="80.0" />
@@ -531,11 +527,11 @@
                                                                                                 </AnchorPane>
                                                                                                 <AnchorPane style="-fx-border-color: orange; -fx-border-radius: 5;">
                                                                                                    <children>
-                                                                                                      <TableView fx:id="tblSocMed" onMouseClicked="#tblSocMed_Clicked" prefHeight="155.0" prefWidth="480.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
+                                                                                                      <TableView fx:id="tblSocMed" onMouseClicked="#tblSocMed_Clicked" prefHeight="155.0" prefWidth="495.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
                                                                                                          <columns>
-                                                                                                            <TableColumn fx:id="socmindex01" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" text="Row" />
-                                                                                                            <TableColumn fx:id="socmindex02" maxWidth="80.0" minWidth="80.0" text="Social Type" />
-                                                                                                            <TableColumn fx:id="socmindex03" maxWidth="350.0" minWidth="350.0" prefWidth="350.0" text="Account" />
+                                                                                                            <TableColumn fx:id="socmindex01" editable="false" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" sortable="false" text="Row" />
+                                                                                                            <TableColumn fx:id="socmindex02" editable="false" maxWidth="80.0" minWidth="80.0" sortable="false" text="Social Type" />
+                                                                                                            <TableColumn fx:id="socmindex03" editable="false" maxWidth="350.0" minWidth="350.0" prefWidth="350.0" sortable="false" text="Account" />
                                                                                                          </columns>
                                                                                                       </TableView>
                                                                                                    </children>
@@ -611,11 +607,11 @@
                                                                   <TextField fx:id="txtField13" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                                                                </children>
                                                             </GridPane>
-                                                            <GridPane hgap="3.0" layoutX="10.0" layoutY="10.0" vgap="3.0">
+                                                            <GridPane layoutX="10.0" layoutY="10.0" vgap="3.0">
                                                                <columnConstraints>
                                                                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="22.0" minWidth="22.0" prefWidth="22.0" />
                                                                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="70.0" />
-                                                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="500.0" />
+                                                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="530.0" />
                                                                </columnConstraints>
                                                                <rowConstraints>
                                                                   <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="23.0" vgrow="SOMETIMES" />

@@ -130,15 +130,15 @@ public class BankEntryFormController implements Initializable, ScreenInterface {
         oTrans = new BankInformation(oApp, oApp.getBranchCode(), true); //Initialize ClientMaster
         oTrans.setCallback(oListener);
         oTrans.setWithUI(true);
-        makeAutoCapitalization(txtField02);
-        makeAutoCapitalization(txtField17);
-        makeAutoCapitalization(txtField05);
-        makeAutoCapitalization(txtField18);
-        makeAutoCapitalization(txtField15);
-        makeAutoCapitalization(txtField07);
-        makeAutoCapitalization(txtField04);
-        makeAutoCapitalization(txtField08);
-        makeAutoCapitalization(txtField09);
+        setCapsLockBehavior(txtField02);
+        setCapsLockBehavior(txtField17);
+        setCapsLockBehavior(txtField05);
+        setCapsLockBehavior(txtField18);
+        setCapsLockBehavior(txtField15);
+        setCapsLockBehavior(txtField07);
+        setCapsLockBehavior(txtField04);
+        setCapsLockBehavior(txtField08);
+        setCapsLockBehavior(txtField09);
         /*Set Focus to set Value to Class*/
         txtField02.focusedProperty().addListener(txtField_Focus); // sBankName
 //          txtField03.focusedProperty().addListener(txtField_Focus); // sBankAdv
@@ -207,9 +207,9 @@ public class BankEntryFormController implements Initializable, ScreenInterface {
         oApp = foValue;
     }
 
-    private void makeAutoCapitalization(TextField textField) {
+    private static void setCapsLockBehavior(TextField textField) {
         textField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.isEmpty()) {
+            if (textField.getText() != null) {
                 textField.setText(newValue.toUpperCase());
             }
         });

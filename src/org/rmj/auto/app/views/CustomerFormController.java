@@ -276,6 +276,12 @@ public class CustomerFormController implements Initializable, ScreenInterface {
      private TableColumn socmindex02;
      @FXML
      private TableColumn socmindex03;
+    @FXML
+    private Button btnVEdit;
+    @FXML
+    private Button btnVSave;
+    @FXML
+    private Button btnTransfer;
      
      private Stage getStage(){
           return (Stage) txtField01.getScene().getWindow();

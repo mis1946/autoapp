@@ -75,7 +75,7 @@ public class VehicleDescriptionFormController implements Initializable, ScreenIn
     /*populate tables Vehicle Description List*/
     private ObservableList<VehicleDescriptionTableList> vhcldescdata = FXCollections.observableArrayList();
     private FilteredList<VehicleDescriptionTableList> filteredData;
-    private static final int ROWS_PER_PAGE = 31;
+    private static final int ROWS_PER_PAGE = 50;
 
     ObservableList<String> cTransmission = FXCollections.observableArrayList("AUTOMATIC", "MANUAL", "CVT");
     ObservableList<String> cModelsize = FXCollections.observableArrayList("BANTAM", "SMALL", "MEDIUM", "LARGE");
@@ -360,7 +360,7 @@ public class VehicleDescriptionFormController implements Initializable, ScreenIn
                 case "btnModel":
                 case "btnType":
                     if (oTrans.getMaster(3).toString().equals("") || oTrans.getMaster(3).toString().isEmpty() || oTrans.getMaster(3).toString() == null){
-                        ShowMessageFX.Warning(getStage(),"Kindly ensure that the Vehicle Make is selected before proceeding to set the model." ,"Warning", "");
+                        ShowMessageFX.Warning(getStage(),"Kindly ensure that the Vehicle Make is selected." ,"Warning", "");
                         txtField03.requestFocus();
                         return;
                     }

@@ -54,11 +54,11 @@ public class VehicleTypeFormController implements Initializable {
     private String sTransNo = "";
     private String sMakeID = "";
     private String sMakeDesc = "";
+    private String sFormula0 = "E+A+B"; //Default Type Formula
     private String sFormula1 = "";
     private String sFormula2 = "";
     private String lsFormula = "";
-    
-    
+    private int lnRow;
     private int lnCtr;
     
     private ObservableList<VehicleDescriptionTableParameter> vhclparamdata = FXCollections.observableArrayList();
@@ -135,7 +135,14 @@ public class VehicleTypeFormController implements Initializable {
             TableRow<VehicleDescriptionTableParameter> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 2 && !row.isEmpty()) {
-                    getSelectedItem(vhclparamdata.get(row.getIndex()).getTblindex04(),row.getIndex());
+                    lnRow = row.getIndex();
+                    if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
+                        if(ShowMessageFX.OkayCancel(null, pxeModuleName, "You have unsaved data, are you sure you want to continue?") == true){   
+                        } else
+                           return;
+                    }
+                    
+                    getSelectedItem(vhclparamdata.get(lnRow).getTblindex04());
                 }
             });
             return row;
@@ -146,10 +153,22 @@ public class VehicleTypeFormController implements Initializable {
             txtField03.setDisable(true);
             txtField04.setDisable(true);
             
-            if(cmbFormat.getSelectionModel().getSelectedIndex() == 0){
-                lsFormula = sFormula1;
-            } else if(cmbFormat.getSelectionModel().getSelectedIndex() == 1){
-                lsFormula = sFormula2;
+            switch (cmbFormat.getSelectionModel().getSelectedIndex()) {
+                case 0:
+                    lsFormula = sFormula0;
+                    break;
+                case 1:
+                    if (!sFormula1.equals(sFormula0) && !sFormula1.equals("")){
+                        lsFormula = sFormula1;
+                    } else {
+                        lsFormula = sFormula2;
+                    }
+                    break;
+                case 2:
+                    lsFormula = sFormula2;
+                    break;
+                default:
+                    break;
             }
             
             if(lsFormula.contains("E")){
@@ -193,27 +212,54 @@ public class VehicleTypeFormController implements Initializable {
         });
     }
     
-    private void loadTypeFormat(){
+    private boolean loadTypeFormat(){
         try {
-            String lsFormat1, lsFormat2;
+            String lsFormat;
             cTypeFormat.clear();
             cmbFormat.setItems(null);
+            lsFormat = genFormat(sFormula0);
+            //Set Default Formula
+            if(!lsFormat.equals("") && !lsFormat.isEmpty()){
+                cTypeFormat.add(lsFormat);
+                lsFormat=""; //Clear Variable
+            }
             if(oTrans.LoadTypeFormat(sMakeID)){
                 sFormula1 = oTrans.getFormat( 2).toString();
                 sFormula2 = oTrans.getFormat( 3).toString();
-                lsFormat1 = genFormat(sFormula1);
-                if(!lsFormat1.equals("") && !lsFormat1.isEmpty() ){
-                    cTypeFormat.add(lsFormat1);
-                }
-                lsFormat2 = genFormat(sFormula2);
-                if(!lsFormat2.equals("") && !lsFormat2.isEmpty()){
-                    cTypeFormat.add(lsFormat2);
+                
+                if ( (sFormula1.equals("") || sFormula1.isEmpty()) && (sFormula2.equals("") || sFormula2.isEmpty()) ) {
+                } else {
+                    if (!sFormula1.equals(sFormula0)){
+                        lsFormat = genFormat(sFormula1);
+                        if (lsFormat != null){
+                            if(!lsFormat.equals("") && !lsFormat.isEmpty() ){
+                                cTypeFormat.add(lsFormat);
+                                lsFormat=""; //Clear Variable
+                            }
+                        }
+                        
+                    }
+                    if (!sFormula2.equals(sFormula0)){
+                        lsFormat = genFormat(sFormula2);
+                        if (lsFormat != null){
+                            if(!lsFormat.equals("") && !lsFormat.isEmpty() ){
+                                cTypeFormat.add(lsFormat);
+                                lsFormat=""; //Clear Variable
+                            }
+                        }
+                    }
                 }
             cmbFormat.setItems( cTypeFormat);
+            cmbFormat.getSelectionModel().select(0);
+            
+            } else {
+                ShowMessageFX.Warning(null, pxeModuleName, oTrans.getMessage());
+                return false;
             }
         } catch (SQLException ex) {
             Logger.getLogger(VehicleTypeFormController.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return true;
     }
     
     private String genFormat(String fsValue){
@@ -262,27 +308,33 @@ public class VehicleTypeFormController implements Initializable {
             switch (fsValue.substring(lnCtr-1, lnCtr)) {
                 case "E":
                     if (txtField01.getText().equals("") || txtField01.getText().isEmpty()){
-                        ShowMessageFX.Warning(null, pxeModuleName, "Please set Type Engine");
-                        txtField01.requestFocus();
-                        return null;
+                        if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure you want to skip Engine Size?")) {
+                        } else {
+                            txtField01.requestFocus();
+                        }
+                    } else {
+                        sCode = txtField01.getText();
                     }
-                    sCode = txtField01.getText();
                     break;
                 case "A":
                     if (txtField03.getText().equals("") || txtField03.getText().isEmpty()){
-                        ShowMessageFX.Warning(null, pxeModuleName, "Please set Variant Code A");
-                        txtField03.requestFocus();
-                        return null;
+                        if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure you want to skip Variant Code A?")) {
+                        } else {
+                            txtField03.requestFocus();
+                        } 
+                    } else {
+                        sCode = txtField03.getText();
                     }
-                    sCode = txtField03.getText();
                     break;
                 case "B":
                     if (txtField04.getText().equals("") || txtField04.getText().isEmpty()){
-                        ShowMessageFX.Warning(null, pxeModuleName, "Please set Variant Code B");
-                        txtField04.requestFocus();
-                        return null;
+                        if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure you want to skip Variant Code B?")) {
+                        } else {
+                            txtField04.requestFocus();
+                        }  
+                    } else {
+                        sCode = txtField04.getText();
                     }
-                    sCode = txtField04.getText();
                     break;
                 default:
                     break;
@@ -319,24 +371,35 @@ public class VehicleTypeFormController implements Initializable {
                         oTrans.setMaster(2, lsType);
                     } else {
                         ShowMessageFX.Warning(null, pxeModuleName, "No Type Description to be created.");
+                        return;
                     }   
+                    
+                    clearFields();
                 break;
                 case "btnAdd":
-                    loadTypeFormat();
-                    txtField02.clear();
-                    if(oTrans.NewRecord()){
-                        pnEditMode = oTrans.getEditMode();
+                    clearFields();
+                    if (loadTypeFormat()) {
+                        txtField02.clear();
+                        if(oTrans.NewRecord()){
+                            pnEditMode = oTrans.getEditMode();
+                        } else {
+                            ShowMessageFX.Warning(null, pxeModuleName, oTrans.getMessage());
+                            return;
+                        }
                     } else {
-                        ShowMessageFX.Warning(null, pxeModuleName, oTrans.getMessage());
                         return;
                     }
                     break;
                 case "btnEdit":
-                    loadTypeFormat();
-                    if(oTrans.UpdateRecord()){
-                        pnEditMode = oTrans.getEditMode();
+                    clearFields();
+                    if (loadTypeFormat()) {
+                        if(oTrans.UpdateRecord()){
+                            pnEditMode = oTrans.getEditMode();
+                        } else {
+                            ShowMessageFX.Warning(null, pxeModuleName, oTrans.getMessage());
+                            return;
+                        }
                     } else {
-                        ShowMessageFX.Warning(null, pxeModuleName, oTrans.getMessage());
                         return;
                     }
                     break;
@@ -347,18 +410,20 @@ public class VehicleTypeFormController implements Initializable {
                     }
 
                     if(oTrans.SaveRecord()){
-                    ShowMessageFX.Information(null, pxeModuleName, "Vehicle Make save sucessfully.");
-                    if (oTrans.OpenRecord(oTrans.getSourceID())){
+                        ShowMessageFX.Information(null, pxeModuleName, "Vehicle Make save sucessfully.");
+                        loadVehicleParameterList();
+                        if (pnEditMode == EditMode.ADDNEW){
+                            lnRow = (oTrans.getItemCount()-1) ;
+                        }
+                        
+                        getSelectedItem(vhclparamdata.get(lnRow).getTblindex04());
                         pnEditMode = oTrans.getEditMode();
-                    } else {
-                        txtField02.clear();
-                        pnEditMode = EditMode.UNKNOWN;
-                    }
-                    loadVehicleParameterList();
                     } else {
                         ShowMessageFX.Warning(null, pxeModuleName, oTrans.getMessage());
                         return;
                     }
+                    
+                    clearFields();
                     break;
 
                 case "btnRefresh":
@@ -373,7 +438,6 @@ public class VehicleTypeFormController implements Initializable {
                     break;
 
             }
-            clearFields();
             initbutton(pnEditMode);
         } catch (SQLException ex) {
             Logger.getLogger(VehicleTypeFormController.class.getName()).log(Level.SEVERE, null, ex);
@@ -485,17 +549,18 @@ public class VehicleTypeFormController implements Initializable {
     }
     
     //Populate Text Field Based on selected transaction in table
-    private void getSelectedItem(String TransNo, int nRow) {
+    private void getSelectedItem(String TransNo) {
         oldTransNo = TransNo;
         if (oTrans.OpenRecord(TransNo)){
-            if (vhclparamdata.get(nRow).getTblindex03().equals("Y")){
+            if (vhclparamdata.get(lnRow ).getTblindex03().equals("Y")){
                 pnEditMode = oTrans.getEditMode();
             } else {
                 pnEditMode = EditMode.UNKNOWN;
             }
             
-            txtField02.setText(vhclparamdata.get(nRow).getTblindex02()); // Description
+            txtField02.setText(vhclparamdata.get(lnRow ).getTblindex02()); // Description
         }
+        clearFields();
         initbutton(pnEditMode);
     }
     
@@ -534,9 +599,11 @@ public class VehicleTypeFormController implements Initializable {
         cmbFormat.setDisable(!lbShow);
         btnConcat.setDisable(!lbShow);
         
-        txtField01.setDisable(true);
-        txtField03.setDisable(true);
-        txtField04.setDisable(true);
+        if (cmbFormat.getValue() == null) {
+            txtField01.setDisable(true);
+            txtField03.setDisable(true);
+            txtField04.setDisable(true);
+        }
         
         if (fnValue == EditMode.READY) { //show edit if user clicked save / browse
             btnEdit.setVisible(true); 

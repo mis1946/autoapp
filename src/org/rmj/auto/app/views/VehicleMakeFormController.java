@@ -48,6 +48,7 @@ public class VehicleMakeFormController implements Initializable {
     
     private String oldTransNo = "";
     private String sTransNo = "";
+    private int lnRow;
     private int lnCtr;
     
     private ObservableList<VehicleDescriptionTableParameter> vhclparamdata = FXCollections.observableArrayList();
@@ -98,7 +99,14 @@ public class VehicleMakeFormController implements Initializable {
             TableRow<VehicleDescriptionTableParameter> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 2 && !row.isEmpty()) {
-                    getSelectedItem(vhclparamdata.get(row.getIndex()).getTblindex04(),row.getIndex());
+                    lnRow = row.getIndex();
+                    if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
+                        if(ShowMessageFX.OkayCancel(null, pxeModuleName, "You have unsaved data, are you sure you want to continue?") == true){   
+                        } else
+                           return;
+                    }
+                    
+                    getSelectedItem(vhclparamdata.get(lnRow).getTblindex04());
                 }
             });
             return row;
@@ -128,60 +136,65 @@ public class VehicleMakeFormController implements Initializable {
      }
     
     private void cmdButton_Click(ActionEvent event) {
-        String lsButton = ((Button)event.getSource()).getId();
-        switch (lsButton){
-            case "btnAdd":
-                txtField02.clear();
-                if(oTrans.NewRecord()){
-                    pnEditMode = oTrans.getEditMode();
-                } else {
-                    ShowMessageFX.Warning(null, pxeModuleName, oTrans.getMessage());
-                    return;
-                }
-                break;
-            case "btnEdit":
-                if(oTrans.UpdateRecord()){
-                    pnEditMode = oTrans.getEditMode();
-                } else {
-                    ShowMessageFX.Warning(null, pxeModuleName, oTrans.getMessage());
-                    return;
-                }
-                break;
-            case "btnSave":
-                if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure you want to save?")) {
-                } else {
-                    return;
-                }
-
-                if(oTrans.SaveRecord()){
-                ShowMessageFX.Information(null, pxeModuleName, "Vehicle Make save sucessfully.");
-                if (oTrans.OpenRecord(oTrans.getSourceID())){
-                    pnEditMode = oTrans.getEditMode();
-                } else {
+        try {
+            String lsButton = ((Button)event.getSource()).getId();
+            switch (lsButton){
+                case "btnAdd":
                     txtField02.clear();
-                    pnEditMode = EditMode.UNKNOWN;
-                }
-                loadVehicleParameterList();
-                } else {
-                    ShowMessageFX.Warning(null, pxeModuleName, oTrans.getMessage());
-                    return;
-                }
-                break;
+                    if(oTrans.NewRecord()){
+                        pnEditMode = oTrans.getEditMode();
+                    } else {
+                        ShowMessageFX.Warning(null, pxeModuleName, oTrans.getMessage());
+                        return;
+                    }
+                    break;
+                case "btnEdit":
+                    if(oTrans.UpdateRecord()){
+                        pnEditMode = oTrans.getEditMode();
+                    } else {
+                        ShowMessageFX.Warning(null, pxeModuleName, oTrans.getMessage());
+                        return;
+                    }
+                    break;
+                case "btnSave":
+                    if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure you want to save?")) {
+                    } else {
+                        return;
+                    }
 
-            case "btnRefresh":
-                loadVehicleParameterList();
-                break;
-            case "btnClose":
-                CommonUtils.closeStage(btnClose);
-                break;
+                    if(oTrans.SaveRecord()){
+                        ShowMessageFX.Information(null, pxeModuleName, "Vehicle Make save sucessfully.");
+                        loadVehicleParameterList();
+                        if (pnEditMode == EditMode.ADDNEW){
+                            lnRow = (oTrans.getItemCount()-1) ;
+                        }
+                        
+                        getSelectedItem(vhclparamdata.get(lnRow).getTblindex04());
+                        pnEditMode = oTrans.getEditMode();
 
-            default:
-                ShowMessageFX.Warning(null, pxeModuleName, "Button with name " + lsButton + " not registered.");
-                break;
+                    } else {
+                        ShowMessageFX.Warning(null, pxeModuleName, oTrans.getMessage());
+                        return;
+                    }
+                    break;
 
+                case "btnRefresh":
+                    loadVehicleParameterList();
+                    break;
+                case "btnClose":
+                    CommonUtils.closeStage(btnClose);
+                    break;
+
+                default:
+                    ShowMessageFX.Warning(null, pxeModuleName, "Button with name " + lsButton + " not registered.");
+                    break;
+
+            }
+
+            initbutton(pnEditMode);
+        } catch (SQLException ex) {
+            Logger.getLogger(VehicleMakeFormController.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-        initbutton(pnEditMode);
     }    
     
     public void loadVehicleParameterList(){
@@ -237,16 +250,16 @@ public class VehicleMakeFormController implements Initializable {
     }
     
     //Populate Text Field Based on selected transaction in table
-    private void getSelectedItem(String TransNo, int nRow) {
+    private void getSelectedItem(String TransNo) {
         oldTransNo = TransNo;
         if (oTrans.OpenRecord(TransNo)){
-            if (vhclparamdata.get(nRow).getTblindex03().equals("Y")){
+            if (vhclparamdata.get(lnRow).getTblindex03().equals("Y")){
                 pnEditMode = oTrans.getEditMode();
             } else {
                 pnEditMode = EditMode.UNKNOWN;
             }
             
-            txtField02.setText(vhclparamdata.get(nRow).getTblindex02()); // Description
+            txtField02.setText(vhclparamdata.get(lnRow).getTblindex02()); // Description
         }
         initbutton(pnEditMode);
     }

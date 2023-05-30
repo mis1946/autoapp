@@ -51,6 +51,7 @@ public class VehicleModelFormController implements Initializable {
     private String sTransNo = "";
     private String sMakeID = "";
     private String sMakeDesc = "";
+    private int lnRow;
     private int lnCtr;
     
     private ObservableList<VehicleDescriptionTableParameter> vhclparamdata = FXCollections.observableArrayList();
@@ -125,7 +126,14 @@ public class VehicleModelFormController implements Initializable {
             TableRow<VehicleDescriptionTableParameter> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 2 && !row.isEmpty()) {
-                    getSelectedItem(vhclparamdata.get(row.getIndex()).getTblindex04(),row.getIndex());
+                    lnRow = row.getIndex();
+                    if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
+                        if(ShowMessageFX.OkayCancel(null, pxeModuleName, "You have unsaved data, are you sure you want to continue?") == true){   
+                        } else
+                           return;
+                    }
+                    
+                    getSelectedItem(vhclparamdata.get(lnRow).getTblindex04());
                 }
             });
             return row;
@@ -184,18 +192,17 @@ public class VehicleModelFormController implements Initializable {
                 } else {
                     return;
                 }
-                
-                
                 if (setSelection()){
                     if(oTrans.SaveRecord()){
-                    ShowMessageFX.Information(null, pxeModuleName, "Vehicle Make save sucessfully.");
-                    if (oTrans.OpenRecord(oTrans.getSourceID())){
+                        ShowMessageFX.Information(null, pxeModuleName, "Vehicle Make save sucessfully.");
+                        loadVehicleParameterList();
+                        if (pnEditMode == EditMode.ADDNEW){
+                            lnRow = (oTrans.getItemCount()-1) ;
+                        }
+                        
+                        getSelectedItem(vhclparamdata.get(lnRow).getTblindex04());
                         pnEditMode = oTrans.getEditMode();
-                    } else {
-                        clearFields();
-                        pnEditMode = EditMode.UNKNOWN;
-                    }
-                    loadVehicleParameterList();
+
                     } else {
                         ShowMessageFX.Warning(null, pxeModuleName, oTrans.getMessage());
                         return;
@@ -275,19 +282,19 @@ public class VehicleModelFormController implements Initializable {
     }
     
     //Populate Text Field Based on selected transaction in table
-    private void getSelectedItem(String TransNo, int nRow) {
+    private void getSelectedItem(String TransNo) {
         oldTransNo = TransNo;
-        if (oTrans.OpenRecord(TransNo)){
-            if (vhclparamdata.get(nRow).getTblindex03().equals("Y")){
+        if (oTrans.OpenRecord(TransNo)) {
+            if (vhclparamdata.get(lnRow).getTblindex03().equals("Y")) {
                 pnEditMode = oTrans.getEditMode();
             } else {
                 pnEditMode = EditMode.UNKNOWN;
             }
-            txtField03.setText(vhclparamdata.get(nRow).getTblindex09()); // MakeID
-            txtField02.setText(vhclparamdata.get(nRow).getTblindex02()); // Description
-            
+            txtField03.setText(vhclparamdata.get(lnRow).getTblindex09()); // MakeID
+            txtField02.setText(vhclparamdata.get(lnRow).getTblindex02()); // Description
+
             //sUnitType
-            switch (vhclparamdata.get(nRow).getTblindex05()) {
+            switch (vhclparamdata.get(lnRow).getTblindex05()) {
                 case "com":
                     comboBox04.getSelectionModel().select(0);
                     break;
@@ -304,10 +311,10 @@ public class VehicleModelFormController implements Initializable {
                     break;
             }
             //sBodyType
-            comboBox05.setValue(vhclparamdata.get(nRow).getTblindex06());
+            comboBox05.setValue(vhclparamdata.get(lnRow).getTblindex06());
             //sVhclSize
-            comboBox06.getSelectionModel().select(Integer.parseInt(vhclparamdata.get(nRow).getTblindex07())); 
-            
+            comboBox06.getSelectionModel().select(Integer.parseInt(vhclparamdata.get(lnRow).getTblindex07()));
+
         }
         initbutton(pnEditMode);
     }

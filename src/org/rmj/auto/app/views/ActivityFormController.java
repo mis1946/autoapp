@@ -10,8 +10,6 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -40,6 +38,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
+import javafx.scene.control.DateCell;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -50,6 +49,7 @@ import static javafx.scene.input.KeyCode.TAB;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.stage.StageStyle;
+import javafx.util.Callback;
 import org.rmj.appdriver.GRider;
 import org.rmj.appdriver.agentfx.CommonUtils;
 import org.rmj.appdriver.agentfx.ShowMessageFX;
@@ -179,6 +179,8 @@ public class ActivityFormController implements Initializable, ScreenInterface {
     private ComboBox<String> comboBox29; //sEventTyp
     @FXML
     private TextField txtField01; //sActvtyID
+    @FXML
+    private Button btnCancel;
 
     /**
      * Initializes the controller class.
@@ -191,10 +193,12 @@ public class ActivityFormController implements Initializable, ScreenInterface {
         oTrans = new Activity(oApp, oApp.getBranchCode(), true); //Initialize ClientMaster
         oTrans.setCallback(oListener);
         oTrans.setWithUI(true);
+
         txtField32.setDisable(true);
+        txtField26.setDisable(true);
         setCapsLockBehavior(txtField25); //sCompyNm
         setCapsLockBehavior(txtField05); //sActTypDs
-        setCapsLockBehavior(txtField26); //sBranchNm
+//        setCapsLockBehavior(txtField26); //sBranchNm
         setCapsLockBehavior(txtField12); //nTrgtClnt
         setCapsLockBehavior(txtField28); //sProvName
         setCapsLockBehavior(txtField24); //sDeptName
@@ -202,11 +206,11 @@ public class ActivityFormController implements Initializable, ScreenInterface {
         setCapsLockBehavior(txtField32); //Branch
         setCapsLockBehavior(txtField12); //nTrgtClnt
 
-        setCapsLockBehavior(textArea09);
-        setCapsLockBehavior(textArea02);
-        setCapsLockBehavior(textArea03);
-        setCapsLockBehavior(textArea15);
-        setCapsLockBehavior(textArea16);
+        setCapsLockBehavior(textArea09); //sCompnynx
+        setCapsLockBehavior(textArea02); //sActTitle
+        setCapsLockBehavior(textArea03); //sActDescx
+        setCapsLockBehavior(textArea15); //sLogRemrk
+        setCapsLockBehavior(textArea16); //sRemarksx
 
         btnBrowse.setOnAction(this::cmdButton_Click);
         btnCitySearch.setOnAction(this::cmdButton_Click);
@@ -218,6 +222,7 @@ public class ActivityFormController implements Initializable, ScreenInterface {
         btnSave.setOnAction(this::cmdButton_Click);
         btnEdit.setOnAction(this::cmdButton_Click);
         btnAddSource.setOnAction(this::cmdButton_Click);
+        btnCancel.setOnAction(this::cmdButton_Click);
 
         /*Set Focus to set Value to Class*/
         txtField05.focusedProperty().addListener(txtField_Focus); //sActTypDs
@@ -229,7 +234,7 @@ public class ActivityFormController implements Initializable, ScreenInterface {
 //        txtField32.focusedProperty().addListener(txtField_Focus); //Branch
         txtField12.focusedProperty().addListener(txtField_Focus); //nTrgtClnt
 
-        textArea08.focusedProperty().addListener(txtArea_Focus);
+        //textArea08.focusedProperty().addListener(txtArea_Focus);
         textArea15.focusedProperty().addListener(txtArea_Focus);
         textArea16.focusedProperty().addListener(txtArea_Focus);
         textArea09.focusedProperty().addListener(txtArea_Focus);
@@ -247,7 +252,7 @@ public class ActivityFormController implements Initializable, ScreenInterface {
         txtField25.setOnKeyPressed(this::txtField_KeyPressed); //sCompyNm
 
         /* TextArea KeyPressed */
-        textArea08.setOnKeyPressed(this::txtArea_KeyPressed);
+        //textArea08.setOnKeyPressed(this::txtArea_KeyPressed);
         textArea15.setOnKeyPressed(this::txtArea_KeyPressed);
         textArea16.setOnKeyPressed(this::txtArea_KeyPressed);
         textArea09.setOnKeyPressed(this::txtArea_KeyPressed);
@@ -256,6 +261,8 @@ public class ActivityFormController implements Initializable, ScreenInterface {
         textSeek01.setOnKeyPressed(this::txtField_KeyPressed); //Activity No Search
         textSeek02.setOnKeyPressed(this::txtField_KeyPressed); //Activity Title Search
 
+        dateFrom06.setDayCellFactory(DateValue);
+        dateTo07.setDayCellFactory(DateValue2);
         comboBox29.setItems(cType);
         comboBox29.setOnAction(e -> {
             String selectedType = comboBox29.getValue();// Retrieve the type ID for the selected type
@@ -268,7 +275,6 @@ public class ActivityFormController implements Initializable, ScreenInterface {
 
         }
         );
-
         Pattern pattern = Pattern.compile("[\\d\\p{Punct}]*");
         TextFormatter<String> formatter = new TextFormatter<>(change -> {
             if (!change.getControlNewText().matches(pattern.pattern())) {
@@ -277,11 +283,45 @@ public class ActivityFormController implements Initializable, ScreenInterface {
             return change;
         });
 
-        txtField12.setTextFormatter(new InputTextFormatter(pattern));  //nTrgtClnt
+        Pattern trgPattern = Pattern.compile("\\p{ASCII}{0,4}");
+        TextFormatter<String> trgformatter = new TextFormatter<>(change -> {
+            if (!change.getControlNewText().matches(pattern.pattern())) {
+                return null;
+            }
+            return change;
+        });
+
+        txtField12.setTextFormatter(new InputTextFormatter(trgPattern));  //nTrgtClnt
         txtField11.setTextFormatter(new InputTextFormatter(pattern));  //nRcvdBdgt
         pnEditMode = EditMode.UNKNOWN;
         initButton(pnEditMode);
     }
+    private Callback<DatePicker, DateCell> DateValue = new Callback<DatePicker, DateCell>() {
+        @Override
+        public DateCell call(final DatePicker param) {
+            return new DateCell() {
+                @Override
+                public void updateItem(LocalDate item, boolean empty) {
+                    super.updateItem(item, empty);
+                    LocalDate minDate = strToDate(CommonUtils.xsDateShort((Date) oApp.getServerDate())).minusDays(7);
+                    setDisable(empty || item.isBefore(minDate));
+                }
+            };
+        }
+    };
+    private Callback<DatePicker, DateCell> DateValue2 = new Callback<DatePicker, DateCell>() {
+        @Override
+        public DateCell call(final DatePicker param) {
+            return new DateCell() {
+                @Override
+                public void updateItem(LocalDate item, boolean empty) {
+                    super.updateItem(item, empty);
+                    LocalDate minDate = strToDate(CommonUtils.xsDateShort((Date) oApp.getServerDate())).minusDays(6);
+                    setDisable(empty || item.isBefore(minDate));
+                }
+            };
+        }
+    };
 
     private static void setCapsLockBehavior(TextField textField) {
         textField.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -312,8 +352,7 @@ public class ActivityFormController implements Initializable, ScreenInterface {
                 case "btnAdd": //create
                     if (oTrans.NewRecord()) {
                         clearFields();
-                        loadActivityField();
-                        loadActMembersTable();
+                        loadActivityField();//                        loadActMembersTable();
                     } else {
                         ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
                     }
@@ -328,7 +367,16 @@ public class ActivityFormController implements Initializable, ScreenInterface {
                     break;
                 case "btnSave":
                     //Validate before saving
+                    LocalDate dateFrom = dateFrom06.getValue();
+                    LocalDate dateTo = dateTo07.getValue();
+
                     if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure, do you want to save?") == true) {
+//                        if (dateFrom != null && dateTo != null && dateFrom.isEqual(dateTo)) {
+//                            // Dates are the same, display validation message or take appropriate action
+//                            ShowMessageFX.Warning(getStage(), "Please don't enter same date value.", "Warning", null);
+//                            return;
+//                        }
+
                         if (textArea02.getText().trim().equals("")) {
                             ShowMessageFX.Warning(getStage(), "Please enter a value for Activity Title.", "Warning", null);
                             textArea02.requestFocus();
@@ -369,11 +417,7 @@ public class ActivityFormController implements Initializable, ScreenInterface {
 //                              txtField26.requestFocus();
 //                              return;
 //                         }
-//                        if (txtField32.getText().trim().equals("")) {
-//                              ShowMessageFX.Warning(getStage(), "Please enter a value for Telephone No.","Warning", null);
-//                              txtField32.requestFocus();
-//                              return;
-//                         }
+//
                         if (txtField12.getText().trim().equals("")) {
                             ShowMessageFX.Warning(getStage(), "Please enter a value for No. of Target Clients.", "Warning", null);
                             txtField12.requestFocus();
@@ -409,6 +453,7 @@ public class ActivityFormController implements Initializable, ScreenInterface {
                         }
                     }
                     break;
+
                 case "btnAddSource":
                     loadActTypeAddSourceDialog();
                     break;
@@ -423,6 +468,13 @@ public class ActivityFormController implements Initializable, ScreenInterface {
                     break;
                 case "btnCityRemove":
                     break;
+                case "btnCancel":
+                    if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure, do you want to cancel?") == true) {
+                        clearFields();
+                    }
+                    pnEditMode = EditMode.UNKNOWN;
+
+                    break;
                 case "btnBrowse":
                     if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
                         if (ShowMessageFX.OkayCancel(null, "Confirmation", "You have unsaved data. Are you sure you want to browse a new record?")) {
@@ -434,6 +486,7 @@ public class ActivityFormController implements Initializable, ScreenInterface {
 
                     try {
                         if (oTrans.SearchRecord(textSeek01.getText(), true)) {
+                            clearFields();
                             loadActivityField();
                             pnEditMode = oTrans.getEditMode();
                         } else {
@@ -540,7 +593,7 @@ public class ActivityFormController implements Initializable, ScreenInterface {
                         }
                         break;
                     case 26:
-                        if (oTrans.searchBranch()) {
+                        if (oTrans.searchBranch(txtField.getText())) {
                             loadActivityField();
                         } else {
                             ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
@@ -555,11 +608,13 @@ public class ActivityFormController implements Initializable, ScreenInterface {
                         }
 
                         break;
+
                 }
 
             }
         } catch (SQLException ex) {
-            Logger.getLogger(ActivityFormController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ActivityFormController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
 
     }
@@ -567,7 +622,7 @@ public class ActivityFormController implements Initializable, ScreenInterface {
         try {
             TextField txtField = (TextField) ((ReadOnlyBooleanPropertyBase) o).getBean();
             int lnIndex = Integer.parseInt(txtField.getId().substring(8, 10));
-            String lsValue = txtField.getText().toUpperCase();
+            String lsValue = txtField.getText();
 
             if (lsValue == null) {
                 return;
@@ -580,12 +635,20 @@ public class ActivityFormController implements Initializable, ScreenInterface {
                     case 24: //sDeptName
                     case 25: //sCompnyNm
                     case 26: //sBranchNm
-                    case 12: //nTrgtClnt
-                    case 11: //nRcvdBdgt
                     case 28: //sProvName
                         oTrans.setMaster(lnIndex, lsValue); // Handle Encoded Value
                         break;
+                    case 12: // nTrgtClnt
+                        int targetClients = Integer.parseInt(lsValue);
+                        oTrans.setMaster(lnIndex, targetClients);
+                        break;
+                    case 11: //nRcvdBdgt
+
+                        double receivedBudget = Double.parseDouble(lsValue);
+                        oTrans.setMaster(lnIndex, receivedBudget);
+                        break;
                 }
+
             } else {
                 txtField.selectAll();
 
@@ -847,90 +910,91 @@ public class ActivityFormController implements Initializable, ScreenInterface {
         return localDate;
     }
 
-    //Activity Member
-    private void loadActMembersTable() {
-        try {
-            // Clear the previous data in the list
-            actMembersData.clear();
-            String departmentID = "";
-
-            // Load the activity members using the appropriate parameters
-            String fsValue = departmentID; // Use the selected department's ID as fsValue
-            boolean fbLoadEmp = true; // Set the fbLoadEmp to true to load employees
-            if (oTrans.loadEmployee(fsValue, fbLoadEmp)) {
-                for (int lnCtr = 1; lnCtr <= oTrans.getActMemberCount(); lnCtr++) {
-                    actMembersData.add(new ActivityMemberTable(
-                            String.valueOf(lnCtr), // ROW
-                            "", // Replace with the appropriate value for the second column
-                            oTrans.getDepartment(lnCtr, "sDeptName").toString(),
-                            oTrans.getDepartment(lnCtr, "sDeptIDxx").toString(), // Replace with the appropriate value for the fourth column
-                            oTrans.getActMember(lnCtr, "sCompnyNm").toString(), // Fifth column (Department)
-                            oTrans.getActMember(lnCtr, "sEmployID").toString() // Replace with the appropriate value for the sixth column
-                    ));
+//    //Activity Member
+//    private void loadActMembersTable() {
+//        try {
+//            // Clear the previous data in the list
+//            actMembersData.clear();
+//            String departmentID = "";
+//
+//            // Load the activity members using the appropriate parameters
+//            String fsValue = departmentID; // Use the selected department's ID as fsValue
+//            boolean fbLoadEmp = true; // Set the fbLoadEmp to true to load employees
+//            if (oTrans.loadEmployee(fsValue, fbLoadEmp)) {
+//                for (int lnCtr = 1; lnCtr <= oTrans.getActMemberCount(); lnCtr++) {
+//                    actMembersData.add(new ActivityMemberTable(
+//                            String.valueOf(lnCtr), // ROW
+//                            "", // Replace with the appropriate value for the second column
+//                            oTrans.getDepartment(lnCtr, "sDeptName").toString(),
+//                            oTrans.getDepartment(lnCtr, "sDeptIDxx").toString(), // Replace with the appropriate value for the fourth column
+//                            oTrans.getActMember(lnCtr, "sCompnyNm").toString(), // Fifth column (Department)
+//                            oTrans.getActMember(lnCtr, "sEmployID").toString() // Replace with the appropriate value for the sixth column
+//                    ));
+//                }
+//
+//                // Set the actMembersData list as the items for tblViewActivityMembers TableView
+//                tblViewActivityMembers.setItems(actMembersData);
+//
+//                // Call the initActMembersTable() method to initialize the TableView columns if needed
+//                initActMembersTable();
+//            }
+//        } catch (SQLException e) {
+//            ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
+//        }
+//    }
+    private Callback<DatePicker, DateCell> callApprove = new Callback<DatePicker, DateCell>() {
+        @Override
+        public DateCell call(final DatePicker param) {
+            return new DateCell() {
+                @Override
+                public void updateItem(LocalDate item, boolean empty) {
+                    super.updateItem(item, empty); //To change body of generated methods, choose Tools | Templates.
+                    LocalDate today = LocalDate.now();
+                    LocalDate minDate = LocalDate.now().minusDays(7);
+                    setDisable(empty || item.isBefore(minDate) || item.compareTo(today) > 0);
                 }
-
-                // Set the actMembersData list as the items for tblViewActivityMembers TableView
-                tblViewActivityMembers.setItems(actMembersData);
-
-                // Call the initActMembersTable() method to initialize the TableView columns if needed
-                initActMembersTable();
-            }
-        } catch (SQLException e) {
-            ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
+            };
         }
-    }
+    };
 
     private void loadActivityField() {
         try {
-            txtField01.setText((String) oTrans.getMaster(1)); //sActvtyID
-            dateFrom06.setValue(strToDate(CommonUtils.xsDateShort((Date) oTrans.getMaster(6)))); //dDateFrom
-            dateTo07.setValue(strToDate(CommonUtils.xsDateShort((Date) oTrans.getMaster(7)))); //dDateThru
+            LocalDate currentDate = strToDate(CommonUtils.xsDateShort((Date) oTrans.getMaster(06)));
+            LocalDate sevenDaysAgo = currentDate.minusDays(7);
+            LocalDate dateFrom = dateFrom06.getValue();
+            txtField01.setText((String) oTrans.getMaster(1)); // sActvtyID
+
+            if (dateFrom.isEqual(sevenDaysAgo)) {
+                dateFrom06.setValue(sevenDaysAgo);
+            } else {
+                dateFrom06.setValue(strToDate(CommonUtils.xsDateShort((Date) oTrans.getMaster(06))));
+            }
+            dateTo07.setValue(strToDate(CommonUtils.xsDateShort((Date) oTrans.getMaster(07))));
             String selectedItem = oTrans.getMaster(29).toString();
             if (selectedItem.equals("sal")) {
                 selectedItem = "SALES CALL";
-            }
-            if (selectedItem.equals("eve")) {
+            } else if (selectedItem.equals("eve")) {
                 selectedItem = "EVENT";
-            }
-            if (selectedItem.equals("pro")) {
+            } else if (selectedItem.equals("pro")) {
                 selectedItem = "PROMO";
-            }// Assuming oTrans.getMaster(29) returns the selected item as a string
+            }
             comboBox29.getSelectionModel().select(selectedItem);
-            txtField05.setText((String) oTrans.getMaster(5)); //sActSrcex
-            textArea02.setText((String) oTrans.getMaster(2)); //sActTitle
-            textArea03.setText((String) oTrans.getMaster(3)); //sActDescx
-            textArea15.setText((String) oTrans.getMaster(15)); //sLogRemrk
-            textArea16.setText((String) oTrans.getMaster(16)); //sRemarksx
-            txtField24.setText((String) oTrans.getMaster(24));//sDeptName
-            txtField25.setText((String) oTrans.getMaster(25)); //sCompnyNm
-            txtField26.setText((String) oTrans.getMaster(26)); //sBranchNm
-//               txtField32.setText((String) oTrans.getMaster(32)); //Branch
-            txtField12.setText(String.valueOf((int) oTrans.getMaster(12))); //nTrgtClnt
-            txtField11.setText(String.valueOf((double) oTrans.getMaster(11)));  //nRcvdBdg
-            txtField28.setText((String) oTrans.getMaster(28)); //sProvName
-//               textArea08.setText((String) oTrans.getMaster(8)); //Street
-            textArea09.setText((String) oTrans.getMaster(9));  //sCompnynx
-
+            txtField05.setText((String) oTrans.getMaster(5)); // sActSrcex
+            textArea02.setText((String) oTrans.getMaster(2)); // sActTitle
+            textArea03.setText((String) oTrans.getMaster(3)); // sActDescx
+            textArea15.setText((String) oTrans.getMaster(15)); // sLogRemrk
+            textArea16.setText((String) oTrans.getMaster(16)); // sRemarksx
+            txtField24.setText((String) oTrans.getMaster(24)); // sDeptName
+            txtField25.setText((String) oTrans.getMaster(25)); // sCompnyNm
+            txtField26.setText((String) oTrans.getMaster(26)); // sBranchNm
+            txtField12.setText(String.valueOf(oTrans.getMaster(12))); // nTrgtClnt
+            txtField11.setText(String.valueOf(oTrans.getMaster(11))); // nRcvdBdgt
+            txtField28.setText((String) oTrans.getMaster(28)); // sProvName
+            textArea09.setText((String) oTrans.getMaster(9)); // sCompnynx
         } catch (SQLException e) {
             ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
         }
     }
-//    public void loadActivityMembers(){
-//          try {
-//               /*Populate table*/
-//               actmembersData.clear();
-//               for (int lnCtr = 1; lnCtr <= oTrans.getActMemberCount(); lnCtr++){
-//                    actmembersData.add(new ActivityMembersTableList(
-//                    String.valueOf(lnCtr),
-//                    oTrans.getActMember(lnCtr,"sTransNox").toString(), //Priority Unit
-//                    oTrans.getActMember(lnCtr,"sCompnyNm").toString(),
-//                    oTrans.getActMember(lnCtr,"sDeptName").toString() // Vehicle Description
-//                    ));
-//               }
-//          } catch (SQLException e) {
-//               ShowMessageFX.Warning(getStage(),e.getMessage(), "Warning", null);
-//          }
-//     }
 
     private void initButton(int fnValue) {
         pnRow = 0;
@@ -941,7 +1005,6 @@ public class ActivityFormController implements Initializable, ScreenInterface {
         boolean lbShow = (fnValue == EditMode.ADDNEW || fnValue == EditMode.UPDATE);
 
         //Fields
-        txtField01.setText(""); //sActvtyID
         dateFrom06.setDisable(!lbShow); //dDateFrom
         dateTo07.setDisable(!lbShow); //dDateThru
         comboBox29.setDisable(!lbShow); //sEventTyp
@@ -957,7 +1020,7 @@ public class ActivityFormController implements Initializable, ScreenInterface {
         txtField12.setDisable(!lbShow); //nTrgtClnt
         txtField11.setDisable(!lbShow);  //nRcvdBdg
         txtField28.setDisable(!lbShow); //sProvName
-        textArea08.setDisable(!lbShow); //Street
+        //textArea08.setDisable(!lbShow); //Street
         textArea09.setDisable(!lbShow);  //sCompnynx
 
         //Button
@@ -978,6 +1041,8 @@ public class ActivityFormController implements Initializable, ScreenInterface {
         btnActivityHistory.setManaged(false);
         btnPrint.setVisible(false);
         btnPrint.setManaged(false);
+        btnCancel.setVisible(lbShow);
+        btnCancel.setManaged(lbShow);
 
         if (fnValue == EditMode.READY) { //show edit if user clicked save / browse
             btnEdit.setVisible(true);
@@ -993,9 +1058,12 @@ public class ActivityFormController implements Initializable, ScreenInterface {
     public void clearFields() {
         pnRow = 0;
         txtField01.setText(""); //sActvtyID
-        dateFrom06.setValue(null); //dDateFrom
-        dateTo07.setValue(null); //dDateThru
-        comboBox29.setValue(null); //sEventTyp
+        LocalDate currentDate = LocalDate.now();
+        LocalDate sevenDaysAgo = currentDate.minusDays(7);
+        dateFrom06.setValue(sevenDaysAgo);
+        //dDateFrom
+        dateTo07.setValue(currentDate);//dDateThru
+        comboBox29.setValue("Choose Type"); //sEventTyp
         txtField05.clear(); //sActTypDs
         textArea02.clear(); //sActTitle
         textArea03.clear(); //sActDescx
@@ -1004,11 +1072,11 @@ public class ActivityFormController implements Initializable, ScreenInterface {
         txtField24.clear();//sDeptName
         txtField25.clear(); //sCompnyNm
         txtField26.clear(); //sBranchNm
-//        txtField32.clear(); //Branch
+        txtField32.clear(); //Branch
         txtField12.clear(); //nTrgtClnt
         txtField11.clear();  //nRcvdBdg
         txtField28.clear(); //sProvName
-        textArea08.clear(); //Street
+        //textArea08.clear(); //Street
         textArea09.clear();  //sCompnynx
     }
 

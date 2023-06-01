@@ -489,6 +489,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                @Override
                public void changed(ObservableValue<? extends Tab> observable, Tab oldTab, Tab newTab) {
                    pnRow = 0;
+                   clearContactInfo();
                }  
           });
           
@@ -1326,7 +1327,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                             oTransEmail.setEmail(tbl_row,5, 1);
                          } else
                             oTransEmail.setEmail(tbl_row,5, 0);  
-                         if (radiobtn05EmaY.isSelected()){
+                         if (radiobtn06EmaY.isSelected()){
                             oTransEmail.setEmail(tbl_row,6, 1);
                          } else
                             oTransEmail.setEmail(tbl_row,6, 0);

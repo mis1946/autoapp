@@ -14,15 +14,15 @@ import javafx.scene.control.CheckBox;
 public class TownEntryTableList {
 
     private SimpleStringProperty tblRow;
-    private SimpleStringProperty tblindex01; //sTransNox
     private CheckBox select;
-    private SimpleStringProperty tblCity; //sTransNox
+    private SimpleStringProperty tblindex01; //sTownIDxx
+    private SimpleStringProperty tblCity; //
 
     public TownEntryTableList(String tblRow, String tblindex01, String tblCity) {
         this.tblRow = new SimpleStringProperty(tblRow);
         this.select = new CheckBox();
         this.tblindex01 = new SimpleStringProperty(tblindex01);
-
+        this.tblCity = new SimpleStringProperty(tblCity);
     }
 
     public String getTblRow() {
@@ -33,20 +33,20 @@ public class TownEntryTableList {
         this.tblRow.set(tblRow);
     }
 
-    public String getTblindex01() {
-        return tblindex01.get();
-    }
-
-    public void setTblindex01(String tblindex01) {
-        this.tblindex01.set(tblindex01);
-    }
-
     public CheckBox getSelect() {
         return select;
     }
 
     public void setSelect(CheckBox select) {
         this.select = select;
+    }
+
+    public String getTblindex01() {
+        return tblindex01.get();
+    }
+
+    public void setTblindex01(String tblindex01) {
+        this.tblindex01.set(tblindex01);
     }
 
     public String getTblCity() {

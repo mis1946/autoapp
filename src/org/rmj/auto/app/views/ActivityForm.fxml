@@ -26,7 +26,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" fx:id="AnchorMain" prefHeight="669.0" prefWidth="1322.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.rmj.auto.app.views.ActivityFormController">
+<AnchorPane id="AnchorPane" fx:id="AnchorMain" prefHeight="669.0" prefWidth="1322.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" >
     <children>
         <StackPane prefHeight="651.0" prefWidth="917.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
@@ -214,7 +214,7 @@
                                                                                         <Insets left="5.0" />
                                                                                     </GridPane.margin>
                                                                                 </Label>
-                                                                                <ComboBox fx:id="comboBox29" prefWidth="150.0" promptText="Choose Type" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="2" />
+                                                                                <ComboBox fx:id="comboBox29" prefWidth="150.0" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="2" />
                                                                                 <TextField fx:id="txtField05" promptText="Search: F3" GridPane.columnIndex="5" GridPane.columnSpan="3" GridPane.rowIndex="2" />
                                                                                 <Button fx:id="btnAddSource" alignment="TOP_LEFT" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="22.0" prefWidth="26.0" GridPane.columnIndex="8" GridPane.rowIndex="2">
                                                                                     <graphic>
@@ -319,29 +319,6 @@
                                                                                         <Insets />
                                                                                     </GridPane.margin>
                                                                                 </TextField>
-                                                                                <TextArea fx:id="textArea08" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="1" GridPane.rowSpan="2" />
-                                                                                <Label id="LabelDesc" prefHeight="49.0" prefWidth="113.0" text="Establishment" GridPane.rowIndex="3" />
-                                                                                <TextArea fx:id="textArea09" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="3" GridPane.rowSpan="3">
-                                                                                    <GridPane.margin>
-                                                                                        <Insets />
-                                                                                    </GridPane.margin>
-                                                                                </TextArea>
-                                                                                <VBox prefHeight="200.0" prefWidth="100.0" spacing="3.0" GridPane.columnIndex="6" GridPane.rowIndex="3" GridPane.rowSpan="2">
-                                                                                    <GridPane.margin>
-                                                                                        <Insets left="5.0" top="2.0" />
-                                                                                    </GridPane.margin>
-                                                                                </VBox>
-                                                                                <TableView fx:id="tblViewCity" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="6" GridPane.columnSpan="4" GridPane.rowIndex="1" GridPane.rowSpan="5">
-                                                                                    <columns>
-                                                                                        <TableColumn prefWidth="41.0" text="Row" />
-                                                                                        <TableColumn prefWidth="34.5">
-                                                                                            <graphic>
-                                                                                                <CheckBox mnemonicParsing="false" prefHeight="22.0" prefWidth="23.0" textAlignment="CENTER" />
-                                                                                            </graphic>
-                                                                                        </TableColumn>
-                                                                                        <TableColumn prefWidth="274.5" text="Town/City" />
-                                                                                    </columns>
-                                                                                </TableView>
                                                                                 <HBox prefHeight="30.0" prefWidth="158.0" spacing="2.0" GridPane.columnIndex="8">
                                                                                     <children>
                                                                                         <Button fx:id="btnCitySearch" alignment="TOP_LEFT" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="22.0" prefWidth="80.0" text="Search">
@@ -368,6 +345,29 @@
                                                                                         </Button>
                                                                                     </children>
                                                                                 </HBox>
+                                                                                <TextArea fx:id="textArea08" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="1" GridPane.rowSpan="2" />
+                                                                                <Label id="LabelDesc" prefHeight="49.0" prefWidth="113.0" text="Establishment" GridPane.rowIndex="3" />
+                                                                                <TextArea fx:id="textArea09" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="3" GridPane.rowSpan="3">
+                                                                                    <GridPane.margin>
+                                                                                        <Insets />
+                                                                                    </GridPane.margin>
+                                                                                </TextArea>
+                                                                                <VBox prefHeight="200.0" prefWidth="100.0" spacing="3.0" GridPane.columnIndex="6" GridPane.rowIndex="3" GridPane.rowSpan="2">
+                                                                                    <GridPane.margin>
+                                                                                        <Insets left="5.0" top="2.0" />
+                                                                                    </GridPane.margin>
+                                                                                </VBox>
+                                                                                <TableView fx:id="tblViewCity" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="6" GridPane.columnSpan="4" GridPane.rowIndex="1" GridPane.rowSpan="5">
+                                                                                    <columns>
+                                                                                        <TableColumn fx:id="tblRowCity" prefWidth="41.0" text="Row" />
+                                                                                        <TableColumn fx:id="tblselectCity" prefWidth="34.5">
+                                                                                            <graphic>
+                                                                                                <CheckBox fx:id="selectAllCity" mnemonicParsing="false" prefHeight="22.0" prefWidth="23.0" textAlignment="CENTER" />
+                                                                                            </graphic>
+                                                                                        </TableColumn>
+                                                                                        <TableColumn fx:id="tblTownCity" prefWidth="274.5" text="Town/City" />
+                                                                                    </columns>
+                                                                                </TableView>
                                                                                 <Label text="Municipality" GridPane.columnIndex="6">
                                                                                     <font>
                                                                                         <Font name="System Bold" size="12.0" />

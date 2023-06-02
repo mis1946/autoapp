@@ -543,7 +543,7 @@ public class ActivityFormController implements Initializable, ScreenInterface {
                             lnCtr++;
                         }
                     }
-                    int[] fsValue = new int[lnCtr];
+                    Integer[] fsValue = new Integer[lnCtr];
                     for (TownEntryTableList item : tblViewCity.getItems()) {
                         if (item.getSelect().isSelected()) {
                             fsValue[lnRow] = Integer.parseInt(item.getTblRow());
@@ -552,8 +552,9 @@ public class ActivityFormController implements Initializable, ScreenInterface {
 
                     }
                     oTrans.removeTown(fsValue);
-                    // tblViewCity.getItems().removeAll(removeselectedItems);
-                    //tblViewCity.refresh();
+//                    tblViewCity.getItems().removeAll(removeselectedItems);
+                    loadTownTable();
+                    tblViewCity.refresh();
 
                     break;
                 case "btnCancel":
@@ -716,14 +717,17 @@ public class ActivityFormController implements Initializable, ScreenInterface {
                                 btnCitySearch.setDisable(false);
                                 btnCityRemove.setDisable(false);
                                 tblViewCity.setDisable(false);
-                                loadActivityField();
+
                                 int lnCtr = 1;
-                                while (oTrans.getActTownCount() > 0) {
+                                int lnRow = 0;
+                                Integer[] fsValue = new Integer[oTrans.getActTownCount()];
+                                while (lnCtr <= oTrans.getActTownCount()) {
+                                    fsValue[lnRow] = lnCtr;
+                                    lnRow++;
                                     lnCtr++;
                                 }
-                                int[] fsValue = new int[lnCtr];
                                 oTrans.removeTown(fsValue);
-
+                                loadActivityField();
                                 loadTownTable();
 
                                 //                                townCitydata.clear();
@@ -1057,27 +1061,28 @@ public class ActivityFormController implements Initializable, ScreenInterface {
         try {
             /*Populate table*/
             townCitydata.clear();
-            Set<String> cityNames = new HashSet<>();
+//            Set<String> cityNames = new HashSet<>();
 
             for (int lnCtr = 1; lnCtr <= oTrans.getActTownCount(); lnCtr++) {
                 String townID = oTrans.getActTown(lnCtr, "sTownIDxx").toString();
                 String townName = oTrans.getActTown(lnCtr, "sTownName").toString();
 
-                if (cityNames.contains(townName)) {
-                    continue; // Skip duplicate city names
-                }
-
+//
+//                if (cityNames.contains(townName)) {
+//                    continue; // Skip duplicate city names
+//                }
+//
                 townCitydata.add(new TownEntryTableList(
                         String.valueOf(lnCtr), //ROW
                         townID,
                         townName
                 ));
-
-                cityNames.add(townName);
+//
+//                cityNames.add(townName);
+//            }
             }
 
             tblViewCity.setItems(townCitydata);
-            tblViewCity.refresh();
             initTownTable();
         } catch (SQLException e) {
             ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);

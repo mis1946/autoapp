@@ -4,15 +4,11 @@
  */
 package org.rmj.auto.app.views;
 
-import com.sun.javafx.scene.control.skin.TableHeaderRow;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
-import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -25,9 +21,7 @@ import javafx.stage.Stage;
 import org.rmj.appdriver.GRider;
 import org.rmj.appdriver.agentfx.CommonUtils;
 import org.rmj.appdriver.agentfx.ShowMessageFX;
-import org.rmj.auto.app.bank.BankEntryTableList;
 import org.rmj.auto.clients.base.Activity;
-import org.rmj.auto.sales.base.InquiryFollowUp;
 
 /**
  * FXML Controller class
@@ -36,7 +30,8 @@ import org.rmj.auto.sales.base.InquiryFollowUp;
  */
 public class TownCityMainEntryDialogController implements Initializable, ScreenInterface {
 
-    private Activity oTransTown;
+    private String sProvID;
+    private Activity oTrans;
     @FXML
     private Button btnClose;
     @FXML
@@ -54,7 +49,7 @@ public class TownCityMainEntryDialogController implements Initializable, ScreenI
     @FXML
     private TableColumn<TownEntryTableList, String> tblTown;
     @FXML
-    private TableView tblViewTown;
+    private TableView<TownEntryTableList> tblViewTown;
 
     /**
      * Initializes the controller class.
@@ -68,12 +63,16 @@ public class TownCityMainEntryDialogController implements Initializable, ScreenI
     }
 
     public void setObject(Activity foValue) {
-        oTransTown = foValue;
+        oTrans = foValue;
     }
 
     @Override
     public void setGRider(GRider foValue) {
         oApp = foValue;
+    }
+
+    public void setProv(String fsValue) {
+        sProvID = fsValue;
     }
 
     private void cmdButton_Click(ActionEvent event) {
@@ -83,20 +82,55 @@ public class TownCityMainEntryDialogController implements Initializable, ScreenI
             case "btnClose":
                 CommonUtils.closeStage(btnClose);
                 break;
+            case "btnAddTown":
+                ObservableList<TownEntryTableList> selectedItems = FXCollections.observableArrayList();
+                for (TownEntryTableList item : tblViewTown.getItems()) {
+                    if (item.getSelect().isSelected()) {
+                        selectedItems.add(item);
+                    }
+                }
+                if (selectedItems.isEmpty()) {
+                    ShowMessageFX.Information(null, pxeModuleName, "No items selected to add.");
+                } else {
+                    int i = 0;
+                    if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure you want to add?")) {
+                        // Call the addTown here
+                        for (TownEntryTableList item : selectedItems) {
+                            String fsTownId = item.getTblindex01();
+                            String fsTownName = item.getTblCity();// Assuming there is a method to retrieve the transaction number
+                            try {
+                                boolean add = oTrans.addActTown(fsTownId, fsTownName);
+                                if (add) {
+                                    i = i + 1;
+                                } else {
+                                    // Handle approval failure
+                                    ShowMessageFX.Error(null, pxeModuleName, "Failed to add town.");
+                                }
+                            } catch (SQLException e) {
+                                // Handle SQL exception
+                                ShowMessageFX.Error(null, pxeModuleName, "An error occurred while adding town: " + e.getMessage());
+                            }
+                        }
+                        ShowMessageFX.Information(null, pxeModuleName, "Added town successfully.");
+                        CommonUtils.closeStage(btnAddTown);
+                    }
+
+                }
         }
     }
 
-    //storing values on bankentrydata
+//storing values on bankentrydata
     private void loadTownTable() {
         try {
             /*Populate table*/
             townCitydata.clear();
-            if (oTransTown.loadTown("", true)) {
-                for (int lnCtr = 1; lnCtr <= oTransTown.getTownCount(); lnCtr++) {
-                    System.out.println(oTransTown.getTown(lnCtr, "sTownName").toString());
+            if (oTrans.loadTown(sProvID, true)) {
+                for (int lnCtr = 1; lnCtr <= oTrans.getTownCount(); lnCtr++) {
+                    System.out.println(oTrans.getTown(lnCtr, "sTownName").toString());
                     townCitydata.add(new TownEntryTableList(
                             String.valueOf(lnCtr), //ROW
-                            oTransTown.getTown(lnCtr, "sTownName").toString()
+                            oTrans.getTown(lnCtr, "sTownIDxx").toString(),
+                            oTrans.getTown(lnCtr, "sTownName").toString()
                     ));
                 }
                 tblViewTown.setItems(townCitydata);
@@ -114,7 +148,7 @@ public class TownCityMainEntryDialogController implements Initializable, ScreenI
     private void initTownTable() {
         tblRow.setCellValueFactory(new PropertyValueFactory<>("tblRow"));  //Row
         tblSelect.setCellValueFactory(new PropertyValueFactory<>("select"));
-        tblTown.setCellValueFactory(new PropertyValueFactory<>("tblTown")); // sBankName
+        tblTown.setCellValueFactory(new PropertyValueFactory<>("tblCity"));
 
     }
 }

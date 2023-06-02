@@ -10,13 +10,18 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import javafx.beans.property.ReadOnlyBooleanPropertyBase;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -51,6 +56,7 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.StageStyle;
 import javafx.util.Callback;
 import org.rmj.appdriver.GRider;
+import org.rmj.appdriver.SQLUtil;
 import org.rmj.appdriver.agentfx.CommonUtils;
 import org.rmj.appdriver.agentfx.ShowMessageFX;
 import org.rmj.appdriver.callback.MasterCallback;
@@ -68,6 +74,7 @@ public class ActivityFormController implements Initializable, ScreenInterface {
     private Activity oTrans;
     private MasterCallback oListener;
     private ObservableList<ActivityMemberTable> actMembersData = FXCollections.observableArrayList();
+    private ObservableList<TownEntryTableList> townCitydata = FXCollections.observableArrayList();
     unloadForm unload = new unloadForm(); //Used in Close Button
     private final String pxeModuleName = "Activity"; //Form Title
     private int pnEditMode;//Modifying fields
@@ -93,11 +100,11 @@ public class ActivityFormController implements Initializable, ScreenInterface {
     @FXML
     private Button btnClose;
     @FXML
-    private TableView<?> tblViewTasks;
+    private TableView tblViewTasks;
     @FXML
-    private TableView<?> tblViewBudget;
+    private TableView tblViewBudget;
     @FXML
-    private TableView<?> tblViewCity;
+    private TableView<TownEntryTableList> tblViewCity;
     @FXML
     private Button btnRemoveTasks;
     @FXML
@@ -120,7 +127,7 @@ public class ActivityFormController implements Initializable, ScreenInterface {
     @FXML
     private Button btnVhlModelRemove;
     @FXML
-    private TableView<?> tblViewVhclModels;
+    private TableView tblViewVhclModels;
     @FXML
     private TableColumn<ActivityMemberTable, String> tblActvtyMembersRow;
     @FXML
@@ -181,6 +188,14 @@ public class ActivityFormController implements Initializable, ScreenInterface {
     private TextField txtField01; //sActvtyID
     @FXML
     private Button btnCancel;
+    @FXML
+    private TableColumn<TownEntryTableList, String> tblRowCity;
+    @FXML
+    private TableColumn<TownEntryTableList, Boolean> tblselectCity;
+    @FXML
+    private TableColumn<TownEntryTableList, String> tblTownCity;
+    @FXML
+    private CheckBox selectAllCity;
 
     /**
      * Initializes the controller class.
@@ -213,8 +228,9 @@ public class ActivityFormController implements Initializable, ScreenInterface {
         setCapsLockBehavior(textArea16); //sRemarksx
 
         btnBrowse.setOnAction(this::cmdButton_Click);
-        btnCitySearch.setOnAction(this::cmdButton_Click);
         btnCityRemove.setOnAction(this::cmdButton_Click);
+        btnCitySearch.setOnAction(this::cmdButton_Click);
+
         btnActivityMembersSearch.setOnAction(this::cmdButton_Click);
         btnVhclModelsSearch.setOnAction(this::cmdButton_Click);
         btnClose.setOnAction(this::cmdButton_Click);
@@ -260,9 +276,37 @@ public class ActivityFormController implements Initializable, ScreenInterface {
         textArea02.setOnKeyPressed(this::txtArea_KeyPressed);
         textSeek01.setOnKeyPressed(this::txtField_KeyPressed); //Activity No Search
         textSeek02.setOnKeyPressed(this::txtField_KeyPressed); //Activity Title Search
+        initTownTable();
+        tblViewCity.getItems().addListener((ListChangeListener.Change<? extends TownEntryTableList> change)
+                -> {
+            if (tblViewCity.getItems().isEmpty() || tblViewCity.getItems().size() >= 2) {
+                // Disable the textArea when there are 0 items or 2 or more items in tblViewCity
+                textArea08.setDisable(true);
+            } else {
 
-        dateFrom06.setDayCellFactory(DateValue);
-        dateTo07.setDayCellFactory(DateValue2);
+                textArea08.setDisable(false);
+            }
+        }
+        );
+
+        txtField28.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.isEmpty()) {
+                btnCitySearch.setDisable(true);
+                btnCityRemove.setDisable(true);
+                tblViewCity.setDisable(false);
+            }
+        });
+        dateFrom06.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                dateTo07.setDayCellFactory(DateTo);
+                dateTo07.setValue(newValue.plusDays(1));
+
+            }
+        });
+
+        dateFrom06.setOnAction(this::getDateFrom);
+        dateTo07.setOnAction(this::getDateTo);
+        dateFrom06.setDayCellFactory(DateFrom);
         comboBox29.setItems(cType);
         comboBox29.setOnAction(e -> {
             String selectedType = comboBox29.getValue();// Retrieve the type ID for the selected type
@@ -296,32 +340,46 @@ public class ActivityFormController implements Initializable, ScreenInterface {
         pnEditMode = EditMode.UNKNOWN;
         initButton(pnEditMode);
     }
-    private Callback<DatePicker, DateCell> DateValue = new Callback<DatePicker, DateCell>() {
+    private Callback<DatePicker, DateCell> DateFrom = (final DatePicker param) -> new DateCell() {
         @Override
-        public DateCell call(final DatePicker param) {
-            return new DateCell() {
-                @Override
-                public void updateItem(LocalDate item, boolean empty) {
-                    super.updateItem(item, empty);
-                    LocalDate minDate = strToDate(CommonUtils.xsDateShort((Date) oApp.getServerDate())).minusDays(7);
-                    setDisable(empty || item.isBefore(minDate));
-                }
-            };
+        public void updateItem(LocalDate item, boolean empty) {
+            super.updateItem(item, empty);
+            LocalDate minDate = strToDate(CommonUtils.xsDateShort((Date) oApp.getServerDate())).minusDays(7);
+            setDisable(empty || item.isBefore(minDate));
         }
     };
-    private Callback<DatePicker, DateCell> DateValue2 = new Callback<DatePicker, DateCell>() {
+    /**
+     * Callback for customizing the behavior and appearance of the date cells in
+     * the 'DateTo' DatePicker. The callback disables dates before the selected
+     * 'dateFrom' value.
+     */
+    private Callback<DatePicker, DateCell> DateTo = (final DatePicker param) -> new DateCell() {
         @Override
-        public DateCell call(final DatePicker param) {
-            return new DateCell() {
-                @Override
-                public void updateItem(LocalDate item, boolean empty) {
-                    super.updateItem(item, empty);
-                    LocalDate minDate = strToDate(CommonUtils.xsDateShort((Date) oApp.getServerDate())).minusDays(6);
-                    setDisable(empty || item.isBefore(minDate));
-                }
-            };
+        public void updateItem(LocalDate item, boolean empty) {
+            super.updateItem(item, empty);
+            LocalDate minDate = dateFrom06.getValue();
+            setDisable(empty || item.isBefore(minDate));
         }
     };
+
+    /*Set Date Value to Master Class*/
+    public void getDateFrom(ActionEvent event) {
+        try {
+            System.out.println(dateFrom06.getValue().toString());
+            oTrans.setMaster(6, SQLUtil.toDate(dateFrom06.getValue().toString(), SQLUtil.FORMAT_SHORT_DATE));
+        } catch (SQLException ex) {
+            Logger.getLogger(CustomerFormController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void getDateTo(ActionEvent event) {
+        try {
+            System.out.println(dateTo07.getValue().toString());
+            oTrans.setMaster(7, SQLUtil.toDate(dateTo07.getValue().toString(), SQLUtil.FORMAT_SHORT_DATE));
+        } catch (SQLException ex) {
+            Logger.getLogger(CustomerFormController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
     private static void setCapsLockBehavior(TextField textField) {
         textField.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -350,13 +408,15 @@ public class ActivityFormController implements Initializable, ScreenInterface {
             String lsButton = ((Button) event.getSource()).getId();
             switch (lsButton) {
                 case "btnAdd": //create
+
                     if (oTrans.NewRecord()) {
+                        loadActivityField();
                         clearFields();
-                        loadActivityField();//                        loadActMembersTable();
+                        townCitydata.clear();
+                        pnEditMode = oTrans.getEditMode();
                     } else {
                         ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
                     }
-                    pnEditMode = oTrans.getEditMode();
                     break;
                 case "btnEdit":
                     if (oTrans.UpdateRecord()) {
@@ -366,32 +426,35 @@ public class ActivityFormController implements Initializable, ScreenInterface {
                     }
                     break;
                 case "btnSave":
-                    //Validate before saving
                     LocalDate dateFrom = dateFrom06.getValue();
                     LocalDate dateTo = dateTo07.getValue();
 
                     if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure, do you want to save?") == true) {
-//                        if (dateFrom != null && dateTo != null && dateFrom.isEqual(dateTo)) {
-//                            // Dates are the same, display validation message or take appropriate action
-//                            ShowMessageFX.Warning(getStage(), "Please don't enter same date value.", "Warning", null);
-//                            return;
-//                        }
+                        if (dateFrom != null && dateTo != null && dateTo.isBefore(dateFrom)) {
+                            ShowMessageFX.Warning(getStage(), "Please enter a valid date.", "Warning", null);
+                            return;
+                        }
+                        if (dateFrom != null && dateTo != null && dateFrom.isAfter(dateTo)) {
+                            ShowMessageFX.Warning(getStage(), "Please enter a valid date.", "Warning", null);
+                            return;
+                        }
 
                         if (textArea02.getText().trim().equals("")) {
                             ShowMessageFX.Warning(getStage(), "Please enter a value for Activity Title.", "Warning", null);
                             textArea02.requestFocus();
                             return;
                         }
-//                        if (txtField05.getText().trim().equals("")) {
-//                              ShowMessageFX.Warning(getStage(), "Please enter a value for Activity Description.","Warning", null);
-//                              txtField05.requestFocus();
-//                              return;
-//                         }
                         if (textArea03.getText().trim().equals("")) {
-                            ShowMessageFX.Warning(getStage(), "Please enter a valid value for Activity Description", "Warning", null);
+                            ShowMessageFX.Warning(getStage(), "Please enter a value for Activity Description", "Warning", null);
                             textArea03.requestFocus();
                             return;
                         }
+                        if (txtField05.getText().trim().equals("")) {
+                            ShowMessageFX.Warning(getStage(), "Please enter a value for Event Source", "Warning", null);
+                            txtField05.requestFocus();
+                            return;
+                        }
+
                         if (textArea15.getText().trim().equals("")) {
                             ShowMessageFX.Warning(getStage(), "Please enter a value for Logistic Remarks .", "Warning", null);
                             textArea15.requestFocus();
@@ -403,7 +466,7 @@ public class ActivityFormController implements Initializable, ScreenInterface {
                             return;
                         }
                         if (txtField24.getText().trim().equals("")) {
-                            ShowMessageFX.Warning(getStage(), "Please enter a valid value for Department in charge.", "Warning", null);
+                            ShowMessageFX.Warning(getStage(), "Please enter a value for Department in charge.", "Warning", null);
                             txtField24.requestFocus();
                             return;
                         }
@@ -412,12 +475,12 @@ public class ActivityFormController implements Initializable, ScreenInterface {
                             txtField25.requestFocus();
                             return;
                         }
-//                        if (txtField26.getText().trim().equals("")) {
-//                              ShowMessageFX.Warning(getStage(), "Please enter a value for Branch in charge","Warning", null);
-//                              txtField26.requestFocus();
-//                              return;
-//                         }
-//
+                        if (txtField26.getText().trim().equals("")) {
+                            ShowMessageFX.Warning(getStage(), "Please enter a value for Branch in charge", "Warning", null);
+                            txtField26.requestFocus();
+                            return;
+                        }
+
                         if (txtField12.getText().trim().equals("")) {
                             ShowMessageFX.Warning(getStage(), "Please enter a value for No. of Target Clients.", "Warning", null);
                             txtField12.requestFocus();
@@ -444,13 +507,16 @@ public class ActivityFormController implements Initializable, ScreenInterface {
                             return;
                         }
                         //Proceed Saving
+
                         if (oTrans.SaveRecord()) {
                             ShowMessageFX.Information(getStage(), "Transaction save successfully.", pxeModuleName, null);
+                            loadTownTable();
                             loadActivityField();
-                            pnEditMode = oTrans.getEditMode();
+                            pnEditMode = EditMode.READY;
                         } else {
                             ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", "Error while saving Activity Information");
                         }
+
                     }
                     break;
 
@@ -467,6 +533,28 @@ public class ActivityFormController implements Initializable, ScreenInterface {
                     loadTownDialog();
                     break;
                 case "btnCityRemove":
+
+                    int lnCtr = 0;
+                    int lnRow = 0;
+                    ObservableList<TownEntryTableList> removeselectedItems = FXCollections.observableArrayList();
+
+                    for (TownEntryTableList item : tblViewCity.getItems()) {
+                        if (item.getSelect().isSelected()) {
+                            lnCtr++;
+                        }
+                    }
+                    int[] fsValue = new int[lnCtr];
+                    for (TownEntryTableList item : tblViewCity.getItems()) {
+                        if (item.getSelect().isSelected()) {
+                            fsValue[lnRow] = Integer.parseInt(item.getTblRow());
+                            lnRow++;
+                        }
+
+                    }
+                    oTrans.removeTown(fsValue);
+                    // tblViewCity.getItems().removeAll(removeselectedItems);
+                    //tblViewCity.refresh();
+
                     break;
                 case "btnCancel":
                     if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure, do you want to cancel?") == true) {
@@ -485,12 +573,13 @@ public class ActivityFormController implements Initializable, ScreenInterface {
                     }
 
                     try {
-                        if (oTrans.SearchRecord(textSeek01.getText(), true)) {
-                            clearFields();
+                        if (oTrans.SearchRecord(textSeek01.getText(), false)) {
+                            loadTownTable();
                             loadActivityField();
-                            pnEditMode = oTrans.getEditMode();
+                            pnEditMode = EditMode.READY;
                         } else {
                             ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                            clearFields();
                             pnEditMode = EditMode.UNKNOWN;
                         }
                     } catch (SQLException ex) {
@@ -533,88 +622,134 @@ public class ActivityFormController implements Initializable, ScreenInterface {
 
     private void txtField_KeyPressed(KeyEvent event) {
         TextField txtField = (TextField) event.getSource();
-        int lnIndex = Integer.parseInt(txtField.getId().substring(8, 10));
+        int lnIndex = Integer.parseInt(((TextField) event.getSource()).getId().substring(8, 10));
+        String txtFieldID = ((TextField) event.getSource()).getId();
+        String lsValue = txtField.getText();
+
         try {
-            if (event.getCode() == KeyCode.TAB || event.getCode() == KeyCode.ENTER || event.getCode() == KeyCode.F3) {
-                event.consume();
-                CommonUtils.SetNextFocus((TextField) event.getSource());
-                switch (lnIndex) {
-                    case 1:
-                        if (oTrans.SearchRecord(textSeek01.getText(), false)) {
-                            loadActivityField();
-                            pnEditMode = oTrans.getEditMode();
-                        } else {
-                            ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
-                        }
+            switch (event.getCode()) {
+                case F3:
+                case TAB:
+                case ENTER:
+                    switch (txtFieldID) {
+                        case "textSeek01":  //Search by Activity No
+                            if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
+                                if (ShowMessageFX.OkayCancel(null, "Confirmation", "You have unsaved data. Are you sure you want to browse a new record?") == true) {
+                                } else {
+                                    return;
+                                }
+                            }
+                            if (oTrans.SearchRecord(textSeek01.getText(), false)) {
+                                loadActivityField();
+                                pnEditMode = EditMode.READY;
+                            } else {
+                                ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                                textSeek02.clear();
+                                clearFields();
+                                pnEditMode = EditMode.UNKNOWN;
+                            }
+                            initButton(pnEditMode);
+                            break;
+                        case "textSeek02":  //Search by Activity Name
+                            if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
+                                if (ShowMessageFX.OkayCancel(null, "Confirmation", "You have unsaved data. Are you sure you want to browse a new record?") == true) {
+                                } else {
+                                    return;
+                                }
+                            }
+                            if (oTrans.SearchRecord(textSeek02.getText(), false)) {
 
-                        break;
-                    case 2:
-                        if (oTrans.SearchRecord(textSeek02.getText(), false)) {
-                            loadActivityField();
-                            pnEditMode = oTrans.getEditMode();
-                        } else {
-                            ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
-                        }
-                        break;
-                    case 5:
-                        String selectedType = comboBox29.getValue();
-                        switch (selectedType) {
-                            case "EVENT":
-                                selectedType = "eve";
-                                break;
-                            case "SALES CALL":
-                                selectedType = "sal";
-                                break;
-                            case "PROMO":
-                                selectedType = "pro";
-                                break;
-                            default:
-                                break;
-                        }
-                        if (oTrans.searchEventType(selectedType)) {
-                            loadActivityField();
-                        } else {
-                            ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
-                        }
-                        break;
+                                loadActivityField();
+                                pnEditMode = oTrans.getEditMode();
+                            } else {
+                                ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                                textSeek01.clear();
+                                clearFields();
+                                pnEditMode = EditMode.UNKNOWN;
+                            }
+                            initButton(pnEditMode);
+                            break;
+                        case "txtField05":
+                            String selectedType = comboBox29.getValue();
+                            switch (selectedType) {
+                                case "EVENT":
+                                    selectedType = "eve";
+                                    break;
+                                case "SALES CALL":
+                                    selectedType = "sal";
+                                    break;
+                                case "PROMO":
+                                    selectedType = "pro";
+                                    break;
+                                default:
+                                    break;
+                            }
+                            if (oTrans.searchEventType(selectedType)) {
+                                loadActivityField();
+                            } else {
+                                ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                            }
+                            break;
+                        case "txtField24":
+                            if (oTrans.searchDepartment(txtField.getText())) {
+                                loadActivityField();
+                            } else {
+                                ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                            }
+                            break;
+                        case "txtField25":
+                            if (oTrans.searchEmployee(txtField.getText())) {
+                                loadActivityField();
+                            } else {
+                                ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                            }
+                            break;
+                        case "txtField26":
+                            if (oTrans.searchBranch(txtField.getText())) {
+                                loadActivityField();
+                            } else {
+                                ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                            }
+                            break;
+                        case "txtField28":
+                            if (oTrans.searchProvince(txtField.getText())) {
+                                btnCitySearch.setDisable(false);
+                                btnCityRemove.setDisable(false);
+                                tblViewCity.setDisable(false);
+                                loadActivityField();
+                                int lnCtr = 1;
+                                while (oTrans.getActTownCount() > 0) {
+                                    lnCtr++;
+                                }
+                                int[] fsValue = new int[lnCtr];
+                                oTrans.removeTown(fsValue);
 
-                    case 24:
-                        if (oTrans.searchDepartment(txtField.getText())) {
-                            loadActivityField();
-                        } else {
-                            ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
-                        }
-                        break;
-                    case 25:
-                        if (oTrans.searchEmployee(txtField.getText())) {
-                            loadActivityField();
-                        } else {
-                            ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
-                        }
-                        break;
-                    case 26:
-                        if (oTrans.searchBranch(txtField.getText())) {
-                            loadActivityField();
-                        } else {
-                            ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
-                        }
-                        break;
-                    case 28:
-                        if (oTrans.searchProvince(txtField.getText())) {
-                            loadActivityField();
-                            pnEditMode = oTrans.getEditMode();
-                        } else {
-                            ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
-                        }
+                                loadTownTable();
 
-                        break;
+                                //                                townCitydata.clear();
+//                                tblViewCity.setItems(townCitydata);
+//                                tblViewCity.refresh();
+                                pnEditMode = oTrans.getEditMode();
+                            } else {
+                                ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                            }
 
-                }
+                            break;
+                    }
+                    break;
 
             }
-        } catch (SQLException ex) {
-            Logger.getLogger(ActivityFormController.class
-                    .getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException e) {
+            ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
+        }
+
+        switch (event.getCode()) {
+            case ENTER:
+            case DOWN:
+                CommonUtils.SetNextFocus(txtField);
+                break;
+            case UP:
+                CommonUtils.SetPreviousFocus(txtField);
         }
 
     }
@@ -860,6 +995,13 @@ public class ActivityFormController implements Initializable, ScreenInterface {
             TownCityMainEntryDialogController loControl = new TownCityMainEntryDialogController();
             loControl.setGRider(oApp);
             loControl.setObject(oTrans);
+            try {
+                loControl.setProv((String) oTrans.getMaster(27));
+
+            } catch (SQLException ex) {
+                Logger.getLogger(ActivityFormController.class
+                        .getName()).log(Level.SEVERE, null, ex);
+            }
             fxmlLoader.setController(loControl);
 
             //load the main interface
@@ -890,6 +1032,7 @@ public class ActivityFormController implements Initializable, ScreenInterface {
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setTitle("");
             stage.showAndWait();
+            loadTownTable();
 
 //            loadInquiryAdvances();
         } catch (IOException e) {
@@ -910,6 +1053,57 @@ public class ActivityFormController implements Initializable, ScreenInterface {
         return localDate;
     }
 
+    private void loadTownTable() {
+        try {
+            /*Populate table*/
+            townCitydata.clear();
+            Set<String> cityNames = new HashSet<>();
+
+            for (int lnCtr = 1; lnCtr <= oTrans.getActTownCount(); lnCtr++) {
+                String townID = oTrans.getActTown(lnCtr, "sTownIDxx").toString();
+                String townName = oTrans.getActTown(lnCtr, "sTownName").toString();
+
+                if (cityNames.contains(townName)) {
+                    continue; // Skip duplicate city names
+                }
+
+                townCitydata.add(new TownEntryTableList(
+                        String.valueOf(lnCtr), //ROW
+                        townID,
+                        townName
+                ));
+
+                cityNames.add(townName);
+            }
+
+            tblViewCity.setItems(townCitydata);
+            tblViewCity.refresh();
+            initTownTable();
+        } catch (SQLException e) {
+            ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
+        }
+    }
+
+    private void initTownTable() {
+        tblRowCity.setCellValueFactory(new PropertyValueFactory<>("tblRow"));
+        tblselectCity.setCellValueFactory(new PropertyValueFactory<>("select"));
+        tblViewCity.getItems().forEach(item -> {
+            CheckBox selectCheckBox = item.getSelect();
+            selectCheckBox.setOnAction(event -> {
+                if (tblViewCity.getItems().stream().allMatch(tableItem -> tableItem.getSelect().isSelected())) {
+                    selectAllCity.setSelected(true);
+                } else {
+                    selectAllCity.setSelected(false);
+                }
+            });
+        });
+        selectAllCity.setOnAction(event -> {
+            boolean newValue = selectAllCity.isSelected();
+            tblViewCity.getItems().forEach(item -> item.getSelect().setSelected(newValue));
+        });
+        tblTownCity.setCellValueFactory(new PropertyValueFactory<>("tblCity"));
+
+    }
 //    //Activity Member
 //    private void loadActMembersTable() {
 //        try {
@@ -959,17 +1153,9 @@ public class ActivityFormController implements Initializable, ScreenInterface {
 
     private void loadActivityField() {
         try {
-            LocalDate currentDate = strToDate(CommonUtils.xsDateShort((Date) oTrans.getMaster(06)));
-            LocalDate sevenDaysAgo = currentDate.minusDays(7);
-            LocalDate dateFrom = dateFrom06.getValue();
             txtField01.setText((String) oTrans.getMaster(1)); // sActvtyID
-
-            if (dateFrom.isEqual(sevenDaysAgo)) {
-                dateFrom06.setValue(sevenDaysAgo);
-            } else {
-                dateFrom06.setValue(strToDate(CommonUtils.xsDateShort((Date) oTrans.getMaster(06))));
-            }
-            dateTo07.setValue(strToDate(CommonUtils.xsDateShort((Date) oTrans.getMaster(07))));
+            dateFrom06.setValue(strToDate(CommonUtils.xsDateShort((Date) oTrans.getMaster(6))));
+            dateTo07.setValue(strToDate(CommonUtils.xsDateShort((Date) oTrans.getMaster(7))));
             String selectedItem = oTrans.getMaster(29).toString();
             if (selectedItem.equals("sal")) {
                 selectedItem = "SALES CALL";
@@ -979,6 +1165,7 @@ public class ActivityFormController implements Initializable, ScreenInterface {
                 selectedItem = "PROMO";
             }
             comboBox29.getSelectionModel().select(selectedItem);
+
             txtField05.setText((String) oTrans.getMaster(5)); // sActSrcex
             textArea02.setText((String) oTrans.getMaster(2)); // sActTitle
             textArea03.setText((String) oTrans.getMaster(3)); // sActDescx
@@ -1024,8 +1211,15 @@ public class ActivityFormController implements Initializable, ScreenInterface {
         textArea09.setDisable(!lbShow);  //sCompnynx
 
         //Button
-        btnCitySearch.setDisable(!lbShow);
-        btnCityRemove.setDisable(!lbShow);
+        btnCitySearch.setDisable(!(lbShow && !txtField28.getText().isEmpty()));
+        btnCityRemove.setDisable(!(lbShow && !txtField28.getText().isEmpty()));
+
+        textArea08.setDisable(!lbShow);
+
+        tblViewActivityMembers.setDisable(!lbShow);
+
+        tblViewVhclModels.setDisable(!lbShow);
+
         btnActivityMembersSearch.setDisable(!lbShow);
         btnActivityMemRemove.setDisable(!lbShow);
         btnVhclModelsSearch.setDisable(!lbShow);
@@ -1057,13 +1251,13 @@ public class ActivityFormController implements Initializable, ScreenInterface {
 
     public void clearFields() {
         pnRow = 0;
+        townCitydata.clear();
         txtField01.setText(""); //sActvtyID
-        LocalDate currentDate = LocalDate.now();
-        LocalDate sevenDaysAgo = currentDate.minusDays(7);
-        dateFrom06.setValue(sevenDaysAgo);
+        dateFrom06.setValue(strToDate(CommonUtils.xsDateShort((Date) oApp.getServerDate())));
+        dateTo07.setValue(strToDate(CommonUtils.xsDateShort((Date) oApp.getServerDate())));
         //dDateFrom
-        dateTo07.setValue(currentDate);//dDateThru
-        comboBox29.setValue("Choose Type"); //sEventTyp
+        tblViewCity.setItems(null);
+        comboBox29.setValue(null); //sEventTyp
         txtField05.clear(); //sActTypDs
         textArea02.clear(); //sActTitle
         textArea03.clear(); //sActDescx

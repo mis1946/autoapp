@@ -28,7 +28,7 @@ import org.rmj.auto.clients.base.Activity;
  *
  * @author John Dave
  */
-public class TownCityMainEntryDialogController implements Initializable, ScreenInterface {
+public class ActivityTownCityMainEntryDialogController implements Initializable, ScreenInterface {
 
     private String sProvID;
     private Activity oTrans;
@@ -39,17 +39,17 @@ public class TownCityMainEntryDialogController implements Initializable, ScreenI
     @FXML
     private Button btnAddTown;
     private GRider oApp;
-    private ObservableList<TownEntryTableList> townCitydata = FXCollections.observableArrayList();
+    private ObservableList<ActivityTownEntryTableList> townCitydata = FXCollections.observableArrayList();
     unloadForm unload = new unloadForm(); //Used in Close Button
     private final String pxeModuleName = "ActivityMemberEntryDialogController"; //Form Title
     @FXML
-    private TableColumn<TownEntryTableList, String> tblRow;
+    private TableColumn<ActivityTownEntryTableList, String> tblRow;
     @FXML
-    private TableColumn<TownEntryTableList, Boolean> tblSelect;
+    private TableColumn<ActivityTownEntryTableList, Boolean> tblSelect;
     @FXML
-    private TableColumn<TownEntryTableList, String> tblTown;
+    private TableColumn<ActivityTownEntryTableList, String> tblTown;
     @FXML
-    private TableView<TownEntryTableList> tblViewTown;
+    private TableView<ActivityTownEntryTableList> tblViewTown;
 
     /**
      * Initializes the controller class.
@@ -83,8 +83,8 @@ public class TownCityMainEntryDialogController implements Initializable, ScreenI
                 CommonUtils.closeStage(btnClose);
                 break;
             case "btnAddTown":
-                ObservableList<TownEntryTableList> selectedItems = FXCollections.observableArrayList();
-                for (TownEntryTableList item : tblViewTown.getItems()) {
+                ObservableList<ActivityTownEntryTableList> selectedItems = FXCollections.observableArrayList();
+                for (ActivityTownEntryTableList item : tblViewTown.getItems()) {
                     if (item.getSelect().isSelected()) {
                         selectedItems.add(item);
                     }
@@ -95,7 +95,7 @@ public class TownCityMainEntryDialogController implements Initializable, ScreenI
                     int i = 0;
                     if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure you want to add?")) {
                         // Call the addTown here
-                        for (TownEntryTableList item : selectedItems) {
+                        for (ActivityTownEntryTableList item : selectedItems) {
                             String fsTownId = item.getTblindex01();
                             String fsTownName = item.getTblCity();// Assuming there is a method to retrieve the transaction number
                             try {
@@ -116,6 +116,7 @@ public class TownCityMainEntryDialogController implements Initializable, ScreenI
                     }
 
                 }
+                break;
         }
     }
 
@@ -127,7 +128,7 @@ public class TownCityMainEntryDialogController implements Initializable, ScreenI
             if (oTrans.loadTown(sProvID, true)) {
                 for (int lnCtr = 1; lnCtr <= oTrans.getTownCount(); lnCtr++) {
                     System.out.println(oTrans.getTown(lnCtr, "sTownName").toString());
-                    townCitydata.add(new TownEntryTableList(
+                    townCitydata.add(new ActivityTownEntryTableList(
                             String.valueOf(lnCtr), //ROW
                             oTrans.getTown(lnCtr, "sTownIDxx").toString(),
                             oTrans.getTown(lnCtr, "sTownName").toString()

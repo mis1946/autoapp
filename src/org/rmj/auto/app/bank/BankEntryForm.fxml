@@ -214,18 +214,18 @@
                                                                                           <Font name="System Bold" size="12.0" />
                                                                                        </font></Label>
                                                                                     <Label id="LabelDesc" stylesheets="@../css/FrameStyle.css" text="House No/Street/Barangay" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                                                                                    <Label id="LabelDesc" stylesheets="@../css/FrameStyle.css" text="Municipality/City" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-                                                                                    <Label id="LabelDesc" stylesheets="@../css/FrameStyle.css" text="Province" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+                                                                                    <Label id="LabelDesc" stylesheets="@../css/FrameStyle.css" text="Municipality/City" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+                                                                                    <Label id="LabelDesc" stylesheets="@../css/FrameStyle.css" text="Province" GridPane.columnIndex="1" GridPane.rowIndex="6" />
                                                                                     <Label id="LabelDesc" stylesheets="@../css/FrameStyle.css" text="Zip Code" GridPane.columnIndex="1" GridPane.rowIndex="8" />
                                                                                     <TextField fx:id="txtField02" GridPane.columnIndex="2" GridPane.columnSpan="4" GridPane.rowIndex="1" />
                                                                                     <TextField fx:id="txtField03" GridPane.columnIndex="2" GridPane.columnSpan="4" GridPane.rowIndex="2" />
                                                                                     <TextField fx:id="txtField17" GridPane.columnIndex="2" GridPane.columnSpan="4" GridPane.rowIndex="3" />
                                                                                     <TextField fx:id="txtField05" GridPane.columnIndex="2" GridPane.columnSpan="4" GridPane.rowIndex="5" />
-                                                                                    <TextField fx:id="txtField18" promptText="Search: F3" GridPane.columnIndex="2" GridPane.columnSpan="4" GridPane.rowIndex="6" />
+                                                                                    <TextField fx:id="txtField15" promptText="Search: F3" GridPane.columnIndex="2" GridPane.columnSpan="4" GridPane.rowIndex="6" />
+                                                                                    <TextField fx:id="txtField18" promptText="Search: F3" GridPane.columnIndex="2" GridPane.columnSpan="4" GridPane.rowIndex="7" />
                                                                                     <Label id="LabelDesc" stylesheets="@../css/FrameStyle.css" text="Contact Person" GridPane.columnIndex="1" GridPane.rowIndex="9" />
                                                                                     <Label id="LabelDesc" stylesheets="@../css/FrameStyle.css" text="Telephone No." GridPane.columnIndex="1" GridPane.rowIndex="10" />
                                                                                     <Label id="LabelDesc" prefHeight="14.0" prefWidth="101.0" stylesheets="@../css/FrameStyle.css" text="Fax No." GridPane.columnIndex="1" GridPane.rowIndex="11" />
-                                                                                    <TextField fx:id="txtField15" promptText="Search: F3" GridPane.columnIndex="2" GridPane.columnSpan="4" GridPane.rowIndex="7" />
                                                                                     <TextField fx:id="txtField07" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="8" />
                                                                                     <TextField fx:id="txtField04" GridPane.columnIndex="2" GridPane.columnSpan="4" GridPane.rowIndex="9" />
                                                                                     <TextField fx:id="txtField08" GridPane.columnIndex="2" GridPane.columnSpan="3" GridPane.rowIndex="10" />

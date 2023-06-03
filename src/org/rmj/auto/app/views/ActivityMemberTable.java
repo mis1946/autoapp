@@ -16,16 +16,14 @@ public class ActivityMemberTable {
 
     private SimpleStringProperty tblindexRow;
     private CheckBox select;
-    private SimpleStringProperty tblindex01;
     private SimpleStringProperty tblindex24; //sDeptName
     private SimpleStringProperty tblindex14; //sDeptIDxx
     private SimpleStringProperty tblindex25; //sCompnyNm
     private SimpleStringProperty tblindex13; //sEmployID
 
-    public ActivityMemberTable(String tblindexRow, String tblindex01, String tblindex24, String tblindex14, String tblindex25, String tblindex13) {
+    public ActivityMemberTable(String tblindexRow, String tblindex24, String tblindex14, String tblindex25, String tblindex13) {
         this.tblindexRow = new SimpleStringProperty(tblindexRow);
         this.select = new CheckBox();
-        this.tblindex01 = new SimpleStringProperty(tblindex01);
         this.tblindex24 = new SimpleStringProperty(tblindex24);
         this.tblindex14 = new SimpleStringProperty(tblindex14);
         this.tblindex25 = new SimpleStringProperty(tblindex25);
@@ -46,14 +44,6 @@ public class ActivityMemberTable {
 
     public void setTblindexRow(String tblindexRow) {
         this.tblindexRow.set(tblindexRow);
-    }
-
-    public String getTblindex01() {
-        return tblindex01.get();
-    }
-
-    public void setTblindex01(String tblindex01) {
-        this.tblindex01.set(tblindex01);
     }
 
     public String getTblindex24() {

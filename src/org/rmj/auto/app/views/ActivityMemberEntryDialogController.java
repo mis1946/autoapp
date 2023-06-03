@@ -4,11 +4,9 @@
  */
 package org.rmj.auto.app.views;
 
-import com.sun.javafx.scene.control.skin.TableHeaderRow;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -21,13 +19,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import org.rmj.appdriver.GRider;
 import org.rmj.appdriver.agentfx.CommonUtils;
 import org.rmj.appdriver.agentfx.ShowMessageFX;
-import org.rmj.auto.app.sales.VehicleSalesApprovalTable;
 import org.rmj.auto.clients.base.Activity;
 
 /**
@@ -44,7 +40,6 @@ public class ActivityMemberEntryDialogController implements Initializable, Scree
     private Button btnClose;
     private Activity oTrans;
     private ObservableList<ActivityMemberTable> Employeedata = FXCollections.observableArrayList();
-    private FilteredList<ActivityMemberTable> filteredData;
     private ObservableList<ActivityMemberTable> Departdata = FXCollections.observableArrayList();
     unloadForm unload = new unloadForm(); //Used in Close Button
     private final String pxeModuleName = "ActivityMemberEntryDialogController"; //Form Title
@@ -62,10 +57,11 @@ public class ActivityMemberEntryDialogController implements Initializable, Scree
     private TableColumn<ActivityMemberTable, Boolean> tblselect;
     @FXML
     private TableColumn<ActivityMemberTable, String> tblindex25;
-    @FXML
     private CheckBox selectAll;
     @FXML
     private Label SelectedCount;
+    @FXML
+    private CheckBox selectAllEmployee;
 
     /**
      * Initializes the controller class.
@@ -80,6 +76,7 @@ public class ActivityMemberEntryDialogController implements Initializable, Scree
             ActivityMemberTable selectedDepartment = tblViewDepart.getSelectionModel().getSelectedItem();
             if (selectedDepartment != null) {
                 String departmentID = selectedDepartment.getTblindex14();
+
                 loadEmployeeTable(departmentID);
             }
         });
@@ -107,35 +104,44 @@ public class ActivityMemberEntryDialogController implements Initializable, Scree
                 CommonUtils.closeStage(btnClose);
                 break;
             case "btnAdd":
-                ObservableList<ActivityMemberTable> selectedItems = tblViewEmployee.getSelectionModel().getSelectedItems();
+                ObservableList<ActivityMemberTable> selectedItems = FXCollections.observableArrayList();
+                for (ActivityMemberTable item : tblViewEmployee.getItems()) {
+                    if (item.getSelect().isSelected()) {
+                        selectedItems.add(item);
+                    }
+                }
                 if (selectedItems.isEmpty()) {
-                    ShowMessageFX.Information(null, pxeModuleName, "No items selected to add");
+                    ShowMessageFX.Information(null, pxeModuleName, "No items selected to add.");
                 } else {
-                    if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure you want to add Employee?")) {
-                        int i = 0;
+                    int i = 0;
+                    if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure you want to add?")) {
+                        // Call the addTown here
                         for (ActivityMemberTable item : selectedItems) {
-                            String fsEmpId = item.getTblindex14();
+
+                            String fsEmployID = item.getTblindex13();
                             String fsEmpName = item.getTblindex25();
-                            String fsDeptName = item.getTblindex24();
+                            String fsDept = item.getTblindex24();
+//                            String fsDeptID = item.getTblindex14();
+                            // Assuming there is a method to retrieve the transaction number
                             try {
-                                boolean add = oTrans.addMember(fsEmpId, fsEmpName, fsDeptName);
+                                System.out.println(fsEmployID + " " + fsEmpName + " " + fsDept);
+                                boolean add = oTrans.addMember(fsEmployID, fsEmpName, fsDept);
+                                System.out.println(add);
                                 if (add) {
-                                    i++;
+                                    i = i + 1;
                                 } else {
                                     // Handle approval failure
                                     ShowMessageFX.Error(null, pxeModuleName, "Failed to add Employee.");
                                 }
                             } catch (SQLException e) {
                                 // Handle SQL exception
-                                ShowMessageFX.Error(null, pxeModuleName, "An error occurred while adding Employee: " + e.getMessage());
+                                ShowMessageFX.Error(null, pxeModuleName, "An error occurred while adding employee: " + e.getMessage());
                             }
                         }
-
-                        tblViewEmployee.getSelectionModel().clearSelection();
-                        SelectedCount.setText("0");
-                        ShowMessageFX.Information(null, pxeModuleName, i + " Employee(s) added successfully.");
-                        tblViewEmployee.refresh();
+                        ShowMessageFX.Information(null, pxeModuleName, "Added Employee successfully.");
+                        CommonUtils.closeStage(btnAdd);
                     }
+
                 }
                 break;
         }
@@ -154,9 +160,8 @@ public class ActivityMemberEntryDialogController implements Initializable, Scree
                 for (int lnCtr = 1; lnCtr <= oTrans.getEmpCount(); lnCtr++) {
                     Employeedata.add(new ActivityMemberTable(
                             String.valueOf(lnCtr), // ROW
-                            "", // Replace with the appropriate value for the second column
-                            "", // Replace with the appropriate value for the third column
-                            "", // Replace with the appropriate value for the fourth column
+                            oTrans.getEmployee(lnCtr, "sDeptName").toString(),
+                            oTrans.getEmployee(lnCtr, "sDeptIDxx").toString(),
                             oTrans.getEmployee(lnCtr, "sCompnyNm").toString(), // Fifth column (Department)
                             oTrans.getEmployee(lnCtr, "sEmployID").toString() // Replace with the appropriate value for the sixth column
                     ));
@@ -188,14 +193,14 @@ public class ActivityMemberEntryDialogController implements Initializable, Scree
             selectCheckBox.setOnAction(event -> {
                 updateSelectedCount();
                 if (tblViewEmployee.getItems().stream().allMatch(tableItem -> tableItem.getSelect().isSelected())) {
-                    selectAll.setSelected(true);
+                    selectAllEmployee.setSelected(true);
                 } else {
-                    selectAll.setSelected(false);
+                    selectAllEmployee.setSelected(false);
                 }
             });
         });
-        selectAll.setOnAction(event -> {
-            boolean newValue = selectAll.isSelected();
+        selectAllEmployee.setOnAction(event -> {
+            boolean newValue = selectAllEmployee.isSelected();
             tblViewEmployee.getItems().forEach(item -> item.getSelect().setSelected(newValue));
             updateSelectedCount();
         });
@@ -212,7 +217,6 @@ public class ActivityMemberEntryDialogController implements Initializable, Scree
                 for (int lnCtr = 1; lnCtr <= oTrans.getDeptCount(); lnCtr++) {
                     Departdata.add(new ActivityMemberTable(
                             String.valueOf(lnCtr), //ROW
-                            "",
                             oTrans.getDepartment(lnCtr, "sDeptName").toString(),
                             oTrans.getDepartment(lnCtr, "sDeptIDxx").toString(),
                             "",

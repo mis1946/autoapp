@@ -18,7 +18,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import org.rmj.appdriver.GRider;
@@ -59,13 +58,14 @@ public class ActivityTypeAddSourceController implements Initializable, ScreenInt
         btnClose.setOnAction(this::cmdButton_Click);
         btnAdd.setOnAction(this::cmdButton_Click);
 
+        setCapsLockBehavior(txtField05);
         comboBox29.setOnAction(e -> {
             String selectedType = comboBox29.getValue();// Retrieve the type ID for the selected type
             // Set the type ID in the text field
             try {
                 oTrans.setMaster(29, selectedType); // Pass the selected type to the setMaster method
             } catch (SQLException ex) {
-                Logger.getLogger(ActivityFormController.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(ActivityTypeAddSourceController.class.getName()).log(Level.SEVERE, null, ex);
             }
 
         }

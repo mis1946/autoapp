@@ -74,7 +74,8 @@ public class ActivityFormController implements Initializable, ScreenInterface {
     private Activity oTrans;
     private MasterCallback oListener;
     private ObservableList<ActivityMemberTable> actMembersData = FXCollections.observableArrayList();
-    private ObservableList<TownEntryTableList> townCitydata = FXCollections.observableArrayList();
+    private ObservableList<ActivityTownEntryTableList> townCitydata = FXCollections.observableArrayList();
+    private ObservableList<ActivityVchlEntryTable> actVhclModelData = FXCollections.observableArrayList();
     unloadForm unload = new unloadForm(); //Used in Close Button
     private final String pxeModuleName = "Activity"; //Form Title
     private int pnEditMode;//Modifying fields
@@ -104,7 +105,7 @@ public class ActivityFormController implements Initializable, ScreenInterface {
     @FXML
     private TableView tblViewBudget;
     @FXML
-    private TableView<TownEntryTableList> tblViewCity;
+    private TableView<ActivityTownEntryTableList> tblViewCity;
     @FXML
     private Button btnRemoveTasks;
     @FXML
@@ -127,7 +128,7 @@ public class ActivityFormController implements Initializable, ScreenInterface {
     @FXML
     private Button btnVhlModelRemove;
     @FXML
-    private TableView tblViewVhclModels;
+    private TableView<ActivityVchlEntryTable> tblViewVhclModels;
     @FXML
     private TableColumn<ActivityMemberTable, String> tblActvtyMembersRow;
     @FXML
@@ -189,13 +190,21 @@ public class ActivityFormController implements Initializable, ScreenInterface {
     @FXML
     private Button btnCancel;
     @FXML
-    private TableColumn<TownEntryTableList, String> tblRowCity;
+    private TableColumn<ActivityTownEntryTableList, String> tblRowCity;
     @FXML
-    private TableColumn<TownEntryTableList, Boolean> tblselectCity;
+    private TableColumn<ActivityTownEntryTableList, Boolean> tblselectCity;
     @FXML
-    private TableColumn<TownEntryTableList, String> tblTownCity;
+    private TableColumn<ActivityTownEntryTableList, String> tblTownCity;
     @FXML
     private CheckBox selectAllCity;
+    @FXML
+    private TableColumn<ActivityVchlEntryTable, String> tblindexVchlRow;
+    @FXML
+    private CheckBox selectAllVchlMode;
+    @FXML
+    private TableColumn<ActivityVchlEntryTable, String> tblVchlDescription;
+    @FXML
+    private TableColumn<ActivityVchlEntryTable, Boolean> tblVchlSelect;
 
     /**
      * Initializes the controller class.
@@ -210,7 +219,6 @@ public class ActivityFormController implements Initializable, ScreenInterface {
         oTrans.setWithUI(true);
 
         txtField32.setDisable(true);
-        txtField26.setDisable(true);
         setCapsLockBehavior(txtField25); //sCompyNm
         setCapsLockBehavior(txtField05); //sActTypDs
 //        setCapsLockBehavior(txtField26); //sBranchNm
@@ -276,14 +284,17 @@ public class ActivityFormController implements Initializable, ScreenInterface {
         textArea02.setOnKeyPressed(this::txtArea_KeyPressed);
         textSeek01.setOnKeyPressed(this::txtField_KeyPressed); //Activity No Search
         textSeek02.setOnKeyPressed(this::txtField_KeyPressed); //Activity Title Search
-        initTownTable();
-        tblViewCity.getItems().addListener((ListChangeListener.Change<? extends TownEntryTableList> change)
-                -> {
-            if (tblViewCity.getItems().isEmpty() || tblViewCity.getItems().size() >= 2) {
-                // Disable the textArea when there are 0 items or 2 or more items in tblViewCity
-                textArea08.setDisable(true);
-            } else {
 
+        tblViewCity.getItems().addListener((ListChangeListener.Change<? extends ActivityTownEntryTableList> change)
+                -> {
+            if (tblViewCity != null && tblViewCity.getItems() != null) {
+                boolean tblViewCityEmpty = tblViewCity.getItems().isEmpty() || tblViewCity.getItems().size() >= 2;
+                textArea08.setDisable(!(true && !tblViewCity.getItems().isEmpty()) || tblViewCity.getItems().size() >= 2);
+
+                if (true && tblViewCityEmpty) {
+                    textArea08.clear();
+                }
+            } else {
                 textArea08.setDisable(false);
             }
         }
@@ -408,7 +419,6 @@ public class ActivityFormController implements Initializable, ScreenInterface {
             String lsButton = ((Button) event.getSource()).getId();
             switch (lsButton) {
                 case "btnAdd": //create
-
                     if (oTrans.NewRecord()) {
                         loadActivityField();
                         clearFields();
@@ -536,15 +546,15 @@ public class ActivityFormController implements Initializable, ScreenInterface {
 
                     int lnCtr = 0;
                     int lnRow = 0;
-                    ObservableList<TownEntryTableList> removeselectedItems = FXCollections.observableArrayList();
+                    ObservableList<ActivityTownEntryTableList> removeselectedItems = FXCollections.observableArrayList();
 
-                    for (TownEntryTableList item : tblViewCity.getItems()) {
+                    for (ActivityTownEntryTableList item : tblViewCity.getItems()) {
                         if (item.getSelect().isSelected()) {
                             lnCtr++;
                         }
                     }
                     Integer[] fsValue = new Integer[lnCtr];
-                    for (TownEntryTableList item : tblViewCity.getItems()) {
+                    for (ActivityTownEntryTableList item : tblViewCity.getItems()) {
                         if (item.getSelect().isSelected()) {
                             fsValue[lnRow] = Integer.parseInt(item.getTblRow());
                             lnRow++;
@@ -560,6 +570,8 @@ public class ActivityFormController implements Initializable, ScreenInterface {
                 case "btnCancel":
                     if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure, do you want to cancel?") == true) {
                         clearFields();
+                        actVhclModelData.clear();
+                        actMembersData.clear();
                     }
                     pnEditMode = EditMode.UNKNOWN;
 
@@ -575,11 +587,16 @@ public class ActivityFormController implements Initializable, ScreenInterface {
 
                     try {
                         if (oTrans.SearchRecord(textSeek01.getText(), false)) {
-                            loadTownTable();
                             loadActivityField();
+                            loadActivityVehicleTable();
+                            loadActMembersTable();
+                            loadTownTable();
+
                             pnEditMode = EditMode.READY;
                         } else {
                             ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                            actVhclModelData.clear();
+                            actMembersData.clear();
                             clearFields();
                             pnEditMode = EditMode.UNKNOWN;
                         }
@@ -926,6 +943,7 @@ public class ActivityFormController implements Initializable, ScreenInterface {
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setTitle("");
             stage.showAndWait();
+            loadActMembersTable();
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -947,6 +965,7 @@ public class ActivityFormController implements Initializable, ScreenInterface {
 
             ActivityVehicleEntryDialogController loControl = new ActivityVehicleEntryDialogController();
             loControl.setGRider(oApp);
+            loControl.setObject(oTrans);
             fxmlLoader.setController(loControl);
 
             //load the main interface
@@ -977,6 +996,7 @@ public class ActivityFormController implements Initializable, ScreenInterface {
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setTitle("");
             stage.showAndWait();
+            loadActivityVehicleTable();
 
 //            loadInquiryAdvances();
         } catch (IOException e) {
@@ -994,9 +1014,9 @@ public class ActivityFormController implements Initializable, ScreenInterface {
             Stage stage = new Stage();
 
             FXMLLoader fxmlLoader = new FXMLLoader();
-            fxmlLoader.setLocation(getClass().getResource("TownCityMainEntryDialog.fxml"));
+            fxmlLoader.setLocation(getClass().getResource("ActivityTownCityMainEntryDialog.fxml"));
 
-            TownCityMainEntryDialogController loControl = new TownCityMainEntryDialogController();
+            ActivityTownCityMainEntryDialogController loControl = new ActivityTownCityMainEntryDialogController();
             loControl.setGRider(oApp);
             loControl.setObject(oTrans);
             try {
@@ -1061,27 +1081,15 @@ public class ActivityFormController implements Initializable, ScreenInterface {
         try {
             /*Populate table*/
             townCitydata.clear();
-//            Set<String> cityNames = new HashSet<>();
-
             for (int lnCtr = 1; lnCtr <= oTrans.getActTownCount(); lnCtr++) {
                 String townID = oTrans.getActTown(lnCtr, "sTownIDxx").toString();
                 String townName = oTrans.getActTown(lnCtr, "sTownName").toString();
-
-//
-//                if (cityNames.contains(townName)) {
-//                    continue; // Skip duplicate city names
-//                }
-//
-                townCitydata.add(new TownEntryTableList(
+                townCitydata.add(new ActivityTownEntryTableList(
                         String.valueOf(lnCtr), //ROW
                         townID,
                         townName
                 ));
-//
-//                cityNames.add(townName);
-//            }
             }
-
             tblViewCity.setItems(townCitydata);
             initTownTable();
         } catch (SQLException e) {
@@ -1109,38 +1117,95 @@ public class ActivityFormController implements Initializable, ScreenInterface {
         tblTownCity.setCellValueFactory(new PropertyValueFactory<>("tblCity"));
 
     }
-//    //Activity Member
-//    private void loadActMembersTable() {
-//        try {
-//            // Clear the previous data in the list
-//            actMembersData.clear();
-//            String departmentID = "";
-//
-//            // Load the activity members using the appropriate parameters
-//            String fsValue = departmentID; // Use the selected department's ID as fsValue
-//            boolean fbLoadEmp = true; // Set the fbLoadEmp to true to load employees
-//            if (oTrans.loadEmployee(fsValue, fbLoadEmp)) {
-//                for (int lnCtr = 1; lnCtr <= oTrans.getActMemberCount(); lnCtr++) {
-//                    actMembersData.add(new ActivityMemberTable(
-//                            String.valueOf(lnCtr), // ROW
-//                            "", // Replace with the appropriate value for the second column
-//                            oTrans.getDepartment(lnCtr, "sDeptName").toString(),
-//                            oTrans.getDepartment(lnCtr, "sDeptIDxx").toString(), // Replace with the appropriate value for the fourth column
-//                            oTrans.getActMember(lnCtr, "sCompnyNm").toString(), // Fifth column (Department)
-//                            oTrans.getActMember(lnCtr, "sEmployID").toString() // Replace with the appropriate value for the sixth column
-//                    ));
-//                }
-//
-//                // Set the actMembersData list as the items for tblViewActivityMembers TableView
-//                tblViewActivityMembers.setItems(actMembersData);
-//
-//                // Call the initActMembersTable() method to initialize the TableView columns if needed
-//                initActMembersTable();
-//            }
-//        } catch (SQLException e) {
-//            ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
-//        }
-//    }
+
+    //Activity Member
+    private void loadActMembersTable() {
+
+        try {
+            /*Populate table*/
+            actMembersData.clear();
+            System.out.println(oTrans.getActMemberCount());
+            for (int lnCtr = 1; lnCtr <= oTrans.getActMemberCount(); lnCtr++) {
+                actMembersData.add(new ActivityMemberTable(
+                        String.valueOf(lnCtr), //ROW
+                        oTrans.getActMember(lnCtr, "sDeptName").toString(),
+                        "",
+                        //                        oTrans.getActMember(lnCtr, "sDeptIDxx").toString(),
+                        oTrans.getActMember(lnCtr, "sCompnyNm").toString(), // Fifth column (Department)
+                        oTrans.getActMember(lnCtr, "sEmployID").toString()
+                ));
+            }
+            tblViewActivityMembers.setItems(actMembersData);
+            initActMembersTable();
+        } catch (SQLException e) {
+            ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
+        }
+
+    }
+
+    private void initActMembersTable() {
+        tblActvtyMembersRow.setCellValueFactory(new PropertyValueFactory<>("tblindexRow"));
+        tblselected.setCellValueFactory(new PropertyValueFactory<>("select"));
+        tblViewActivityMembers.getItems().forEach(item -> {
+            CheckBox selectCheckBox = item.getSelect();
+            selectCheckBox.setOnAction(event -> {
+                if (tblViewActivityMembers.getItems().stream().allMatch(tableItem -> tableItem.getSelect().isSelected())) {
+                    selectAllCheckBoxEmployee.setSelected(true);
+                } else {
+                    selectAllCheckBoxEmployee.setSelected(false);
+                }
+            });
+        });
+        selectAllCheckBoxEmployee.setOnAction(event -> {
+            boolean newValue = selectAllCheckBoxEmployee.isSelected();
+            tblViewActivityMembers.getItems().forEach(item -> item.getSelect().setSelected(newValue));
+        });
+        tblindex24.setCellValueFactory(new PropertyValueFactory<>("tblindex24"));
+        tblindex25.setCellValueFactory(new PropertyValueFactory<>("tblindex25"));
+    }
+
+    private void loadActivityVehicleTable() {
+        try {
+            /*Populate table*/
+            actVhclModelData.clear();
+            System.out.println(oTrans.getActMemberCount());
+            for (int lnCtr = 1; lnCtr <= oTrans.getActVehicleCount(); lnCtr++) {
+
+                actVhclModelData.add(new ActivityVchlEntryTable(
+                        String.valueOf(lnCtr), //ROW
+                        oTrans.getActVehicle(lnCtr, "sSerialID").toString(),
+                        oTrans.getActVehicle(lnCtr, "sDescript").toString(),
+                        oTrans.getActVehicle(lnCtr, "sCSNoxxxx").toString()
+                ));
+            }
+            tblViewVhclModels.setItems(actVhclModelData);
+            initActivityVehicleTable();
+        } catch (SQLException e) {
+            ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
+        }
+
+    }
+
+    private void initActivityVehicleTable() {
+        tblindexVchlRow.setCellValueFactory(new PropertyValueFactory<>("tblRow"));  //Row
+        tblVchlSelect.setCellValueFactory(new PropertyValueFactory<>("select"));
+        tblViewVhclModels.getItems().forEach(item -> {
+            CheckBox selectCheckBox = item.getSelect();
+            selectCheckBox.setOnAction(event -> {
+                if (tblViewVhclModels.getItems().stream().allMatch(tableItem -> tableItem.getSelect().isSelected())) {
+                    selectAllVchlMode.setSelected(true);
+                } else {
+                    selectAllVchlMode.setSelected(false);
+                }
+            });
+        });
+        selectAllVchlMode.setOnAction(event -> {
+            boolean newValue = selectAllVchlMode.isSelected();
+            tblViewVhclModels.getItems().forEach(item -> item.getSelect().setSelected(newValue));
+        });
+        tblVchlDescription.setCellValueFactory(new PropertyValueFactory<>("tblDescription04"));
+    }
+
     private Callback<DatePicker, DateCell> callApprove = new Callback<DatePicker, DateCell>() {
         @Override
         public DateCell call(final DatePicker param) {
@@ -1161,15 +1226,23 @@ public class ActivityFormController implements Initializable, ScreenInterface {
             txtField01.setText((String) oTrans.getMaster(1)); // sActvtyID
             dateFrom06.setValue(strToDate(CommonUtils.xsDateShort((Date) oTrans.getMaster(6))));
             dateTo07.setValue(strToDate(CommonUtils.xsDateShort((Date) oTrans.getMaster(7))));
-            String selectedItem = oTrans.getMaster(29).toString();
-            if (selectedItem.equals("sal")) {
-                selectedItem = "SALES CALL";
-            } else if (selectedItem.equals("eve")) {
-                selectedItem = "EVENT";
-            } else if (selectedItem.equals("pro")) {
-                selectedItem = "PROMO";
+            String selectedItem = oTrans.getMaster(29).toString();//sEventTyp
+            switch (selectedItem) {
+                case "sal":
+                    selectedItem = "SALES CALL";
+                    break;
+                case "eve":
+                    selectedItem = "EVENT";
+                    break;
+                case "pro":
+                    selectedItem = "PROMO";
+                    break;
+                default:
+                    break;
             }
-            comboBox29.getSelectionModel().select(selectedItem);
+            if (!selectedItem.isEmpty()) {
+                comboBox29.getSelectionModel().select(selectedItem);
+            }
 
             txtField05.setText((String) oTrans.getMaster(5)); // sActSrcex
             textArea02.setText((String) oTrans.getMaster(2)); // sActTitle
@@ -1190,40 +1263,44 @@ public class ActivityFormController implements Initializable, ScreenInterface {
 
     private void initButton(int fnValue) {
         pnRow = 0;
-        /* NOTE:
-                  lbShow (FALSE)= invisible
-                  !lbShow (TRUE)= visible
-         */
+
         boolean lbShow = (fnValue == EditMode.ADDNEW || fnValue == EditMode.UPDATE);
 
-        //Fields
-        dateFrom06.setDisable(!lbShow); //dDateFrom
-        dateTo07.setDisable(!lbShow); //dDateThru
-        comboBox29.setDisable(!lbShow); //sEventTyp
-        txtField05.setDisable(!lbShow); //sActTypDs
-        textArea02.setDisable(!lbShow); //sActTitle
-        textArea03.setDisable(!lbShow); //sActDescx
-        textArea15.setDisable(!lbShow); //sLogRemrk
-        textArea16.setDisable(!lbShow); //sRemarksx
-        txtField24.setDisable(!lbShow);//sDeptName
-        txtField25.setDisable(!lbShow); //sCompnyNm
-        txtField26.setDisable(!lbShow); //sBranchNm
-//        txtField32.setDisable(!lbShow); //Branch
-        txtField12.setDisable(!lbShow); //nTrgtClnt
-        txtField11.setDisable(!lbShow);  //nRcvdBdg
-        txtField28.setDisable(!lbShow); //sProvName
-        //textArea08.setDisable(!lbShow); //Street
-        textArea09.setDisable(!lbShow);  //sCompnynx
-
-        //Button
+        // Fields
+        dateFrom06.setDisable(!lbShow);
+        dateTo07.setDisable(!lbShow);
+        comboBox29.setDisable(!lbShow);
+        txtField05.setDisable(!lbShow);
+        textArea02.setDisable(!lbShow);
+        textArea03.setDisable(!lbShow);
+        textArea15.setDisable(!lbShow);
+        textArea16.setDisable(!lbShow);
+        txtField24.setDisable(!lbShow);
+        txtField25.setDisable(!lbShow);
+        txtField26.setDisable(!lbShow);
+        txtField12.setDisable(!lbShow);
+        txtField11.setDisable(!lbShow);
+        txtField28.setDisable(!lbShow);
+        textArea09.setDisable(!lbShow);
+        // Button
         btnCitySearch.setDisable(!(lbShow && !txtField28.getText().isEmpty()));
         btnCityRemove.setDisable(!(lbShow && !txtField28.getText().isEmpty()));
 
-        textArea08.setDisable(!lbShow);
+        if (tblViewCity != null && tblViewCity.getItems() != null) {
+            boolean tblViewCityEmpty = tblViewCity.getItems().isEmpty() || tblViewCity.getItems().size() >= 2;
+            textArea08.setDisable(!(lbShow && !tblViewCity.getItems().isEmpty()) || tblViewCity.getItems().size() >= 2);
 
-        tblViewActivityMembers.setDisable(!lbShow);
+            if (!lbShow || tblViewCityEmpty) {
+                textArea08.setDisable(true);
+                textArea08.clear();
 
-        tblViewVhclModels.setDisable(!lbShow);
+            } else {
+
+                textArea08.setVisible(true);
+            }
+        } else {
+            textArea08.setDisable(!lbShow);
+        }
 
         btnActivityMembersSearch.setDisable(!lbShow);
         btnActivityMemRemove.setDisable(!lbShow);
@@ -1231,7 +1308,6 @@ public class ActivityFormController implements Initializable, ScreenInterface {
         btnVhlModelRemove.setDisable(!lbShow);
         btnAdd.setVisible(!lbShow);
         btnAdd.setManaged(!lbShow);
-        //if lbShow = false hide btn
         btnEdit.setVisible(false);
         btnEdit.setManaged(false);
         btnSave.setVisible(lbShow);
@@ -1243,10 +1319,9 @@ public class ActivityFormController implements Initializable, ScreenInterface {
         btnCancel.setVisible(lbShow);
         btnCancel.setManaged(lbShow);
 
-        if (fnValue == EditMode.READY) { //show edit if user clicked save / browse
+        if (fnValue == EditMode.READY) {
             btnEdit.setVisible(true);
             btnEdit.setManaged(true);
-
             btnActivityHistory.setVisible(true);
             btnActivityHistory.setManaged(true);
             btnPrint.setVisible(true);
@@ -1275,15 +1350,8 @@ public class ActivityFormController implements Initializable, ScreenInterface {
         txtField12.clear(); //nTrgtClnt
         txtField11.clear();  //nRcvdBdg
         txtField28.clear(); //sProvName
-        //textArea08.clear(); //Street
+        textArea08.clear(); //Street
         textArea09.clear();  //sCompnynx
-    }
-
-    private void initActMembersTable() {
-        tblActvtyMembersRow.setCellValueFactory(new PropertyValueFactory<>("tblindexRow"));
-        tblselected.setCellValueFactory(new PropertyValueFactory<>("select"));
-        tblindex24.setCellValueFactory(new PropertyValueFactory<>("tblindex24"));
-        tblindex25.setCellValueFactory(new PropertyValueFactory<>("tblindex25"));
     }
 
 }

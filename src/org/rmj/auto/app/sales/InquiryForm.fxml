@@ -29,7 +29,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" fx:id="AnchorMain" prefHeight="1182.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane id="AnchorPane" fx:id="AnchorMain" prefHeight="1182.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" >
    <children>
       <StackPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -334,7 +334,7 @@
                                                                                                       <RadioButton fx:id="rdbtnHtB11" mnemonicParsing="false" text="Hot B" toggleGroup="$hotCategory" GridPane.columnIndex="3" />
                                                                                                       <RadioButton fx:id="rdbtnHtC11" mnemonicParsing="false" text="Hot C" toggleGroup="$hotCategory" GridPane.columnIndex="4" />
                                                                                                       <Label id="LabelDesc" text="Target Release Date" GridPane.columnIndex="6" />
-                                                                                                      <Label id="LabelDesc" text="Model" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                                                                                      <Label id="LabelDesc" text="Test Drive Model" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                                                                                       <TextField fx:id="txtField14" prefHeight="22.0" prefWidth="262.0" promptText="Search: F3" GridPane.columnIndex="2" GridPane.columnSpan="3" GridPane.rowIndex="1" />
                                                                                                       <DatePicker fx:id="txtField10" GridPane.columnIndex="7" />
                                                                                                       <Label id="LabelDesc" text="Inquiry Status " GridPane.columnIndex="6" GridPane.rowIndex="1" />

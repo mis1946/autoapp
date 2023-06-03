@@ -761,13 +761,13 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                 loadCustomerInquiry();
                 loadTargetVehicle();
                 loadPromosOfferred();
-                ShowMessageFX.Information(null, pxeModuleName, "You click clear button!"); 
+                ShowMessageFX.Information(getStage(), "You click clear button!", pxeModuleName, null);
                 break;
             case "btnConvertSales":
-                ShowMessageFX.Information(null, pxeModuleName, "You click convert to sales button"); 
+                ShowMessageFX.Information(getStage(), "You click convert to sales button", pxeModuleName, null);
                 break;
             case "btnPrintRefund":
-                ShowMessageFX.Information(null, pxeModuleName, "You click print refund button"); 
+                ShowMessageFX.Information(getStage(), "You click print refund button", pxeModuleName, null);
                 break;
             case "btnLostSale":
                 if(ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure, do you want to tag this inquiry as LOST SALE?") == true){
@@ -796,19 +796,19 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                     if (item.isTblcheck01()) {
 
                         if ("btnASremove".equals(lsButton) && lnCtr > 1){
-                             ShowMessageFX.Information(null, pxeModuleName, "Please select atleast 1 slip to be removed.");
+                             ShowMessageFX.Information(getStage(), "Please select atleast 1 slip to be removed.", pxeModuleName, null);
                              return;
                         }
                         
                         if ("btnAScancel".equals(lsButton) && lnCtr > 1){
-                             ShowMessageFX.Information(null, pxeModuleName, "Please select atleast 1 slip to be cancelled.");
+                             ShowMessageFX.Information(getStage(), "Please select atleast 1 slip to be cancelled.", pxeModuleName, null);
                              return;
                         }
                        switch (oTransProcess.getInqRsv(lnRow,13).toString()) {
                             case "0":
                                 if ("btnASprint".equals(lsButton)){
-                                     ShowMessageFX.Information(null, pxeModuleName, "Slip No. " + oTransProcess.getInqRsv(lnRow,3).toString() + " is not yet approved. Printing Aborted." );
-                                     return;
+                                     ShowMessageFX.Information(getStage(), "Slip No. " + oTransProcess.getInqRsv(lnRow,3).toString() + " is not yet approved. Printing Aborted.", pxeModuleName, null);
+                             return;
                                 } else {
                                      selectedItems.add(item);
                                 }
@@ -816,17 +816,17 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                             case "1":
                                 switch (lsButton) {
                                     case "btnAScancel":
-                                        ShowMessageFX.Information(null, pxeModuleName, "You are not allowed to Cancel Slip No. " + oTransProcess.getInqRsv(lnRow,3).toString());
+                                        ShowMessageFX.Information(getStage(), "You are not allowed to Cancel Slip No. " + oTransProcess.getInqRsv(lnRow,3).toString(), pxeModuleName, null);
                                         return;
                                     case "btnASremove":
-                                        ShowMessageFX.Information(null, pxeModuleName, "You are not allowed to Remove Slip No. " + oTransProcess.getInqRsv(lnRow,3).toString());
+                                        ShowMessageFX.Information(getStage(), "You are not allowed to Remove Slip No. " + oTransProcess.getInqRsv(lnRow,3).toString(), pxeModuleName, null);
                                         return;
                                     case "btnASprint":
                                         selectedItems.add(item);
                                 }
                                 break;
                             case "2":
-                                ShowMessageFX.Information(null, pxeModuleName, "Slip No. " + oTransProcess.getInqRsv(lnRow,3).toString() + " is already Cancelled.");
+                                ShowMessageFX.Information(getStage(),  "Slip No. " + oTransProcess.getInqRsv(lnRow,3).toString() + " is already Cancelled.", pxeModuleName, null);
                                 return;
                         } 
                         lnCtr++;
@@ -835,7 +835,7 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                 }
                     
                 if (selectedItems.isEmpty()) {
-                    ShowMessageFX.Information(null, pxeModuleName, "No items selected!");
+                    ShowMessageFX.Information(getStage(),  "No items selected!", pxeModuleName, null);
                 } else {
                     switch (lsButton) {
                         case "btnAScancel":
@@ -848,7 +848,7 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                                         String[] sSourceNo = {sSourceNox}; //Use array cause class is mandatory array to call even I only need 1
                                         oTransProcess.loadReservation(sSourceNo,true);
                                         }else {
-                                            ShowMessageFX.Information(null, pxeModuleName, "Failed to cancel reservation.");
+                                            ShowMessageFX.Information(getStage(), "Failed to cancel reservation." , pxeModuleName, null);
                                             return;
                                         }
                                     } else {
@@ -857,7 +857,7 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                                     
                                     
                                 }
-                                ShowMessageFX.Information(null, pxeModuleName, "Reservation cancelled successfully.");
+                                ShowMessageFX.Information(getStage(), "Reservation cancelled successfully." , pxeModuleName, null);
                             }
                         break;
                         case "btnASremove":
@@ -867,7 +867,7 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                                     if(oTransProcess.removeInqRes(Integer.parseInt(sRow))) {
                                         break;
                                     }else {
-                                        ShowMessageFX.Information(null, pxeModuleName, oTransProcess.getMessage());
+                                        ShowMessageFX.Information(getStage(), oTransProcess.getMessage() , pxeModuleName, null);
                                     }
                                 }
                             }
@@ -970,7 +970,7 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                     if (item.isTblcheck01()) {
                         if (("btnBankAppView".equals(lsButton) && lnCtr > 1) ||
                              "btnBankAppUpdate".equals(lsButton) && lnCtr > 1){
-                            ShowMessageFX.Warning(null, pxeModuleName, "Please select atleast 1 slip to be view / updated.");
+                            ShowMessageFX.Warning(getStage(), "Please select atleast 1 slip to be view / updated." , pxeModuleName, null);
                             return;
                         }
                         selBankItems.add(item);
@@ -979,7 +979,7 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                 }
                     
                 if (selBankItems.isEmpty()) {
-                    ShowMessageFX.Information(null, pxeModuleName, "No items selected!");
+                    ShowMessageFX.Information(getStage(), "No items selected!" , pxeModuleName, null);
                 } else {
                     if ("btnBankAppCancel".equals(lsButton)){
                         if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure you want to cancel?")) {
@@ -995,13 +995,13 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                                 String sTransStat = (String) oTransBankApp.getBankAppDet( Integer.parseInt(item.getTblindex01()),9);
                                 switch (sTransStat) {
                                     case "1":
-                                        ShowMessageFX.Warning(null, pxeModuleName, "Selected Bank Application has already been declined.");
+                                        ShowMessageFX.Warning(getStage(), "Selected Bank Application has already been declined." , pxeModuleName, null);
                                         return;
                                     case "2":
-                                        ShowMessageFX.Warning(null, pxeModuleName, "Approved bank applications cannot be cancelled.");
+                                        ShowMessageFX.Warning(getStage(), "Approved bank applications cannot be cancelled."  , pxeModuleName, null);
                                         return;
                                     case "3":
-                                        ShowMessageFX.Warning(null, pxeModuleName, "Selected Bank Application has already been cancelled.");
+                                        ShowMessageFX.Warning(getStage(),"Selected Bank Application has already been cancelled."  , pxeModuleName, null);
                                         return;
                                     
                                     default:
@@ -1011,7 +1011,7 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                                 if(oTransBankApp.CancelBankApp(sTransNo)){
                                 }else {
                                     //ShowMessageFX.Warning(null, pxeModuleName, "Failed to cancel Bank Application.");
-                                    ShowMessageFX.Warning(null, pxeModuleName, oTransBankApp.getMessage());
+                                    ShowMessageFX.Warning(getStage(), oTransBankApp.getMessage() , pxeModuleName, null);
                                     return;
                                 }
                             break;
@@ -1048,7 +1048,7 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                     }
                     
                     if ("btnBankAppCancel".equals(lsButton)){
-                        ShowMessageFX.Information(null, pxeModuleName, oTransBankApp.getMessage());
+                        ShowMessageFX.Information(getStage(), oTransBankApp.getMessage() , pxeModuleName, null);
                     }
                     oTransBankApp.loadBankApplication(sSourceNox,true);
                     loadBankApplication();
@@ -1086,16 +1086,17 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                     if (unload != null) {
                         unload.unloadForm(AnchorMain, oApp, pxeModuleName);
                     }else {
-                        ShowMessageFX.Warning(null, "Warning", "Notify System Admin to Configure Null value at close button.");    
+                        ShowMessageFX.Warning(getStage(), "Notify System Admin to Configure Null value at close button." , pxeModuleName, null);
                     }
                 break;
                 }else
                     return;
             default:
-                ShowMessageFX.Warning(null, pxeModuleName, "Button with name " + lsButton + " not registered.");
+                ShowMessageFX.Warning(getStage(), "Button with name " + lsButton + " not registered.", pxeModuleName, null);
                 return;
             }
             initButton(pnEditMode); 
+            initBtnProcess(pnEditMode);
         } catch (SQLException ex) {
             Logger.getLogger(InquiryFormController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -2535,7 +2536,8 @@ public class InquiryFormController implements Initializable, ScreenInterface{
             }
                
             if (!rdbtnNew05.isSelected() && !rdbtnPro05.isSelected()){
-                ShowMessageFX.Warning("No `Vehicle Category` selected.", pxeModuleName, "Please select `Vehicle Category` value.");
+                //ShowMessageFX.Warning("No `Vehicle Category` selected.", pxeModuleName, "Please select `Vehicle Category` value.");
+                ShowMessageFX.Warning(getStage(), "Please select `Vehicle Category` value." , pxeModuleName, null);
                 return false;
             }else {
                 if (rdbtnNew05.isSelected()){
@@ -2546,7 +2548,7 @@ public class InquiryFormController implements Initializable, ScreenInterface{
             }
                
             if (cmbType012.getSelectionModel().getSelectedIndex() < 0){
-                ShowMessageFX.Warning("No `Inquiry Type` selected.", pxeModuleName, "Please select `Inquiry Type` value.");
+                ShowMessageFX.Warning(getStage(), "Please select `Inquiry Type` value." , pxeModuleName, null);
                 cmbType012.requestFocus();
                 return false;
             }else 
@@ -2563,13 +2565,15 @@ public class InquiryFormController implements Initializable, ScreenInterface{
 
             if (cmbType012.getSelectionModel().getSelectedIndex() == 3){
                 if (txtField09.getText().equals("") || txtField09.getText() == null){
-                    ShowMessageFX.Warning("No `Refferal Agent` selected.", pxeModuleName, "Please select `Refferal Agent` value.");
+                    //ShowMessageFX.Warning("No `Refferal Agent` selected.", pxeModuleName, "Please select `Refferal Agent` value.");
+                    ShowMessageFX.Warning(getStage(), "Please select `Refferal Agent` value." , pxeModuleName, null);
                     txtField09.requestFocus();
                     return false;
                 }
             } else if (cmbType012.getSelectionModel().getSelectedIndex() == 4 || cmbType012.getSelectionModel().getSelectedIndex() == 5){
                 if (txtField15.getText().equals("") || txtField15.getText() == null){
-                    ShowMessageFX.Warning("No `Event` selected.", pxeModuleName, "Please select `Event` value.");
+                    //ShowMessageFX.Warning("No `Event` selected.", pxeModuleName, "Please select `Event` value.");
+                    ShowMessageFX.Warning(getStage(), "Please select `Event` value." , pxeModuleName, null);
                     txtField15.requestFocus();
                     return false;
                 }

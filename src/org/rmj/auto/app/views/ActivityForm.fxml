@@ -26,7 +26,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" fx:id="AnchorMain" prefHeight="669.0" prefWidth="1322.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" >
+<AnchorPane id="AnchorPane" fx:id="AnchorMain" prefHeight="669.0" prefWidth="1322.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <StackPane prefHeight="651.0" prefWidth="917.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
@@ -359,13 +359,13 @@
                                                                                 </VBox>
                                                                                 <TableView fx:id="tblViewCity" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="6" GridPane.columnSpan="4" GridPane.rowIndex="1" GridPane.rowSpan="5">
                                                                                     <columns>
-                                                                                        <TableColumn fx:id="tblRowCity" prefWidth="41.0" text="Row" />
-                                                                                        <TableColumn fx:id="tblselectCity" prefWidth="34.5">
+                                                                                        <TableColumn fx:id="tblRowCity" editable="false" prefWidth="41.0" sortable="false" text="Row" />
+                                                                                        <TableColumn fx:id="tblselectCity" editable="false" prefWidth="34.5" sortable="false">
                                                                                             <graphic>
                                                                                                 <CheckBox fx:id="selectAllCity" mnemonicParsing="false" prefHeight="22.0" prefWidth="23.0" textAlignment="CENTER" />
                                                                                             </graphic>
                                                                                         </TableColumn>
-                                                                                        <TableColumn fx:id="tblTownCity" prefWidth="274.5" text="Town/City" />
+                                                                                        <TableColumn fx:id="tblTownCity" editable="false" prefWidth="274.5" text="Town/City" />
                                                                                     </columns>
                                                                                 </TableView>
                                                                                 <Label text="Municipality" GridPane.columnIndex="6">
@@ -459,14 +459,14 @@
                                                                         </AnchorPane>
                                                                         <TableView fx:id="tblViewActivityMembers" prefHeight="208.0" prefWidth="498.0">
                                                                             <columns>
-                                                                                <TableColumn fx:id="tblActvtyMembersRow" prefWidth="36.33331298828125" text="Row" />
-                                                                                <TableColumn fx:id="tblselected" prefWidth="28.33331298828125">
+                                                                                <TableColumn fx:id="tblActvtyMembersRow" editable="false" prefWidth="36.33331298828125" sortable="false" text="Row" />
+                                                                                <TableColumn fx:id="tblselected" editable="false" prefWidth="28.33331298828125">
                                                                                     <graphic>
-                                                                                        <CheckBox fx:id="selectAllCheckBoxEmployee" alignment="CENTER" mnemonicParsing="false" prefHeight="18.0" prefWidth="51.0" />
+                                                                                        <CheckBox fx:id="selectAllCheckBoxEmployee" alignment="CENTER" mnemonicParsing="false" prefHeight="18.0" prefWidth="76.0" />
                                                                                     </graphic>
                                                                                 </TableColumn>
-                                                                                <TableColumn fx:id="tblindex25" prefWidth="255.66668701171875" text="Employee" />
-                                                                                <TableColumn fx:id="tblindex24" prefWidth="250.3333740234375" text="Department" />
+                                                                                <TableColumn fx:id="tblindex25" editable="false" prefWidth="255.66668701171875" sortable="false" text="Employee" />
+                                                                                <TableColumn fx:id="tblindex24" editable="false" prefWidth="250.3333740234375" sortable="false" text="Department" />
                                                                             </columns>
                                                                             <VBox.margin>
                                                                                 <Insets />
@@ -506,14 +506,13 @@
                                                                         </AnchorPane>
                                                                         <TableView fx:id="tblViewVhclModels" prefHeight="197.0" prefWidth="498.0">
                                                                             <columns>
-                                                                                <TableColumn prefWidth="33.66668701171875" text="Row" />
-                                                                                <TableColumn prefWidth="33.6666259765625">
+                                                                                <TableColumn fx:id="tblindexVchlRow" editable="false" prefWidth="33.66668701171875" text="Row" />
+                                                                                <TableColumn fx:id="tblVchlSelect" editable="false" prefWidth="33.6666259765625" sortable="false">
                                                                                     <graphic>
-                                                                                        <CheckBox mnemonicParsing="false" />
+                                                                                        <CheckBox fx:id="selectAllVchlMode" mnemonicParsing="false" />
                                                                                     </graphic>
                                                                                 </TableColumn>
-                                                                                <TableColumn prefWidth="246.3333740234375" text="Make" />
-                                                                                <TableColumn prefWidth="211.0" text="Model" />
+                                                                                <TableColumn fx:id="tblVchlDescription" editable="false" prefWidth="428.0" sortable="false" text="Vehicle Description" />
                                                                             </columns>
                                                                         </TableView>
                                                                     </children>

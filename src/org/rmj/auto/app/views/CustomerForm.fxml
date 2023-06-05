@@ -27,7 +27,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" fx:id="AnchorMain" prefHeight="600.0" stylesheets="@../css/FrameStyle.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" >
+<AnchorPane id="AnchorPane" fx:id="AnchorMain" prefHeight="600.0" stylesheets="@../css/FrameStyle.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <StackPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -82,14 +82,6 @@
                                  </effect>
                                  <graphic>
                                     <FontAwesomeIconView glyphName="FOLDER_OPEN" size="20" />
-                                 </graphic>
-                              </Button>
-                              <Button fx:id="btnVEdit" contentDisplay="TOP" layoutX="81.0" layoutY="10.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="70.0" text="Edit">
-                                 <effect>
-                                    <Blend />
-                                 </effect>
-                                 <graphic>
-                                    <FontAwesomeIconView glyphName="EDIT" size="20" />
                                  </graphic>
                               </Button>
                               <Button fx:id="btnVSave" contentDisplay="TOP" layoutX="152.0" layoutY="10.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="280.0" text="Attach INSERTED Vehicle Record to Customer">
@@ -167,7 +159,7 @@
                                        <children>
                                           <TabPane fx:id="tabPaneMain" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                             <tabs>
-                                              <Tab style="-fx-font-weight: bold; -fx-font-family: arial;" text="Customer">
+                                              <Tab fx:id="tabCustomer" style="-fx-font-weight: bold; -fx-font-family: arial;" text="Customer">
                                                    <content>
                                                       <AnchorPane>
                                                          <children>
@@ -668,7 +660,7 @@
                                                       </AnchorPane>
                                                    </content>
                                                 </Tab>
-                                              <Tab style="-fx-font-weight: bold; -fx-font-family: arial;" text="Vehicle Information">
+                                              <Tab fx:id="tabVhclInfo" style="-fx-font-weight: bold; -fx-font-family: arial;" text="Vehicle Information">
                                                    <content>
                                                       <AnchorPane>
                                                          <children>
@@ -769,8 +761,8 @@
                                                                                     <TextField fx:id="txtField25V" promptText="Search F3" GridPane.columnIndex="3" GridPane.rowIndex="1" />
                                                                                     <Button fx:id="btnVhclDesc" mnemonicParsing="false" prefHeight="25.0" prefWidth="30.0" text="..." GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                                                                     <TextField fx:id="txtField27V" promptText="Search F3" GridPane.columnIndex="6" GridPane.rowIndex="1" />
-                                                                                    <TextField fx:id="txtField32V" promptText="Search F3" GridPane.columnIndex="3" GridPane.rowIndex="2" />
                                                                                     <TextField fx:id="txtField29V" promptText="Search F3" GridPane.columnIndex="9" GridPane.rowIndex="1" />
+                                                                                    <TextField fx:id="txtField32V" promptText="Search F3" GridPane.columnIndex="3" GridPane.rowIndex="2" />
                                                                                     <TextField fx:id="txtField31V" promptText="Search F3" GridPane.columnIndex="6" GridPane.rowIndex="2" />
                                                                                     <TextField fx:id="txtField33V" promptText="Search F3" GridPane.columnIndex="9" GridPane.rowIndex="2" />
                                                                                     <Label id="LabelDesc" text="Make" GridPane.columnIndex="2" GridPane.rowIndex="1">
@@ -838,8 +830,8 @@
                                                                                        </graphic>
                                                                                     </Button>
                                                                                     <TextField fx:id="txtField21V" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-                                                                                    <TextField fx:id="txtField12V" GridPane.columnIndex="9" GridPane.rowIndex="1" />
                                                                                     <TextField fx:id="txtField03V" GridPane.columnIndex="6" GridPane.rowIndex="1" />
+                                                                                    <TextField fx:id="txtField12V" GridPane.columnIndex="9" GridPane.rowIndex="1" />
                                                                                     <TextField fx:id="txtField08V" GridPane.columnIndex="3" GridPane.rowIndex="2" />
                                                                                     <TextField fx:id="txtField04V" GridPane.columnIndex="6" GridPane.rowIndex="2" />
                                                                                     <Label id="LabelDesc" text="Plate Number" GridPane.columnIndex="2" GridPane.rowIndex="1" />

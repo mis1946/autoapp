@@ -39,6 +39,7 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Pagination;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableRow;
@@ -95,6 +96,7 @@ public class InquiryFormController implements Initializable, ScreenInterface{
     private int pnRow = -1;
     private int oldPnRow = -1;
     private int selectedTblRowIndex = -1;
+    private int selectedIndex = 0;
     private int lnCtr = 0;
     private int lnRow = 0;
     private int pagecounter;
@@ -379,6 +381,8 @@ public class InquiryFormController implements Initializable, ScreenInterface{
     private TableColumn flwpIndex06;
     @FXML
     private TextArea textArea33;
+    @FXML
+    private TabPane tabPaneMain;
     
     
     private Stage getStage(){
@@ -603,6 +607,38 @@ public class InquiryFormController implements Initializable, ScreenInterface{
 
         pnEditMode = EditMode.UNKNOWN;
         initButton(pnEditMode);
+        
+        tabPaneMain.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Tab>() {
+            @Override
+            public void changed(ObservableValue<? extends Tab> observable, Tab oldTab, Tab newTab) {
+                selectedIndex = tabPaneMain.getSelectionModel().getSelectedIndex();
+                
+                /*INQUIRY PROCESS*/
+                if (selectedIndex == 1) {
+                    initButton(pnEditMode);
+                    initBtnProcess(oTransProcess.getEditMode());
+                    btnAdd.setVisible(false);
+                    btnAdd.setManaged(false);
+                    btnEdit.setVisible(false);
+                    btnEdit.setManaged(false);
+                    btnSave.setVisible(false);
+                    btnSave.setManaged(false);
+                    btnClear.setVisible(false);
+                    btnClear.setManaged(false);
+                    btnCancel.setVisible(false);
+                    btnCancel.setManaged(false);
+                /*INQUIRY INFORMATION*/
+                } else {
+                    initButton(pnEditMode);
+                    btnProcess.setVisible(false);
+                    btnProcess.setManaged(false);
+                    btnModify.setVisible(false);
+                    btnModify.setManaged(false);
+                    btnApply.setVisible(false);
+                    btnApply.setManaged(false);
+                }
+            }
+        });
 
     }    
     
@@ -743,12 +779,17 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                     if (setSelection()) {
                         if(oTrans.SaveRecord()){
                             ShowMessageFX.Information(getStage(), "Transaction save successfully.", pxeModuleName, null);
-                            loadCustomerInquiry();
-                            loadTargetVehicle();
-                            loadPromosOfferred();
                             loadInquiryListTable();
                             pagination.setPageFactory(this::createPage);
+                            if (pnEditMode == EditMode.ADDNEW){
+                                pagecounter = (oTrans.getInquiryMasterCount()-1) + pagination.getCurrentPageIndex() * ROWS_PER_PAGE;
+                            }
+                            getSelectedItem(filteredData.get(pagecounter).getTblcinqindex01());
                             pnEditMode = oTrans.getEditMode();
+                            initBtnProcess(pnEditMode);
+                            //loadCustomerInquiry();
+                            //loadTargetVehicle();
+                            //loadPromosOfferred();
                         } else {
                             ShowMessageFX.Warning(getStage(),oTrans.getMessage() ,"Warning", "Error while saving " + pxeModuleName);
                         }
@@ -904,8 +945,13 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                     oTransProcess.setClientID(sClientID);
                     oTransProcess.setTransNox(sSourceNox);
                     if(oTransProcess.SaveRecord()){
-                        System.out.println("inq code after saving >> " +(String) oTrans.getMaster(1));
                         ShowMessageFX.Information(getStage(), "Transaction save successfully.", pxeModuleName, null);
+                        loadInquiryListTable();
+                        pagination.setPageFactory(this::createPage);
+                        getSelectedItem(filteredData.get(pagecounter).getTblcinqindex01());
+                        pnEditMode = oTransProcess.getEditMode();
+                        initBtnProcess(pnEditMode);
+                        /*
                         oTrans.OpenRecord(sSourceNox);
                         loadCustomerInquiry();
                         loadTargetVehicle();
@@ -930,11 +976,12 @@ public class InquiryFormController implements Initializable, ScreenInterface{
 
                         loadInquiryListTable();
                         pagination.setPageFactory(this::createPage);
+                        */
 
                     } else {
                         ShowMessageFX.Warning(getStage(),oTransProcess.getMessage() ,"Warning", "Error while saving " + pxeModuleName);
+                        return;
                     }
-                    initBtnProcess(oTransProcess.getEditMode());
                     break;
                 }else
                     return;
@@ -1095,8 +1142,9 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                 ShowMessageFX.Warning(getStage(), "Button with name " + lsButton + " not registered.", pxeModuleName, null);
                 return;
             }
-            initButton(pnEditMode); 
-            initBtnProcess(pnEditMode);
+            if(selectedIndex != 1){
+                initButton(pnEditMode); 
+            }
         } catch (SQLException ex) {
             Logger.getLogger(InquiryFormController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -1772,9 +1820,12 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                     
                     sClientID = (String) oTrans.getMaster(7);
                     sSourceNox = TransNo;
-                    //Enable button based on selected inquiry
-                    initButton(pnEditMode);
-                    initBtnProcess(pnEditMode);
+                    if(selectedIndex != 1){
+                        //Enable button based on selected inquiry
+                        initButton(pnEditMode);
+                    } else {
+                        initBtnProcess(pnEditMode);
+                    }
                     oldPnRow = pagecounter;  
                }
           
@@ -2622,7 +2673,7 @@ public class InquiryFormController implements Initializable, ScreenInterface{
     private void initButton(int fnValue){
         pnRow = 0;
         /* NOTE:
-             lbShow (FALSE)= invisible
+             lbShow (FALSE)=F invisible
              !lbShow (TRUE)= visible
         */
         boolean lbShow = (fnValue == EditMode.ADDNEW || fnValue == EditMode.UPDATE);
@@ -2760,6 +2811,14 @@ public class InquiryFormController implements Initializable, ScreenInterface{
                 case 6: //Cancelled
                 break;
             }
+        }
+        if(selectedIndex != 1){
+            btnProcess.setVisible(false);
+            btnProcess.setManaged(false);
+            btnModify.setVisible(false);
+            btnModify.setManaged(false);
+            btnApply.setVisible(false);
+            btnApply.setManaged(false);
         }
     }
      

@@ -221,7 +221,7 @@ public class ActivityFormController implements Initializable, ScreenInterface {
         txtField32.setDisable(true);
         setCapsLockBehavior(txtField25); //sCompyNm
         setCapsLockBehavior(txtField05); //sActTypDs
-//        setCapsLockBehavior(txtField26); //sBranchNm
+        setCapsLockBehavior(txtField26); //sBranchNm
         setCapsLockBehavior(txtField12); //nTrgtClnt
         setCapsLockBehavior(txtField28); //sProvName
         setCapsLockBehavior(txtField24); //sDeptName
@@ -234,6 +234,7 @@ public class ActivityFormController implements Initializable, ScreenInterface {
         setCapsLockBehavior(textArea03); //sActDescx
         setCapsLockBehavior(textArea15); //sLogRemrk
         setCapsLockBehavior(textArea16); //sRemarksx
+        setCapsLockBehavior(textArea08); //sAddressx
 
         btnBrowse.setOnAction(this::cmdButton_Click);
         btnCityRemove.setOnAction(this::cmdButton_Click);
@@ -258,12 +259,12 @@ public class ActivityFormController implements Initializable, ScreenInterface {
 //        txtField32.focusedProperty().addListener(txtField_Focus); //Branch
         txtField12.focusedProperty().addListener(txtField_Focus); //nTrgtClnt
 
-        //textArea08.focusedProperty().addListener(txtArea_Focus);
-        textArea15.focusedProperty().addListener(txtArea_Focus);
-        textArea16.focusedProperty().addListener(txtArea_Focus);
-        textArea09.focusedProperty().addListener(txtArea_Focus);
-        textArea03.focusedProperty().addListener(txtArea_Focus);
-        textArea02.focusedProperty().addListener(txtArea_Focus);
+        textArea08.focusedProperty().addListener(txtArea_Focus); //sAddressx
+        textArea15.focusedProperty().addListener(txtArea_Focus); //sLogRemrk
+        textArea16.focusedProperty().addListener(txtArea_Focus); //sRemarksx
+        textArea09.focusedProperty().addListener(txtArea_Focus);  //sCompnynx
+        textArea03.focusedProperty().addListener(txtArea_Focus);   //sActDescx
+        textArea02.focusedProperty().addListener(txtArea_Focus);  //sActTitle
         /* TxtField KeyPressed */
         txtField05.setOnKeyPressed(this::txtField_KeyPressed); //sActTypDs
         txtField26.setOnKeyPressed(this::txtField_KeyPressed); //sBranchNm
@@ -285,25 +286,11 @@ public class ActivityFormController implements Initializable, ScreenInterface {
         textSeek01.setOnKeyPressed(this::txtField_KeyPressed); //Activity No Search
         textSeek02.setOnKeyPressed(this::txtField_KeyPressed); //Activity Title Search
 
-        tblViewCity.getItems().addListener((ListChangeListener.Change<? extends ActivityTownEntryTableList> change)
-                -> {
-            if (tblViewCity != null && tblViewCity.getItems() != null) {
-                boolean tblViewCityEmpty = tblViewCity.getItems().isEmpty() || tblViewCity.getItems().size() >= 2;
-                textArea08.setDisable(!(true && !tblViewCity.getItems().isEmpty()) || tblViewCity.getItems().size() >= 2);
-
-                if (true && tblViewCityEmpty) {
-                    textArea08.clear();
-                }
-            } else {
-                textArea08.setDisable(false);
-            }
-        }
-        );
-
         txtField28.textProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue.isEmpty()) {
                 btnCitySearch.setDisable(true);
                 btnCityRemove.setDisable(true);
+                textArea08.setDisable(true);
                 tblViewCity.setDisable(false);
             }
         });
@@ -348,6 +335,7 @@ public class ActivityFormController implements Initializable, ScreenInterface {
 
         txtField12.setTextFormatter(new InputTextFormatter(trgPattern));  //nTrgtClnt
         txtField11.setTextFormatter(new InputTextFormatter(pattern));  //nRcvdBdgt
+        loadTownTable();
         pnEditMode = EditMode.UNKNOWN;
         initButton(pnEditMode);
     }
@@ -506,11 +494,11 @@ public class ActivityFormController implements Initializable, ScreenInterface {
                             txtField28.requestFocus();
                             return;
                         }
-//                        if (textArea08.getText().trim().equals("")) {
-//                              ShowMessageFX.Warning(getStage(), "Please enter a value for Municipality.","Warning", null);
-//                              textArea08.requestFocus();
-//                              return;
-//                         }
+                        if (textArea08.getText().trim().equals("")) {
+                            ShowMessageFX.Warning(getStage(), "Please enter a value for Street/Barangay.", "Warning", null);
+                            textArea08.requestFocus();
+                            return;
+                        }
                         if (textArea09.getText().trim().equals("")) {
                             ShowMessageFX.Warning(getStage(), "Please enter a value for Establishment.", "Warning", null);
                             textArea09.requestFocus();
@@ -546,7 +534,6 @@ public class ActivityFormController implements Initializable, ScreenInterface {
 
                     int lnCtr = 0;
                     int lnRow = 0;
-                    ObservableList<ActivityTownEntryTableList> removeselectedItems = FXCollections.observableArrayList();
 
                     for (ActivityTownEntryTableList item : tblViewCity.getItems()) {
                         if (item.getSelect().isSelected()) {
@@ -659,10 +646,15 @@ public class ActivityFormController implements Initializable, ScreenInterface {
                             }
                             if (oTrans.SearchRecord(textSeek01.getText(), false)) {
                                 loadActivityField();
+                                loadActivityVehicleTable();
+                                loadActMembersTable();
+                                loadTownTable();
                                 pnEditMode = EditMode.READY;
                             } else {
                                 ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
                                 textSeek02.clear();
+                                actVhclModelData.clear();
+                                actMembersData.clear();
                                 clearFields();
                                 pnEditMode = EditMode.UNKNOWN;
                             }
@@ -676,12 +668,16 @@ public class ActivityFormController implements Initializable, ScreenInterface {
                                 }
                             }
                             if (oTrans.SearchRecord(textSeek02.getText(), false)) {
-
                                 loadActivityField();
+                                loadActivityVehicleTable();
+                                loadActMembersTable();
+                                loadTownTable();
                                 pnEditMode = oTrans.getEditMode();
                             } else {
                                 ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
                                 textSeek01.clear();
+                                actVhclModelData.clear();
+                                actMembersData.clear();
                                 clearFields();
                                 pnEditMode = EditMode.UNKNOWN;
                             }
@@ -837,6 +833,9 @@ public class ActivityFormController implements Initializable, ScreenInterface {
                     case 9:        //sCompnynx
                         oTrans.setMaster(lnIndex, lsValue);
                         break;
+                    case 8: //sAddressx
+                        oTrans.setActTown(1, 3, lsValue);
+                        break;
                 }
             } else {
                 textArea.selectAll();
@@ -846,8 +845,8 @@ public class ActivityFormController implements Initializable, ScreenInterface {
             System.exit(1);
         }
     };
-    //Act Type Add Source Dialog
 
+    //Act Type Add Source Dialog
     private void loadActTypeAddSourceDialog() throws IOException {
         /**
          * if state = true : ADD else if state = false : UPDATE *
@@ -1080,16 +1079,30 @@ public class ActivityFormController implements Initializable, ScreenInterface {
     private void loadTownTable() {
         try {
             /*Populate table*/
+
             townCitydata.clear();
             for (int lnCtr = 1; lnCtr <= oTrans.getActTownCount(); lnCtr++) {
                 String townID = oTrans.getActTown(lnCtr, "sTownIDxx").toString();
                 String townName = oTrans.getActTown(lnCtr, "sTownName").toString();
-                townCitydata.add(new ActivityTownEntryTableList(
-                        String.valueOf(lnCtr), //ROW
-                        townID,
-                        townName
-                ));
+                boolean cityExists = false;
+                for (ActivityTownEntryTableList town : tblViewCity.getItems()) {
+                    if (town.getTblCity().equals(townName)) {
+                        cityExists = true;
+                        break;
+                    }
+
+                }
+
+                // Add the city to the table only if it doesn't already exist
+                if (!cityExists) {
+                    townCitydata.add(new ActivityTownEntryTableList(
+                            String.valueOf(lnCtr), //ROW
+                            townID,
+                            townName
+                    ));
+                }
             }
+
             tblViewCity.setItems(townCitydata);
             initTownTable();
         } catch (SQLException e) {
@@ -1112,8 +1125,11 @@ public class ActivityFormController implements Initializable, ScreenInterface {
         });
         selectAllCity.setOnAction(event -> {
             boolean newValue = selectAllCity.isSelected();
-            tblViewCity.getItems().forEach(item -> item.getSelect().setSelected(newValue));
-        });
+            if (!tblViewCity.getItems().isEmpty()) {
+                tblViewCity.getItems().forEach(item -> item.getSelect().setSelected(newValue));
+            }
+        }
+        );
         tblTownCity.setCellValueFactory(new PropertyValueFactory<>("tblCity"));
 
     }
@@ -1158,7 +1174,9 @@ public class ActivityFormController implements Initializable, ScreenInterface {
         });
         selectAllCheckBoxEmployee.setOnAction(event -> {
             boolean newValue = selectAllCheckBoxEmployee.isSelected();
-            tblViewActivityMembers.getItems().forEach(item -> item.getSelect().setSelected(newValue));
+            if (!tblViewActivityMembers.getItems().isEmpty()) {
+                tblViewActivityMembers.getItems().forEach(item -> item.getSelect().setSelected(newValue));
+            }
         });
         tblindex24.setCellValueFactory(new PropertyValueFactory<>("tblindex24"));
         tblindex25.setCellValueFactory(new PropertyValueFactory<>("tblindex25"));
@@ -1201,28 +1219,19 @@ public class ActivityFormController implements Initializable, ScreenInterface {
         });
         selectAllVchlMode.setOnAction(event -> {
             boolean newValue = selectAllVchlMode.isSelected();
-            tblViewVhclModels.getItems().forEach(item -> item.getSelect().setSelected(newValue));
-        });
+            if (!tblViewVhclModels.getItems().isEmpty()) {
+                tblViewVhclModels.getItems().forEach(item -> item.getSelect().setSelected(newValue));
+            }
+        }
+        );
         tblVchlDescription.setCellValueFactory(new PropertyValueFactory<>("tblDescription04"));
     }
 
-    private Callback<DatePicker, DateCell> callApprove = new Callback<DatePicker, DateCell>() {
-        @Override
-        public DateCell call(final DatePicker param) {
-            return new DateCell() {
-                @Override
-                public void updateItem(LocalDate item, boolean empty) {
-                    super.updateItem(item, empty); //To change body of generated methods, choose Tools | Templates.
-                    LocalDate today = LocalDate.now();
-                    LocalDate minDate = LocalDate.now().minusDays(7);
-                    setDisable(empty || item.isBefore(minDate) || item.compareTo(today) > 0);
-                }
-            };
-        }
-    };
-
     private void loadActivityField() {
         try {
+            if (oTrans.getActTownCount() > 0) {
+                textArea08.setText((String) oTrans.getActTown(1, 3));
+            }
             txtField01.setText((String) oTrans.getMaster(1)); // sActvtyID
             dateFrom06.setValue(strToDate(CommonUtils.xsDateShort((Date) oTrans.getMaster(6))));
             dateTo07.setValue(strToDate(CommonUtils.xsDateShort((Date) oTrans.getMaster(7))));
@@ -1256,6 +1265,7 @@ public class ActivityFormController implements Initializable, ScreenInterface {
             txtField11.setText(String.valueOf(oTrans.getMaster(11))); // nRcvdBdgt
             txtField28.setText((String) oTrans.getMaster(28)); // sProvName
             textArea09.setText((String) oTrans.getMaster(9)); // sCompnynx
+
         } catch (SQLException e) {
             ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
         }
@@ -1288,18 +1298,13 @@ public class ActivityFormController implements Initializable, ScreenInterface {
 
         if (tblViewCity != null && tblViewCity.getItems() != null) {
             boolean tblViewCityEmpty = tblViewCity.getItems().isEmpty() || tblViewCity.getItems().size() >= 2;
-            textArea08.setDisable(!(lbShow && !tblViewCity.getItems().isEmpty()) || tblViewCity.getItems().size() >= 2);
-
             if (!lbShow || tblViewCityEmpty) {
                 textArea08.setDisable(true);
                 textArea08.clear();
-
             } else {
-
-                textArea08.setVisible(true);
+                textArea08.setDisable(false);
             }
-        } else {
-            textArea08.setDisable(!lbShow);
+            textArea08.setDisable(!(lbShow && !tblViewCity.getItems().isEmpty()) || tblViewCity.getItems().size() >= 2);
         }
 
         btnActivityMembersSearch.setDisable(!lbShow);
@@ -1318,6 +1323,9 @@ public class ActivityFormController implements Initializable, ScreenInterface {
         btnPrint.setManaged(false);
         btnCancel.setVisible(lbShow);
         btnCancel.setManaged(lbShow);
+        tblselectCity.setVisible(lbShow);
+        tblselected.setVisible(lbShow);
+        tblVchlSelect.setVisible(lbShow);
 
         if (fnValue == EditMode.READY) {
             btnEdit.setVisible(true);
@@ -1327,6 +1335,7 @@ public class ActivityFormController implements Initializable, ScreenInterface {
             btnPrint.setVisible(true);
             btnPrint.setManaged(true);
         }
+
     }
 
     public void clearFields() {

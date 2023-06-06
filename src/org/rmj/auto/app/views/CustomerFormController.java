@@ -74,10 +74,10 @@ import org.rmj.auto.clients.base.ClientVehicleInfo;
 /**
  * FXML Controller class
  *
- * @author Arsiela
- * DATE CREATED 03-01-2023  
+ * @author Arsiela DATE CREATED 03-01-2023
  */
 public class CustomerFormController implements Initializable, ScreenInterface {
+
     private GRider oApp;
     private ClientMaster oTrans;
     private MasterCallback oListener;
@@ -86,7 +86,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
     private ClientEMail oTransEmail;
     private ClientSocMed oTransSocMed;
     private ClientVehicleInfo oTransVehicle;
-    
+
     unloadForm unload = new unloadForm(); //Used in Close Button
     private final String pxeModuleName = "Customer"; //Form Title
     private int selectedIndex;//Selected Tab Index
@@ -105,6 +105,10 @@ public class CustomerFormController implements Initializable, ScreenInterface {
     private ObservableList<CustomerTableMobile> mobiledata = FXCollections.observableArrayList();
     private ObservableList<CustomerTableEmail> emaildata = FXCollections.observableArrayList();
     private ObservableList<CustomerTableSocialMedia> socialmediadata = FXCollections.observableArrayList();
+
+    /*populate tables for customer vehicle info and vehicle history*/
+    private ObservableList<CustomerTableVehicleInfo> vhclinfodata = FXCollections.observableArrayList();
+    private ObservableList<CustomerTableVehicleInfo> vhclhtrydata = FXCollections.observableArrayList();
 
     /*populate comboxes client_master*/
     ObservableList<String> cCvlStat = FXCollections.observableArrayList("SINGLE", "MARRIED", "DIVORCED", "SEPARATED", "WIDOWED");
@@ -226,7 +230,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
     @FXML
     private Button btnTabAdd;
     @FXML
-    private Button btnTabRem; 
+    private Button btnTabRem;
     @FXML
     private Button btnTabUpd;
     @FXML
@@ -291,7 +295,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
     private TableColumn socmindex02;
     @FXML
     private TableColumn socmindex03;
-    
+
     /*CLIENT VEHICLE INFORMATION*/
     @FXML
     private Button btnVSave;
@@ -330,21 +334,11 @@ public class CustomerFormController implements Initializable, ScreenInterface {
     @FXML
     private TableColumn tblVhcllHsty05;
     @FXML
-    private TextField txtField25V;
-    @FXML
-    private TextField txtField27V;
-    @FXML
     private TextField txtField32V;
-    @FXML
-    private TextField txtField29V;
     @FXML
     private TextField txtField31V;
     @FXML
-    private TextField txtField33V;
-    @FXML
-    private TextField txtField21V;
-    @FXML
-    private TextField txtField12V;
+    private DatePicker txtField21V;
     @FXML
     private TextField txtField03V;
     @FXML
@@ -354,18 +348,28 @@ public class CustomerFormController implements Initializable, ScreenInterface {
     @FXML
     private TextField txtField09V;
     @FXML
-    private DatePicker txtField22V;
+    private TextField txtField22V;
     @FXML
-    private TextField txtField23V;
+    private TextField txtField24V;
     @FXML
-    private TextArea textArea35V;
+    private TextField txtField26V;
+    @FXML
+    private TextField txtField28V;
+    @FXML
+    private TextField txtField30V;
+    @FXML
+    private TextField txtField20V;
+    @FXML
+    private TextField txtField11V;
+    @FXML
+    private TextArea textArea34V;
     @FXML
     private TabPane tabPaneMain;
     @FXML
     private Tab tabCustomer;
     @FXML
     private Tab tabVhclInfo;
-     
+
     private Stage getStage() {
         return (Stage) txtField01.getScene().getWindow();
     }
@@ -379,11 +383,11 @@ public class CustomerFormController implements Initializable, ScreenInterface {
             System.out.println("Set Class Value " + fnIndex + "-->" + foValue);
         };
 
-        oTrans = new ClientMaster(oApp, oApp.getBranchCode(), true); 
+        oTrans = new ClientMaster(oApp, oApp.getBranchCode(), true);
         oTrans.setCallback(oListener);
         oTrans.setWithUI(true);
 
-        oTransAddress = new ClientAddress(oApp, oApp.getBranchCode(), false); 
+        oTransAddress = new ClientAddress(oApp, oApp.getBranchCode(), false);
         oTransAddress.setCallback(oListener);
         oTransAddress.setWithUI(true);
         initAddress();
@@ -393,12 +397,12 @@ public class CustomerFormController implements Initializable, ScreenInterface {
         oTransMobile.setWithUI(true);
         initContact();
 
-        oTransEmail = new ClientEMail(oApp, oApp.getBranchCode(), false); 
+        oTransEmail = new ClientEMail(oApp, oApp.getBranchCode(), false);
         oTransEmail.setCallback(oListener);
         oTransEmail.setWithUI(true);
         initEmail();
 
-        oTransSocMed = new ClientSocMed(oApp, oApp.getBranchCode(), false); 
+        oTransSocMed = new ClientSocMed(oApp, oApp.getBranchCode(), false);
         oTransSocMed.setCallback(oListener);
         oTransSocMed.setWithUI(true);
         initSocialMedia();
@@ -503,7 +507,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
         txtField03Socm.setOnKeyPressed(this::txtField_KeyPressed); // SocMed Account
 
         /*Radio Button Click Event Y / N*/
-        /*client_address*/
+ /*client_address*/
         radiobtn18AddY.setOnAction(this::cmdRadioButton_Click);
         radiobtn18AddN.setOnAction(this::cmdRadioButton_Click);
         /*client_mobile*/
@@ -521,7 +525,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
         radiobtn05SocN.setOnAction(this::cmdRadioButton_Click);
 
         /*Check box Clicked Event*/
-        /*client_address*/
+ /*client_address*/
         checkBox14Addr.setOnAction(this::cmdCheckBox_Click);
         checkBox17Addr.setOnAction(this::cmdCheckBox_Click);
         checkBox12Addr.setOnAction(this::cmdCheckBox_Click);
@@ -576,74 +580,82 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                 clearContactInfo();
             }
         });
-        
+
         /*Clear Fields*/
         clearFields();
         pnEditMode = EditMode.UNKNOWN;
         initButton(pnEditMode);
-        
+
         /*CUSTOMER VEHICLE INFORMATION*/
-        oTransVehicle = new ClientVehicleInfo(oApp, oApp.getBranchCode(), false); 
+        oTransVehicle = new ClientVehicleInfo(oApp, oApp.getBranchCode(), false);
         oTransVehicle.setCallback(oListener);
         oTransVehicle.setWithUI(true);
-        
+        initVehicleInfo();
+        initVehicleHtry();
+
         setCapsLockBehavior(txtField03V);
         setCapsLockBehavior(txtField04V);
         setCapsLockBehavior(txtField08V);
         setCapsLockBehavior(txtField09V);
-        setCapsLockBehavior(txtField12V);
-        setCapsLockBehavior(txtField21V);
-        setCapsLockBehavior(txtField23V);
-        setCapsLockBehavior(txtField25V);
-        setCapsLockBehavior(txtField27V);
-        setCapsLockBehavior(txtField29V);
-        setCapsLockBehavior(textArea35V);
-        
+        setCapsLockBehavior(txtField11V);
+        setCapsLockBehavior(txtField20V);
+        setCapsLockBehavior(txtField22V);
+        setCapsLockBehavior(txtField24V);
+        setCapsLockBehavior(txtField26V);
+        setCapsLockBehavior(txtField28V);
+        setCapsLockBehavior(textArea34V);
+
         txtField03V.focusedProperty().addListener(txtField_Focus);
         txtField04V.focusedProperty().addListener(txtField_Focus);
         txtField08V.focusedProperty().addListener(txtField_Focus);
         txtField09V.focusedProperty().addListener(txtField_Focus);
-        txtField12V.focusedProperty().addListener(txtField_Focus);
-        txtField21V.focusedProperty().addListener(txtField_Focus);
-        txtField23V.focusedProperty().addListener(txtField_Focus);
-        txtField25V.focusedProperty().addListener(txtField_Focus);
-        txtField27V.focusedProperty().addListener(txtField_Focus);
-        txtField29V.focusedProperty().addListener(txtField_Focus);
-        textArea35V.focusedProperty().addListener(txtArea_Focus);
-        txtField22V.setOnAction(this::getDate);
-        
+        txtField11V.focusedProperty().addListener(txtField_Focus);
+        txtField20V.focusedProperty().addListener(txtField_Focus);
+        txtField22V.focusedProperty().addListener(txtField_Focus);
+        txtField24V.focusedProperty().addListener(txtField_Focus);
+        txtField26V.focusedProperty().addListener(txtField_Focus);
+        txtField28V.focusedProperty().addListener(txtField_Focus);
+        txtField31V.focusedProperty().addListener(txtField_Focus);
+        txtField30V.focusedProperty().addListener(txtField_Focus);
+        txtField32V.focusedProperty().addListener(txtField_Focus);
+        textArea34V.focusedProperty().addListener(txtArea_Focus);
+        txtField21V.setOnAction(this::getDate);
+
         txtField03V.setOnKeyPressed(this::txtField_KeyPressed);
         txtField04V.setOnKeyPressed(this::txtField_KeyPressed);
         txtField08V.setOnKeyPressed(this::txtField_KeyPressed);
         txtField09V.setOnKeyPressed(this::txtField_KeyPressed);
-        txtField12V.setOnKeyPressed(this::txtField_KeyPressed);
-        txtField21V.setOnKeyPressed(this::txtField_KeyPressed);
+        txtField11V.setOnKeyPressed(this::txtField_KeyPressed);
+        txtField20V.setOnKeyPressed(this::txtField_KeyPressed);
         txtField22V.setOnKeyPressed(this::txtField_KeyPressed);
-        txtField23V.setOnKeyPressed(this::txtField_KeyPressed);
-        txtField25V.setOnKeyPressed(this::txtField_KeyPressed);
-        txtField27V.setOnKeyPressed(this::txtField_KeyPressed);
-        txtField29V.setOnKeyPressed(this::txtField_KeyPressed);
-        textArea35V.setOnKeyPressed(this::txtArea_KeyPressed);
-        
+        txtField24V.setOnKeyPressed(this::txtField_KeyPressed);
+        txtField26V.setOnKeyPressed(this::txtField_KeyPressed);
+        txtField28V.setOnKeyPressed(this::txtField_KeyPressed);
+        txtField31V.setOnKeyPressed(this::txtField_KeyPressed);
+        txtField30V.setOnKeyPressed(this::txtField_KeyPressed);
+        txtField32V.setOnKeyPressed(this::txtField_KeyPressed);
+        textArea34V.setOnKeyPressed(this::txtArea_KeyPressed);
+
         btnVhclDesc.setOnAction(this::cmdButton_Click);
         btnVhclAvl.setOnAction(this::cmdButton_Click);
         btnVhclMnl.setOnAction(this::cmdButton_Click);
         btnEngFrm.setOnAction(this::cmdButton_Click);
         btnVSave.setOnAction(this::cmdButton_Click);
         btnTransfer.setOnAction(this::cmdButton_Click);
-        
+
         tabPaneMain.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Tab>() {
             @Override
             public void changed(ObservableValue<? extends Tab> observable, Tab oldTab, Tab newTab) {
                 selectedIndex = tabPaneMain.getSelectionModel().getSelectedIndex();
+                pnRow = 0;
                 /*CLIENT INFORMATION*/
-                if (selectedIndex == 0){
+                if (selectedIndex == 0) {
                     initButton(pnEditMode);
                     btnTransfer.setVisible(false);
                     btnTransfer.setManaged(false);
                     btnVSave.setVisible(false);
                     btnVSave.setManaged(false);
-                /*CLIENT VEHICLE INFORMATION*/
+                    /*CLIENT VEHICLE INFORMATION*/
                 } else if (selectedIndex == 1) {
                     initVhclInfoButton(pnVEditMode);
                     btnAdd.setVisible(false);
@@ -651,10 +663,10 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                     btnSave.setVisible(false);
                     btnSave.setManaged(false);
                 }
-                
+
             }
         });
-        
+
         clearVehicleInfoFields();
         pnVEditMode = EditMode.UNKNOWN;
         initVhclInfoButton(pnEditMode);
@@ -743,6 +755,8 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                                 loadContact();
                                 loadEmail();
                                 loadSocialMedia();
+                                loadVehicleInfoTable();
+                                loadVehicleHtryTable();
                                 pnEditMode = EditMode.READY;
                             } else {
                                 ShowMessageFX.Warning(getStage(), "There was an error while loading Contact Information Details.", "Warning", null);
@@ -780,9 +794,9 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                         ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
                     }
                     break;
-                case "btnEdit": 
+                case "btnEdit":
                     /*CLIENT INFORMATION*/
-                    if(selectedIndex == 0){
+                    if (selectedIndex == 0) {
                         //modify client info
                         if (oTrans.UpdateRecord() && oTransAddress.UpdateRecord() && oTransMobile.UpdateRecord()
                                 && oTransEmail.UpdateRecord() && oTransSocMed.UpdateRecord()) {
@@ -795,10 +809,11 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                             ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
                         }
                         clearContactInfo();
-                    /*CLIENT VEHICLE INFORMATION*/
-                    } else if (selectedIndex == 1){
-                    
-                    
+                        /*CLIENT VEHICLE INFORMATION*/
+                    } else if (selectedIndex == 1) {
+                        if (oTransVehicle.UpdateRecord()){
+                            pnVEditMode = oTransVehicle.getEditMode();
+                        }
                     }
                     break;
                 case "btnSave": //save client info
@@ -1170,17 +1185,32 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                     loadEngineFrameWindow();
                     break;
                 case "btnVhclAvl":
-                    if(oTransVehicle.searchAvailableVhcl()){
+                    if (pnVEditMode == EditMode.ADDNEW || pnVEditMode == EditMode.UPDATE ){
+                        if (ShowMessageFX.OkayCancel(null, "Confirmation", "You have unsaved data. Are you sure you want to create a new record?") == true) {
+                        } else {
+                            return;
+                        }
+                    }
+                    clearVehicleInfoFields();
+                    if (oTransVehicle.searchAvailableVhcl()) {
+                        loadClientVehicleInfo();
                         pnVEditMode = oTransVehicle.getEditMode();
                     } else {
                         ShowMessageFX.Warning(getStage(), oTransVehicle.getMessage(), "Warning", null);
                         return;
                     }
-                    
+
                     break;
                 case "btnVhclMnl":
-                    if(oTransVehicle.NewRecord()){
-                        txtField25V.requestFocus();
+                    if (pnVEditMode == EditMode.ADDNEW || pnVEditMode == EditMode.UPDATE ){
+                        if (ShowMessageFX.OkayCancel(null, "Confirmation", "You have unsaved data. Are you sure you want to create a new record?") == true) {
+                        } else {
+                            return;
+                        }
+                    }
+                    clearVehicleInfoFields();
+                    if (oTransVehicle.NewRecord()) {
+                        txtField24V.requestFocus();
                         pnVEditMode = oTransVehicle.getEditMode();
                     } else {
                         ShowMessageFX.Warning(getStage(), oTransVehicle.getMessage(), "Warning", null);
@@ -1188,19 +1218,28 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                     }
                     break;
                 case "btnVSave":
-                    if(oTransVehicle.SaveRecord()){
+                    if (ShowMessageFX.OkayCancel(null, "Confirmation", "Are you sure you want to save this entry?") == true) {
+                    } else {
+                        return;
+                    }
+                    oTransVehicle.setClientID(oTrans.getMaster("sClientID").toString());
+                    if (oTransVehicle.SaveRecord()) {
+                        ShowMessageFX.Information(getStage(), oTransVehicle.getMessage(), "Warning", null);
                         pnVEditMode = oTransVehicle.getEditMode();
+                        loadVehicleInfoTable();
+                        loadVehicleHtryTable();
                     } else {
                         ShowMessageFX.Warning(getStage(), oTransVehicle.getMessage(), "Warning", null);
                         return;
                     }
+                    clearVehicleInfoFields();
                     break;
                 case "btnTransfer":
-                    
+
                     break;
 
             }
-            if (selectedIndex == 0 ){
+            if (selectedIndex == 0) {
                 initButton(pnEditMode);
             } else if (selectedIndex == 1) {
                 initVhclInfoButton(pnVEditMode);
@@ -1210,9 +1249,9 @@ public class CustomerFormController implements Initializable, ScreenInterface {
             ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
         }
     }
-    
+
     /*OPEN WINDOW FOR VEHICLE DESCRIPTION ENTRY*/
-    private void loadVehicleDescriptionWindow(){
+    private void loadVehicleDescriptionWindow() {
         try {
             Stage stage = new Stage();
 
@@ -1252,13 +1291,13 @@ public class CustomerFormController implements Initializable, ScreenInterface {
 
         } catch (IOException e) {
             e.printStackTrace();
-            ShowMessageFX.Warning(getStage(),e.getMessage(), "Warning", null);
+            ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
             System.exit(1);
         }
     }
-    
+
     /*OPEN WINDOW FOR VEHICLE DESCRIPTION ENTRY*/
-    private void loadEngineFrameWindow(){
+    private void loadEngineFrameWindow() {
         try {
             Stage stage = new Stage();
 
@@ -1298,11 +1337,11 @@ public class CustomerFormController implements Initializable, ScreenInterface {
 
         } catch (IOException e) {
             e.printStackTrace();
-            ShowMessageFX.Warning(getStage(),e.getMessage(), "Warning", null);
+            ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
             System.exit(1);
         }
     }
-    
+
     /*LOAD CLIENT INFORMATION*/
     private void loadClientMaster() {
         try {
@@ -1332,7 +1371,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
             ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
         }
     }
-    
+
     /*LOAD CLIENT VEHICLE INFORMATION*/
     private void loadClientVehicleInfo() {
         try {
@@ -1340,22 +1379,71 @@ public class CustomerFormController implements Initializable, ScreenInterface {
             txtField04V.setText((String) oTransVehicle.getMaster(4));
             txtField08V.setText((String) oTransVehicle.getMaster(8));
             txtField09V.setText((String) oTransVehicle.getMaster(9));
-            txtField12V.setText((String) oTransVehicle.getMaster(12));
-            txtField21V.setText((String) oTransVehicle.getMaster(21));
-           // txtField22V.setValue(strToDate(CommonUtils.xsDateShort((Date) oTransVehicle.getMaster(22))));
-            txtField23V.setText((String) oTransVehicle.getMaster(23));
-            txtField25V.setText((String) oTransVehicle.getMaster(25));
-            txtField27V.setText((String) oTransVehicle.getMaster(27));
-            txtField29V.setText((String) oTransVehicle.getMaster(29));
+            txtField11V.setText((String) oTransVehicle.getMaster(11));
+            txtField20V.setText((String) oTransVehicle.getMaster(20));
+            txtField21V.setValue(strToDate(CommonUtils.xsDateShort((Date) oTransVehicle.getMaster(21))));
+            txtField22V.setText((String) oTransVehicle.getMaster(22));
+            txtField24V.setText((String) oTransVehicle.getMaster(24));
+            txtField26V.setText((String) oTransVehicle.getMaster(26));
+            txtField28V.setText((String) oTransVehicle.getMaster(28));
+            txtField30V.setText((String) oTransVehicle.getMaster(30));
             txtField31V.setText((String) oTransVehicle.getMaster(31));
             txtField32V.setText((String) oTransVehicle.getMaster(32));
-            txtField33V.setText((String) oTransVehicle.getMaster(33));
-
+            textArea34V.setText((String) oTransVehicle.getMaster(34));
         } catch (SQLException e) {
             ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
         }
     }
-    
+
+    private void loadVehicleInfoTable() {
+        try {
+            vhclinfodata.clear();
+            if (oTransVehicle.LoadList(oTrans.getMaster("sClientID").toString())) {
+                /*Set Values to table from vehicle info table*/
+                for (lnCtr = 1; lnCtr <= oTransVehicle.getItemCount(); lnCtr++) {
+                    vhclinfodata.add(new CustomerTableVehicleInfo(
+                            String.valueOf(lnCtr) //ROW
+                            ,
+                             (String) oTransVehicle.getDetail(lnCtr, 8),
+                             (String) oTransVehicle.getDetail(lnCtr, 20),
+                             (String) oTransVehicle.getDetail(lnCtr, 33),
+                             (String) oTransVehicle.getDetail(lnCtr, 9),
+                             (String) oTransVehicle.getDetail(lnCtr, 1),
+                             (String) oTransVehicle.getDetail(lnCtr, 6)
+                    ));
+                }
+            }
+
+        } catch (SQLException e) {
+            ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
+        }
+
+    }
+
+    private void loadVehicleHtryTable() {
+//        TODO
+//        try {
+//            vhclhtrydata.clear();
+//            if (oTransVehicle.LoadList(oTrans.getMaster("sClientID").toString())){
+//                /*Set Values to table from vehicle history table*/
+//                for (lnCtr = 1; lnCtr <= oTransVehicle.getItemCount(); lnCtr++) {
+//                    vhclhtrydata.add(new CustomerTableVehicleInfo(
+//                                String.valueOf(lnCtr) //ROW
+//                            ,  (String) oTransVehicle.getDetail(lnCtr, 8)
+//                            ,  (String) oTransVehicle.getDetail(lnCtr, 20)
+//                            ,  (String) oTransVehicle.getDetail(lnCtr, 33)
+//                            ,  (String) oTransVehicle.getDetail(lnCtr, 9)
+//                            ,  (String) oTransVehicle.getDetail(lnCtr, 1)
+//                            ,  (String) oTransVehicle.getDetail(lnCtr, 6)
+//                            
+//                    ));
+//                }
+//            }
+//        } catch (SQLException e) {
+//            ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
+//        }
+    }
+
     private void loadAddress() {
         String sAddress, sStatus;
 
@@ -1492,7 +1580,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
             ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
         }
     }
-    
+
     private boolean setItemtoTable(String btnID) {
         iTabIndex = tabPCustCont.getSelectionModel().getSelectedIndex();
         try {
@@ -1523,9 +1611,6 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                 ShowMessageFX.Warning(getStage(), "Invalid Table Row to Set. Insert to Table Aborted!", "Warning", null);
                 return false;
             }
-
-            System.out.println("SET getItemCount current row  >>> " + oTransAddress.getItemCount());
-            System.out.println("SET tbl_row set to address in row >>> " + tbl_row);
 
             switch (iTabIndex) {
                 case 0:
@@ -1768,6 +1853,42 @@ public class CustomerFormController implements Initializable, ScreenInterface {
         tblSocMed.setItems(socialmediadata);
     }
 
+    /*populate vheicle information Table*/
+    private void initVehicleInfo() {
+        tblVhcllist01.setCellValueFactory(new PropertyValueFactory<>("tblindex01"));
+        tblVhcllist02.setCellValueFactory(new PropertyValueFactory<>("tblindex02"));
+        tblVhcllist03.setCellValueFactory(new PropertyValueFactory<>("tblindex03"));
+        tblVhcllist04.setCellValueFactory(new PropertyValueFactory<>("tblindex04"));
+        tblVhcllist05.setCellValueFactory(new PropertyValueFactory<>("tblindex05"));
+
+        tblViewVhclInfo.widthProperty().addListener((ObservableValue<? extends Number> source, Number oldWidth, Number newWidth) -> {
+            TableHeaderRow header = (TableHeaderRow) tblViewVhclInfo.lookup("TableHeaderRow");
+            header.reorderingProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+                header.setReordering(false);
+            });
+        });
+
+        tblViewVhclInfo.setItems(vhclinfodata);
+    }
+
+    /*populate vehicle history Table*/
+    private void initVehicleHtry() {
+        tblVhcllHsty01.setCellValueFactory(new PropertyValueFactory<>("tblindex01"));
+        tblVhcllHsty02.setCellValueFactory(new PropertyValueFactory<>("tblindex02"));
+        tblVhcllHsty03.setCellValueFactory(new PropertyValueFactory<>("tblindex03"));
+        tblVhcllHsty04.setCellValueFactory(new PropertyValueFactory<>("tblindex04"));
+        tblVhcllHsty05.setCellValueFactory(new PropertyValueFactory<>("tblindex05"));
+
+        tblViewVhclHsty.widthProperty().addListener((ObservableValue<? extends Number> source, Number oldWidth, Number newWidth) -> {
+            TableHeaderRow header = (TableHeaderRow) tblViewVhclHsty.lookup("TableHeaderRow");
+            header.reorderingProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+                header.setReordering(false);
+            });
+        });
+
+        tblViewVhclHsty.setItems(vhclhtrydata);
+    }
+
     private int validateContactInfo() {
         iTabIndex = tabPCustCont.getSelectionModel().getSelectedIndex();
         int iCntp = 0;
@@ -1807,128 +1928,137 @@ public class CustomerFormController implements Initializable, ScreenInterface {
     /*Populate Text Field Based on selected address in table*/
     private void getSelectedItem() {
         iTabIndex = tabPCustCont.getSelectionModel().getSelectedIndex();
-
         try {
-            switch (iTabIndex) {
-                /*Address*/
-                case 0:
-                    if (pnEditMode == EditMode.UPDATE) {
-                        if (oTransAddress.getAddress(pnRow, "sAddrssID").toString().equals("")) {
-                            btnTabRem.setVisible(true);
-                        } else {
-                            btnTabRem.setVisible(false);
+            if (selectedIndex != 1) {
+                switch (iTabIndex) {
+                    /*Address*/
+                    case 0:
+                        if (pnEditMode == EditMode.UPDATE) {
+                            if (oTransAddress.getAddress(pnRow, "sAddrssID").toString().equals("")) {
+                                btnTabRem.setVisible(true);
+                            } else {
+                                btnTabRem.setVisible(false);
+                            }
                         }
-                    }
-                    txtField03Addr.setText((String) oTransAddress.getAddress(pnRow, "sHouseNox"));
-                    txtField04Addr.setText((String) oTransAddress.getAddress(pnRow, "sAddressx"));
-                    txtField05Addr.setText((String) oTransAddress.getAddress(pnRow, "sTownName"));
-                    txtField06Addr.setText((String) oTransAddress.getAddress(pnRow, "sBrgyName"));
-                    txtField07Addr.setText((String) oTransAddress.getAddress(pnRow, "sZippCode"));
-                    textArea11Addr.setText((String) oTransAddress.getAddress(pnRow, "sRemarksx"));
-                    if (oTransAddress.getAddress(pnRow, "cRecdStat").toString().equals("1")) {
-                        radiobtn18AddY.setSelected(true);
-                        radiobtn18AddN.setSelected(false);
-                    } else {
-                        radiobtn18AddY.setSelected(false);
-                        radiobtn18AddN.setSelected(true);
-                    }
-                    if (oTransAddress.getAddress(pnRow, "cOfficexx").toString().equals("1")) {
-                        checkBox12Addr.setSelected(true);
-                    } else {
-                        checkBox12Addr.setSelected(false);
-                    }
-                    if (oTransAddress.getAddress(pnRow, "cProvince").toString().equals("1")) {
-                        checkBox13Addr.setSelected(true);
-                    } else {
-                        checkBox13Addr.setSelected(false);
-                    }
-                    if (oTransAddress.getAddress(pnRow, "cPrimaryx").toString().equals("1")) {
-                        checkBox14Addr.setSelected(true);
-                    } else {
-                        checkBox14Addr.setSelected(false);
-                    }
-                    if (oTransAddress.getAddress(pnRow, "cCurrentx").toString().equals("1")) {
-                        checkBox17Addr.setSelected(true);
-                    } else {
-                        checkBox17Addr.setSelected(false);
-                    }
-                    break;
+                        txtField03Addr.setText((String) oTransAddress.getAddress(pnRow, "sHouseNox"));
+                        txtField04Addr.setText((String) oTransAddress.getAddress(pnRow, "sAddressx"));
+                        txtField05Addr.setText((String) oTransAddress.getAddress(pnRow, "sTownName"));
+                        txtField06Addr.setText((String) oTransAddress.getAddress(pnRow, "sBrgyName"));
+                        txtField07Addr.setText((String) oTransAddress.getAddress(pnRow, "sZippCode"));
+                        textArea11Addr.setText((String) oTransAddress.getAddress(pnRow, "sRemarksx"));
+                        if (oTransAddress.getAddress(pnRow, "cRecdStat").toString().equals("1")) {
+                            radiobtn18AddY.setSelected(true);
+                            radiobtn18AddN.setSelected(false);
+                        } else {
+                            radiobtn18AddY.setSelected(false);
+                            radiobtn18AddN.setSelected(true);
+                        }
+                        if (oTransAddress.getAddress(pnRow, "cOfficexx").toString().equals("1")) {
+                            checkBox12Addr.setSelected(true);
+                        } else {
+                            checkBox12Addr.setSelected(false);
+                        }
+                        if (oTransAddress.getAddress(pnRow, "cProvince").toString().equals("1")) {
+                            checkBox13Addr.setSelected(true);
+                        } else {
+                            checkBox13Addr.setSelected(false);
+                        }
+                        if (oTransAddress.getAddress(pnRow, "cPrimaryx").toString().equals("1")) {
+                            checkBox14Addr.setSelected(true);
+                        } else {
+                            checkBox14Addr.setSelected(false);
+                        }
+                        if (oTransAddress.getAddress(pnRow, "cCurrentx").toString().equals("1")) {
+                            checkBox17Addr.setSelected(true);
+                        } else {
+                            checkBox17Addr.setSelected(false);
+                        }
+                        break;
 
-                /*Mobile*/
-                case 1:
-                    if (pnEditMode == EditMode.UPDATE) {
-                        if (oTransMobile.getMobile(pnRow, "sMobileID").toString().equals("")) {
-                            btnTabRem.setVisible(true);
-                        } else {
-                            btnTabRem.setVisible(false);
+                    /*Mobile*/
+                    case 1:
+                        if (pnEditMode == EditMode.UPDATE) {
+                            if (oTransMobile.getMobile(pnRow, "sMobileID").toString().equals("")) {
+                                btnTabRem.setVisible(true);
+                            } else {
+                                btnTabRem.setVisible(false);
+                            }
                         }
-                    }
-                    txtField03Cont.setText((String) oTransMobile.getMobile(pnRow, "sMobileNo"));
-                    textArea13Cont.setText((String) oTransMobile.getMobile(pnRow, "sRemarksx"));
-                    comboBox04Cont.getSelectionModel().select(Integer.parseInt((String) oTransMobile.getMobile(pnRow, "cMobileTp")));
-                    comboBox05Cont.getSelectionModel().select(Integer.parseInt((String) oTransMobile.getMobile(pnRow, "cOwnerxxx")));
-                    if (oTransMobile.getMobile(pnRow, "cRecdStat").toString().equals("1")) {
-                        radiobtn14CntY.setSelected(true);
-                        radiobtn14CntN.setSelected(false);
-                    } else {
-                        radiobtn14CntY.setSelected(false);
-                        radiobtn14CntN.setSelected(true);
-                    }
-                    if (oTransMobile.getMobile(pnRow, "cPrimaryx").toString().equals("1")) {
-                        radiobtn11CntY.setSelected(true);
-                        radiobtn11CntN.setSelected(false);
-                    } else {
-                        radiobtn11CntY.setSelected(false);
-                        radiobtn11CntN.setSelected(true);
-                    }
-                    break;
+                        txtField03Cont.setText((String) oTransMobile.getMobile(pnRow, "sMobileNo"));
+                        textArea13Cont.setText((String) oTransMobile.getMobile(pnRow, "sRemarksx"));
+                        comboBox04Cont.getSelectionModel().select(Integer.parseInt((String) oTransMobile.getMobile(pnRow, "cMobileTp")));
+                        comboBox05Cont.getSelectionModel().select(Integer.parseInt((String) oTransMobile.getMobile(pnRow, "cOwnerxxx")));
+                        if (oTransMobile.getMobile(pnRow, "cRecdStat").toString().equals("1")) {
+                            radiobtn14CntY.setSelected(true);
+                            radiobtn14CntN.setSelected(false);
+                        } else {
+                            radiobtn14CntY.setSelected(false);
+                            radiobtn14CntN.setSelected(true);
+                        }
+                        if (oTransMobile.getMobile(pnRow, "cPrimaryx").toString().equals("1")) {
+                            radiobtn11CntY.setSelected(true);
+                            radiobtn11CntN.setSelected(false);
+                        } else {
+                            radiobtn11CntY.setSelected(false);
+                            radiobtn11CntN.setSelected(true);
+                        }
+                        break;
 
-                /*Email*/
-                case 2:
-                    if (pnEditMode == EditMode.UPDATE) {
-                        if (oTransEmail.getEmail(pnRow, "sEmailIDx").toString().equals("")) {
-                            btnTabRem.setVisible(true);
-                        } else {
-                            btnTabRem.setVisible(false);
+                    /*Email*/
+                    case 2:
+                        if (pnEditMode == EditMode.UPDATE) {
+                            if (oTransEmail.getEmail(pnRow, "sEmailIDx").toString().equals("")) {
+                                btnTabRem.setVisible(true);
+                            } else {
+                                btnTabRem.setVisible(false);
+                            }
                         }
-                    }
-                    txtField03EmAd.setText((String) oTransEmail.getEmail(pnRow, "sEmailAdd"));
-                    comboBox04EmAd.getSelectionModel().select(Integer.parseInt((String) oTransEmail.getEmail(pnRow, "cOwnerxxx")));
-                    if (oTransEmail.getEmail(pnRow, "cRecdStat").toString().equals("1")) {
-                        radiobtn06EmaY.setSelected(true);
-                        radiobtn06EmaN.setSelected(false);
-                    } else {
-                        radiobtn06EmaY.setSelected(false);
-                        radiobtn06EmaN.setSelected(true);
-                    }
-                    if (oTransEmail.getEmail(pnRow, "cPrimaryx").toString().equals("1")) {
-                        radiobtn05EmaY.setSelected(true);
-                        radiobtn05EmaN.setSelected(false);
-                    } else {
-                        radiobtn05EmaY.setSelected(false);
-                        radiobtn05EmaN.setSelected(true);
-                    }
-                    break;
+                        txtField03EmAd.setText((String) oTransEmail.getEmail(pnRow, "sEmailAdd"));
+                        comboBox04EmAd.getSelectionModel().select(Integer.parseInt((String) oTransEmail.getEmail(pnRow, "cOwnerxxx")));
+                        if (oTransEmail.getEmail(pnRow, "cRecdStat").toString().equals("1")) {
+                            radiobtn06EmaY.setSelected(true);
+                            radiobtn06EmaN.setSelected(false);
+                        } else {
+                            radiobtn06EmaY.setSelected(false);
+                            radiobtn06EmaN.setSelected(true);
+                        }
+                        if (oTransEmail.getEmail(pnRow, "cPrimaryx").toString().equals("1")) {
+                            radiobtn05EmaY.setSelected(true);
+                            radiobtn05EmaN.setSelected(false);
+                        } else {
+                            radiobtn05EmaY.setSelected(false);
+                            radiobtn05EmaN.setSelected(true);
+                        }
+                        break;
 
-                /*Social*/
-                case 3:
-                    if (pnEditMode == EditMode.UPDATE) {
-                        if (oTransSocMed.getSocMed(pnRow, "sSocialID").toString().equals("")) {
-                            btnTabRem.setVisible(true);
-                        } else {
-                            btnTabRem.setVisible(false);
+                    /*Social*/
+                    case 3:
+                        if (pnEditMode == EditMode.UPDATE) {
+                            if (oTransSocMed.getSocMed(pnRow, "sSocialID").toString().equals("")) {
+                                btnTabRem.setVisible(true);
+                            } else {
+                                btnTabRem.setVisible(false);
+                            }
                         }
-                    }
-                    txtField03Socm.setText((String) oTransSocMed.getSocMed(pnRow, "sAccountx"));
-                    comboBox04Socm.getSelectionModel().select(Integer.parseInt((String) oTransSocMed.getSocMed(pnRow, "cSocialTp")));
-                    if (oTransSocMed.getSocMed(pnRow, "cRecdStat").toString().equals("1")) {
-                        radiobtn05SocY.setSelected(true);
-                        radiobtn05SocN.setSelected(false);
-                    } else {
-                        radiobtn05SocY.setSelected(false);
-                        radiobtn05SocN.setSelected(true);
-                    }
-                    break;
+                        txtField03Socm.setText((String) oTransSocMed.getSocMed(pnRow, "sAccountx"));
+                        comboBox04Socm.getSelectionModel().select(Integer.parseInt((String) oTransSocMed.getSocMed(pnRow, "cSocialTp")));
+                        if (oTransSocMed.getSocMed(pnRow, "cRecdStat").toString().equals("1")) {
+                            radiobtn05SocY.setSelected(true);
+                            radiobtn05SocN.setSelected(false);
+                        } else {
+                            radiobtn05SocY.setSelected(false);
+                            radiobtn05SocN.setSelected(true);
+                        }
+                        break;
+                }
+            } else if (selectedIndex == 1) {
+                if(oTransVehicle.OpenRecord(vhclinfodata.get(pnRow-1).getTblindex06())){
+                    loadClientVehicleInfo();
+                    pnVEditMode = oTransVehicle.getEditMode();
+                    initVhclInfoButton(pnVEditMode);
+                }else {
+                    ShowMessageFX.Warning(getStage(), oTransVehicle.getMessage(), "Warning", null);
+                }
             }
         } catch (SQLException e) {
             ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
@@ -2077,6 +2207,49 @@ public class CustomerFormController implements Initializable, ScreenInterface {
         });
     }
 
+    @FXML
+    private void tblViewVhclInfo_Clicked(MouseEvent event) {
+        if (pnVEditMode == EditMode.ADDNEW || pnVEditMode == EditMode.UPDATE ){
+            if (ShowMessageFX.OkayCancel(null, "Confirmation", "You have unsaved data. Are you sure you want to retrieve a new record?") == true) {
+                clearVehicleInfoFields();
+            } else {
+                return;
+            }
+        }
+        pnRow = tblViewVhclInfo.getSelectionModel().getSelectedIndex()+1;
+        if (pnRow == 0) {
+            return;
+        }
+        getSelectedItem();
+
+        tblViewVhclInfo.setOnKeyReleased((KeyEvent t) -> {
+            KeyCode key = t.getCode();
+            switch (key) {
+                case DOWN:
+                    pnRow = tblViewVhclInfo.getSelectionModel().getSelectedIndex();
+                    if (pnRow == tblViewVhclInfo.getItems().size()) {
+                        pnRow = tblViewVhclInfo.getItems().size();
+                        getSelectedItem();
+                    } else {
+                        int y = 1;
+                        pnRow = pnRow + y;
+                        getSelectedItem();
+                    }
+                    break;
+
+                case UP:
+                    int pnRows = 0;
+                    int x = -1;
+                    pnRows = tblViewVhclInfo.getSelectionModel().getSelectedIndex() + 1;
+                    pnRow = pnRows;
+                    getSelectedItem();
+                    break;
+                default:
+                    return;
+            }
+        });
+    }
+
     /*Convert Date to String*/
     private LocalDate strToDate(String val) {
         DateTimeFormatter date_formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -2088,11 +2261,11 @@ public class CustomerFormController implements Initializable, ScreenInterface {
     public void getDate(ActionEvent event) {
         try {
             /*CLIENT INFORMATION*/
-            if (selectedIndex == 0){
+            if (selectedIndex == 0) {
                 oTrans.setMaster(11, SQLUtil.toDate(txtField11.getValue().toString(), SQLUtil.FORMAT_SHORT_DATE));
-            /*CLIENT VEHICLE INFORMATION*/
+                /*CLIENT VEHICLE INFORMATION*/
             } else if (selectedIndex == 1) {
-                oTransVehicle.setMaster(22, SQLUtil.toDate(txtField22V.getValue().toString(), SQLUtil.FORMAT_SHORT_DATE));
+                oTransVehicle.setMaster(21, SQLUtil.toDate(txtField21V.getValue().toString(), SQLUtil.FORMAT_SHORT_DATE));
             }
         } catch (SQLException ex) {
             Logger.getLogger(CustomerFormController.class.getName()).log(Level.SEVERE, null, ex);
@@ -2154,8 +2327,8 @@ public class CustomerFormController implements Initializable, ScreenInterface {
             }
             if (!nv) {
                 /*Lost Focus*/
-                /*CLIENT INFORMATION*/
-                if (selectedIndex == 0){
+ /*CLIENT INFORMATION*/
+                if (selectedIndex == 0) {
                     switch (lnIndex) {
                         case 2:
                         case 3:
@@ -2175,21 +2348,21 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                             break;
                         case 25:
                             oTrans.setMaster(28, lsValue); //Handle Encoded Value
-                            break;  
+                            break;
                     }
-                /*CLIENT VEHICLE INFORMATION*/
+                    /*CLIENT VEHICLE INFORMATION*/
                 } else if (selectedIndex == 1) {
                     switch (lnIndex) {
                         case 3:
                         case 4:
                         case 8:
                         case 9:
-                        case 12:
-                        case 21:
-                        case 23:
-                        case 25:
-                        case 27:
-                        case 29:
+                        case 11:
+                        case 20:
+                        case 22:
+                        case 24:
+                        case 26:
+                        case 28:
                             oTransVehicle.setMaster(lnIndex, lsValue);
                             break;
                     }
@@ -2217,21 +2390,21 @@ public class CustomerFormController implements Initializable, ScreenInterface {
         try {
             if (!nv) {
                 /*Lost Focus*/
-                /*CLIENT INFORMATION*/
-                if (selectedIndex == 0){
+ /*CLIENT INFORMATION*/
+                if (selectedIndex == 0) {
                     switch (lnIndex) {
                         case 15:
                             oTrans.setMaster(lnIndex, lsValue);
                             break;
                     }
-                /*CLIENT VEHICLE INFORMATION*/
+                    /*CLIENT VEHICLE INFORMATION*/
                 } else if (selectedIndex == 1) {
                     switch (lnIndex) {
-                        case 35:
+                        case 34:
                             oTransVehicle.setMaster(lnIndex, lsValue);
                             break;
                     }
-                    
+
                 }
             } else {
                 txtField.selectAll();
@@ -2294,7 +2467,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                 case TAB:
                 case ENTER:
                     /*CLIENT INFORMATION*/
-                    if (selectedIndex == 0){
+                    if (selectedIndex == 0) {
                         switch (txtFieldID) {
                             case "txtField01":  //Search by CLIENT ID
                                 if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
@@ -2308,8 +2481,8 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                                         return;
                                     }
                                 }
-    //                            txtField26.clear(); // CLIENT Search
-    //                            clearFields();
+                                //                            txtField26.clear(); // CLIENT Search
+                                //                            clearFields();
                                 if (oTrans.SearchRecord(txtField01.getText(), true)) {
                                     if (oTransAddress.OpenRecord(oTrans.getMaster("sClientID").toString(), false)
                                             && oTransMobile.OpenRecord(oTrans.getMaster("sClientID").toString(), false)
@@ -2352,8 +2525,8 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                                         return;
                                     }
                                 }
-    //                                   txtField01.clear(); // CLIENT ID
-    //                                   clearFields();
+                                //                                   txtField01.clear(); // CLIENT ID
+                                //                                   clearFields();
                                 if (oTrans.SearchRecord(txtField26.getText(), false)) {
                                     if (oTransAddress.OpenRecord(oTrans.getMaster("sClientID").toString(), false)
                                             && oTransMobile.OpenRecord(oTrans.getMaster("sClientID").toString(), false)
@@ -2439,7 +2612,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                                 break;
                         }
                         break;
-                    /*
+                        /*
                     case TAB:
                     case ENTER:
                         switch (txtFieldID) {
@@ -2503,131 +2676,137 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                                 break;
                         }
                         break;
-                    */
-                /*CLIENT VEHICLE INFORMATION*/
-                } else if (selectedIndex == 1) {
-                    switch(lnIndex){
-                        case 25: //MAKE
-                            if (oTransVehicle.searchVehicleMake(txtField25V.getText())) {
-                                loadClientVehicleInfo();
-                            } else {
-                                ShowMessageFX.Warning(getStage(), oTransVehicle.getMessage(), "Warning", null);
-                            }
-                        break;
-                        case 27: //MODEL
-                            if(!oTransVehicle.getMaster(25).toString().isEmpty()){
-                                ShowMessageFX.Warning(getStage(), "Please select Vehicle Make.", "Warning", null);
-                                txtField25V.requestFocus();
-                                return;
-                            }
-                            if (oTransVehicle.searchVehicleModel(txtField27V.getText())) {
-                                loadClientVehicleInfo();
-                            } else {
-                                ShowMessageFX.Warning(getStage(), oTransVehicle.getMessage(), "Warning", null);
-                            }
-                        break;
-                        case 29: //TYPE
-                            if(!oTransVehicle.getMaster(25).toString().isEmpty()){
-                                ShowMessageFX.Warning(getStage(), "Please select Vehicle Make.", "Warning", null);
-                                txtField25V.requestFocus();
-                                return;
-                            }
-                            if(!oTransVehicle.getMaster(27).toString().isEmpty()){
-                                ShowMessageFX.Warning(getStage(), "Please select Vehicle Model.", "Warning", null);
-                                txtField27V.requestFocus();
-                                return;
-                            }
-                            if (oTransVehicle.searchVehicleModel(txtField29V.getText())) {
-                                loadClientVehicleInfo();
-                            } else {
-                                ShowMessageFX.Warning(getStage(), oTransVehicle.getMessage(), "Warning", null);
-                            }
-                        break;
-                        case 32: //TRANSMISSION
-                            if(!oTransVehicle.getMaster(25).toString().isEmpty()){
-                                ShowMessageFX.Warning(getStage(), "Please select Vehicle Make.", "Warning", null);
-                                txtField25V.requestFocus();
-                                return;
-                            }
-                            if(!oTransVehicle.getMaster(27).toString().isEmpty()){
-                                ShowMessageFX.Warning(getStage(), "Please select Vehicle Model.", "Warning", null);
-                                txtField27V.requestFocus();
-                                return;
-                            }
-                            if(!oTransVehicle.getMaster(29).toString().isEmpty()){
-                                ShowMessageFX.Warning(getStage(), "Please select Vehicle Type.", "Warning", null);
-                                txtField29V.requestFocus();
-                                return;
-                            }
-                            if (oTransVehicle.searchVehicleModel(txtField32V.getText())) {
-                                loadClientVehicleInfo();
-                            } else {
-                                ShowMessageFX.Warning(getStage(), oTransVehicle.getMessage(), "Warning", null);
-                            }
-                        break;
-                        case 31: //YEAR
-                            if(!oTransVehicle.getMaster(25).toString().isEmpty()){
-                                ShowMessageFX.Warning(getStage(), "Please select Vehicle Make.", "Warning", null);
-                                txtField25V.requestFocus();
-                                return;
-                            }
-                            if(!oTransVehicle.getMaster(27).toString().isEmpty()){
-                                ShowMessageFX.Warning(getStage(), "Please select Vehicle Model.", "Warning", null);
-                                txtField27V.requestFocus();
-                                return;
-                            }
-                            if(!oTransVehicle.getMaster(29).toString().isEmpty()){
-                                ShowMessageFX.Warning(getStage(), "Please select Vehicle Type.", "Warning", null);
-                                txtField29V.requestFocus();
-                                return;
-                            }
-                            if(!oTransVehicle.getMaster(32).toString().isEmpty()){
-                                ShowMessageFX.Warning(getStage(), "Please select Vehicle Transmission.", "Warning", null);
-                                txtField32V.requestFocus();
-                                return;
-                            }
-                            if (oTransVehicle.searchVehicleModel(txtField31V.getText())) {
-                                loadClientVehicleInfo();
-                            } else {
-                                ShowMessageFX.Warning(getStage(), oTransVehicle.getMessage(), "Warning", null);
-                            }
-                        break;
-                        case 33: //COLOR
-                            if(!oTransVehicle.getMaster(25).toString().isEmpty()){
-                                ShowMessageFX.Warning(getStage(), "Please select Vehicle Make.", "Warning", null);
-                                txtField25V.requestFocus();
-                                return;
-                            }
-                            if(!oTransVehicle.getMaster(27).toString().isEmpty()){
-                                ShowMessageFX.Warning(getStage(), "Please select Vehicle Model.", "Warning", null);
-                                txtField27V.requestFocus();
-                                return;
-                            }
-                            if(!oTransVehicle.getMaster(29).toString().isEmpty()){
-                                ShowMessageFX.Warning(getStage(), "Please select Vehicle Type.", "Warning", null);
-                                txtField29V.requestFocus();
-                                return;
-                            }
-                            if(!oTransVehicle.getMaster(32).toString().isEmpty()){
-                                ShowMessageFX.Warning(getStage(), "Please select Vehicle Transmission.", "Warning", null);
-                                txtField32V.requestFocus();
-                                return;
-                            }
-                            if(!oTransVehicle.getMaster(31).toString().isEmpty()){
-                                ShowMessageFX.Warning(getStage(), "Please select Vehicle Year.", "Warning", null);
-                                txtField31V.requestFocus();
-                                return;
-                            }
-                            if (oTransVehicle.searchVehicleModel(txtField33V.getText())) {
-                                loadClientVehicleInfo();
-                            } else {
-                                ShowMessageFX.Warning(getStage(), oTransVehicle.getMessage(), "Warning", null);
-                            }
-                        break;
+                         */
+ /*CLIENT VEHICLE INFORMATION*/
+                    } else if (selectedIndex == 1) {
+                        switch (lnIndex) {
+                            case 24: //MAKE
+                                if (oTransVehicle.searchVehicleMake(txtField24V.getText())) {
+                                    loadClientVehicleInfo();
+                                } else {
+                                    ShowMessageFX.Warning(getStage(), oTransVehicle.getMessage(), "Warning", null);
+                                }
+                                break;
+                            case 26: //MODEL
+                                if (oTransVehicle.getMaster(23).toString().isEmpty()) {
+                                    ShowMessageFX.Warning(getStage(), "Please select Vehicle Make.", "Warning", null);
+                                    txtField24V.requestFocus();
+                                    return;
+                                }
+                                if (oTransVehicle.searchVehicleModel(txtField26V.getText())) {
+                                    loadClientVehicleInfo();
+                                } else {
+                                    ShowMessageFX.Warning(getStage(), oTransVehicle.getMessage(), "Warning", null);
+                                }
+                                break;
+                            case 28: //TYPE
+                                if (oTransVehicle.getMaster(23).toString().isEmpty()) {
+                                    ShowMessageFX.Warning(getStage(), "Please select Vehicle Make.", "Warning", null);
+                                    txtField24V.requestFocus();
+                                    return;
+                                }
+                                if (oTransVehicle.getMaster(25).toString().isEmpty()) {
+                                    ShowMessageFX.Warning(getStage(), "Please select Vehicle Model.", "Warning", null);
+                                    txtField26V.requestFocus();
+                                    return;
+                                }
+                                if (oTransVehicle.searchVehicleType(txtField28V.getText())) {
+                                    loadClientVehicleInfo();
+                                } else {
+                                    ShowMessageFX.Warning(getStage(), oTransVehicle.getMessage(), "Warning", null);
+                                }
+                                break;
+                            case 31: //TRANSMISSION
+                                if (oTransVehicle.getMaster(23).toString().isEmpty()) {
+                                    ShowMessageFX.Warning(getStage(), "Please select Vehicle Make.", "Warning", null);
+                                    txtField24V.requestFocus();
+                                    return;
+                                }
+                                if (oTransVehicle.getMaster(25).toString().isEmpty()) {
+                                    ShowMessageFX.Warning(getStage(), "Please select Vehicle Model.", "Warning", null);
+                                    txtField26V.requestFocus();
+                                    return;
+                                }
+                                if (oTransVehicle.getMaster(27).toString().isEmpty()) {
+                                    ShowMessageFX.Warning(getStage(), "Please select Vehicle Type.", "Warning", null);
+                                    txtField28V.requestFocus();
+                                    return;
+                                }
+                                if (oTransVehicle.searchVehicleTrnsMn(txtField31V.getText())) {
+                                    loadClientVehicleInfo();
+                                } else {
+                                    ShowMessageFX.Warning(getStage(), oTransVehicle.getMessage(), "Warning", null);
+                                }
+                                break;
+                            case 30: //COLOR
+                                if (oTransVehicle.getMaster(23).toString().isEmpty()) {
+                                    ShowMessageFX.Warning(getStage(), "Please select Vehicle Make.", "Warning", null);
+                                    txtField24V.requestFocus();
+                                    return;
+                                }
+                                if (oTransVehicle.getMaster(25).toString().isEmpty()) {
+                                    ShowMessageFX.Warning(getStage(), "Please select Vehicle Model.", "Warning", null);
+                                    txtField26V.requestFocus();
+                                    return;
+                                }
+                                if (oTransVehicle.getMaster(27).toString().isEmpty()) {
+                                    ShowMessageFX.Warning(getStage(), "Please select Vehicle Type.", "Warning", null);
+                                    txtField28V.requestFocus();
+                                    return;
+                                }
+                                if (oTransVehicle.getMaster(31).toString().isEmpty()) {
+                                    ShowMessageFX.Warning(getStage(), "Please select Vehicle Transmission.", "Warning", null);
+                                    txtField31V.requestFocus();
+                                    return;
+                                }
+                                if (oTransVehicle.searchVehicleColor(txtField30V.getText())) {
+                                    loadClientVehicleInfo();
+                                } else {
+                                    ShowMessageFX.Warning(getStage(), oTransVehicle.getMessage(), "Warning", null);
+                                }
+                                break;
+                            case 32: //YEAR
+                                if (oTransVehicle.getMaster(23).toString().isEmpty()) {
+                                    ShowMessageFX.Warning(getStage(), "Please select Vehicle Make.", "Warning", null);
+                                    txtField24V.requestFocus();
+                                    return;
+                                }
+                                if (oTransVehicle.getMaster(25).toString().isEmpty()) {
+                                    ShowMessageFX.Warning(getStage(), "Please select Vehicle Model.", "Warning", null);
+                                    txtField26V.requestFocus();
+                                    return;
+                                }
+                                if (oTransVehicle.getMaster(27).toString().isEmpty()) {
+                                    ShowMessageFX.Warning(getStage(), "Please select Vehicle Type.", "Warning", null);
+                                    txtField28V.requestFocus();
+                                    return;
+                                }
+                                if (oTransVehicle.getMaster(31).toString().isEmpty()) {
+                                    ShowMessageFX.Warning(getStage(), "Please select Vehicle Transmission.", "Warning", null);
+                                    txtField31V.requestFocus();
+                                    return;
+                                }
+                                if (oTransVehicle.getMaster(29).toString().isEmpty()) {
+                                    ShowMessageFX.Warning(getStage(), "Please select Vehicle Color.", "Warning", null);
+                                    txtField30V.requestFocus();
+                                    return;
+                                }
+                                if (oTransVehicle.searchVehicleYearMdl(txtField32V.getText())) {
+                                    loadClientVehicleInfo();
+                                } else {
+                                    ShowMessageFX.Warning(getStage(), oTransVehicle.getMessage(), "Warning", null);
+                                }
+                                break;
+                            case 9:
+                                if(oTransVehicle.searchDealer(txtField09V.getText())){
+                                    loadClientVehicleInfo();
+                                } else {
+                                    ShowMessageFX.Warning(getStage(), oTransVehicle.getMessage(), "Warning", null);
+                                }
+                        }
                     }
-                }
             }
-            
+
         } catch (SQLException e) {
             ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
         }
@@ -2784,10 +2963,10 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                !lbShow (TRUE)= visible
          */
         boolean lbShow = (fnValue == EditMode.ADDNEW || fnValue == EditMode.UPDATE);
-        
+
         /*CLIENT VEHICLE INFO TAB*/
         tabVhclInfo.setDisable(fnValue == EditMode.ADDNEW);
-        
+
         /*CLIENT Master*/
         txtField14.setDisable(!lbShow); //LTO NO
         txtField13.setDisable(!lbShow); //TIN NO
@@ -2855,7 +3034,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
         btnSave.setManaged(lbShow);
         btnTabAdd.setVisible(lbShow);
         btnTabUpd.setVisible(lbShow);
-        
+
         if (fnValue == EditMode.ADDNEW) {
             btnTabRem.setVisible(lbShow);
         } else {
@@ -3086,34 +3265,37 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                !lbShow (TRUE)= visible
          */
         boolean lbShow = (fnValue == EditMode.ADDNEW || fnValue == EditMode.UPDATE);
-        
+
         txtField03V.setDisable(!lbShow);
         txtField04V.setDisable(!lbShow);
         txtField08V.setDisable(!lbShow);
         txtField09V.setDisable(!lbShow);
-        txtField12V.setDisable(!lbShow);
+        txtField11V.setDisable(!lbShow);
+        txtField20V.setDisable(!lbShow);
         txtField21V.setDisable(!lbShow);
         txtField22V.setDisable(!lbShow);
-        txtField23V.setDisable(!lbShow);
-        txtField25V.setDisable(!lbShow);
-        txtField27V.setDisable(!lbShow);
-        txtField29V.setDisable(!lbShow);
+        txtField24V.setDisable(!lbShow);
+        txtField26V.setDisable(!lbShow);
+        txtField28V.setDisable(!lbShow);
+        txtField30V.setDisable(!lbShow);
         txtField31V.setDisable(!lbShow);
         txtField32V.setDisable(!lbShow);
-        txtField33V.setDisable(!lbShow);
+        textArea34V.setDisable(!lbShow);
         
         btnVhclDesc.setVisible(true);  //Show Vehicle Description Entry Window
         btnEngFrm.setVisible(lbShow);  //Show Engine Frame Entry Window
-        btnVhclAvl.setVisible(!lbShow && (pnEditMode != EditMode.UNKNOWN)); //Find Available Unit
-        btnVhclMnl.setVisible(!lbShow && (pnEditMode != EditMode.UNKNOWN)); //Manually selection of vehicle information
-        
+//        btnVhclAvl.setVisible(!lbShow && (pnEditMode != EditMode.UNKNOWN)); //Find Available Unit
+//        btnVhclMnl.setVisible(!lbShow && (pnEditMode != EditMode.UNKNOWN)); //Manually selection of vehicle information
+        btnVhclAvl.setVisible((pnEditMode != EditMode.UNKNOWN && pnEditMode != EditMode.ADDNEW)); //Find Available Unit
+        btnVhclMnl.setVisible((pnEditMode != EditMode.UNKNOWN && pnEditMode != EditMode.ADDNEW)); //Manually selection of vehicle information
+
         btnEdit.setVisible(false);
         btnEdit.setManaged(false);
         btnTransfer.setVisible(false);
         btnTransfer.setManaged(false);
         btnVSave.setVisible(lbShow);
         btnVSave.setManaged(lbShow);
-        
+
         if (fnValue == EditMode.READY) {
             btnEdit.setVisible(true);
             btnEdit.setManaged(true);
@@ -3124,6 +3306,21 @@ public class CustomerFormController implements Initializable, ScreenInterface {
     }
 
     private void clearVehicleInfoFields() {
+        txtField03V.clear();
+        txtField04V.clear();
+        txtField08V.clear();
+        txtField09V.clear();
+        txtField11V.clear();
+        txtField20V.clear();
+        txtField21V.setValue(LocalDate.of(1900, Month.JANUARY, 1)); //birthdate
+        txtField22V.clear();
+        txtField24V.clear();
+        txtField26V.clear();
+        txtField28V.clear();
+        txtField30V.clear();
+        txtField31V.clear();
+        txtField32V.clear();
+        textArea34V.clear();
     }
 
 }

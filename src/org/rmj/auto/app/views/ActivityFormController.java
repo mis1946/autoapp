@@ -10,18 +10,13 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import javafx.beans.property.ReadOnlyBooleanPropertyBase;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -52,7 +47,6 @@ import static javafx.scene.input.KeyCode.DOWN;
 import static javafx.scene.input.KeyCode.ENTER;
 import static javafx.scene.input.KeyCode.TAB;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.GridPane;
 import javafx.stage.StageStyle;
 import javafx.util.Callback;
 import org.rmj.appdriver.GRider;
@@ -549,7 +543,6 @@ public class ActivityFormController implements Initializable, ScreenInterface {
 
                     }
                     oTrans.removeTown(fsValue);
-//                    tblViewCity.getItems().removeAll(removeselectedItems);
                     loadTownTable();
                     tblViewCity.refresh();
 

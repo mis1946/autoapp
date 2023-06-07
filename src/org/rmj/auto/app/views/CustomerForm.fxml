@@ -27,7 +27,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" fx:id="AnchorMain" prefHeight="600.0" stylesheets="@../css/FrameStyle.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" >
+<AnchorPane id="AnchorPane" fx:id="AnchorMain" prefHeight="600.0" stylesheets="@../css/FrameStyle.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <StackPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -857,7 +857,7 @@
                                                                                     <TextField fx:id="txtField09V" promptText="Search F3" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                                                                                     <DatePicker fx:id="txtField21V" GridPane.columnIndex="5" GridPane.rowIndex="1" />
                                                                                     <Label id="LabelDesc" text="Register Date" GridPane.columnIndex="4" GridPane.rowIndex="1" />
-                                                                                    <TextField fx:id="txtField22V" GridPane.columnIndex="2" GridPane.columnSpan="4" GridPane.rowIndex="2" />
+                                                                                    <TextField fx:id="txtField22V" promptText="Search F3" GridPane.columnIndex="2" GridPane.columnSpan="4" GridPane.rowIndex="2" />
                                                                                     <TextArea fx:id="textArea34V" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.columnSpan="4" GridPane.rowIndex="3" GridPane.rowSpan="2" />
                                                                                  </children>
                                                                               </GridPane>

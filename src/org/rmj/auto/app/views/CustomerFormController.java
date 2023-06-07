@@ -621,19 +621,19 @@ public class CustomerFormController implements Initializable, ScreenInterface {
         textArea34V.focusedProperty().addListener(txtArea_Focus);
         txtField21V.setOnAction(this::getDate);
 
-        txtField03V.setOnKeyPressed(this::txtField_KeyPressed);
-        txtField04V.setOnKeyPressed(this::txtField_KeyPressed);
-        txtField08V.setOnKeyPressed(this::txtField_KeyPressed);
-        txtField09V.setOnKeyPressed(this::txtField_KeyPressed);
-        txtField11V.setOnKeyPressed(this::txtField_KeyPressed);
-        txtField20V.setOnKeyPressed(this::txtField_KeyPressed);
-        txtField22V.setOnKeyPressed(this::txtField_KeyPressed);
-        txtField24V.setOnKeyPressed(this::txtField_KeyPressed);
-        txtField26V.setOnKeyPressed(this::txtField_KeyPressed);
-        txtField28V.setOnKeyPressed(this::txtField_KeyPressed);
-        txtField31V.setOnKeyPressed(this::txtField_KeyPressed);
-        txtField30V.setOnKeyPressed(this::txtField_KeyPressed);
-        txtField32V.setOnKeyPressed(this::txtField_KeyPressed);
+        txtField03V.setOnKeyPressed(this::txtField_KeyPressed_Vhcl);
+        txtField04V.setOnKeyPressed(this::txtField_KeyPressed_Vhcl);
+        txtField08V.setOnKeyPressed(this::txtField_KeyPressed_Vhcl);
+        txtField09V.setOnKeyPressed(this::txtField_KeyPressed_Vhcl);
+        txtField11V.setOnKeyPressed(this::txtField_KeyPressed_Vhcl);
+        txtField20V.setOnKeyPressed(this::txtField_KeyPressed_Vhcl);
+        txtField22V.setOnKeyPressed(this::txtField_KeyPressed_Vhcl);
+        txtField24V.setOnKeyPressed(this::txtField_KeyPressed_Vhcl);
+        txtField26V.setOnKeyPressed(this::txtField_KeyPressed_Vhcl);
+        txtField28V.setOnKeyPressed(this::txtField_KeyPressed_Vhcl);
+        txtField31V.setOnKeyPressed(this::txtField_KeyPressed_Vhcl);
+        txtField30V.setOnKeyPressed(this::txtField_KeyPressed_Vhcl);
+        txtField32V.setOnKeyPressed(this::txtField_KeyPressed_Vhcl);
         textArea34V.setOnKeyPressed(this::txtArea_KeyPressed);
 
         btnVhclDesc.setOnAction(this::cmdButton_Click);
@@ -725,6 +725,8 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                                 loadContact();
                                 loadEmail();
                                 loadSocialMedia();
+                                loadVehicleInfoTable();
+                                loadVehicleHtryTable();
                                 pnEditMode = EditMode.READY;
                             } else {
                                 ShowMessageFX.Warning(getStage(), "There was an error while loading Contact Information Details.", "Warning", null);
@@ -779,6 +781,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                     break;
                 case "btnAdd": //create new client
                     clearFields();
+                    clearVehicleInfoFields();
                     if (oTrans.NewRecord() && oTransAddress.NewRecord() && oTransMobile.NewRecord()
                             && oTransEmail.NewRecord() && oTransSocMed.NewRecord()) {
                         loadClientMaster();
@@ -787,6 +790,8 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                         mobiledata.clear();
                         emaildata.clear();
                         socialmediadata.clear();
+                        vhclinfodata.clear();
+                        vhclhtrydata.clear();
                         txtField26.clear(); // CLIENT Search
                         txtField01.clear(); // CLIENT ID
                         pnEditMode = oTrans.getEditMode();
@@ -890,6 +895,36 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                         }
                     }
                     clearContactInfo();
+                    clearVehicleInfoFields();
+                    //Retrieve saved data
+                    if (oTrans.SearchRecord(oTrans.getMaster("sClientID").toString(), true)) {
+                        if (oTransAddress.OpenRecord(oTrans.getMaster("sClientID").toString(), false)
+                                && oTransMobile.OpenRecord(oTrans.getMaster("sClientID").toString(), false)
+                                && oTransEmail.OpenRecord(oTrans.getMaster("sClientID").toString(), false)
+                                && oTransSocMed.OpenRecord(oTrans.getMaster("sClientID").toString(), false)) {
+                            loadClientMaster();
+                            loadAddress();
+                            loadContact();
+                            loadEmail();
+                            loadSocialMedia();
+                            loadVehicleInfoTable();
+                            loadVehicleHtryTable();
+                            pnEditMode = oTrans.getEditMode();
+                        } else {
+                            ShowMessageFX.Warning(getStage(), "There was an error while loading Contact Information Details.", "Warning", null);
+                            txtField26.clear(); // CLIENT Search
+                            txtField01.clear(); // CLIENT ID
+                            clearFields();
+                            pnEditMode = EditMode.UNKNOWN;
+
+                        }
+                    } else {
+                        ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                        txtField26.clear(); // CLIENT Search
+                        txtField01.clear(); // CLIENT ID
+                        clearFields();
+                        pnEditMode = EditMode.UNKNOWN;
+                    }
                     break;
                 case "btnClose": //close tab
                     if (ShowMessageFX.OkayCancel(null, "Close Tab", "Are you sure you want to close this Tab?") == true) {
@@ -1182,7 +1217,16 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                     loadVehicleDescriptionWindow();
                     break;
                 case "btnEngFrm":
-                    loadEngineFrameWindow();
+                    if( ((String) oTransVehicle.getMaster(23)).equals("")){
+                        ShowMessageFX.Warning(getStage(), "Please select Make." , "Warning", null);
+                        return;
+                    }
+                    if( ((String) oTransVehicle.getMaster(25)).equals("")){
+                        ShowMessageFX.Warning(getStage(), "Please select Model." , "Warning", null);
+                        return;
+                    }
+                            
+                    loadEngineFrameWindow((String) oTransVehicle.getMaster(23), (String) oTransVehicle.getMaster(24),(String) oTransVehicle.getMaster(25),(String) oTransVehicle.getMaster(26));
                     break;
                 case "btnVhclAvl":
                     if (pnVEditMode == EditMode.ADDNEW || pnVEditMode == EditMode.UPDATE ){
@@ -1297,7 +1341,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
     }
 
     /*OPEN WINDOW FOR VEHICLE DESCRIPTION ENTRY*/
-    private void loadEngineFrameWindow() {
+    private void loadEngineFrameWindow(String sMakeID, String sMakeDesc, String sModelID, String sModelDesc) {
         try {
             Stage stage = new Stage();
 
@@ -1306,6 +1350,10 @@ public class CustomerFormController implements Initializable, ScreenInterface {
 
             VehicleEngineFrameFormatFormController loControl = new VehicleEngineFrameFormatFormController();
             loControl.setGRider(oApp);
+            loControl.setMakeID(sMakeID);
+            loControl.setMakeDesc(sMakeDesc);
+            loControl.setModelID(sModelID);
+            loControl.setModelDesc(sModelDesc);
             fxmlLoader.setController(loControl);
 
             //load the main interface
@@ -2327,7 +2375,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
             }
             if (!nv) {
                 /*Lost Focus*/
- /*CLIENT INFORMATION*/
+                /*CLIENT INFORMATION*/
                 if (selectedIndex == 0) {
                     switch (lnIndex) {
                         case 2:
@@ -2350,7 +2398,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                             oTrans.setMaster(28, lsValue); //Handle Encoded Value
                             break;
                     }
-                    /*CLIENT VEHICLE INFORMATION*/
+                /*CLIENT VEHICLE INFORMATION*/
                 } else if (selectedIndex == 1) {
                     switch (lnIndex) {
                         case 3:
@@ -2390,14 +2438,14 @@ public class CustomerFormController implements Initializable, ScreenInterface {
         try {
             if (!nv) {
                 /*Lost Focus*/
- /*CLIENT INFORMATION*/
+                /*CLIENT INFORMATION*/
                 if (selectedIndex == 0) {
                     switch (lnIndex) {
                         case 15:
                             oTrans.setMaster(lnIndex, lsValue);
                             break;
                     }
-                    /*CLIENT VEHICLE INFORMATION*/
+                /*CLIENT VEHICLE INFORMATION*/
                 } else if (selectedIndex == 1) {
                     switch (lnIndex) {
                         case 34:
@@ -2445,13 +2493,12 @@ public class CustomerFormController implements Initializable, ScreenInterface {
             CommonUtils.SetPreviousFocus((TextArea) event.getSource());
         }
     }
-
+    
+    /*CLIENT INFORMATION*/
     private void txtField_KeyPressed(KeyEvent event) {
         TextField txtField = (TextField) event.getSource();
         int lnIndex = Integer.parseInt(((TextField) event.getSource()).getId().substring(8, 10));
         String txtFieldID = ((TextField) event.getSource()).getId();
-        String lsValue = txtField.getText();
-
         try {
             //Set value of row where the town / brgy to be set
             if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
@@ -2466,347 +2513,221 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                 case F3:
                 case TAB:
                 case ENTER:
-                    /*CLIENT INFORMATION*/
-                    if (selectedIndex == 0) {
-                        switch (txtFieldID) {
-                            case "txtField01":  //Search by CLIENT ID
-                                if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
-                                    if (ShowMessageFX.OkayCancel(null, "Confirmation", "You have unsaved data. Are you sure you want to browse a new record?") == true) {
-                                        oTransAddress.removeAddress(oTransAddress.getItemCount());
-                                        oTransMobile.removeMobile(oTransMobile.getItemCount());
-                                        oTransEmail.removeEmail(oTransEmail.getItemCount());
-                                        oTransSocMed.removeSocMed(oTransSocMed.getItemCount());
+                    switch (txtFieldID) {
+                        case "txtField01":  //Search by CLIENT ID
+                            if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
+                                if (ShowMessageFX.OkayCancel(null, "Confirmation", "You have unsaved data. Are you sure you want to browse a new record?") == true) {
+                                    oTransAddress.removeAddress(oTransAddress.getItemCount());
+                                    oTransMobile.removeMobile(oTransMobile.getItemCount());
+                                    oTransEmail.removeEmail(oTransEmail.getItemCount());
+                                    oTransSocMed.removeSocMed(oTransSocMed.getItemCount());
 
-                                    } else {
-                                        return;
-                                    }
-                                }
-                                //                            txtField26.clear(); // CLIENT Search
-                                //                            clearFields();
-                                if (oTrans.SearchRecord(txtField01.getText(), true)) {
-                                    if (oTransAddress.OpenRecord(oTrans.getMaster("sClientID").toString(), false)
-                                            && oTransMobile.OpenRecord(oTrans.getMaster("sClientID").toString(), false)
-                                            && oTransEmail.OpenRecord(oTrans.getMaster("sClientID").toString(), false)
-                                            && oTransSocMed.OpenRecord(oTrans.getMaster("sClientID").toString(), false)) {
-                                        loadClientMaster();
-                                        loadAddress();
-                                        loadContact();
-                                        loadEmail();
-                                        loadSocialMedia();
-                                        pnEditMode = EditMode.READY;
-                                    } else {
-                                        ShowMessageFX.Warning(getStage(), "There was an error while loading Contact Information Details.", "Warning", null);
-                                        txtField26.clear(); // CLIENT Search
-                                        //txtField01.clear(); // CLIENT ID
-                                        clearFields();
-                                        pnEditMode = EditMode.UNKNOWN;
-                                    }
                                 } else {
-                                    ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
-                                    //if (pnEditMode == EditMode.ADDNEW ){
+                                    return;
+                                }
+                            }
+                            //                            txtField26.clear(); // CLIENT Search
+                            //                            clearFields();
+                            if (oTrans.SearchRecord(txtField01.getText(), true)) {
+                                if (oTransAddress.OpenRecord(oTrans.getMaster("sClientID").toString(), false)
+                                        && oTransMobile.OpenRecord(oTrans.getMaster("sClientID").toString(), false)
+                                        && oTransEmail.OpenRecord(oTrans.getMaster("sClientID").toString(), false)
+                                        && oTransSocMed.OpenRecord(oTrans.getMaster("sClientID").toString(), false)) {
+                                    loadClientMaster();
+                                    loadAddress();
+                                    loadContact();
+                                    loadEmail();
+                                    loadSocialMedia();
+                                    loadVehicleInfoTable();
+                                    loadVehicleHtryTable();
+                                    pnEditMode = EditMode.READY;
+                                } else {
+                                    ShowMessageFX.Warning(getStage(), "There was an error while loading Contact Information Details.", "Warning", null);
                                     txtField26.clear(); // CLIENT Search
                                     //txtField01.clear(); // CLIENT ID
                                     clearFields();
-                                    // }
                                     pnEditMode = EditMode.UNKNOWN;
                                 }
+                            } else {
+                                ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                                //if (pnEditMode == EditMode.ADDNEW ){
+                                txtField26.clear(); // CLIENT Search
+                                //txtField01.clear(); // CLIENT ID
+                                clearFields();
+                                // }
+                                pnEditMode = EditMode.UNKNOWN;
+                            }
 
-                                initButton(pnEditMode);
-                                break;
-                            case "txtField26": //Search by Name
-                                if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
-                                    if (ShowMessageFX.OkayCancel(null, "Confirmation", "You have unsaved data. Are you sure you want to browse a new record?") == true) {
-                                        oTransAddress.removeAddress(oTransAddress.getItemCount());
-                                        oTransMobile.removeMobile(oTransMobile.getItemCount());
-                                        oTransEmail.removeEmail(oTransEmail.getItemCount());
-                                        oTransSocMed.removeSocMed(oTransSocMed.getItemCount());
+                            initButton(pnEditMode);
+                            break;
+                        case "txtField26": //Search by Name
+                            if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
+                                if (ShowMessageFX.OkayCancel(null, "Confirmation", "You have unsaved data. Are you sure you want to browse a new record?") == true) {
+                                    oTransAddress.removeAddress(oTransAddress.getItemCount());
+                                    oTransMobile.removeMobile(oTransMobile.getItemCount());
+                                    oTransEmail.removeEmail(oTransEmail.getItemCount());
+                                    oTransSocMed.removeSocMed(oTransSocMed.getItemCount());
 
-                                    } else {
-                                        return;
-                                    }
-                                }
-                                //                                   txtField01.clear(); // CLIENT ID
-                                //                                   clearFields();
-                                if (oTrans.SearchRecord(txtField26.getText(), false)) {
-                                    if (oTransAddress.OpenRecord(oTrans.getMaster("sClientID").toString(), false)
-                                            && oTransMobile.OpenRecord(oTrans.getMaster("sClientID").toString(), false)
-                                            && oTransEmail.OpenRecord(oTrans.getMaster("sClientID").toString(), false)
-                                            && oTransSocMed.OpenRecord(oTrans.getMaster("sClientID").toString(), false)) {
-                                        loadClientMaster();
-                                        loadAddress();
-                                        loadContact();
-                                        loadEmail();
-                                        loadSocialMedia();
-                                        pnEditMode = EditMode.READY;
-                                    } else {
-                                        ShowMessageFX.Warning(getStage(), "There was an error while loading Contact Information Details.", "Warning", null);
-                                        txtField01.clear(); // CLIENT ID
-                                        clearFields();
-                                        pnEditMode = EditMode.UNKNOWN;
-                                    }
                                 } else {
-                                    ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
-                                    //if (pnEditMode == EditMode.ADDNEW ){
-                                    //txtField26.clear(); // CLIENT Search
+                                    return;
+                                }
+                            }
+                            //                                   txtField01.clear(); // CLIENT ID
+                            //                                   clearFields();
+                            if (oTrans.SearchRecord(txtField26.getText(), false)) {
+                                if (oTransAddress.OpenRecord(oTrans.getMaster("sClientID").toString(), false)
+                                        && oTransMobile.OpenRecord(oTrans.getMaster("sClientID").toString(), false)
+                                        && oTransEmail.OpenRecord(oTrans.getMaster("sClientID").toString(), false)
+                                        && oTransSocMed.OpenRecord(oTrans.getMaster("sClientID").toString(), false)) {
+                                    loadClientMaster();
+                                    loadAddress();
+                                    loadContact();
+                                    loadEmail();
+                                    loadSocialMedia();
+                                    loadVehicleInfoTable();
+                                    loadVehicleHtryTable();
+                                    pnEditMode = EditMode.READY;
+                                } else {
+                                    ShowMessageFX.Warning(getStage(), "There was an error while loading Contact Information Details.", "Warning", null);
                                     txtField01.clear(); // CLIENT ID
                                     clearFields();
-                                    //}
                                     pnEditMode = EditMode.UNKNOWN;
                                 }
-                                initButton(pnEditMode);
-                                break;
-                            case "txtField10": //Citizenship
-                                if (oTrans.searchCitizenship(txtField10.getText(), false)) {
-                                    loadClientMaster();
-                                } else {
-                                    ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
-                                }
+                            } else {
+                                ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                                //if (pnEditMode == EditMode.ADDNEW ){
+                                //txtField26.clear(); // CLIENT Search
+                                txtField01.clear(); // CLIENT ID
+                                clearFields();
+                                //}
+                                pnEditMode = EditMode.UNKNOWN;
+                            }
+                            initButton(pnEditMode);
+                            break;
+                        case "txtField10": //Citizenship
+                            if (oTrans.searchCitizenship(txtField10.getText(), false)) {
+                                loadClientMaster();
+                            } else {
+                                ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                            }
 
-                                break;
+                            break;
 
-                            case "txtField12": //BirthPlace
-                                if (oTrans.searchBirthplace(txtField12.getText(), false)) {
-                                    loadClientMaster();
-                                } else {
-                                    ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
-                                }
+                        case "txtField12": //BirthPlace
+                            if (oTrans.searchBirthplace(txtField12.getText(), false)) {
+                                loadClientMaster();
+                            } else {
+                                ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                            }
 
-                                break;
+                            break;
 
-                            case "txtField25": //Spouse 
-                                if (oTrans.searchSpouse(txtField25.getText(), false)) {
-                                    loadClientMaster();
-                                } else {
-                                    ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
-                                }
+                        case "txtField25": //Spouse 
+                            if (oTrans.searchSpouse(txtField25.getText(), false)) {
+                                loadClientMaster();
+                            } else {
+                                ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                            }
 
-                                break;
+                            break;
 
-                            case "txtField05Addr":  //Search by Town Address
+                        case "txtField05Addr":  //Search by Town Address
 
-                                if (tbl_row <= 0) {
-                                    ShowMessageFX.Warning(getStage(), "Invalid Table Row to Set. Insert to Table Aborted!", "Warning", null);
-                                }
-                                if (oTransAddress.searchTown(tbl_row, txtField05Addr.getText(), false)) {
-                                    //loadAddress_textfield();
-                                    txtField05Addr.setText((String) oTransAddress.getAddress(tbl_row, "sTownName"));
-                                    txtField07Addr.setText((String) oTransAddress.getAddress(tbl_row, "sZippCode"));
-                                } else {
-                                    ShowMessageFX.Warning(getStage(), oTransAddress.getMessage(), "Warning", null);
-                                }
+                            if (tbl_row <= 0) {
+                                ShowMessageFX.Warning(getStage(), "Invalid Table Row to Set. Insert to Table Aborted!", "Warning", null);
+                            }
+                            if (oTransAddress.searchTown(tbl_row, txtField05Addr.getText(), false)) {
+                                //loadAddress_textfield();
+                                txtField05Addr.setText((String) oTransAddress.getAddress(tbl_row, "sTownName"));
+                                txtField07Addr.setText((String) oTransAddress.getAddress(tbl_row, "sZippCode"));
+                            } else {
+                                ShowMessageFX.Warning(getStage(), oTransAddress.getMessage(), "Warning", null);
+                            }
 
-                                break;
+                            break;
 
-                            case "txtField06Addr":  //Search by Brgy Address
+                        case "txtField06Addr":  //Search by Brgy Address
 
-                                if (tbl_row <= 0) {
-                                    ShowMessageFX.Warning(getStage(), "Invalid Table Row to Set. Insert to Table Aborted!", "Warning", null);
-                                }
-                                if (oTransAddress.searchBarangay(tbl_row, txtField06Addr.getText(), false)) {
-                                    //loadAddress_textfield();
-                                    txtField06Addr.setText((String) oTransAddress.getAddress(tbl_row, "sBrgyName"));
+                            if (tbl_row <= 0) {
+                                ShowMessageFX.Warning(getStage(), "Invalid Table Row to Set. Insert to Table Aborted!", "Warning", null);
+                            }
+                            if (oTransAddress.searchBarangay(tbl_row, txtField06Addr.getText(), false)) {
+                                //loadAddress_textfield();
+                                txtField06Addr.setText((String) oTransAddress.getAddress(tbl_row, "sBrgyName"));
 
-                                } else {
-                                    ShowMessageFX.Warning(getStage(), oTransAddress.getMessage(), "Warning", null);
-                                }
-                                break;
-                        }
-                        break;
-                        /*
-                    case TAB:
-                    case ENTER:
-                        switch (txtFieldID) {
-                            case "txtField10": //Citizenship
-                                if (oTrans.searchCitizenship(txtField10.getText(), false)) {
-                                    loadClientMaster();
-
-                                } else {
-                                    ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
-                                }
-
-                                break;
-
-                            case "txtField12": //BirthPlace
-                                if (oTrans.searchBirthplace(txtField12.getText(), false)) {
-                                    loadClientMaster();
-                                } else {
-                                    ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
-                                }
-
-                                break;
-
-                            case "txtField25": //Spouse 
-                                if (oTrans.searchSpouse(txtField25.getText(), false)) {
-                                    loadClientMaster();
-                                } else {
-                                    ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
-                                }
-
-                                break;
-
-                            case "txtField05Addr":  //Search by Town Address
-
-                                if (tbl_row <= 0) {
-                                    ShowMessageFX.Warning(getStage(), "Invalid Table Row to Set. Insert to Table Aborted!", "Warning", null);
-                                }
-                                if (oTransAddress.searchTown(tbl_row, txtField05Addr.getText(), false)) {
-                                    //loadAddress_textfield();
-                                    System.out.println("Town getItemCount >>> " + tbl_row);
-                                    txtField05Addr.setText((String) oTransAddress.getAddress(tbl_row, "sTownName"));
-                                    txtField07Addr.setText((String) oTransAddress.getAddress(tbl_row, "sZippCode"));
-                                } else {
-                                    ShowMessageFX.Warning(getStage(), oTransAddress.getMessage(), "Warning", null);
-                                }
-
-                                break;
-
-                            case "txtField06Addr":  //Search by Brgy Address
-
-                                if (tbl_row <= 0) {
-                                    ShowMessageFX.Warning(getStage(), "Invalid Table Row to Set. Insert to Table Aborted!", "Warning", null);
-                                }
-                                if (oTransAddress.searchBarangay(tbl_row, txtField06Addr.getText(), false)) {
-                                    //loadAddress_textfield();
-                                    System.out.println("Brgy getItemCount >>> " + tbl_row);
-                                    txtField06Addr.setText((String) oTransAddress.getAddress(tbl_row, "sBrgyName"));
-
-                                } else {
-                                    ShowMessageFX.Warning(getStage(), oTransAddress.getMessage(), "Warning", null);
-                                }
-                                break;
-                        }
-                        break;
-                         */
- /*CLIENT VEHICLE INFORMATION*/
-                    } else if (selectedIndex == 1) {
-                        switch (lnIndex) {
-                            case 24: //MAKE
-                                if (oTransVehicle.searchVehicleMake(txtField24V.getText())) {
-                                    loadClientVehicleInfo();
-                                } else {
-                                    ShowMessageFX.Warning(getStage(), oTransVehicle.getMessage(), "Warning", null);
-                                }
-                                break;
-                            case 26: //MODEL
-                                if (oTransVehicle.getMaster(23).toString().isEmpty()) {
-                                    ShowMessageFX.Warning(getStage(), "Please select Vehicle Make.", "Warning", null);
-                                    txtField24V.requestFocus();
-                                    return;
-                                }
-                                if (oTransVehicle.searchVehicleModel(txtField26V.getText())) {
-                                    loadClientVehicleInfo();
-                                } else {
-                                    ShowMessageFX.Warning(getStage(), oTransVehicle.getMessage(), "Warning", null);
-                                }
-                                break;
-                            case 28: //TYPE
-                                if (oTransVehicle.getMaster(23).toString().isEmpty()) {
-                                    ShowMessageFX.Warning(getStage(), "Please select Vehicle Make.", "Warning", null);
-                                    txtField24V.requestFocus();
-                                    return;
-                                }
-                                if (oTransVehicle.getMaster(25).toString().isEmpty()) {
-                                    ShowMessageFX.Warning(getStage(), "Please select Vehicle Model.", "Warning", null);
-                                    txtField26V.requestFocus();
-                                    return;
-                                }
-                                if (oTransVehicle.searchVehicleType(txtField28V.getText())) {
-                                    loadClientVehicleInfo();
-                                } else {
-                                    ShowMessageFX.Warning(getStage(), oTransVehicle.getMessage(), "Warning", null);
-                                }
-                                break;
-                            case 31: //TRANSMISSION
-                                if (oTransVehicle.getMaster(23).toString().isEmpty()) {
-                                    ShowMessageFX.Warning(getStage(), "Please select Vehicle Make.", "Warning", null);
-                                    txtField24V.requestFocus();
-                                    return;
-                                }
-                                if (oTransVehicle.getMaster(25).toString().isEmpty()) {
-                                    ShowMessageFX.Warning(getStage(), "Please select Vehicle Model.", "Warning", null);
-                                    txtField26V.requestFocus();
-                                    return;
-                                }
-                                if (oTransVehicle.getMaster(27).toString().isEmpty()) {
-                                    ShowMessageFX.Warning(getStage(), "Please select Vehicle Type.", "Warning", null);
-                                    txtField28V.requestFocus();
-                                    return;
-                                }
-                                if (oTransVehicle.searchVehicleTrnsMn(txtField31V.getText())) {
-                                    loadClientVehicleInfo();
-                                } else {
-                                    ShowMessageFX.Warning(getStage(), oTransVehicle.getMessage(), "Warning", null);
-                                }
-                                break;
-                            case 30: //COLOR
-                                if (oTransVehicle.getMaster(23).toString().isEmpty()) {
-                                    ShowMessageFX.Warning(getStage(), "Please select Vehicle Make.", "Warning", null);
-                                    txtField24V.requestFocus();
-                                    return;
-                                }
-                                if (oTransVehicle.getMaster(25).toString().isEmpty()) {
-                                    ShowMessageFX.Warning(getStage(), "Please select Vehicle Model.", "Warning", null);
-                                    txtField26V.requestFocus();
-                                    return;
-                                }
-                                if (oTransVehicle.getMaster(27).toString().isEmpty()) {
-                                    ShowMessageFX.Warning(getStage(), "Please select Vehicle Type.", "Warning", null);
-                                    txtField28V.requestFocus();
-                                    return;
-                                }
-                                if (oTransVehicle.getMaster(31).toString().isEmpty()) {
-                                    ShowMessageFX.Warning(getStage(), "Please select Vehicle Transmission.", "Warning", null);
-                                    txtField31V.requestFocus();
-                                    return;
-                                }
-                                if (oTransVehicle.searchVehicleColor(txtField30V.getText())) {
-                                    loadClientVehicleInfo();
-                                } else {
-                                    ShowMessageFX.Warning(getStage(), oTransVehicle.getMessage(), "Warning", null);
-                                }
-                                break;
-                            case 32: //YEAR
-                                if (oTransVehicle.getMaster(23).toString().isEmpty()) {
-                                    ShowMessageFX.Warning(getStage(), "Please select Vehicle Make.", "Warning", null);
-                                    txtField24V.requestFocus();
-                                    return;
-                                }
-                                if (oTransVehicle.getMaster(25).toString().isEmpty()) {
-                                    ShowMessageFX.Warning(getStage(), "Please select Vehicle Model.", "Warning", null);
-                                    txtField26V.requestFocus();
-                                    return;
-                                }
-                                if (oTransVehicle.getMaster(27).toString().isEmpty()) {
-                                    ShowMessageFX.Warning(getStage(), "Please select Vehicle Type.", "Warning", null);
-                                    txtField28V.requestFocus();
-                                    return;
-                                }
-                                if (oTransVehicle.getMaster(31).toString().isEmpty()) {
-                                    ShowMessageFX.Warning(getStage(), "Please select Vehicle Transmission.", "Warning", null);
-                                    txtField31V.requestFocus();
-                                    return;
-                                }
-                                if (oTransVehicle.getMaster(29).toString().isEmpty()) {
-                                    ShowMessageFX.Warning(getStage(), "Please select Vehicle Color.", "Warning", null);
-                                    txtField30V.requestFocus();
-                                    return;
-                                }
-                                if (oTransVehicle.searchVehicleYearMdl(txtField32V.getText())) {
-                                    loadClientVehicleInfo();
-                                } else {
-                                    ShowMessageFX.Warning(getStage(), oTransVehicle.getMessage(), "Warning", null);
-                                }
-                                break;
-                            case 9:
-                                if(oTransVehicle.searchDealer(txtField09V.getText())){
-                                    loadClientVehicleInfo();
-                                } else {
-                                    ShowMessageFX.Warning(getStage(), oTransVehicle.getMessage(), "Warning", null);
-                                }
-                        }
+                            } else {
+                                ShowMessageFX.Warning(getStage(), oTransAddress.getMessage(), "Warning", null);
+                            }
+                            break;
                     }
-            }
+                break;
+                    /*
+                case TAB:
+                case ENTER:
+                    switch (txtFieldID) {
+                        case "txtField10": //Citizenship
+                            if (oTrans.searchCitizenship(txtField10.getText(), false)) {
+                                loadClientMaster();
 
+                            } else {
+                                ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                            }
+
+                            break;
+
+                        case "txtField12": //BirthPlace
+                            if (oTrans.searchBirthplace(txtField12.getText(), false)) {
+                                loadClientMaster();
+                            } else {
+                                ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                            }
+
+                            break;
+
+                        case "txtField25": //Spouse 
+                            if (oTrans.searchSpouse(txtField25.getText(), false)) {
+                                loadClientMaster();
+                            } else {
+                                ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                            }
+
+                            break;
+
+                        case "txtField05Addr":  //Search by Town Address
+
+                            if (tbl_row <= 0) {
+                                ShowMessageFX.Warning(getStage(), "Invalid Table Row to Set. Insert to Table Aborted!", "Warning", null);
+                            }
+                            if (oTransAddress.searchTown(tbl_row, txtField05Addr.getText(), false)) {
+                                //loadAddress_textfield();
+                                System.out.println("Town getItemCount >>> " + tbl_row);
+                                txtField05Addr.setText((String) oTransAddress.getAddress(tbl_row, "sTownName"));
+                                txtField07Addr.setText((String) oTransAddress.getAddress(tbl_row, "sZippCode"));
+                            } else {
+                                ShowMessageFX.Warning(getStage(), oTransAddress.getMessage(), "Warning", null);
+                            }
+
+                            break;
+
+                        case "txtField06Addr":  //Search by Brgy Address
+
+                            if (tbl_row <= 0) {
+                                ShowMessageFX.Warning(getStage(), "Invalid Table Row to Set. Insert to Table Aborted!", "Warning", null);
+                            }
+                            if (oTransAddress.searchBarangay(tbl_row, txtField06Addr.getText(), false)) {
+                                //loadAddress_textfield();
+                                System.out.println("Brgy getItemCount >>> " + tbl_row);
+                                txtField06Addr.setText((String) oTransAddress.getAddress(tbl_row, "sBrgyName"));
+
+                            } else {
+                                ShowMessageFX.Warning(getStage(), oTransAddress.getMessage(), "Warning", null);
+                            }
+                            break;
+                    }
+                    break;
+                     */
+            }
+            
         } catch (SQLException e) {
             ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
         }
@@ -2821,7 +2742,164 @@ public class CustomerFormController implements Initializable, ScreenInterface {
         }
 
     }
+    /*CLIENT VEHICLE INFORMATION*/
+    private void txtField_KeyPressed_Vhcl(KeyEvent event) {
+         TextField txtField = (TextField) event.getSource();
+        int lnIndex = Integer.parseInt(((TextField) event.getSource()).getId().substring(8, 10));
+        String txtFieldID = ((TextField) event.getSource()).getId();
+        try {
+            switch (event.getCode()) {
+                case F3:
+                case TAB:
+                case ENTER:
+                
+                switch (lnIndex) {
+                    case 24: //MAKE
+                        if (oTransVehicle.searchVehicleMake(txtField24V.getText())) {
+                            loadClientVehicleInfo();
+                        } else {
+                            ShowMessageFX.Warning(getStage(), oTransVehicle.getMessage(), "Warning", null);
+                        }
+                        break;
+                    case 26: //MODEL
+                        if (oTransVehicle.getMaster(23).toString().isEmpty()) {
+                            ShowMessageFX.Warning(getStage(), "Please select Vehicle Make.", "Warning", null);
+                            txtField24V.requestFocus();
+                            return;
+                        }
+                        if (oTransVehicle.searchVehicleModel(txtField26V.getText())) {
+                            loadClientVehicleInfo();
+                        } else {
+                            ShowMessageFX.Warning(getStage(), oTransVehicle.getMessage(), "Warning", null);
+                        }
+                        break;
+                    case 28: //TYPE
+                        if (oTransVehicle.getMaster(23).toString().isEmpty()) {
+                            ShowMessageFX.Warning(getStage(), "Please select Vehicle Make.", "Warning", null);
+                            txtField24V.requestFocus();
+                            return;
+                        }
+                        if (oTransVehicle.getMaster(25).toString().isEmpty()) {
+                            ShowMessageFX.Warning(getStage(), "Please select Vehicle Model.", "Warning", null);
+                            txtField26V.requestFocus();
+                            return;
+                        }
+                        if (oTransVehicle.searchVehicleType(txtField28V.getText())) {
+                            loadClientVehicleInfo();
+                        } else {
+                            ShowMessageFX.Warning(getStage(), oTransVehicle.getMessage(), "Warning", null);
+                        }
+                        break;
+                    case 31: //TRANSMISSION
+                        if (oTransVehicle.getMaster(23).toString().isEmpty()) {
+                            ShowMessageFX.Warning(getStage(), "Please select Vehicle Make.", "Warning", null);
+                            txtField24V.requestFocus();
+                            return;
+                        }
+                        if (oTransVehicle.getMaster(25).toString().isEmpty()) {
+                            ShowMessageFX.Warning(getStage(), "Please select Vehicle Model.", "Warning", null);
+                            txtField26V.requestFocus();
+                            return;
+                        }
+                        if (oTransVehicle.getMaster(27).toString().isEmpty()) {
+                            ShowMessageFX.Warning(getStage(), "Please select Vehicle Type.", "Warning", null);
+                            txtField28V.requestFocus();
+                            return;
+                        }
+                        if (oTransVehicle.searchVehicleTrnsMn(txtField31V.getText())) {
+                            loadClientVehicleInfo();
+                        } else {
+                            ShowMessageFX.Warning(getStage(), oTransVehicle.getMessage(), "Warning", null);
+                        }
+                        break;
+                    case 30: //COLOR
+                        if (oTransVehicle.getMaster(23).toString().isEmpty()) {
+                            ShowMessageFX.Warning(getStage(), "Please select Vehicle Make.", "Warning", null);
+                            txtField24V.requestFocus();
+                            return;
+                        }
+                        if (oTransVehicle.getMaster(25).toString().isEmpty()) {
+                            ShowMessageFX.Warning(getStage(), "Please select Vehicle Model.", "Warning", null);
+                            txtField26V.requestFocus();
+                            return;
+                        }
+                        if (oTransVehicle.getMaster(27).toString().isEmpty()) {
+                            ShowMessageFX.Warning(getStage(), "Please select Vehicle Type.", "Warning", null);
+                            txtField28V.requestFocus();
+                            return;
+                        }
+                        if (oTransVehicle.getMaster(31).toString().isEmpty()) {
+                            ShowMessageFX.Warning(getStage(), "Please select Vehicle Transmission.", "Warning", null);
+                            txtField31V.requestFocus();
+                            return;
+                        }
+                        if (oTransVehicle.searchVehicleColor(txtField30V.getText())) {
+                            loadClientVehicleInfo();
+                        } else {
+                            ShowMessageFX.Warning(getStage(), oTransVehicle.getMessage(), "Warning", null);
+                        }
+                        break;
+                    case 32: //YEAR
+                        if (oTransVehicle.getMaster(23).toString().isEmpty()) {
+                            ShowMessageFX.Warning(getStage(), "Please select Vehicle Make.", "Warning", null);
+                            txtField24V.requestFocus();
+                            return;
+                        }
+                        if (oTransVehicle.getMaster(25).toString().isEmpty()) {
+                            ShowMessageFX.Warning(getStage(), "Please select Vehicle Model.", "Warning", null);
+                            txtField26V.requestFocus();
+                            return;
+                        }
+                        if (oTransVehicle.getMaster(27).toString().isEmpty()) {
+                            ShowMessageFX.Warning(getStage(), "Please select Vehicle Type.", "Warning", null);
+                            txtField28V.requestFocus();
+                            return;
+                        }
+                        if (oTransVehicle.getMaster(31).toString().isEmpty()) {
+                            ShowMessageFX.Warning(getStage(), "Please select Vehicle Transmission.", "Warning", null);
+                            txtField31V.requestFocus();
+                            return;
+                        }
+                        if (oTransVehicle.getMaster(29).toString().isEmpty()) {
+                            ShowMessageFX.Warning(getStage(), "Please select Vehicle Color.", "Warning", null);
+                            txtField30V.requestFocus();
+                            return;
+                        }
+                        if (oTransVehicle.searchVehicleYearMdl(txtField32V.getText())) {
+                            loadClientVehicleInfo();
+                        } else {
+                            ShowMessageFX.Warning(getStage(), oTransVehicle.getMessage(), "Warning", null);
+                        }
+                        break;
+                    case 9:
+                        if(oTransVehicle.searchDealer(txtField09V.getText())){
+                            loadClientVehicleInfo();
+                        } else {
+                            ShowMessageFX.Warning(getStage(), oTransVehicle.getMessage(), "Warning", null);
+                        }
+                    case 22:
+                        if(oTransVehicle.searchRegsplace(txtField22V.getText())){
+                            loadClientVehicleInfo();
+                        } else {
+                            ShowMessageFX.Warning(getStage(), oTransVehicle.getMessage(), "Warning", null);
+                        }
+                }
+            }
 
+        } catch (SQLException e) {
+            ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
+        }
+
+        switch (event.getCode()) {
+            case ENTER:
+            case DOWN:
+                CommonUtils.SetNextFocus(txtField);
+                break;
+            case UP:
+                CommonUtils.SetPreviousFocus(txtField);
+        }
+     }
+    
     //Set CheckBox Action
     private void cmdCheckBox_Click(ActionEvent event) {
         String scbSel = ((CheckBox) event.getSource()).getId();

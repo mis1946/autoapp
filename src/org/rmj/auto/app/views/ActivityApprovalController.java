@@ -241,7 +241,7 @@ public class ActivityApprovalController implements Initializable, ScreenInterfac
                     txtFieldSearch.setManaged(true);
                     btnDepart.setVisible(true);
                     btnDepart.setManaged(true);
-//                    tblVhclApproval.setItems(actApprovalData);
+//                    tblViewActApproval.setItems(actApprovalData);
                     break;
 
             }

@@ -285,7 +285,7 @@ public class ActivityFormController implements Initializable, ScreenInterface {
                 btnCitySearch.setDisable(true);
                 btnCityRemove.setDisable(true);
                 textArea08.setDisable(true);
-                tblViewCity.setDisable(false);
+
             }
         });
         dateFrom06.valueProperty().addListener((observable, oldValue, newValue) -> {
@@ -329,7 +329,6 @@ public class ActivityFormController implements Initializable, ScreenInterface {
 
         txtField12.setTextFormatter(new InputTextFormatter(trgPattern));  //nTrgtClnt
         txtField11.setTextFormatter(new InputTextFormatter(pattern));  //nRcvdBdgt
-        loadTownTable();
         pnEditMode = EditMode.UNKNOWN;
         initButton(pnEditMode);
     }
@@ -430,7 +429,16 @@ public class ActivityFormController implements Initializable, ScreenInterface {
                             ShowMessageFX.Warning(getStage(), "Please enter a valid date.", "Warning", null);
                             return;
                         }
+                        if (comboBox29.getSelectionModel().isEmpty()) {
+                            ShowMessageFX.Warning(getStage(), "Please choose a value for Active Type", "Warning", null);
+                            return;
+                        }
+                        if (txtField05.getText().trim().equals("")) {
+                            ShowMessageFX.Warning(getStage(), "Please enter a value for Event Source", "Warning", null);
+                            txtField05.requestFocus();
+                            return;
 
+                        }
                         if (textArea02.getText().trim().equals("")) {
                             ShowMessageFX.Warning(getStage(), "Please enter a value for Activity Title.", "Warning", null);
                             textArea02.requestFocus();
@@ -439,11 +447,6 @@ public class ActivityFormController implements Initializable, ScreenInterface {
                         if (textArea03.getText().trim().equals("")) {
                             ShowMessageFX.Warning(getStage(), "Please enter a value for Activity Description", "Warning", null);
                             textArea03.requestFocus();
-                            return;
-                        }
-                        if (txtField05.getText().trim().equals("")) {
-                            ShowMessageFX.Warning(getStage(), "Please enter a value for Event Source", "Warning", null);
-                            txtField05.requestFocus();
                             return;
                         }
 
@@ -552,6 +555,7 @@ public class ActivityFormController implements Initializable, ScreenInterface {
                         clearFields();
                         actVhclModelData.clear();
                         actMembersData.clear();
+                        townCitydata.clear();
                     }
                     pnEditMode = EditMode.UNKNOWN;
 
@@ -567,12 +571,13 @@ public class ActivityFormController implements Initializable, ScreenInterface {
 
                     try {
                         if (oTrans.SearchRecord(textSeek01.getText(), false)) {
+
                             loadActivityField();
                             loadActivityVehicleTable();
                             loadActMembersTable();
                             loadTownTable();
-
                             pnEditMode = EditMode.READY;
+
                         } else {
                             ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
                             actVhclModelData.clear();
@@ -1075,27 +1080,11 @@ public class ActivityFormController implements Initializable, ScreenInterface {
 
             townCitydata.clear();
             for (int lnCtr = 1; lnCtr <= oTrans.getActTownCount(); lnCtr++) {
-                String townID = oTrans.getActTown(lnCtr, "sTownIDxx").toString();
-                String townName = oTrans.getActTown(lnCtr, "sTownName").toString();
-                boolean cityExists = false;
-                for (ActivityTownEntryTableList town : tblViewCity.getItems()) {
-                    if (town.getTblCity().equals(townName)) {
-                        cityExists = true;
-                        break;
-                    }
-
-                }
-
-                // Add the city to the table only if it doesn't already exist
-                if (!cityExists) {
-                    townCitydata.add(new ActivityTownEntryTableList(
-                            String.valueOf(lnCtr), //ROW
-                            townID,
-                            townName
-                    ));
-                }
+                townCitydata.add(new ActivityTownEntryTableList(
+                        String.valueOf(lnCtr), //ROW
+                        oTrans.getActTown(lnCtr, "sTownIDxx").toString(),
+                        oTrans.getActTown(lnCtr, "sTownName").toString()));
             }
-
             tblViewCity.setItems(townCitydata);
             initTownTable();
         } catch (SQLException e) {
@@ -1222,9 +1211,7 @@ public class ActivityFormController implements Initializable, ScreenInterface {
 
     private void loadActivityField() {
         try {
-            if (oTrans.getActTownCount() > 0) {
-                textArea08.setText((String) oTrans.getActTown(1, 3));
-            }
+
             txtField01.setText((String) oTrans.getMaster(1)); // sActvtyID
             dateFrom06.setValue(strToDate(CommonUtils.xsDateShort((Date) oTrans.getMaster(6))));
             dateTo07.setValue(strToDate(CommonUtils.xsDateShort((Date) oTrans.getMaster(7))));
@@ -1258,7 +1245,14 @@ public class ActivityFormController implements Initializable, ScreenInterface {
             txtField11.setText(String.valueOf(oTrans.getMaster(11))); // nRcvdBdgt
             txtField28.setText((String) oTrans.getMaster(28)); // sProvName
             textArea09.setText((String) oTrans.getMaster(9)); // sCompnynx
-
+            if (oTrans.getActTownCount() > 0) {
+//                if (!textArea08.getText().isEmpty()) {
+                textArea08.setText(oTrans.getActTown(1, 3).toString());
+                System.out.println(oTrans.getActTown(1, 3).toString());
+            }
+//            } else {
+//                System.out.println("NO GET ACT TOWN");
+//            }
         } catch (SQLException e) {
             ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
         }
@@ -1291,11 +1285,12 @@ public class ActivityFormController implements Initializable, ScreenInterface {
 
         if (tblViewCity != null && tblViewCity.getItems() != null) {
             boolean tblViewCityEmpty = tblViewCity.getItems().isEmpty() || tblViewCity.getItems().size() >= 2;
-            if (!lbShow || tblViewCityEmpty) {
-                textArea08.setDisable(true);
+            if (tblViewCityEmpty) {
+                textArea08.setDisable(!lbShow);
                 textArea08.clear();
             } else {
                 textArea08.setDisable(false);
+
             }
             textArea08.setDisable(!(lbShow && !tblViewCity.getItems().isEmpty()) || tblViewCity.getItems().size() >= 2);
         }

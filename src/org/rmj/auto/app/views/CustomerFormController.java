@@ -2401,8 +2401,6 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                 /*CLIENT VEHICLE INFORMATION*/
                 } else if (selectedIndex == 1) {
                     switch (lnIndex) {
-                        case 3:
-                        case 4:
                         case 8:
                         case 9:
                         case 11:
@@ -2412,6 +2410,39 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                         case 26:
                         case 28:
                             oTransVehicle.setMaster(lnIndex, lsValue);
+                            break;
+                        case 3:
+                            if (lsValue.length() < 5){
+                                ShowMessageFX.Warning(getStage(), "Invalid Frame Number.", "Warning", null);
+                                //txtField03V.requestFocus();
+                                return;
+                            }
+                            if(oTransVehicle.isMakeFrameOK(lsValue)){
+                                if(oTransVehicle.isModelFrameOK(lsValue)){
+                                    oTransVehicle.setMaster(lnIndex, lsValue);
+                                } else {
+                                   ShowMessageFX.Warning(getStage(), oTransVehicle.getMessage(), "Warning", null);
+                                   //txtField03V.requestFocus();
+                                }
+                            } else {
+                               ShowMessageFX.Warning(getStage(), oTransVehicle.getMessage(), "Warning", null);
+                               //txtField03V.requestFocus();
+                            }
+                            
+                            break;
+                        case 4:
+                            if (lsValue.length() < 3){
+                                ShowMessageFX.Warning(getStage(), "Invalid Engine Number.", "Warning", null);
+                                //txtField04V.requestFocus();
+                                return;
+                            }
+                            
+                            if(oTransVehicle.isModelEngineOK(lsValue)){
+                                oTransVehicle.setMaster(lnIndex, lsValue);
+                            } else {
+                               ShowMessageFX.Warning(getStage(), oTransVehicle.getMessage(), "Warning", null);
+                               //txtField04V.requestFocus();
+                            } 
                             break;
                     }
                 }
@@ -2752,7 +2783,6 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                 case F3:
                 case TAB:
                 case ENTER:
-                
                 switch (lnIndex) {
                     case 24: //MAKE
                         if (oTransVehicle.searchVehicleMake(txtField24V.getText())) {

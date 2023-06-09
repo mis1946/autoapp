@@ -81,7 +81,7 @@ public class VehicleDescriptionFormController implements Initializable, ScreenIn
     ObservableList<String> cModelsize = FXCollections.observableArrayList("BANTAM", "SMALL", "MEDIUM", "LARGE");
 
     @FXML
-    private AnchorPane AnchorMain;
+    public AnchorPane AnchorMain;
     @FXML
     private Button btnAdd;
     @FXML

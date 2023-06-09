@@ -33,22 +33,23 @@ import org.rmj.auto.parameters.VehicleEngineFrame;
 /**
  * FXML Controller class
  *
- * @author Arsiela
- * Date Created: 06-05-2023
+ * @author Arsiela Date Created: 06-05-2023
  */
 public class VehicleEngineFrameFormatFormController implements Initializable {
+
     private GRider oApp;
     private MasterCallback oListener;
     private VehicleEngineFrame oTrans;
     private int pnEditMode;
     private final String pxeModuleName = "Vehicle Engine / Frame";
-    private int pnCodeType = 0;
+    private int pnCodeType;
+    private boolean pbState;
     private String psCodeType;
     private String psMakeID, psMakeDesc;
     private String psModelID, psModelDesc;
-    
+
     ObservableList<String> cCodeType = FXCollections.observableArrayList("MANUFACTURING", "FRAME", "ENGINE");
-    
+
     @FXML
     private Button btnAdd;
     @FXML
@@ -83,30 +84,41 @@ public class VehicleEngineFrameFormatFormController implements Initializable {
     private Label lblModel;
     @FXML
     private TextField txtField02_frame;
-    
-    public String setMakeID(String fsValue){
+
+    public String setMakeID(String fsValue) {
         psMakeID = fsValue;
         return psMakeID;
     }
-    
-    public String setMakeDesc(String fsValue){
+
+    public String setMakeDesc(String fsValue) {
         psMakeDesc = fsValue;
         return psMakeDesc;
     }
-    
-    public String setModelID(String fsValue){
+
+    public String setModelID(String fsValue) {
         psModelID = fsValue;
         return psModelID;
     }
-    
-    public String setModelDesc(String fsValue){
+
+    public String setModelDesc(String fsValue) {
         psModelDesc = fsValue;
         return psModelDesc;
     }
+
+    public Integer setCodeType(Integer fnValue) {
+        pnCodeType = fnValue;
+        return pnCodeType;
+    }
     
+    public Boolean setState(Boolean fbValue) {
+        pbState = fbValue;
+        return pbState;
+    }
+
     private Stage getStage() {
         return (Stage) btnSave.getScene().getWindow();
     }
+
     /**
      * Initializes the controller class.
      */
@@ -115,14 +127,14 @@ public class VehicleEngineFrameFormatFormController implements Initializable {
         oListener = (int fnIndex, Object foValue) -> {
             System.out.println("Set Class Value " + fnIndex + "-->" + foValue);
         };
-        
+
         oTrans = new VehicleEngineFrame(oApp, oApp.getBranchCode(), true); //Initialize ClientMaster
         oTrans.setCallback(oListener);
         oTrans.setWithUI(true);
-        
+
         txtField07.setText(psMakeDesc);
         txtField09.setText(psModelDesc);
-        
+
         comboBox10.setItems(cCodeType);
         comboBox10.setOnAction(event -> {
             txtField02_make.clear();
@@ -133,65 +145,30 @@ public class VehicleEngineFrameFormatFormController implements Initializable {
             pnEditMode = EditMode.UNKNOWN;
             initbutton(pnEditMode);
             pnCodeType = comboBox10.getSelectionModel().getSelectedIndex();
-            switch(pnCodeType){
-                case 0:
-                    lblManufacturing.setVisible(true);
-                    txtField02_make.setVisible(true);
-                    lblCode.setVisible(false);
-                    txtField02.setVisible(false);
-                    txtField02_frame.setVisible(false);
-                    lblLength.setVisible(false);
-                    txtField03.setVisible(false);
-                    lblModel.setVisible(false);
-                    txtField09.setVisible(false);
-                    psCodeType = "Manufaturing";
-                break;
-                case 1:
-                    lblManufacturing.setVisible(false);
-                    txtField02_make.setVisible(false);
-                    lblCode.setVisible(true);
-                    txtField02.setVisible(false);
-                    txtField02_frame.setVisible(true);
-                    lblLength.setVisible(true);
-                    txtField03.setVisible(true);
-                    lblModel.setVisible(true);
-                    txtField09.setVisible(true);
-                    lblCode.setText("Frame Code");
-                    lblLength.setText("Frame No Length");
-                    psCodeType = "Frame";
-                break;
-                case 2:
-                    lblManufacturing.setVisible(false);
-                    txtField02_make.setVisible(false);
-                    lblCode.setVisible(true);
-                    txtField02.setVisible(true);
-                    txtField02_frame.setVisible(false);
-                    lblLength.setVisible(true);
-                    txtField03.setVisible(true);
-                    lblModel.setVisible(true);
-                    txtField09.setVisible(true);
-                    lblCode.setText("Engine Code");
-                    lblLength.setText("Engine No Length");
-                    psCodeType = "Engine";
-                break;
-            }
+            showFields(pnCodeType);
         });
+        
+        if (pbState){
+            
+            comboBox10.getSelectionModel().select(pnCodeType); //Code Type
+            showFields(pnCodeType);
+        }
         Pattern pattern;
         pattern = Pattern.compile("[0-9]*");
         txtField03.setTextFormatter(new InputTextFormatter(pattern)); //code length No
         setCapsLockBehavior(txtField02_make);
         setCapsLockBehavior(txtField02_frame);
         setCapsLockBehavior(txtField02);
-        
+
         CommonUtils.addTextLimiter(txtField02_make, 3); //ManuFacturing
         CommonUtils.addTextLimiter(txtField02_frame, 2); //Frame
         CommonUtils.addTextLimiter(txtField02, 3); //Engine
-        
+
         txtField02_make.focusedProperty().addListener(txtField_Focus);  // ManuFacturing Pattern
         txtField02_frame.focusedProperty().addListener(txtField_Focus);  // Frame Pattern
         txtField02.focusedProperty().addListener(txtField_Focus);  // Engine Pattern
         txtField03.focusedProperty().addListener(txtField_Focus);  // Length
-        
+
         //Button SetOnAction using cmdButton_Click() method
         btnClose.setOnAction(this::cmdButton_Click);
         btnSearch.setOnAction(this::cmdButton_Click);
@@ -199,15 +176,60 @@ public class VehicleEngineFrameFormatFormController implements Initializable {
         btnEdit.setOnAction(this::cmdButton_Click);
         btnCancel.setOnAction(this::cmdButton_Click);
         btnSave.setOnAction(this::cmdButton_Click);
-
         pnEditMode = EditMode.UNKNOWN;
         initbutton(pnEditMode);
-    }  
+    }
+   
+    private void showFields(Integer fnValue){
+        switch (fnValue) {
+            case 0:
+                lblManufacturing.setVisible(true);
+                txtField02_make.setVisible(true);
+                lblCode.setVisible(false);
+                txtField02.setVisible(false);
+                txtField02_frame.setVisible(false);
+                lblLength.setVisible(false);
+                txtField03.setVisible(false);
+                lblModel.setVisible(false);
+                txtField09.setVisible(false);
+                psCodeType = "Manufaturing";
+                break;
+            case 1:
+                lblManufacturing.setVisible(false);
+                txtField02_make.setVisible(false);
+                lblCode.setVisible(true);
+                txtField02.setVisible(false);
+                txtField02_frame.setVisible(true);
+                lblLength.setVisible(true);
+                txtField03.setVisible(true);
+                lblModel.setVisible(true);
+                txtField09.setVisible(true);
+                lblCode.setText("Frame Code");
+                lblLength.setText("Frame No Length");
+                psCodeType = "Frame";
+                break;
+            case 2:
+                lblManufacturing.setVisible(false);
+                txtField02_make.setVisible(false);
+                lblCode.setVisible(true);
+                txtField02.setVisible(true);
+                txtField02_frame.setVisible(false);
+                lblLength.setVisible(true);
+                txtField03.setVisible(true);
+                lblModel.setVisible(true);
+                txtField09.setVisible(true);
+                lblCode.setText("Engine Code");
+                lblLength.setText("Engine No Length");
+                psCodeType = "Engine";
+                break;
+        }
+    }
     
+
     public void setGRider(GRider foValue) {
         oApp = foValue;
-    } 
-    
+    }
+
     private static void setCapsLockBehavior(TextField textField) {
         textField.textProperty().addListener((observable, oldValue, newValue) -> {
             if (textField.getText() != null) {
@@ -221,12 +243,12 @@ public class VehicleEngineFrameFormatFormController implements Initializable {
             String lsButton = ((Button) event.getSource()).getId();
             switch (lsButton) {
                 case "btnAdd":
-                    if (comboBox10.getValue() == null){
+                    if (comboBox10.getValue() == null) {
                         ShowMessageFX.Warning(null, pxeModuleName, "Please select code type.");
                         comboBox10.requestFocus();
                         return;
                     }
-                    
+
                     txtField02.clear();
                     txtField02_make.clear();
                     txtField02_frame.clear();
@@ -260,7 +282,7 @@ public class VehicleEngineFrameFormatFormController implements Initializable {
                     oTrans.setCodeType(pnCodeType);
                     if (oTrans.SaveRecord()) {
                         ShowMessageFX.Information(null, pxeModuleName, psCodeType + " saved sucessfully.");
-                        if (oTrans.OpenRecord(oTrans.getMaster(2).toString(), pnCodeType)){
+                        if (oTrans.OpenRecord(oTrans.getMaster(2).toString(), pnCodeType)) {
                             loadEngineFrameField();
                         } else {
                             ShowMessageFX.Warning(null, pxeModuleName, oTrans.getMessage());
@@ -273,7 +295,13 @@ public class VehicleEngineFrameFormatFormController implements Initializable {
                     }
                     break;
                 case "btnSearch":
-                    if (oTrans.searchVhclEngineFrame()) {
+                    if (comboBox10.getValue() == null) {
+                        ShowMessageFX.Warning(null, pxeModuleName, "Please select code type.");
+                        comboBox10.requestFocus();
+                        return;
+                    }
+                    if (oTrans.searchVhclEngineFrame(pnCodeType)) {
+                    //if (oTrans.searchVhclEngineFrame()) {
                         loadEngineFrameField();
                         pnEditMode = oTrans.getEditMode();
                     } else {
@@ -308,13 +336,13 @@ public class VehicleEngineFrameFormatFormController implements Initializable {
             Logger.getLogger(VehicleColorFormController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    private void loadEngineFrameField(){
+
+    private void loadEngineFrameField() {
         try {
-            
+
             comboBox10.getSelectionModel().select(Integer.parseInt(String.valueOf((Long) oTrans.getMaster(10)))); //Code Type
             txtField07.setText((String) oTrans.getMaster(7));
-            if (!String.valueOf((Long) oTrans.getMaster(10)).equals("0")){
+            if (!String.valueOf((Long) oTrans.getMaster(10)).equals("0")) {
                 txtField02_frame.setText((String) oTrans.getMaster(2)); //Frame / Engine Pattern
                 txtField02.setText((String) oTrans.getMaster(2)); //Frame / Engine Pattern
                 txtField03.setText(String.valueOf((Integer) oTrans.getMaster(3))); //Frame / Engine Pattern
@@ -359,13 +387,13 @@ public class VehicleEngineFrameFormatFormController implements Initializable {
 
     private void initbutton(int fnValue) {
         boolean lbShow = (fnValue == EditMode.ADDNEW || fnValue == EditMode.UPDATE);
-        
+
         comboBox10.setDisable(lbShow);
         txtField02_make.setDisable(!lbShow);
         txtField02_frame.setDisable(!lbShow);
         txtField02.setDisable(!lbShow);
         txtField03.setDisable(!lbShow);
-        
+
         btnAdd.setVisible(!lbShow);
         btnAdd.setManaged(!lbShow);
         btnEdit.setVisible(false);
@@ -380,16 +408,14 @@ public class VehicleEngineFrameFormatFormController implements Initializable {
 //            btnEdit.setManaged(true);
         }
     }
-    
-    private void clearFields(){
+
+    private void clearFields() {
         comboBox10.setValue(null);
         txtField02_make.clear();
         txtField02_frame.clear();
         txtField02.clear();
         txtField03.clear();
-    
+
     }
-    
-    
-    
+
 }

@@ -1247,8 +1247,8 @@ public class ActivityFormController implements Initializable, ScreenInterface {
             textArea09.setText((String) oTrans.getMaster(9)); // sCompnynx
             if (oTrans.getActTownCount() > 0) {
 //                if (!textArea08.getText().isEmpty()) {
-                textArea08.setText(oTrans.getActTown(1, 3).toString());
-                System.out.println(oTrans.getActTown(1, 3).toString());
+                textArea08.setText(oTrans.getActTown(3).toString());
+                System.out.println(oTrans.getActTown(3).toString());
             }
 //            } else {
 //                System.out.println("NO GET ACT TOWN");

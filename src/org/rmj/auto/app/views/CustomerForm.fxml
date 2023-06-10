@@ -27,7 +27,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" fx:id="AnchorMain" prefHeight="600.0" stylesheets="@../css/FrameStyle.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane id="AnchorPane" fx:id="AnchorMain" prefHeight="600.0" stylesheets="@../css/FrameStyle.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" >
    <children>
       <StackPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -688,11 +688,11 @@
                                                                                              <children>
                                                                                                 <TableView fx:id="tblViewVhclInfo" onMouseClicked="#tblViewVhclInfo_Clicked" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                                                                                    <columns>
-                                                                                                      <TableColumn fx:id="tblVhcllist01" minWidth="-Infinity" prefWidth="35.0" text="Row" />
-                                                                                                      <TableColumn fx:id="tblVhcllist02" minWidth="-Infinity" text="CS No" />
-                                                                                                      <TableColumn fx:id="tblVhcllist03" text="Plate No" />
-                                                                                                      <TableColumn fx:id="tblVhcllist04" minWidth="-Infinity" prefWidth="300.0" text="Description" />
-                                                                                                      <TableColumn fx:id="tblVhcllist05" minWidth="-Infinity" prefWidth="280.0" text="Selling Dealer" />
+                                                                                                      <TableColumn fx:id="tblVhcllist01" editable="false" minWidth="-Infinity" prefWidth="35.0" sortable="false" text="Row" />
+                                                                                                      <TableColumn fx:id="tblVhcllist02" editable="false" minWidth="-Infinity" sortable="false" text="CS No" />
+                                                                                                      <TableColumn fx:id="tblVhcllist03" editable="false" sortable="false" text="Plate No" />
+                                                                                                      <TableColumn fx:id="tblVhcllist04" editable="false" minWidth="-Infinity" prefWidth="300.0" sortable="false" text="Description" />
+                                                                                                      <TableColumn fx:id="tblVhcllist05" editable="false" minWidth="-Infinity" prefWidth="280.0" sortable="false" text="Selling Dealer" />
                                                                                                    </columns>
                                                                                                 </TableView>
                                                                                              </children>
@@ -715,11 +715,11 @@
                                                                                              <children>
                                                                                                 <TableView fx:id="tblViewVhclHsty" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                                                                                    <columns>
-                                                                                                      <TableColumn fx:id="tblVhcllHsty01" minWidth="-Infinity" prefWidth="35.0" text="Row" />
-                                                                                                      <TableColumn fx:id="tblVhcllHsty02" minWidth="-Infinity" prefWidth="110.0" text="Transeferred Date" />
-                                                                                                      <TableColumn fx:id="tblVhcllHsty03" minWidth="-Infinity" prefWidth="300.0" text="Previous Owner" />
-                                                                                                      <TableColumn fx:id="tblVhcllHsty04" minWidth="-Infinity" prefWidth="110.0" text="Transferred By" />
-                                                                                                      <TableColumn fx:id="tblVhcllHsty05" minWidth="-Infinity" prefWidth="300.0" text="Remarks" />
+                                                                                                      <TableColumn fx:id="tblVhcllHsty01" editable="false" minWidth="-Infinity" prefWidth="35.0" sortable="false" text="Row" />
+                                                                                                      <TableColumn fx:id="tblVhcllHsty02" editable="false" minWidth="-Infinity" prefWidth="110.0" sortable="false" text="Transeferred Date" />
+                                                                                                      <TableColumn fx:id="tblVhcllHsty03" editable="false" minWidth="-Infinity" prefWidth="300.0" sortable="false" text="Previous Owner" />
+                                                                                                      <TableColumn fx:id="tblVhcllHsty04" editable="false" minWidth="-Infinity" prefWidth="110.0" sortable="false" text="Transferred By" />
+                                                                                                      <TableColumn fx:id="tblVhcllHsty05" editable="false" minWidth="-Infinity" prefWidth="300.0" sortable="false" text="Remarks" />
                                                                                                    </columns>
                                                                                                 </TableView>
                                                                                              </children>

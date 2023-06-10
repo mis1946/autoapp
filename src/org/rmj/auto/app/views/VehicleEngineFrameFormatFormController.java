@@ -266,13 +266,13 @@ public class VehicleEngineFrameFormatFormController implements Initializable {
                     }
                     break;
                 case "btnEdit":
-//                    oTrans.setCodeType(pnCodeType);
-//                    if (oTrans.UpdateRecord()) {
-//                        pnEditMode = oTrans.getEditMode();
-//                    } else {
-//                        ShowMessageFX.Warning(null, pxeModuleName, oTrans.getMessage());
-//                        return;
-//                    }
+                    oTrans.setCodeType(pnCodeType);
+                    if (oTrans.UpdateRecord()) {
+                        pnEditMode = oTrans.getEditMode();
+                    } else {
+                        ShowMessageFX.Warning(null, pxeModuleName, oTrans.getMessage());
+                        return;
+                    }
                     break;
                 case "btnSave":
                     if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure you want to save?")) {
@@ -404,8 +404,8 @@ public class VehicleEngineFrameFormatFormController implements Initializable {
         btnSave.setManaged(lbShow);
 
         if (fnValue == EditMode.READY) {
-//            btnEdit.setVisible(true);
-//            btnEdit.setManaged(true);
+            btnEdit.setVisible(true);
+            btnEdit.setManaged(true);
         }
     }
 

@@ -101,6 +101,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
     private int lnCtr;
     private int tbl_row = 0;
     private int iTabIndex = 0; //Set tab index
+    private boolean bBtnVhclAvl = false;
     //private int iCLIENTType;
 
     /*populate tables Address, Mobile, Email and Social Media*/
@@ -1244,6 +1245,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                     clearVehicleInfoFields();
                     if (oTransVehicle.searchAvailableVhcl()) {
                         loadClientVehicleInfo();
+                        bBtnVhclAvl = true;
                         pnVEditMode = oTransVehicle.getEditMode();
                     } else {
                         ShowMessageFX.Warning(getStage(), oTransVehicle.getMessage(), "Warning", null);
@@ -1260,6 +1262,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                     }
                     clearVehicleInfoFields();
                     if (oTransVehicle.NewRecord()) {
+                        bBtnVhclAvl = false;
                         txtField24V.requestFocus();
                         pnVEditMode = oTransVehicle.getEditMode();
                     } else {
@@ -1293,6 +1296,10 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                 initButton(pnEditMode);
             } else if (selectedIndex == 1) {
                 initVhclInfoButton(pnVEditMode);
+                
+                if (bBtnVhclAvl){
+                    disableFields();
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -2837,11 +2844,14 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                                 loadClientVehicleInfo();
                             } else {
                                 ShowMessageFX.Warning(getStage(), oTransVehicle.getMessage(), "Warning", null);
+                                oTransVehicle.setMaster(5, "");
+                                txtField24V.setText("");
                             }
                             break;
                         case 26: //MODEL
                             if (oTransVehicle.getMaster(23).toString().isEmpty()) {
                                 ShowMessageFX.Warning(getStage(), "Please select Vehicle Make.", "Warning", null);
+                                oTransVehicle.setMaster(5, "");
                                 txtField24V.requestFocus();
                                 return;
                             }
@@ -2849,16 +2859,20 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                                 loadClientVehicleInfo();
                             } else {
                                 ShowMessageFX.Warning(getStage(), oTransVehicle.getMessage(), "Warning", null);
+                                oTransVehicle.setMaster(5, "");
+                                txtField26V.setText("");
                             }
                             break;
                         case 28: //TYPE
                             if (oTransVehicle.getMaster(23).toString().isEmpty()) {
                                 ShowMessageFX.Warning(getStage(), "Please select Vehicle Make.", "Warning", null);
+                                oTransVehicle.setMaster(5, "");
                                 txtField24V.requestFocus();
                                 return;
                             }
                             if (oTransVehicle.getMaster(25).toString().isEmpty()) {
                                 ShowMessageFX.Warning(getStage(), "Please select Vehicle Model.", "Warning", null);
+                                oTransVehicle.setMaster(5, "");
                                 txtField26V.requestFocus();
                                 return;
                             }
@@ -2866,21 +2880,26 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                                 loadClientVehicleInfo();
                             } else {
                                 ShowMessageFX.Warning(getStage(), oTransVehicle.getMessage(), "Warning", null);
+                                oTransVehicle.setMaster(5, "");
+                                txtField28V.setText("");
                             }
                             break;
                         case 31: //TRANSMISSION
                             if (oTransVehicle.getMaster(23).toString().isEmpty()) {
                                 ShowMessageFX.Warning(getStage(), "Please select Vehicle Make.", "Warning", null);
+                                oTransVehicle.setMaster(5, "");
                                 txtField24V.requestFocus();
                                 return;
                             }
                             if (oTransVehicle.getMaster(25).toString().isEmpty()) {
                                 ShowMessageFX.Warning(getStage(), "Please select Vehicle Model.", "Warning", null);
+                                oTransVehicle.setMaster(5, "");
                                 txtField26V.requestFocus();
                                 return;
                             }
                             if (oTransVehicle.getMaster(27).toString().isEmpty()) {
                                 ShowMessageFX.Warning(getStage(), "Please select Vehicle Type.", "Warning", null);
+                                oTransVehicle.setMaster(5, "");
                                 txtField28V.requestFocus();
                                 return;
                             }
@@ -2888,26 +2907,32 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                                 loadClientVehicleInfo();
                             } else {
                                 ShowMessageFX.Warning(getStage(), oTransVehicle.getMessage(), "Warning", null);
+                                oTransVehicle.setMaster(5, "");
+                                txtField31V.setText("");
                             }
                             break;
                         case 30: //COLOR
                             if (oTransVehicle.getMaster(23).toString().isEmpty()) {
                                 ShowMessageFX.Warning(getStage(), "Please select Vehicle Make.", "Warning", null);
+                                oTransVehicle.setMaster(5, "");
                                 txtField24V.requestFocus();
                                 return;
                             }
                             if (oTransVehicle.getMaster(25).toString().isEmpty()) {
                                 ShowMessageFX.Warning(getStage(), "Please select Vehicle Model.", "Warning", null);
+                                oTransVehicle.setMaster(5, "");
                                 txtField26V.requestFocus();
                                 return;
                             }
                             if (oTransVehicle.getMaster(27).toString().isEmpty()) {
                                 ShowMessageFX.Warning(getStage(), "Please select Vehicle Type.", "Warning", null);
+                                oTransVehicle.setMaster(5, "");
                                 txtField28V.requestFocus();
                                 return;
                             }
                             if (oTransVehicle.getMaster(31).toString().isEmpty()) {
                                 ShowMessageFX.Warning(getStage(), "Please select Vehicle Transmission.", "Warning", null);
+                                oTransVehicle.setMaster(5, "");
                                 txtField31V.requestFocus();
                                 return;
                             }
@@ -2915,31 +2940,38 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                                 loadClientVehicleInfo();
                             } else {
                                 ShowMessageFX.Warning(getStage(), oTransVehicle.getMessage(), "Warning", null);
+                                oTransVehicle.setMaster(5, "");
+                                txtField30V.setText("");
                             }
                             break;
                         case 32: //YEAR
                             if (oTransVehicle.getMaster(23).toString().isEmpty()) {
                                 ShowMessageFX.Warning(getStage(), "Please select Vehicle Make.", "Warning", null);
+                                oTransVehicle.setMaster(5, "");
                                 txtField24V.requestFocus();
                                 return;
                             }
                             if (oTransVehicle.getMaster(25).toString().isEmpty()) {
                                 ShowMessageFX.Warning(getStage(), "Please select Vehicle Model.", "Warning", null);
+                                oTransVehicle.setMaster(5, "");
                                 txtField26V.requestFocus();
                                 return;
                             }
                             if (oTransVehicle.getMaster(27).toString().isEmpty()) {
                                 ShowMessageFX.Warning(getStage(), "Please select Vehicle Type.", "Warning", null);
+                                oTransVehicle.setMaster(5, "");
                                 txtField28V.requestFocus();
                                 return;
                             }
                             if (oTransVehicle.getMaster(31).toString().isEmpty()) {
                                 ShowMessageFX.Warning(getStage(), "Please select Vehicle Transmission.", "Warning", null);
+                                oTransVehicle.setMaster(5, "");
                                 txtField31V.requestFocus();
                                 return;
                             }
                             if (oTransVehicle.getMaster(29).toString().isEmpty()) {
                                 ShowMessageFX.Warning(getStage(), "Please select Vehicle Color.", "Warning", null);
+                                oTransVehicle.setMaster(5, "");
                                 txtField30V.requestFocus();
                                 return;
                             }
@@ -2947,6 +2979,8 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                                 loadClientVehicleInfo();
                             } else {
                                 ShowMessageFX.Warning(getStage(), oTransVehicle.getMessage(), "Warning", null);
+                                oTransVehicle.setMaster(5, "");
+                                txtField32V.setText("");
                             }
                             break;
                         case 9:
@@ -3459,6 +3493,25 @@ public class CustomerFormController implements Initializable, ScreenInterface {
             btnTransfer.setManaged(true);
         }
 
+    }
+    
+    private void disableFields(){
+        txtField03V.setDisable(true);
+        txtField04V.setDisable(true);
+        txtField08V.setDisable(true);
+        txtField09V.setDisable(true);
+        txtField11V.setDisable(true);
+        txtField20V.setDisable(true);
+        txtField21V.setDisable(true);
+        txtField22V.setDisable(true);
+        txtField24V.setDisable(true);
+        txtField26V.setDisable(true);
+        txtField28V.setDisable(true);
+        txtField30V.setDisable(true);
+        txtField31V.setDisable(true);
+        txtField32V.setDisable(true);
+        textArea34V.setDisable(true);
+    
     }
 
     private void clearVehicleInfoFields() {

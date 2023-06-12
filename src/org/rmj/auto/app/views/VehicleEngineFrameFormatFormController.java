@@ -310,6 +310,10 @@ public class VehicleEngineFrameFormatFormController implements Initializable {
                     }
                     break;
                 case "btnCancel":
+                    if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure, do you want to cancel?")) {
+                    } else {
+                        return;
+                    }
                     clearFields();
                     lblManufacturing.setVisible(true);
                     txtField02_make.setVisible(true);

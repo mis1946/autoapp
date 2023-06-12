@@ -1969,7 +1969,6 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                     for (lnCtr = 1; lnCtr <= oTransAddress.getItemCount(); lnCtr++) {
                         if (oTransAddress.getAddress(lnCtr, "cPrimaryx").toString().equals("1") && (lnCtr != pnRow)) {
                             iCntp = iCntp + 1;
-                            System.out.println("Primary Address Counter >>> " + iCntp);
                         }
                     }
                     break;
@@ -1977,7 +1976,6 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                     for (lnCtr = 1; lnCtr <= oTransMobile.getItemCount(); lnCtr++) {
                         if (oTransMobile.getMobile(lnCtr, "cPrimaryx").toString().equals("1") && (lnCtr != pnRow)) {
                             iCntp = iCntp + 1;
-                            System.out.println("Primary Mobile Counter >>> " + iCntp);
                         }
                     }
                     break;
@@ -1985,7 +1983,6 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                     for (lnCtr = 1; lnCtr <= oTransEmail.getItemCount(); lnCtr++) {
                         if (oTransEmail.getEmail(lnCtr, "cPrimaryx").toString().equals("1") && (lnCtr != pnRow)) {
                             iCntp = iCntp + 1;
-                            System.out.println("Primary Email Counter >>> " + iCntp);
                         }
                     }
                     break;
@@ -2841,12 +2838,11 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                     switch (lnIndex) {
                         case 24: //MAKE
                             if (oTransVehicle.searchVehicleMake(txtField24V.getText())) {
-                                loadClientVehicleInfo();
                             } else {
                                 ShowMessageFX.Warning(getStage(), oTransVehicle.getMessage(), "Warning", null);
-                                oTransVehicle.setMaster(5, "");
                                 txtField24V.setText("");
                             }
+                            loadClientVehicleInfo();
                             break;
                         case 26: //MODEL
                             if (oTransVehicle.getMaster(23).toString().isEmpty()) {
@@ -2856,12 +2852,11 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                                 return;
                             }
                             if (oTransVehicle.searchVehicleModel(txtField26V.getText())) {
-                                loadClientVehicleInfo();
                             } else {
                                 ShowMessageFX.Warning(getStage(), oTransVehicle.getMessage(), "Warning", null);
-                                oTransVehicle.setMaster(5, "");
                                 txtField26V.setText("");
                             }
+                            loadClientVehicleInfo();
                             break;
                         case 28: //TYPE
                             if (oTransVehicle.getMaster(23).toString().isEmpty()) {
@@ -2877,12 +2872,11 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                                 return;
                             }
                             if (oTransVehicle.searchVehicleType(txtField28V.getText())) {
-                                loadClientVehicleInfo();
                             } else {
                                 ShowMessageFX.Warning(getStage(), oTransVehicle.getMessage(), "Warning", null);
-                                oTransVehicle.setMaster(5, "");
                                 txtField28V.setText("");
                             }
+                            loadClientVehicleInfo();
                             break;
                         case 31: //TRANSMISSION
                             if (oTransVehicle.getMaster(23).toString().isEmpty()) {
@@ -2904,12 +2898,11 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                                 return;
                             }
                             if (oTransVehicle.searchVehicleTrnsMn(txtField31V.getText())) {
-                                loadClientVehicleInfo();
                             } else {
                                 ShowMessageFX.Warning(getStage(), oTransVehicle.getMessage(), "Warning", null);
-                                oTransVehicle.setMaster(5, "");
                                 txtField31V.setText("");
                             }
+                            loadClientVehicleInfo();
                             break;
                         case 30: //COLOR
                             if (oTransVehicle.getMaster(23).toString().isEmpty()) {
@@ -2937,12 +2930,11 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                                 return;
                             }
                             if (oTransVehicle.searchVehicleColor(txtField30V.getText())) {
-                                loadClientVehicleInfo();
                             } else {
                                 ShowMessageFX.Warning(getStage(), oTransVehicle.getMessage(), "Warning", null);
-                                oTransVehicle.setMaster(5, "");
                                 txtField30V.setText("");
                             }
+                            loadClientVehicleInfo();
                             break;
                         case 32: //YEAR
                             if (oTransVehicle.getMaster(23).toString().isEmpty()) {
@@ -2976,12 +2968,11 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                                 return;
                             }
                             if (oTransVehicle.searchVehicleYearMdl(txtField32V.getText())) {
-                                loadClientVehicleInfo();
                             } else {
                                 ShowMessageFX.Warning(getStage(), oTransVehicle.getMessage(), "Warning", null);
-                                oTransVehicle.setMaster(5, "");
                                 txtField32V.setText("");
                             }
+                            loadClientVehicleInfo();
                             break;
                         case 9:
                             if (oTransVehicle.searchDealer(txtField09V.getText())) {

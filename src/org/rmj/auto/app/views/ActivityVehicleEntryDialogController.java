@@ -14,6 +14,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -52,6 +53,8 @@ public class ActivityVehicleEntryDialogController implements Initializable, Scre
     private CheckBox selectAllCheckBox;
     @FXML
     private TableView<ActivityVchlEntryTable> tblViewActVchl;
+    @FXML
+    private Label SelectedCount;
 
     /**
      * Initializes the controller class.
@@ -98,6 +101,12 @@ public class ActivityVehicleEntryDialogController implements Initializable, Scre
                             String fsDescript = item.getTblDescription04();
                             String fsCSNoxxxx = item.getTblCs04();// Assuming there is a method to retrieve the transaction number
                             try {
+                                for (int lnCtr = 1; lnCtr <= oTrans.getActVehicleCount(); lnCtr++) {
+                                    if (oTrans.getActVehicle(lnCtr, "sDescript").toString().equals(fsDescript)) {
+                                        ShowMessageFX.Error(null, pxeModuleName, "Failed to add vehicle model, " + fsDescript + " is already exist.");
+                                        return;
+                                    }
+                                }
                                 boolean add = oTrans.addActVehicle(fsSerialID, fsDescript, fsCSNoxxxx);
                                 if (add) {
                                     i = i + 1;
@@ -145,12 +154,19 @@ public class ActivityVehicleEntryDialogController implements Initializable, Scre
         return (Stage) tblViewActVchl.getScene().getWindow();
     }
 
+    private void updateSelectedCount() {
+        ObservableList<ActivityVchlEntryTable> selectedItems = tblViewActVchl.getItems().filtered(items -> items.getSelect().isSelected());
+        int count = selectedItems.size();
+        SelectedCount.setText("" + count);
+    }
+
     private void initActVhclModelTable() {
         tblindexRow.setCellValueFactory(new PropertyValueFactory<>("tblRow"));  //Row
         tblSelectActVhcl.setCellValueFactory(new PropertyValueFactory<>("select"));
         tblViewActVchl.getItems().forEach(item -> {
             CheckBox selectCheckBox = item.getSelect();
             selectCheckBox.setOnAction(event -> {
+                updateSelectedCount();
                 if (tblViewActVchl.getItems().stream().allMatch(tableItem -> tableItem.getSelect().isSelected())) {
                     selectAllCheckBox.setSelected(true);
                 } else {
@@ -161,6 +177,7 @@ public class ActivityVehicleEntryDialogController implements Initializable, Scre
         selectAllCheckBox.setOnAction(event -> {
             boolean newValue = selectAllCheckBox.isSelected();
             tblViewActVchl.getItems().forEach(item -> item.getSelect().setSelected(newValue));
+            updateSelectedCount();
         });
         tblDescript.setCellValueFactory(new PropertyValueFactory<>("tblDescription04"));
 

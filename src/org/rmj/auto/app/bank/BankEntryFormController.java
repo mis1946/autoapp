@@ -22,6 +22,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Pagination;
 import javafx.scene.control.TableColumn;
@@ -242,12 +243,12 @@ public class BankEntryFormController implements Initializable, ScreenInterface {
                 }
                 break;
             case "btnCancel":
-                if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure, do you want to cancel?") == true) {
+                if (ShowMessageFX.OkayCancel(getStage(), "Are you sure you want to cancel?", pxeModuleName, null) == true) {
                     clearFields();
+                    pnEditMode = EditMode.UNKNOWN;
                 }
-                pnEditMode = EditMode.UNKNOWN;
-
                 break;
+
             case "btnSave":
                 //Validate before saving
                 if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure, do you want to save?") == true) {
@@ -596,9 +597,11 @@ public class BankEntryFormController implements Initializable, ScreenInterface {
                 }
             } else {
                 txtField.selectAll();
+
             }
         } catch (SQLException ex) {
-            Logger.getLogger(BankEntryFormController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BankEntryFormController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     };
 

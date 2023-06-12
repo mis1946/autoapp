@@ -121,10 +121,13 @@ public class ActivityMemberEntryDialogController implements Initializable, Scree
                             String fsEmployID = item.getTblindex13();
                             String fsEmpName = item.getTblindex25();
                             String fsDept = item.getTblindex24();
-//                            String fsDeptID = item.getTblindex14();
-                            // Assuming there is a method to retrieve the transaction number
                             try {
-                                System.out.println(fsEmployID + " " + fsEmpName + " " + fsDept);
+                                for (int lnCtr = 1; lnCtr <= oTrans.getActMemberCount(); lnCtr++) {
+                                    if (oTrans.getActMember(lnCtr, "sCompnyNm").toString().equals(fsEmpName)) {
+                                        ShowMessageFX.Error(null, pxeModuleName, "Failed to add Employee, " + fsEmpName + " is already exist.");
+                                        return;
+                                    }
+                                }
                                 boolean add = oTrans.addMember(fsEmployID, fsEmpName, fsDept);
                                 System.out.println(add);
                                 if (add) {

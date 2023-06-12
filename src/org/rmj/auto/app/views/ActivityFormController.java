@@ -10,7 +10,10 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
 import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -491,10 +494,12 @@ public class ActivityFormController implements Initializable, ScreenInterface {
                             txtField28.requestFocus();
                             return;
                         }
-                        if (textArea08.getText().trim().equals("")) {
-                            ShowMessageFX.Warning(getStage(), "Please enter a value for Street/Barangay.", "Warning", null);
-                            textArea08.requestFocus();
-                            return;
+                        if (tblViewCity.getItems().size() == 1) {
+                            if (textArea08.getText().isEmpty()) {
+                                ShowMessageFX.Warning(getStage(), "Please enter a value for Street/Barangay", "Warning", null);
+                                textArea08.requestFocus();
+                                return;
+                            }
                         }
                         if (textArea09.getText().trim().equals("")) {
                             ShowMessageFX.Warning(getStage(), "Please enter a value for Establishment.", "Warning", null);
@@ -502,10 +507,8 @@ public class ActivityFormController implements Initializable, ScreenInterface {
                             return;
                         }
                         //Proceed Saving
-
                         if (oTrans.SaveRecord()) {
                             ShowMessageFX.Information(getStage(), "Transaction save successfully.", pxeModuleName, null);
-                            loadTownTable();
                             loadActivityField();
                             pnEditMode = EditMode.READY;
                         } else {
@@ -551,27 +554,24 @@ public class ActivityFormController implements Initializable, ScreenInterface {
 
                     break;
                 case "btnCancel":
-                    if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure, do you want to cancel?") == true) {
+                    if (ShowMessageFX.OkayCancel(getStage(), "Are you sure you want to cancel?", pxeModuleName, null) == true) {
                         clearFields();
                         actVhclModelData.clear();
                         actMembersData.clear();
                         townCitydata.clear();
+                        pnEditMode = EditMode.UNKNOWN;
                     }
-                    pnEditMode = EditMode.UNKNOWN;
-
                     break;
+
                 case "btnBrowse":
                     if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
                         if (ShowMessageFX.OkayCancel(null, "Confirmation", "You have unsaved data. Are you sure you want to browse a new record?")) {
                         } else {
                             return;
                         }
-
                     }
-
                     try {
                         if (oTrans.SearchRecord(textSeek01.getText(), false)) {
-
                             loadActivityField();
                             loadActivityVehicleTable();
                             loadActMembersTable();
@@ -697,7 +697,9 @@ public class ActivityFormController implements Initializable, ScreenInterface {
                                     break;
                             }
                             if (oTrans.searchEventType(selectedType)) {
+
                                 loadActivityField();
+
                             } else {
                                 ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
                             }
@@ -1084,9 +1086,11 @@ public class ActivityFormController implements Initializable, ScreenInterface {
                         String.valueOf(lnCtr), //ROW
                         oTrans.getActTown(lnCtr, "sTownIDxx").toString(),
                         oTrans.getActTown(lnCtr, "sTownName").toString()));
+
             }
             tblViewCity.setItems(townCitydata);
             initTownTable();
+
         } catch (SQLException e) {
             ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
         }

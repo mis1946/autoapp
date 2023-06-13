@@ -105,7 +105,7 @@ public class ActivityTownCityMainEntryDialogController implements Initializable,
                             try {
                                 for (int lnCtr = 1; lnCtr <= oTrans.getActTownCount(); lnCtr++) {
                                     if (oTrans.getActTown(lnCtr, "sTownName").toString().equals(fsTownName)) {
-                                        ShowMessageFX.Error(null, pxeModuleName, "Failed to add town, " + fsTownName + " is already exist.");
+                                        ShowMessageFX.Error(null, pxeModuleName, "Failed to add town, " + fsTownName + " already exist.");
                                         return;
                                     }
                                 }

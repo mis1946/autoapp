@@ -457,22 +457,28 @@ public class VehicleTypeFormController implements Initializable {
                         case 1: //Engine Size
                             if (oTrans.searchTypeEngine(txtField01.getText())){
                                 txtField01.setText(oTrans.getMaster(9).toString());
-                            } else 
+                            } else {
+                                txtField01.setText("");
                                 ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
+                            }
                         break;
 
                         case 3: //Variant Code A
                             if (oTrans.searchTypeVariant(txtField03.getText(), "A")){
                                 txtField03.setText(oTrans.getMaster(10).toString());
-                            } else 
+                            } else {
+                                txtField03.setText("");
                                 ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
+                            }
                         break;
 
                         case 4: //Variant Code B 
                             if (oTrans.searchTypeVariant(txtField04.getText(), "B")){
-                                 txtField04.setText(oTrans.getMaster(11).toString());
-                            } else 
-                                ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);                            
+                                txtField04.setText(oTrans.getMaster(11).toString());
+                            } else {
+                                txtField04.setText("");
+                                ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
+                            }
                         break;      
                     } 
                     break;

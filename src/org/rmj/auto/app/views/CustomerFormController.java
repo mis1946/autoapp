@@ -829,10 +829,10 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                     //Do not Allow to save CLIENT Info if there's no Address / Mobile
                     if (pnEditMode == EditMode.ADDNEW) {
                         if (oTransAddress.getItemCount() <= 1) {
-                            ShowMessageFX.Warning(null, "Warning", "Please Add atleast 1 Address.");
+                            ShowMessageFX.Warning(getStage(), "Please Add atleast 1 Address.", "Warning", pxeModuleName);
                             return;
                         } else if (oTransMobile.getItemCount() <= 1) {
-                            ShowMessageFX.Warning(null, "Warning", "Please Add atleast 1 Contact Number.");
+                            ShowMessageFX.Warning(getStage(), "Please Add atleast 1 Contact Number.", "Warning", pxeModuleName);
                             return;
                         }
                     }
@@ -843,7 +843,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                         }
                     }
                     if (iCntp <= 0) {
-                        ShowMessageFX.Warning(null, "Warning", "Please Add Primary Address.");
+                        ShowMessageFX.Warning(getStage(), "Please Add Primary Address.", "Warning", pxeModuleName);
                         return;
                     }
 
@@ -854,7 +854,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                         }
                     }
                     if (iCntp <= 0) {
-                        ShowMessageFX.Warning(null, "Warning", "Please Add Primary Contact Number.");
+                        ShowMessageFX.Warning(getStage(), "Please Add Primary Contact Number.", "Warning", pxeModuleName);
                         return;
                     }
 
@@ -892,7 +892,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                                 return;
                             }
 
-                            ShowMessageFX.Information(getStage(), "Transaction save successfully.", "Client Information", null);
+                            ShowMessageFX.Information(getStage(), "Client saved successfully.", "Client Information", null);
                             pnEditMode = oTrans.getEditMode();
                         } else {
                             ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", "Error while saving Client Information");
@@ -935,7 +935,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                         if (unload != null) {
                             unload.unloadForm(AnchorMain, oApp, "Customer");
                         } else {
-                            ShowMessageFX.Warning(null, "Warning", "Please notify the system administrator to configure the null value at the close button.");
+                            ShowMessageFX.Warning(getStage(), "Please notify the system administrator to configure the null value at the close button.", "Warning", pxeModuleName);
                         }
                         break;
                     } else {
@@ -950,7 +950,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                                 //Validate Primary Before Inserting
                                 if (validateContactInfo() >= 1) {
                                     if (checkBox14Addr.isSelected()) {
-                                        ShowMessageFX.Warning(null, "Warning", "Please note that you cannot add more than 1 primary address.");
+                                        ShowMessageFX.Warning(getStage(), "Please note that you cannot add more than 1 primary address.", "Warning", pxeModuleName);
                                         return;
                                     }
                                 }
@@ -982,7 +982,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                             } else {
                                 if (validateContactInfo() >= 1) {
                                     if (radiobtn11CntY.isSelected()) {
-                                        ShowMessageFX.Warning(null, "Warning", "Please note that you cannot add more than 1 primary contact number.");
+                                        ShowMessageFX.Warning(getStage(), "Please note that you cannot add more than 1 primary contact number.", "Warning", pxeModuleName);
                                         return;
                                     }
                                 }
@@ -1011,7 +1011,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                             } else {
                                 if (validateContactInfo() >= 1) {
                                     if (radiobtn05EmaY.isSelected()) {
-                                        ShowMessageFX.Warning(null, "Warning", "Please note that you cannot add more than 1 primary email.");
+                                        ShowMessageFX.Warning(getStage(), "Please note that you cannot add more than 1 primary email.", "Warning", pxeModuleName);
                                         return;
                                     }
                                 }
@@ -1056,7 +1056,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                             if (setItemtoTable("btnTabUpd")) {
                                 if (validateContactInfo() >= 1) {
                                     if (checkBox14Addr.isSelected()) {
-                                        ShowMessageFX.Warning(null, "Warning", "Please note that you cannot add more than 1 primary address.");
+                                        ShowMessageFX.Warning(getStage(), "Please note that you cannot add more than 1 primary address.", "Warning", pxeModuleName);
                                         return;
                                     }
                                 }
@@ -1084,7 +1084,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                             if (setItemtoTable("btnTabUpd")) {
                                 if (validateContactInfo() >= 1) {
                                     if (radiobtn11CntY.isSelected()) {
-                                        ShowMessageFX.Warning(null, "Warning", "Please note that you cannot add more than 1 primary contact number.");
+                                        ShowMessageFX.Warning(getStage(), "Please note that you cannot add more than 1 primary contact number.", "Warning", pxeModuleName);
                                         return;
                                     }
                                 }
@@ -1107,7 +1107,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                             if (setItemtoTable("btnTabUpd")) {
                                 if (validateContactInfo() >= 1) {
                                     if (radiobtn05EmaY.isSelected()) {
-                                        ShowMessageFX.Warning(null, "Warning", "Please note that you cannot add more than 1 primary email.");
+                                        ShowMessageFX.Warning(getStage(), "Please note that you cannot add more than 1 primary email.", "Warning", pxeModuleName);
                                         return;
                                     }
                                 }
@@ -1140,7 +1140,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                     break;
                 case "btnTabRem":
                     if (pnRow == 0) {
-                        ShowMessageFX.Warning(null, "Warning", "No selected item!");
+                        ShowMessageFX.Warning(getStage(), "No selected item!", "Warning", pxeModuleName);
                         return;
                     }
                     switch (iTabIndex) {
@@ -1277,7 +1277,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                     }
                     oTransVehicle.setClientID(oTrans.getMaster("sClientID").toString());
                     if (oTransVehicle.SaveRecord()) {
-                        ShowMessageFX.Information(getStage(), oTransVehicle.getMessage(), "Warning", null);
+                        ShowMessageFX.Information(getStage(), oTransVehicle.getMessage(), "Client Vehicle Information", null);
                         pnVEditMode = oTransVehicle.getEditMode();
                         loadVehicleInfoTable();
                         loadVehicleHtryTable();
@@ -1343,7 +1343,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                         if (unload != null) {
                             unload.unloadForm(otherAnchorPane, oApp, "Vehicle Description");
                         } else {
-                            ShowMessageFX.Warning(null, "Warning", "Please notify the system administrator to configure the null value at the close button.");
+                            ShowMessageFX.Warning(getStage(), "Please notify the system administrator to configure the null value at the close button.", "Warning", pxeModuleName);
                         }
                     } else {
                         // Cancel the close request
@@ -2446,23 +2446,19 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                                 return;
                             }
 
-                            if (lsValue.length() < 5) {
-                                ShowMessageFX.Warning(getStage(), "Invalid Frame Number.", "Warning", null);
-                                //txtField03V.requestFocus();
-                                return;
-                            }
-
                             if (oTransVehicle.isMakeFrameOK(lsValue)) {
                                 if (oTransVehicle.isModelFrameOK(lsValue)) {
                                     oTransVehicle.setMaster(lnIndex, lsValue);
                                 } else {
                                     ShowMessageFX.Warning(getStage(), oTransVehicle.getMessage(), "Warning", null);
                                     txtField03V.setText("");
+                                    oTransVehicle.setMaster(lnIndex, "");
                                     loadEngineFrameWindow(1, true);
                                 }
                             } else {
                                 ShowMessageFX.Warning(getStage(), oTransVehicle.getMessage(), "Warning", null);
                                 txtField03V.setText("");
+                                oTransVehicle.setMaster(lnIndex, "");
                                 loadEngineFrameWindow(0, true);
                             }
 
@@ -2481,17 +2477,13 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                                 txtField26V.requestFocus();
                                 return;
                             }
-                            if (lsValue.length() < 3) {
-                                ShowMessageFX.Warning(getStage(), "Invalid Engine Number.", "Warning", null);
-                                //txtField04V.requestFocus();
-                                return;
-                            }
-
+                            
                             if (oTransVehicle.isModelEngineOK(lsValue)) {
                                 oTransVehicle.setMaster(lnIndex, lsValue);
                             } else {
                                 ShowMessageFX.Warning(getStage(), oTransVehicle.getMessage(), "Warning", null);
                                 txtField04V.setText("");
+                                oTransVehicle.setMaster(lnIndex, "");
                                 loadEngineFrameWindow(2, true);
                             }
                             break;

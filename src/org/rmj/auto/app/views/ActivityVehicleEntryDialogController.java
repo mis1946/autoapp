@@ -103,7 +103,7 @@ public class ActivityVehicleEntryDialogController implements Initializable, Scre
                             try {
                                 for (int lnCtr = 1; lnCtr <= oTrans.getActVehicleCount(); lnCtr++) {
                                     if (oTrans.getActVehicle(lnCtr, "sDescript").toString().equals(fsDescript)) {
-                                        ShowMessageFX.Error(null, pxeModuleName, "Failed to add vehicle model, " + fsDescript + " is already exist.");
+                                        ShowMessageFX.Error(null, pxeModuleName, "Failed to add vehicle model, " + fsDescript + " already exist.");
                                         return;
                                     }
                                 }

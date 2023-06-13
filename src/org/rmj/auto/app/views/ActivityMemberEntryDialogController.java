@@ -124,7 +124,7 @@ public class ActivityMemberEntryDialogController implements Initializable, Scree
                             try {
                                 for (int lnCtr = 1; lnCtr <= oTrans.getActMemberCount(); lnCtr++) {
                                     if (oTrans.getActMember(lnCtr, "sCompnyNm").toString().equals(fsEmpName)) {
-                                        ShowMessageFX.Error(null, pxeModuleName, "Failed to add Employee, " + fsEmpName + " is already exist.");
+                                        ShowMessageFX.Error(null, pxeModuleName, "Failed to add Employee, " + fsEmpName + " already exist.");
                                         return;
                                     }
                                 }

@@ -4,7 +4,6 @@
  */
 package org.rmj.auto.app.views;
 
-import java.awt.Checkbox;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.CheckBox;
 

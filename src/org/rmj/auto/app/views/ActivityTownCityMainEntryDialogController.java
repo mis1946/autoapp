@@ -97,32 +97,37 @@ public class ActivityTownCityMainEntryDialogController implements Initializable,
                     ShowMessageFX.Information(null, pxeModuleName, "No items selected to add.");
                 } else {
                     int i = 0;
+                    int lnfind = 0;
+
                     if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure you want to add?")) {
                         // Call the addTown here
                         for (ActivityTownEntryTableList item : selectedItems) {
                             String fsTownId = item.getTblindex01();
                             String fsTownName = item.getTblCity();// Assuming there is a method to retrieve the transaction number
                             try {
+                                boolean fsTown = false;
                                 for (int lnCtr = 1; lnCtr <= oTrans.getActTownCount(); lnCtr++) {
                                     if (oTrans.getActTown(lnCtr, "sTownName").toString().equals(fsTownName)) {
-                                        ShowMessageFX.Error(null, pxeModuleName, "Failed to add town, " + fsTownName + " already exist.");
-                                        return;
+                                        ShowMessageFX.Error(null, pxeModuleName, "Skipping, Failed to add town, " + fsTownName + " already exist.");
+                                        fsTown = true;
+                                        break;
                                     }
                                 }
-                                boolean add = oTrans.addActTown(fsTownId, fsTownName);
-                                if (add) {
-                                    i = i + 1;
-                                } else {
-                                    // Handle approval failure
-                                    ShowMessageFX.Error(null, pxeModuleName, "Failed to add town.");
+                                if (!fsTown) {
+                                    lnfind++;
+                                    System.out.println(lnfind);
+                                    boolean add = oTrans.addActTown(fsTownId, fsTownName);
                                 }
-
                             } catch (SQLException e) {
                                 // Handle SQL exception
                                 ShowMessageFX.Error(null, pxeModuleName, "An error occurred while adding town: " + e.getMessage());
                             }
                         }
-                        ShowMessageFX.Information(null, pxeModuleName, "Added town successfully.");
+                        if (lnfind >= 1) {
+                            ShowMessageFX.Information(null, pxeModuleName, "Added town successfully.");
+                        } else {
+                            ShowMessageFX.Error(null, pxeModuleName, "Failed to add town");
+                        }
                         CommonUtils.closeStage(btnAddTown);
                     }
 

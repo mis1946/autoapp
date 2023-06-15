@@ -94,6 +94,7 @@ public class ActivityVehicleEntryDialogController implements Initializable, Scre
                     ShowMessageFX.Information(null, pxeModuleName, "No items selected to add.");
                 } else {
                     int i = 0;
+                    int lnfind = 0;
                     if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure you want to add?")) {
                         // Call the addTown here
                         for (ActivityVchlEntryTable item : selectedItems) {
@@ -101,28 +102,31 @@ public class ActivityVehicleEntryDialogController implements Initializable, Scre
                             String fsDescript = item.getTblDescription04();
                             String fsCSNoxxxx = item.getTblCs04();// Assuming there is a method to retrieve the transaction number
                             try {
+                                boolean fsDest = false;
                                 for (int lnCtr = 1; lnCtr <= oTrans.getActVehicleCount(); lnCtr++) {
                                     if (oTrans.getActVehicle(lnCtr, "sDescript").toString().equals(fsDescript)) {
-                                        ShowMessageFX.Error(null, pxeModuleName, "Failed to add vehicle model, " + fsDescript + " already exist.");
-                                        return;
+                                        ShowMessageFX.Error(null, pxeModuleName, "Skipping, Failed to add vehicle model, " + fsDescript + " already exist.");
+                                        fsDest = true;
+                                        break;
+                                        //return;
                                     }
                                 }
-                                boolean add = oTrans.addActVehicle(fsSerialID, fsDescript, fsCSNoxxxx);
-                                if (add) {
-                                    i = i + 1;
-                                } else {
-                                    // Handle approval failure
-                                    ShowMessageFX.Error(null, pxeModuleName, "Failed to add.");
+                                if (!fsDest) {
+                                    lnfind++;
+                                    boolean add = oTrans.addActVehicle(fsSerialID, fsDescript, fsCSNoxxxx);
                                 }
                             } catch (SQLException e) {
                                 // Handle SQL exception
                                 ShowMessageFX.Error(null, pxeModuleName, "An error occurred while adding vehicle model: " + e.getMessage());
                             }
                         }
-                        ShowMessageFX.Information(null, pxeModuleName, "Added Vehicle Model successfully.");
-                        CommonUtils.closeStage(btnAdd);
+                        if (lnfind >= 1) {
+                            ShowMessageFX.Information(null, pxeModuleName, "Added vehicle successfully.");
+                        } else {
+                            ShowMessageFX.Error(null, pxeModuleName, "Failed to add vehicle");
+                        }
                     }
-
+                    CommonUtils.closeStage(btnAdd);
                 }
                 break;
         }

@@ -114,6 +114,8 @@ public class ActivityMemberEntryDialogController implements Initializable, Scree
                     ShowMessageFX.Information(null, pxeModuleName, "No items selected to add.");
                 } else {
                     int i = 0;
+                    int lnfind = 0;
+
                     if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure you want to add?")) {
                         // Call the addTown here
                         for (ActivityMemberTable item : selectedItems) {
@@ -122,26 +124,30 @@ public class ActivityMemberEntryDialogController implements Initializable, Scree
                             String fsEmpName = item.getTblindex25();
                             String fsDept = item.getTblindex24();
                             try {
+                                boolean fsEmp = false;
                                 for (int lnCtr = 1; lnCtr <= oTrans.getActMemberCount(); lnCtr++) {
-                                    if (oTrans.getActMember(lnCtr, "sCompnyNm").toString().equals(fsEmpName)) {
-                                        ShowMessageFX.Error(null, pxeModuleName, "Failed to add Employee, " + fsEmpName + " already exist.");
-                                        return;
+                                    if (oTrans.getActMember(lnCtr, "sCompnyNm").toString().equals(fsEmpName)
+                                            && oTrans.getActMember(lnCtr, "cOriginal").toString().equals("1")) {
+                                        ShowMessageFX.Error(null, pxeModuleName, "Skipping, Failed to add Employee, " + fsEmpName + " already exist.");
+                                        fsEmp = true;
+                                        break;
                                     }
                                 }
-                                boolean add = oTrans.addMember(fsEmployID, fsEmpName, fsDept);
-                                System.out.println(add);
-                                if (add) {
-                                    i = i + 1;
-                                } else {
-                                    // Handle approval failure
-                                    ShowMessageFX.Error(null, pxeModuleName, "Failed to add Employee.");
+                                if (!fsEmp) {
+                                    lnfind++;
+                                    System.out.println(lnfind);
+                                    boolean add = oTrans.addMember(fsEmployID, fsEmpName, fsDept);
                                 }
                             } catch (SQLException e) {
                                 // Handle SQL exception
                                 ShowMessageFX.Error(null, pxeModuleName, "An error occurred while adding employee: " + e.getMessage());
                             }
                         }
-                        ShowMessageFX.Information(null, pxeModuleName, "Added Employee successfully.");
+                        if (lnfind >= 1) {
+                            ShowMessageFX.Information(null, pxeModuleName, "Added Employee successfully.");
+                        } else {
+                            ShowMessageFX.Error(null, pxeModuleName, "Failed to add employee");
+                        }
                         CommonUtils.closeStage(btnAdd);
                     }
 

@@ -512,7 +512,6 @@ public class ActivityFormController implements Initializable, ScreenInterface {
                             ShowMessageFX.Information(getStage(), "Transaction save successfully.", pxeModuleName, null);
                             loadActivityField();
                             pnEditMode = EditMode.READY;
-                            System.out.println(oTrans.getMaster(1).toString());
                             if (oTrans.SearchRecord(oTrans.getMaster(1).toString(), true)) {
                                 loadActivityField();
                                 loadActivityVehicleTable();
@@ -651,23 +650,24 @@ public class ActivityFormController implements Initializable, ScreenInterface {
                 case "btnActCancel":
                     String fsValueCancelAct = oTrans.getMaster(1).toString();
                     if (cancelform.loadCancelWindow(oApp, fsValueCancelAct, fsValueCancelAct, "ACT")) {
-
                         if (oTrans.CancelActivity(fsValueCancelAct)) {
+                            loadActivityField();
+                            pnEditMode = EditMode.READY;
                             if (oTrans.SearchRecord(fsValueCancelAct, true)) {
                                 loadActivityField();
                                 loadActivityVehicleTable();
                                 loadActMembersTable();
                                 loadTownTable();
-                                pnEditMode = EditMode.UNKNOWN;
+                                pnEditMode = EditMode.READY;
 
                             } else {
                                 ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
                                 actVhclModelData.clear();
                                 actMembersData.clear();
                                 clearFields();
+                                pnEditMode = EditMode.UNKNOWN;
 
                             }
-
                         } else {
                             ShowMessageFX.Information(getStage(), "Failed to cancel activity.", pxeModuleName, null);
                             return;
@@ -1401,21 +1401,26 @@ public class ActivityFormController implements Initializable, ScreenInterface {
         tblVchlSelect.setVisible(lbShow);
 
         if (fnValue == EditMode.READY) {
-            btnActivityHistory.setVisible(true);
-            btnActivityHistory.setManaged(true);
-            btnPrint.setVisible(true);
-            btnPrint.setManaged(true);
+
             if (lblCancelStatus.getText().equals("Cancelled")) {
                 btnActCancel.setVisible(false);
                 btnActCancel.setManaged(false);
                 btnEdit.setVisible(false);
                 btnEdit.setManaged(false);
+                btnPrint.setVisible(false);
+                btnPrint.setManaged(false);
+                btnActivityHistory.setVisible(true);
+                btnActivityHistory.setManaged(true);
 
             } else {
                 btnActCancel.setVisible(true);
                 btnActCancel.setManaged(true);
                 btnEdit.setVisible(true);
                 btnEdit.setManaged(true);
+                btnPrint.setVisible(true);
+                btnPrint.setManaged(true);
+                btnActivityHistory.setVisible(true);
+                btnActivityHistory.setManaged(true);
             }
         }
 

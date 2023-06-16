@@ -785,16 +785,9 @@ public class InquiryFormController implements Initializable, ScreenInterface {
                             if (oTrans.SaveRecord()) {
                                 ShowMessageFX.Information(getStage(), "Transaction save successfully.", pxeModuleName, null);
                                 loadInquiryListTable();
-                                pagination.setPageFactory(this::createPage);
-                                if (pnEditMode == EditMode.ADDNEW) {
-                                    pagecounter = (oTrans.getInquiryMasterCount() - 1) + pagination.getCurrentPageIndex() * ROWS_PER_PAGE;
-                                }
-                                getSelectedItem(filteredData.get(pagecounter).getTblcinqindex01());
+                                getSelectedItem((String) oTrans.getMaster(1));
                                 pnEditMode = oTrans.getEditMode();
                                 initBtnProcess(pnEditMode);
-                                //loadCustomerInquiry();
-                                //loadTargetVehicle();
-                                //loadPromosOfferred();
                             } else {
                                 ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", "Error while saving " + pxeModuleName);
                             }
@@ -822,6 +815,11 @@ public class InquiryFormController implements Initializable, ScreenInterface {
                 case "btnLostSale":
                     if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure, do you want to tag this inquiry as LOST SALE?") == true) {
                         loadLostSaleWindow();
+                        
+                        getSelectedItem(filteredData.get(pagecounter).getTblcinqindex01());
+                        pnEditMode = oTrans.getEditMode();
+                        initBtnProcess(pnEditMode);
+                        
                         break;
                     } else {
                         return;
@@ -1587,7 +1585,7 @@ public class InquiryFormController implements Initializable, ScreenInterface {
                             //oTrans.getInqDetail(lnCtr, "sSourceNo").toString(), //
                             oTrans.getInqDetail(lnCtr, "sPlatform").toString(), // Web Inquiry
                             oTrans.getInqDetail(lnCtr, "sTestModl").toString(), //
-                            oTrans.getInqDetail(lnCtr, "sActvtyID").toString(), //
+                            oTrans.getInqDetail(lnCtr, "sActTitle").toString(), //
                             //oTrans.getInqDetail(lnCtr, "dLastUpdt").toString(), //
                             oTrans.getInqDetail(lnCtr, "nReserved").toString(), //
                             oTrans.getInqDetail(lnCtr, "nRsrvTotl").toString(), //
@@ -1757,12 +1755,13 @@ public class InquiryFormController implements Initializable, ScreenInterface {
         try {
             oldTransNo = TransNo;
             if (oTrans.OpenRecord(TransNo)) {
-                pnEditMode = oTrans.getEditMode();
-                txtField02.setText(inqlistdata.get(pagecounter).getTblcinqindex02()); // sBranchCD
-                txtField03.setText(inqlistdata.get(pagecounter).getTblcinqindex03()); //
-                txtField04.setText(inqlistdata.get(pagecounter).getTblcinqindex34()); // sSalesExe
-                txtField07.setText(inqlistdata.get(pagecounter).getTblcinqindex29()); // sCompnyNm
-                switch (inqlistdata.get(pagecounter).getTblcinqindex05()) { //cIsVhclNw
+                pnEditMode = oTrans.getEditMode(); //inqlistdata
+                /*
+                txtField02.setText(filteredData.get(pagecounter).getTblcinqindex02()); // sBranchCD
+                txtField03.setText(filteredData.get(pagecounter).getTblcinqindex03()); //
+                txtField04.setText(filteredData.get(pagecounter).getTblcinqindex34()); // sSalesExe
+                txtField07.setText(filteredData.get(pagecounter).getTblcinqindex29()); // sCompnyNm
+                switch (filteredData.get(pagecounter).getTblcinqindex05()) { //cIsVhclNw
                     case "0":
                         rdbtnNew05.setSelected(true);
                         break;
@@ -1775,11 +1774,11 @@ public class InquiryFormController implements Initializable, ScreenInterface {
                         break;
                 }
 
-                textArea08.setText(inqlistdata.get(pagecounter).getTblcinqindex08()); // sRemarksx
-                txtField09.setText(inqlistdata.get(pagecounter).getTblcinqindex35()); // sSalesAgn
-                txtField10.setValue(strToDate(inqlistdata.get(pagecounter).getTblcinqindex10())); //dTargetDt
+                textArea08.setText(filteredData.get(pagecounter).getTblcinqindex08()); // sRemarksx
+                txtField09.setText(filteredData.get(pagecounter).getTblcinqindex35()); // sSalesAgn
+                txtField10.setValue(strToDate(filteredData.get(pagecounter).getTblcinqindex10())); //dTargetDt
 
-                switch (inqlistdata.get(pagecounter).getTblcinqindex11().toLowerCase()) {
+                switch (filteredData.get(pagecounter).getTblcinqindex11().toLowerCase()) {
                     case "a":
                         rdbtnHtA11.setSelected(true);
                         break;
@@ -1795,28 +1794,30 @@ public class InquiryFormController implements Initializable, ScreenInterface {
                         rdbtnHtC11.setSelected(false);
                         break;
                 }
-                cmbType012.getSelectionModel().select(Integer.parseInt(inqlistdata.get(pagecounter).getTblcinqindex12())); //Inquiry Type sSourceCD
+                cmbType012.getSelectionModel().select(Integer.parseInt(filteredData.get(pagecounter).getTblcinqindex12())); //Inquiry Type sSourceCD
 //                    if (Integer.parseInt(inqlistdata.get(pagecounter).getTblcinqindex12()) == 1) {
 //                         cmbOnstr13.getSelectionModel().select(Integer.parseInt(inqlistdata.get(pagecounter).getTblcinqindex13())); //Online Store sSourceNo
 //                    }
-                txtField13.setText(inqlistdata.get(pagecounter).getTblcinqindex13()); //Web Inquiry
-                txtField14.setText(inqlistdata.get(pagecounter).getTblcinqindex14()); //sTestModl
-                txtField15.setText(inqlistdata.get(pagecounter).getTblcinqindex15()); //
-                txtField17.setText(inqlistdata.get(pagecounter).getTblcinqindex17()); // nReserved
-                txtField18.setText(inqlistdata.get(pagecounter).getTblcinqindex18()); // nRsrvTotl
-                txtField21.setText(inqlistdata.get(pagecounter).getTblcinqindex21()); // sApproved
-                comboBox24.getSelectionModel().select(Integer.parseInt(inqlistdata.get(pagecounter).getTblcinqindex24())); //Inquiry Status
-                txtField29.setText(inqlistdata.get(pagecounter).getTblcinqindex29()); // sCompnyNm
-                txtField30.setText(inqlistdata.get(pagecounter).getTblcinqindex30()); // sMobileNo
-                txtField31.setText(inqlistdata.get(pagecounter).getTblcinqindex31()); // sAccountx
-                txtField32.setText(inqlistdata.get(pagecounter).getTblcinqindex32()); // sEmailAdd
+                txtField13.setText(filteredData.get(pagecounter).getTblcinqindex13()); //Web Inquiry
+                txtField14.setText(filteredData.get(pagecounter).getTblcinqindex14()); //sTestModl
+                txtField15.setText(filteredData.get(pagecounter).getTblcinqindex15()); //
+                txtField17.setText(filteredData.get(pagecounter).getTblcinqindex17()); // nReserved
+                txtField18.setText(filteredData.get(pagecounter).getTblcinqindex18()); // nRsrvTotl
+                txtField21.setText(filteredData.get(pagecounter).getTblcinqindex21()); // sApproved
+                comboBox24.getSelectionModel().select(Integer.parseInt(filteredData.get(pagecounter).getTblcinqindex24())); //Inquiry Status
+                txtField29.setText(filteredData.get(pagecounter).getTblcinqindex29()); // sCompnyNm
+                txtField30.setText(filteredData.get(pagecounter).getTblcinqindex30()); // sMobileNo
+                txtField31.setText(filteredData.get(pagecounter).getTblcinqindex31()); // sAccountx
+                txtField32.setText(filteredData.get(pagecounter).getTblcinqindex32()); // sEmailAdd
                 //txtField33.setText(inqlistdata.get(pagecounter).getTblcinqindex33()); // sAddressx
-                textArea33.setText(inqlistdata.get(pagecounter).getTblcinqindex33()); // sAddressx
+                textArea33.setText(filteredData.get(pagecounter).getTblcinqindex33()); // sAddressx
+                */
+                loadCustomerInquiry() ;
                 loadTargetVehicle();
                 loadPromosOfferred();
 
                 //Retrieve Requirements
-                oTransProcess.loadRequirements(inqlistdata.get(pagecounter).getTblcinqindex01());
+                oTransProcess.loadRequirements(filteredData.get(pagecounter).getTblcinqindex01());
                 if (oTransProcess.getInqReqCount() > 0) {
                     cmbInqpr01.getSelectionModel().select(Integer.parseInt(oTransProcess.getInqReq(oTransProcess.getInqReqCount(), "cPayModex").toString())); //Inquiry Payment mode
                     cmbInqpr02.getSelectionModel().select(Integer.parseInt(oTransProcess.getInqReq(oTransProcess.getInqReqCount(), "cCustGrpx").toString())); //Inquiry Customer Type
@@ -1828,17 +1829,17 @@ public class InquiryFormController implements Initializable, ScreenInterface {
                 //Load Table Requirements
                 loadInquiryRequirements();
                 //Retrieve Reservation
-                String[] sSourceNo = {inqlistdata.get(pagecounter).getTblcinqindex01()};
+                String[] sSourceNo = {filteredData.get(pagecounter).getTblcinqindex01()};
                 oTransProcess.loadReservation(sSourceNo, true);
                 //Load Table Reservation
                 loadInquiryAdvances();
 
                 //Load Table Bank Application
-                oTransBankApp.loadBankApplication(inqlistdata.get(pagecounter).getTblcinqindex01(), true);
+                oTransBankApp.loadBankApplication(filteredData.get(pagecounter).getTblcinqindex01(), true);
                 loadBankApplication();
 
                 //Load Table Follow Up History
-                oTransFollowUp.loadFollowUp(inqlistdata.get(pagecounter).getTblcinqindex01(), true);
+                oTransFollowUp.loadFollowUp(filteredData.get(pagecounter).getTblcinqindex01(), true);
                 loadFollowUp();
 
                 sClientID = (String) oTrans.getMaster(7);

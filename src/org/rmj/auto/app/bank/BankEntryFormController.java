@@ -22,7 +22,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Pagination;
 import javafx.scene.control.TableColumn;
@@ -31,6 +30,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
+import static javafx.scene.input.KeyCode.DOWN;
+import static javafx.scene.input.KeyCode.UP;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -67,7 +68,7 @@ public class BankEntryFormController implements Initializable, ScreenInterface {
     private String oldTransNo = "";
     private String TransNo = "";
 
-    private ObservableList<BankEntryTableList> bankentrydata = FXCollections.observableArrayList();
+    private final ObservableList<BankEntryTableList> bankentrydata = FXCollections.observableArrayList();
     private FilteredList<BankEntryTableList> filteredData;
     private static final int ROWS_PER_PAGE = 50;
 
@@ -301,14 +302,11 @@ public class BankEntryFormController implements Initializable, ScreenInterface {
                     if (oTrans.SaveRecord()) {
                         ShowMessageFX.Information(getStage(), "Transaction save successfully.", pxeModuleName, null);
                         loadBankEntryTable();
-                        if (pnEditMode == EditMode.ADDNEW) {
-                            try {
-                                pagecounter = (oTrans.getItemCount() - 1) + pagination.getCurrentPageIndex() * ROWS_PER_PAGE;
-                            } catch (SQLException ex) {
-                                Logger.getLogger(BankEntryFormController.class.getName()).log(Level.SEVERE, null, ex);
-                            }
+                        try {
+                            getSelectedItem((String) oTrans.getMaster(1));
+                        } catch (SQLException ex) {
+                            Logger.getLogger(BankEntryFormController.class.getName()).log(Level.SEVERE, null, ex);
                         }
-                        getSelectedItem(filteredData.get(pagecounter).getTblindex01());
                         pnEditMode = oTrans.getEditMode();
                     } else {
                         ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", "Error while saving Vehicle Description");
@@ -346,8 +344,7 @@ public class BankEntryFormController implements Initializable, ScreenInterface {
             /*Populate table*/
             bankentrydata.clear();
             if (oTrans.LoadList("")) {
-                System.out.println(oTrans.getItemCount());
-                for (lnCtr = 1; lnCtr <= oTrans.getItemCount(); lnCtr++) {
+                for (lnCtr = 1; lnCtr <= oTrans.getDetailCount(); lnCtr++) {
                     bankentrydata.add(new BankEntryTableList(
                             String.valueOf(lnCtr), //ROW
                             oTrans.getDetail(lnCtr, "sBankIDxx").toString(),//BANKID
@@ -384,12 +381,8 @@ public class BankEntryFormController implements Initializable, ScreenInterface {
 
         filteredData = new FilteredList<>(bankentrydata, b -> true);
         autoSearch(textSeek02);
-        // 3. Wrap the FilteredList in a SortedList.
         SortedList<BankEntryTableList> sortedData = new SortedList<>(filteredData);
-        // 4. Bind the SortedList comparator to the TableView comparator.
-        // 	  Otherwise, sorting the TableView would have no effect.
         sortedData.comparatorProperty().bind(tblBankEntry.comparatorProperty());
-        // 5. Add sorted (and filtered) data to the table.
         tblBankEntry.setItems(sortedData);
 
         tblBankEntry.widthProperty().addListener((ObservableValue<? extends Number> source, Number oldWidth, Number newWidth) -> {
@@ -498,17 +491,18 @@ public class BankEntryFormController implements Initializable, ScreenInterface {
     private void getSelectedItem(String TransNo) {
         oldTransNo = TransNo;
         if (oTrans.OpenRecord(TransNo)) {
-
-            txtField02.setText(bankentrydata.get(pagecounter).getTblindex02()); // sBankName
-            txtField03.setText(bankentrydata.get(pagecounter).getTblindex03()); // sBankAdv
-            txtField17.setText(bankentrydata.get(pagecounter).getTblindex17()); // sBankBrch
-            txtField05.setText(bankentrydata.get(pagecounter).getTblindex05()); // sAddressx
-            txtField18.setText(bankentrydata.get(pagecounter).getTblindex18()); // sTownName
-            txtField15.setText(bankentrydata.get(pagecounter).getTblindex15()); // sProvName
-            txtField07.setText(bankentrydata.get(pagecounter).getTblindex07()); // sZippCode
-            txtField04.setText(bankentrydata.get(pagecounter).getTblindex04()); // sContactP
-            txtField08.setText(bankentrydata.get(pagecounter).getTblindex08()); // sTelNoxxx
-            txtField09.setText(bankentrydata.get(pagecounter).getTblindex09()); // sFaxNoxxx
+            loadBankEntryField();
+//
+//            txtField02.setText(filteredData.get(pagecounter).getTblindex02()); // sBankName
+//            txtField03.setText(filteredData.get(pagecounter).getTblindex03()); // sBankAdv
+//            txtField17.setText(filteredData.get(pagecounter).getTblindex17()); // sBankBrch
+//            txtField05.setText(filteredData.get(pagecounter).getTblindex05()); // sAddressx
+//            txtField18.setText(filteredData.get(pagecounter).getTblindex18()); // sTownName
+//            txtField15.setText(filteredData.get(pagecounter).getTblindex15()); // sProvName
+//            txtField07.setText(filteredData.get(pagecounter).getTblindex07()); // sZippCode
+//            txtField04.setText(filteredData.get(pagecounter).getTblindex04()); // sContactP
+//            txtField08.setText(filteredData.get(pagecounter).getTblindex08()); // sTelNoxxx
+//            txtField09.setText(filteredData.get(pagecounter).getTblindex09()); // sFaxNoxxx
 
         }
         oldPnRow = pagecounter;
@@ -556,6 +550,8 @@ public class BankEntryFormController implements Initializable, ScreenInterface {
                             txtField18.clear();
                             txtField07.clear();
                         } else {
+                            txtField15.clear();
+                            txtField15.requestFocus();
                             ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
                         }
                         break;

@@ -615,31 +615,8 @@ public class InquiryFormController implements Initializable, ScreenInterface {
             @Override
             public void changed(ObservableValue<? extends Tab> observable, Tab oldTab, Tab newTab) {
                 selectedIndex = tabPaneMain.getSelectionModel().getSelectedIndex();
-
-                /*INQUIRY PROCESS*/
-                if (selectedIndex == 1) {
-                    initButton(pnEditMode);
-                    initBtnProcess(oTransProcess.getEditMode());
-                    btnAdd.setVisible(false);
-                    btnAdd.setManaged(false);
-                    btnEdit.setVisible(false);
-                    btnEdit.setManaged(false);
-                    btnSave.setVisible(false);
-                    btnSave.setManaged(false);
-                    btnClear.setVisible(false);
-                    btnClear.setManaged(false);
-                    btnCancel.setVisible(false);
-                    btnCancel.setManaged(false);
-                    /*INQUIRY INFORMATION*/
-                } else {
-                    initButton(pnEditMode);
-                    btnProcess.setVisible(false);
-                    btnProcess.setManaged(false);
-                    btnModify.setVisible(false);
-                    btnModify.setManaged(false);
-                    btnApply.setVisible(false);
-                    btnApply.setManaged(false);
-                }
+                initBtnProcess(oTransProcess.getEditMode());
+                initButton(pnEditMode);
             }
         });
 
@@ -810,13 +787,13 @@ public class InquiryFormController implements Initializable, ScreenInterface {
                     ShowMessageFX.Information(getStage(), "You click convert to sales button", pxeModuleName, null);
                     break;
                 case "btnPrintRefund":
-                    ShowMessageFX.Information(getStage(), "You click print refund button", pxeModuleName, null);
+                    loadPrintRefund((String) oTrans.getMaster(1));
                     break;
                 case "btnLostSale":
                     if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure, do you want to tag this inquiry as LOST SALE?") == true) {
                         loadLostSaleWindow();
                         
-                        getSelectedItem(filteredData.get(pagecounter).getTblcinqindex01());
+                        getSelectedItem((String) oTrans.getMaster(1));
                         pnEditMode = oTrans.getEditMode();
                         initBtnProcess(pnEditMode);
                         
@@ -955,36 +932,9 @@ public class InquiryFormController implements Initializable, ScreenInterface {
                             ShowMessageFX.Information(getStage(), "Transaction save successfully.", pxeModuleName, null);
                             loadInquiryListTable();
                             pagination.setPageFactory(this::createPage);
-                            getSelectedItem(filteredData.get(pagecounter).getTblcinqindex01());
+                            getSelectedItem((String) oTrans.getMaster(1));
                             pnEditMode = oTransProcess.getEditMode();
                             initBtnProcess(pnEditMode);
-                            /*
-                        oTrans.OpenRecord(sSourceNox);
-                        loadCustomerInquiry();
-                        loadTargetVehicle();
-                        loadPromosOfferred();
-
-                        //Retrieve Requirements
-                        oTransProcess.loadRequirements(sSourceNox);
-                        if (oTransProcess.getInqReqCount() > 0){
-                            cmbInqpr01.getSelectionModel().select(Integer.parseInt(oTransProcess.getInqReq(oTransProcess.getInqReqCount(), "cPayModex").toString())); //Inquiry Payment mode
-                            cmbInqpr02.getSelectionModel().select(Integer.parseInt(oTransProcess.getInqReq(oTransProcess.getInqReqCount(), "cCustGrpx").toString())); //Inquiry Customer Type
-                        } else {
-                            cmbInqpr01.setValue(null);
-                            cmbInqpr02.setValue(null);
-                        }
-                        //Load Table Requirements
-                        loadInquiryRequirements();
-                        //Retrieve Reservation
-                        String[] sSourceNo = {sSourceNox}; //Use array cause class is mandatory array to call even I only need 1
-                        oTransProcess.loadReservation(sSourceNo,true);
-                        //Load Table Reservation
-                        loadInquiryAdvances();
-
-                        loadInquiryListTable();
-                        pagination.setPageFactory(this::createPage);
-                             */
-
                         } else {
                             ShowMessageFX.Warning(getStage(), oTransProcess.getMessage(), "Warning", "Error while saving " + pxeModuleName);
                             return;
@@ -1159,6 +1109,53 @@ public class InquiryFormController implements Initializable, ScreenInterface {
             Logger.getLogger(InquiryFormController.class.getName()).log(Level.SEVERE, null, ex);
         }
 
+    }
+    
+    /*INQUIRY PRINT REFUND*/
+    private void loadPrintRefund(String fsValue) throws SQLException {
+        try {
+            Stage stage = new Stage();
+
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            fxmlLoader.setLocation(getClass().getResource("InquiryRefundPrint.fxml"));
+
+            InquiryRefundPrintController loControl = new InquiryRefundPrintController();
+            loControl.setGRider(oApp);
+            loControl.setTransNox(fsValue);
+
+            fxmlLoader.setController(loControl);
+
+            //load the main interface
+            Parent parent = fxmlLoader.load();
+
+            parent.setOnMousePressed(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    xOffset = event.getSceneX();
+                    yOffset = event.getSceneY();
+                }
+            });
+
+            parent.setOnMouseDragged(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    stage.setX(event.getScreenX() - xOffset);
+                    stage.setY(event.getScreenY() - yOffset);
+                }
+            });
+
+            //set the main interface as the scene
+            Scene scene = new Scene(parent);
+            stage.setScene(scene);
+            stage.initStyle(StageStyle.TRANSPARENT);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle("");
+            stage.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+            ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
+            System.exit(1);
+        }
     }
 
     /*INQUIRY PROCESS: OPEN VEHICLE SALES ADVANCES*/
@@ -1535,7 +1532,7 @@ public class InquiryFormController implements Initializable, ScreenInterface {
             /*Populate table*/
             inqlistdata.clear();
             if (oTrans.loadCustomer("", dateSeek01.getValue().toString(), dateSeek02.getValue().toString(), false)) {
-                for (lnCtr = 1; lnCtr <= oTrans.getInquiryMasterCount(); lnCtr++) {
+                for (lnCtr = 1; lnCtr <= oTrans.getInquiryDetailCount(); lnCtr++) {
                     //Inquiry Status
                     switch (oTrans.getInqDetail(lnCtr, "cTranStat").toString()) { // cTranStat
                         case "0":
@@ -1817,7 +1814,7 @@ public class InquiryFormController implements Initializable, ScreenInterface {
                 loadPromosOfferred();
 
                 //Retrieve Requirements
-                oTransProcess.loadRequirements(filteredData.get(pagecounter).getTblcinqindex01());
+                oTransProcess.loadRequirements(TransNo );
                 if (oTransProcess.getInqReqCount() > 0) {
                     cmbInqpr01.getSelectionModel().select(Integer.parseInt(oTransProcess.getInqReq(oTransProcess.getInqReqCount(), "cPayModex").toString())); //Inquiry Payment mode
                     cmbInqpr02.getSelectionModel().select(Integer.parseInt(oTransProcess.getInqReq(oTransProcess.getInqReqCount(), "cCustGrpx").toString())); //Inquiry Customer Type
@@ -1829,27 +1826,24 @@ public class InquiryFormController implements Initializable, ScreenInterface {
                 //Load Table Requirements
                 loadInquiryRequirements();
                 //Retrieve Reservation
-                String[] sSourceNo = {filteredData.get(pagecounter).getTblcinqindex01()};
+                String[] sSourceNo = {TransNo};
                 oTransProcess.loadReservation(sSourceNo, true);
                 //Load Table Reservation
                 loadInquiryAdvances();
 
                 //Load Table Bank Application
-                oTransBankApp.loadBankApplication(filteredData.get(pagecounter).getTblcinqindex01(), true);
+                oTransBankApp.loadBankApplication(TransNo, true);
                 loadBankApplication();
 
                 //Load Table Follow Up History
-                oTransFollowUp.loadFollowUp(filteredData.get(pagecounter).getTblcinqindex01(), true);
+                oTransFollowUp.loadFollowUp(TransNo, true);
                 loadFollowUp();
 
                 sClientID = (String) oTrans.getMaster(7);
                 sSourceNox = TransNo;
-                if (selectedIndex != 1) {
-                    //Enable button based on selected inquiry
-                    initButton(pnEditMode);
-                } else {
-                    initBtnProcess(pnEditMode);
-                }
+                
+                initBtnProcess(pnEditMode);
+                initButton(pnEditMode);
                 oldPnRow = pagecounter;
             }
 
@@ -2857,7 +2851,6 @@ public class InquiryFormController implements Initializable, ScreenInterface {
                     btnBankAppView.setVisible(true);
                     //For Follow up
                     btnFollowUp.setVisible(true);
-
                     break;
                 case 3: //VSP
                     //Bank Application
@@ -2871,18 +2864,36 @@ public class InquiryFormController implements Initializable, ScreenInterface {
                 case 2: //Lost Sale
                     btnPrintRefund.setVisible(true);
                     btnPrintRefund.setManaged(true);
+                    btnEdit.setVisible(false);
+                    btnEdit.setManaged(false);
                     break;
                 case 5: //Retired
                     tabInquiryProcess.setDisable(true);
                     tabBankHistory.setDisable(true);
                     btnFollowUp.setVisible(true);
+                    btnEdit.setVisible(false);
+                    btnEdit.setManaged(false);
                     break;
                 case 4: //Sold
                 case 6: //Cancelled
+                    btnEdit.setVisible(false);
+                    btnEdit.setManaged(false);
                     break;
             }
         }
-        if (selectedIndex != 1) {
+        
+        if (selectedIndex == 1) {
+            btnAdd.setVisible(false);
+            btnAdd.setManaged(false);
+            btnEdit.setVisible(false);
+            btnEdit.setManaged(false);
+            btnSave.setVisible(false);
+            btnSave.setManaged(false);
+            btnClear.setVisible(false);
+            btnClear.setManaged(false);
+            btnCancel.setVisible(false);
+            btnCancel.setManaged(false);
+        } else {
             btnProcess.setVisible(false);
             btnProcess.setManaged(false);
             btnModify.setVisible(false);
@@ -2890,6 +2901,7 @@ public class InquiryFormController implements Initializable, ScreenInterface {
             btnApply.setVisible(false);
             btnApply.setManaged(false);
         }
+        
     }
 
     /*INQUIRY PROCESS*/

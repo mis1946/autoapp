@@ -15,13 +15,13 @@ public class ActivityTownEntryTableList {
 
     private SimpleStringProperty tblRow;
     private CheckBox select;
-    private SimpleStringProperty tblindex01; //sTownIDxx
+    private SimpleStringProperty tblindexId01; //sTownIDxx
     private SimpleStringProperty tblCity; //
 
-    public ActivityTownEntryTableList(String tblRow, String tblindex01, String tblCity) {
+    public ActivityTownEntryTableList(String tblRow, String tblindexId01, String tblCity) {
         this.tblRow = new SimpleStringProperty(tblRow);
         this.select = new CheckBox();
-        this.tblindex01 = new SimpleStringProperty(tblindex01);
+        this.tblindexId01 = new SimpleStringProperty(tblindexId01);
         this.tblCity = new SimpleStringProperty(tblCity);
     }
 
@@ -41,12 +41,12 @@ public class ActivityTownEntryTableList {
         this.select = select;
     }
 
-    public String getTblindex01() {
-        return tblindex01.get();
+    public String getTblindexId01() {
+        return tblindexId01.get();
     }
 
-    public void setTblindex01(String tblindex01) {
-        this.tblindex01.set(tblindex01);
+    public void setTblindexId01(String tblindex01) {
+        this.tblindexId01.set(tblindex01);
     }
 
     public String getTblCity() {

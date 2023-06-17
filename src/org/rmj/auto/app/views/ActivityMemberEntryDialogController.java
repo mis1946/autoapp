@@ -75,7 +75,7 @@ public class ActivityMemberEntryDialogController implements Initializable, Scree
         tblViewDepart.setOnMouseClicked(event -> {
             ActivityMemberTable selectedDepartment = tblViewDepart.getSelectionModel().getSelectedItem();
             if (selectedDepartment != null) {
-                String departmentID = selectedDepartment.getTblindex14();
+                String departmentID = selectedDepartment.getTblindexMem14();
 
                 loadEmployeeTable(departmentID);
             }
@@ -120,9 +120,9 @@ public class ActivityMemberEntryDialogController implements Initializable, Scree
                         // Call the addTown here
                         for (ActivityMemberTable item : selectedItems) {
 
-                            String fsEmployID = item.getTblindex13();
-                            String fsEmpName = item.getTblindex25();
-                            String fsDept = item.getTblindex24();
+                            String fsEmployID = item.getTblindexMem13();
+                            String fsEmpName = item.getTblindexMem25();
+                            String fsDept = item.getTblindexMem24();
                             try {
                                 boolean fsEmp = false;
                                 for (int lnCtr = 1; lnCtr <= oTrans.getActMemberCount(); lnCtr++) {
@@ -213,7 +213,7 @@ public class ActivityMemberEntryDialogController implements Initializable, Scree
             tblViewEmployee.getItems().forEach(item -> item.getSelect().setSelected(newValue));
             updateSelectedCount();
         });
-        tblindex25.setCellValueFactory(new PropertyValueFactory<>("tblindex25"));
+        tblindex25.setCellValueFactory(new PropertyValueFactory<>("tblindexMem25"));
     }
 
     //storing values on bankentrydata
@@ -242,7 +242,7 @@ public class ActivityMemberEntryDialogController implements Initializable, Scree
 
     private void initDepartTable() {
 
-        tblindex24.setCellValueFactory(new PropertyValueFactory<>("tblindex24"));
+        tblindex24.setCellValueFactory(new PropertyValueFactory<>("tblindexMem24"));
     }
 
 }

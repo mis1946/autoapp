@@ -15,18 +15,18 @@ public class ActivityMemberTable {
 
     private SimpleStringProperty tblindexRow;
     private CheckBox select;
-    private SimpleStringProperty tblindex24; //sDeptName
-    private SimpleStringProperty tblindex14; //sDeptIDxx
-    private SimpleStringProperty tblindex25; //sCompnyNm
-    private SimpleStringProperty tblindex13; //sEmployID
+    private SimpleStringProperty tblindexMem24; //sDeptName
+    private SimpleStringProperty tblindexMem14; //sDeptIDxx
+    private SimpleStringProperty tblindexMem25; //sCompnyNm
+    private SimpleStringProperty tblindexMem13; //sEmployID
 
-    public ActivityMemberTable(String tblindexRow, String tblindex24, String tblindex14, String tblindex25, String tblindex13) {
+    public ActivityMemberTable(String tblindexRow, String tblindexMem24, String tblindexMem14, String tblindexMem25, String tblindexMem13) {
         this.tblindexRow = new SimpleStringProperty(tblindexRow);
         this.select = new CheckBox();
-        this.tblindex24 = new SimpleStringProperty(tblindex24);
-        this.tblindex14 = new SimpleStringProperty(tblindex14);
-        this.tblindex25 = new SimpleStringProperty(tblindex25);
-        this.tblindex13 = new SimpleStringProperty(tblindex13);
+        this.tblindexMem24 = new SimpleStringProperty(tblindexMem24);
+        this.tblindexMem14 = new SimpleStringProperty(tblindexMem14);
+        this.tblindexMem25 = new SimpleStringProperty(tblindexMem25);
+        this.tblindexMem13 = new SimpleStringProperty(tblindexMem13);
     }
 
     public CheckBox getSelect() {
@@ -45,36 +45,36 @@ public class ActivityMemberTable {
         this.tblindexRow.set(tblindexRow);
     }
 
-    public String getTblindex24() {
-        return tblindex24.get();
+    public String getTblindexMem24() {
+        return tblindexMem24.get();
     }
 
-    public void setTblindex24(String tblindex24) {
-        this.tblindex24.set(tblindex24);
+    public void setTblindexMem24(String tblindexMem24) {
+        this.tblindexMem24.set(tblindexMem24);
     }
 
-    public String getTblindex14() {
-        return tblindex14.get();
+    public String getTblindexMem14() {
+        return tblindexMem14.get();
     }
 
-    public void setTblindex14(String tblindex14) {
-        this.tblindex14.set(tblindex14);
+    public void setTblindex14(String tblindexMem14) {
+        this.tblindexMem14.set(tblindexMem14);
     }
 
-    public String getTblindex25() {
-        return tblindex25.get();
+    public String getTblindexMem25() {
+        return tblindexMem25.get();
     }
 
-    public void setTblindex25(String tblindex25) {
-        this.tblindex25.set(tblindex25);
+    public void setTblindexMem25(String tblindex25) {
+        this.tblindexMem25.set(tblindex25);
     }
 
-    public String getTblindex13() {
-        return tblindex13.get();
+    public String getTblindexMem13() {
+        return tblindexMem13.get();
     }
 
-    public void setTblindex13(String tblindex13) {
-        this.tblindex13.set(tblindex13);
+    public void setTblindexMem13(String tblindexMem13) {
+        this.tblindexMem13.set(tblindexMem13);
     }
 
 }

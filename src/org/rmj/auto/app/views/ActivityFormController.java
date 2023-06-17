@@ -249,6 +249,7 @@ public class ActivityFormController implements Initializable, ScreenInterface {
         btnEdit.setOnAction(this::cmdButton_Click);
         btnAddSource.setOnAction(this::cmdButton_Click);
         btnCancel.setOnAction(this::cmdButton_Click);
+        btnPrint.setOnAction(this::cmdButton_Click);
         btnActCancel.setOnAction(this::cmdButton_Click);
 
         /*Set Focus to set Value to Class*/
@@ -678,7 +679,9 @@ public class ActivityFormController implements Initializable, ScreenInterface {
 
                     break;
                 case "btnPrint":
-                    break;//close tab
+                    String srowdata = oTrans.getMaster(1).toString();
+                    loadActivityPrint(srowdata);
+                    break;
                 case "btnClose": //close tab
                     if (ShowMessageFX.OkayCancel(null, "Close Tab", "Are you sure you want to close this Tab?") == true) {
                         if (unload != null) {
@@ -693,9 +696,59 @@ public class ActivityFormController implements Initializable, ScreenInterface {
             }
             initButton(pnEditMode);
         } catch (IOException ex) {
-            Logger.getLogger(ActivityFormController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ActivityFormController.class
+                    .getName()).log(Level.SEVERE, null, ex);
+
         } catch (SQLException ex) {
-            Logger.getLogger(ActivityFormController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ActivityFormController.class
+                    .getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void loadActivityPrint(String sTransno) throws SQLException {
+        try {
+            Stage stage = new Stage();
+
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            fxmlLoader.setLocation(getClass().getResource("ActivityPrint.fxml"));
+
+            ActivityPrintController loControl = new ActivityPrintController();
+            loControl.setGRider(oApp);
+            //loControl.setVSAObject(oTransProcess);
+            loControl.setTransNox(sTransno);
+
+            fxmlLoader.setController(loControl);
+
+            //load the main interface
+            Parent parent = fxmlLoader.load();
+
+            parent.setOnMousePressed(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    xOffset = event.getSceneX();
+                    yOffset = event.getSceneY();
+                }
+            });
+
+            parent.setOnMouseDragged(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    stage.setX(event.getScreenX() - xOffset);
+                    stage.setY(event.getScreenY() - yOffset);
+                }
+            });
+
+            //set the main interface as the scene
+            Scene scene = new Scene(parent);
+            stage.setScene(scene);
+            stage.initStyle(StageStyle.TRANSPARENT);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle("");
+            stage.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+            ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
+            System.exit(1);
         }
     }
 
@@ -1208,7 +1261,6 @@ public class ActivityFormController implements Initializable, ScreenInterface {
     private void loadTownTable() {
         try {
             /*Populate table*/
-
             townCitydata.clear();
             for (int lnCtr = 1; lnCtr <= oTrans.getActTownCount(); lnCtr++) {
                 townCitydata.add(new ActivityTownEntryTableList(
@@ -1294,8 +1346,8 @@ public class ActivityFormController implements Initializable, ScreenInterface {
                 tblViewActivityMembers.getItems().forEach(item -> item.getSelect().setSelected(newValue));
             }
         });
-        tblindex24.setCellValueFactory(new PropertyValueFactory<>("tblindex24"));
-        tblindex25.setCellValueFactory(new PropertyValueFactory<>("tblindex25"));
+        tblindex24.setCellValueFactory(new PropertyValueFactory<>("tblindexMem24"));
+        tblindex25.setCellValueFactory(new PropertyValueFactory<>("tblindexMem25"));
     }
 
     private void loadActivityVehicleTable() {

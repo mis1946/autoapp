@@ -8,10 +8,14 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
@@ -55,10 +59,11 @@ public class ActivityPrintController implements Initializable, ScreenInterface {
     private JasperReport jasperReport;
     private JRViewer jrViewer;
     private ObservableList<ActivityTableList> actMasterData = FXCollections.observableArrayList();
-    private ObservableList<ActivityMemberTable> actMembersData = FXCollections.observableArrayList();
-    private ObservableList<ActivityTownEntryTableList> townCitydata = FXCollections.observableArrayList();
-    private ObservableList<ActivityVchlEntryTable> actVhclModelData = FXCollections.observableArrayList();
-    private int lnCtr = 0;
+    private List<ActivityMemberTable> actMembersData = new ArrayList<ActivityMemberTable>();
+    private List<ActivityTownEntryTableList> townCitydata = new ArrayList<ActivityTownEntryTableList>();
+    private List<ActivityVchlEntryTable> actVhclModelData = new ArrayList<ActivityVchlEntryTable>();
+//    private ObservableList<ActivityTownEntryTableList> townCitydata = FXCollections.observableArrayList();
+//    private ObservableList<ActivityVchlEntryTable> actVhclModelData = FXCollections.observableArrayList();
     private boolean running = false;
     final static int interval = 100;
     private Timeline timeline;
@@ -69,14 +74,14 @@ public class ActivityPrintController implements Initializable, ScreenInterface {
     @FXML
     private Button btnClose;
 
-    private final String pxeModuleName = "ReservationPrint";
+    private final String pxeModuleName = "ActivityPrint";
     unloadForm unload = new unloadForm(); //Used in Close Button
     @FXML
     private AnchorPane reportPane;
 
     @FXML
     private VBox vbProgress;
-    private String[] psTransNox;
+    private String psTransNox;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -133,7 +138,11 @@ public class ActivityPrintController implements Initializable, ScreenInterface {
                         }
                         if (timeSeconds == 0) {
 
-//                            loadReport();
+                            try {
+                                loadReport();
+                            } catch (SQLException ex) {
+                                Logger.getLogger(ActivityPrintController.class.getName()).log(Level.SEVERE, null, ex);
+                            }
                         }
                     } // KeyFrame event handler
                     ));
@@ -167,61 +176,86 @@ public class ActivityPrintController implements Initializable, ScreenInterface {
         return localDate;
     }
 
-    private boolean loadReport() {
-        try {
-            //Create the parameter
-            Map<String, Object> params = new HashMap<>();
-//            params.put("sCompnyNm", "Guanzon Group of Companies");
-//            params.put("sBranchNm", oApp.getBranchName());
-//            params.put("sAddressx", oApp.getAddress());
-            actMasterData.clear();
-            actMembersData.clear();
-            townCitydata.clear();
-            actVhclModelData.clear();
-            String fsValues = oTrans.getMaster(1).toString();
+    public void setTransNox(String fsValue) {
+        psTransNox = fsValue;
+    }
 
-            if (oTrans.OpenRecord(fsValues)) {
-                for (lnCtr = 1; lnCtr <= oTrans.getItemCount(); lnCtr++) {
-                    actMasterData.add(new ActivityTableList(
-                            oTrans.getDetail(lnCtr, "sActvtyID").toString(),
-                            oTrans.getDetail(lnCtr, "sActTitle ").toString(),
-                            oTrans.getDetail(lnCtr, "sActDescx").toString(),
-                            oTrans.getDetail(lnCtr, "sActSrcex").toString(),
-                            CommonUtils.xsDateShort((Date) oTrans.getDetail(lnCtr, "dDateFrom")),
-                            CommonUtils.xsDateShort((Date) oTrans.getDetail(lnCtr, "dDateThru")),
-                            oTrans.getDetail(lnCtr, "sLocation").toString(),
-                            oTrans.getDetail(lnCtr, "sCompnynx").toString(),
-                            oTrans.getDetail(lnCtr, "nPropBdgt").toString(),
-                            oTrans.getDetail(lnCtr, "nTrgtClnt").toString(),
-                            oTrans.getDetail(lnCtr, "sLogRemrk").toString(),
-                            oTrans.getDetail(lnCtr, "sRemarksx").toString(),
-                            CommonUtils.xsDateShort((Date) oTrans.getDetail(lnCtr, "dDateThru")),
-                            oTrans.getDetail(lnCtr, "dApproved").toString()));
+    private boolean loadReport() throws SQLException {
+        //Create the parameter
+        int lnCtr = 1;
+        Map<String, Object> params = new HashMap<>();
+        actMasterData.clear();
+        if (oTrans.OpenRecord(psTransNox)) {
+            for (lnCtr = 1; lnCtr <= oTrans.getItemCount(); lnCtr++) {
+                actMasterData.add(new ActivityTableList(
+                        oTrans.getDetail(lnCtr, "sActvtyID").toString(),
+                        oTrans.getDetail(lnCtr, "sActTitle").toString(),
+                        oTrans.getDetail(lnCtr, "sActDescx").toString(),
+                        "",
+                        CommonUtils.xsDateShort((Date) oTrans.getDetail(lnCtr, "dDateFrom")),
+                        CommonUtils.xsDateShort((Date) oTrans.getDetail(lnCtr, "dDateThru")),
+                        oTrans.getDetail(lnCtr, "sLocation").toString(),
+                        oTrans.getDetail(lnCtr, "sCompnynx").toString(),
+                        oTrans.getDetail(lnCtr, "nPropBdgt").toString(),
+                        oTrans.getDetail(lnCtr, "nTrgtClnt").toString(),
+                        oTrans.getDetail(lnCtr, "sLogRemrk").toString(),
+                        oTrans.getDetail(lnCtr, "sRemarksx").toString(),
+                        CommonUtils.xsDateShort((Date) oTrans.getDetail(lnCtr, "dDateThru")),
+                        "",
+                        oTrans.getDetail(lnCtr, "sDeptName").toString(),
+                        oTrans.getDetail(lnCtr, "sCompnyNm").toString(),
+                        oTrans.getDetail(lnCtr, "sBranchNm").toString(),
+                        oTrans.getDetail(lnCtr, "sProvName").toString()));
+            }
+            townCitydata.clear();
+            for (lnCtr = 1; lnCtr <= oTrans.getActTownCount(); lnCtr++) {
+                townCitydata.add(new ActivityTownEntryTableList(
+                        String.valueOf(lnCtr), //ROW
+                        oTrans.getActTown(lnCtr, "sTownIDxx").toString(),
+                        oTrans.getActTown(lnCtr, "sTownName").toString()));
+            }
+            actMembersData.clear();
+            for (lnCtr = 1; lnCtr <= oTrans.getActMemberCount(); lnCtr++) {
+                if (oTrans.getActMember(lnCtr, "cOriginal").equals("1")) {
+                    actMembersData.add(new ActivityMemberTable(
+                            String.valueOf(lnCtr), //ROW
+                            oTrans.getActMember(lnCtr, "sDeptName").toString(),
+                            "",
+                            oTrans.getActMember(lnCtr, "sCompnyNm").toString(), // Fifth column (Department)
+                            oTrans.getActMember(lnCtr, "sEmployID").toString()));
                 }
             }
-//            String sourceFileName = "D://GGC_Java_Systems/reports/autoapp/reserve.jasper";
-            String printFileName = null;
-            JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(actMasterData);
+            actVhclModelData.clear();
+            for (lnCtr = 1; lnCtr <= oTrans.getActVehicleCount(); lnCtr++) {
+                actVhclModelData.add(new ActivityVchlEntryTable(
+                        String.valueOf(lnCtr), //ROW
+                        oTrans.getActVehicle(lnCtr, "sSerialID").toString(),
+                        oTrans.getActVehicle(lnCtr, "sDescript").toString(),
+                        oTrans.getActVehicle(lnCtr, "sCSNoxxxx").toString()));
+            }
+        }
+        String sourceFileName = "D://GGC_Java_Systems/reports/autoapp/ActivityPrint.jasper";
+        String printFileName = null;
+        JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(actMasterData);
+        JRBeanCollectionDataSource vehicle = new JRBeanCollectionDataSource(actVhclModelData);
+        JRBeanCollectionDataSource town = new JRBeanCollectionDataSource(townCitydata);
+        JRBeanCollectionDataSource member = new JRBeanCollectionDataSource(actMembersData);
 
-//            try {
-//                jasperPrint = JasperFillManager.fillReport(sourceFileName, params, beanColDataSource);
+        params.put("vehicle", vehicle);
+        params.put("town", town);
+        params.put("member", member);
+        try {
+            jasperPrint = JasperFillManager.fillReport(sourceFileName, params, beanColDataSource);
             printFileName = jasperPrint.toString();
             if (printFileName != null) {
                 showReport();
             }
-//        }
-//            } catch (JRException ex) {
-//                running = false;
-//                vbProgress.setVisible(false);
-//                timeline.stop();
-//            }
-            return false;
-        } catch (SQLException ex) {
+        } catch (JRException ex) {
             running = false;
             vbProgress.setVisible(false);
             timeline.stop();
         }
-
         return false;
+
     }
 }

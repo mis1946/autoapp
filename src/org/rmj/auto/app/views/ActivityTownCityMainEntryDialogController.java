@@ -102,7 +102,7 @@ public class ActivityTownCityMainEntryDialogController implements Initializable,
                     if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure you want to add?")) {
                         // Call the addTown here
                         for (ActivityTownEntryTableList item : selectedItems) {
-                            String fsTownId = item.getTblindex01();
+                            String fsTownId = item.getTblindexId01();
                             String fsTownName = item.getTblCity();// Assuming there is a method to retrieve the transaction number
                             try {
                                 boolean fsTown = false;

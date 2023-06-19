@@ -12,24 +12,24 @@ import javafx.beans.property.SimpleStringProperty;
  */
 public class ActivityTableList {
 
-    private SimpleStringProperty tblindex01;
-    private SimpleStringProperty tblindex02;
-    private SimpleStringProperty tblindex03;
-    private SimpleStringProperty tblindex05;
-    private SimpleStringProperty tblindex06;
-    private SimpleStringProperty tblindex07;
-    private SimpleStringProperty tblindex08;
-    private SimpleStringProperty tblindex09;
-    private SimpleStringProperty tblindex10;
-    private SimpleStringProperty tblindex12;
-    private SimpleStringProperty tblindex15;
-    private SimpleStringProperty tblindex16;
-    private SimpleStringProperty tblindex19;
-    private SimpleStringProperty tblindex21;
-    private SimpleStringProperty tblindex24;
-    private SimpleStringProperty tblindex25;
-    private SimpleStringProperty tblindex26;
-    private SimpleStringProperty tblindex28; //sProvName
+    private SimpleStringProperty tblindex01;//sActvtyID
+    private SimpleStringProperty tblindex02;//sActTitle
+    private SimpleStringProperty tblindex03;//sActDescx
+    private SimpleStringProperty tblindex05;//sActSrcex
+    private SimpleStringProperty tblindex06;//dDateFrom
+    private SimpleStringProperty tblindex07;//dDateThruNo
+    private SimpleStringProperty tblindex08;//sLocation
+    private SimpleStringProperty tblindex09;//sCompnynx
+    private SimpleStringProperty tblindex10;//nPropBdgt
+    private SimpleStringProperty tblindex12;//nTrgtClnt
+    private SimpleStringProperty tblindex15;//sLogRemrk
+    private SimpleStringProperty tblindex16;//sRemarksx
+    private SimpleStringProperty tblindex19;//dEntryDte
+    private SimpleStringProperty tblindex21;//dApproved
+    private SimpleStringProperty tblindex24;//sDeptName
+    private SimpleStringProperty tblindex25;//sActDescx
+    private SimpleStringProperty tblindex26;//sBranchNm
+    private SimpleStringProperty tblindex28;//sProvName
 
     public ActivityTableList(String tblindex01,
             String tblindex02,

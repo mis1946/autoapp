@@ -42,10 +42,9 @@ import org.rmj.appdriver.callback.MasterCallback;
 import org.rmj.auto.app.views.ScreenInterface;
 import org.rmj.auto.app.views.unloadForm;
 import org.rmj.auto.clients.base.Activity;
-import org.rmj.auto.sales.base.InquiryProcess;
 
 /**
- * Reserve Print FXML Controller class
+ * Activity Print FXML Controller class
  *
  * @author John Dave
  */
@@ -54,7 +53,6 @@ public class ActivityPrintController implements Initializable, ScreenInterface {
     private Activity oTrans;
     private GRider oApp;
     private MasterCallback oListener;
-
     private JasperPrint jasperPrint; //Jasper Libraries
     private JasperReport jasperReport;
     private JRViewer jrViewer;
@@ -62,23 +60,18 @@ public class ActivityPrintController implements Initializable, ScreenInterface {
     private List<ActivityMemberTable> actMembersData = new ArrayList<ActivityMemberTable>();
     private List<ActivityTownEntryTableList> townCitydata = new ArrayList<ActivityTownEntryTableList>();
     private List<ActivityVchlEntryTable> actVhclModelData = new ArrayList<ActivityVchlEntryTable>();
-//    private ObservableList<ActivityTownEntryTableList> townCitydata = FXCollections.observableArrayList();
-//    private ObservableList<ActivityVchlEntryTable> actVhclModelData = FXCollections.observableArrayList();
     private boolean running = false;
     final static int interval = 100;
     private Timeline timeline;
     private Integer timeSeconds = 3;
-
     @FXML
     private AnchorPane AnchorMain;
     @FXML
     private Button btnClose;
-
     private final String pxeModuleName = "ActivityPrint";
     unloadForm unload = new unloadForm(); //Used in Close Button
     @FXML
     private AnchorPane reportPane;
-
     @FXML
     private VBox vbProgress;
     private String psTransNox;
@@ -170,12 +163,6 @@ public class ActivityPrintController implements Initializable, ScreenInterface {
         timeline.stop();
     }
 
-    private LocalDate strToDate(String val) {
-        DateTimeFormatter date_formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate localDate = LocalDate.parse(val, date_formatter);
-        return localDate;
-    }
-
     public void setTransNox(String fsValue) {
         psTransNox = fsValue;
     }
@@ -187,33 +174,59 @@ public class ActivityPrintController implements Initializable, ScreenInterface {
         actMasterData.clear();
         if (oTrans.OpenRecord(psTransNox)) {
             for (lnCtr = 1; lnCtr <= oTrans.getItemCount(); lnCtr++) {
+                String event = "";
+                if (!event.isEmpty()) {
+                    event = oTrans.getDetail(lnCtr, "sActSrcex").toString();
+                }
+                String dApproved = "";
+                if (!dApproved.isEmpty()) {
+                    dApproved = CommonUtils.xsDateShort((Date) oTrans.getDetail(lnCtr, "dApproved"));
+                }
+                String dEntry = "";
+                if (!dEntry.isEmpty()) {
+                    dEntry = CommonUtils.xsDateShort((Date) oTrans.getDetail(lnCtr, "dEntryDte"));
+                }
+                String from = CommonUtils.xsDateLong((Date) oTrans.getDetail(lnCtr, "dDateFrom"));
+                String to = CommonUtils.xsDateLong((Date) oTrans.getDetail(lnCtr, "dDateThru"));
+
+                String duration = from + " - " + to;
                 actMasterData.add(new ActivityTableList(
                         oTrans.getDetail(lnCtr, "sActvtyID").toString(),
                         oTrans.getDetail(lnCtr, "sActTitle").toString(),
                         oTrans.getDetail(lnCtr, "sActDescx").toString(),
+                        event,
+                        duration,
                         "",
-                        CommonUtils.xsDateShort((Date) oTrans.getDetail(lnCtr, "dDateFrom")),
-                        CommonUtils.xsDateShort((Date) oTrans.getDetail(lnCtr, "dDateThru")),
                         oTrans.getDetail(lnCtr, "sLocation").toString(),
                         oTrans.getDetail(lnCtr, "sCompnynx").toString(),
                         oTrans.getDetail(lnCtr, "nPropBdgt").toString(),
                         oTrans.getDetail(lnCtr, "nTrgtClnt").toString(),
                         oTrans.getDetail(lnCtr, "sLogRemrk").toString(),
                         oTrans.getDetail(lnCtr, "sRemarksx").toString(),
-                        CommonUtils.xsDateShort((Date) oTrans.getDetail(lnCtr, "dDateThru")),
-                        "",
+                        dEntry,
+                        dApproved,
                         oTrans.getDetail(lnCtr, "sDeptName").toString(),
                         oTrans.getDetail(lnCtr, "sCompnyNm").toString(),
                         oTrans.getDetail(lnCtr, "sBranchNm").toString(),
                         oTrans.getDetail(lnCtr, "sProvName").toString()));
             }
             townCitydata.clear();
+            String town = "";
             for (lnCtr = 1; lnCtr <= oTrans.getActTownCount(); lnCtr++) {
-                townCitydata.add(new ActivityTownEntryTableList(
-                        String.valueOf(lnCtr), //ROW
-                        oTrans.getActTown(lnCtr, "sTownIDxx").toString(),
-                        oTrans.getActTown(lnCtr, "sTownName").toString()));
+                if (town.isEmpty()) {
+                    town = oTrans.getActTown(lnCtr, "sTownName").toString();
+                } else {
+                    town = town + " , " + oTrans.getActTown(lnCtr, "sTownName").toString();
+
+                }
+
             }
+
+            townCitydata.add(new ActivityTownEntryTableList(
+                    "", //ROW
+                    "",
+                    town
+            ));
             actMembersData.clear();
             for (lnCtr = 1; lnCtr <= oTrans.getActMemberCount(); lnCtr++) {
                 if (oTrans.getActMember(lnCtr, "cOriginal").equals("1")) {
@@ -221,7 +234,7 @@ public class ActivityPrintController implements Initializable, ScreenInterface {
                             String.valueOf(lnCtr), //ROW
                             oTrans.getActMember(lnCtr, "sDeptName").toString(),
                             "",
-                            oTrans.getActMember(lnCtr, "sCompnyNm").toString(), // Fifth column (Department)
+                            oTrans.getActMember(lnCtr, "sCompnyNm").toString(),
                             oTrans.getActMember(lnCtr, "sEmployID").toString()));
                 }
             }
@@ -240,7 +253,6 @@ public class ActivityPrintController implements Initializable, ScreenInterface {
         JRBeanCollectionDataSource vehicle = new JRBeanCollectionDataSource(actVhclModelData);
         JRBeanCollectionDataSource town = new JRBeanCollectionDataSource(townCitydata);
         JRBeanCollectionDataSource member = new JRBeanCollectionDataSource(actMembersData);
-
         params.put("vehicle", vehicle);
         params.put("town", town);
         params.put("member", member);

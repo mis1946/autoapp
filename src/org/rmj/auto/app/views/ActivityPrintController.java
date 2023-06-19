@@ -174,17 +174,13 @@ public class ActivityPrintController implements Initializable, ScreenInterface {
         actMasterData.clear();
         if (oTrans.OpenRecord(psTransNox)) {
             for (lnCtr = 1; lnCtr <= oTrans.getItemCount(); lnCtr++) {
-                String event = "";
-                if (!event.isEmpty()) {
-                    event = oTrans.getDetail(lnCtr, "sActSrcex").toString();
+                String dApproved = CommonUtils.xsDateShort((Date) oTrans.getDetail(lnCtr, "dApproved"));
+                if (dApproved.isEmpty()) {
+                    dApproved = "";
                 }
-                String dApproved = "";
-                if (!dApproved.isEmpty()) {
-                    dApproved = CommonUtils.xsDateShort((Date) oTrans.getDetail(lnCtr, "dApproved"));
-                }
-                String dEntry = "";
-                if (!dEntry.isEmpty()) {
-                    dEntry = CommonUtils.xsDateShort((Date) oTrans.getDetail(lnCtr, "dEntryDte"));
+                String dEntry = dEntry = CommonUtils.xsDateShort((Date) oTrans.getDetail(lnCtr, "dEntryDte"));;
+                if (dEntry.isEmpty()) {
+                    dEntry = " ";
                 }
                 String from = CommonUtils.xsDateLong((Date) oTrans.getDetail(lnCtr, "dDateFrom"));
                 String to = CommonUtils.xsDateLong((Date) oTrans.getDetail(lnCtr, "dDateThru"));
@@ -194,7 +190,7 @@ public class ActivityPrintController implements Initializable, ScreenInterface {
                         oTrans.getDetail(lnCtr, "sActvtyID").toString(),
                         oTrans.getDetail(lnCtr, "sActTitle").toString(),
                         oTrans.getDetail(lnCtr, "sActDescx").toString(),
-                        event,
+                        oTrans.getDetail(lnCtr, "sActTypDs").toString(),
                         duration,
                         "",
                         oTrans.getDetail(lnCtr, "sLocation").toString(),

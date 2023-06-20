@@ -714,11 +714,9 @@ public class ActivityFormController implements Initializable, ScreenInterface {
 
             ActivityPrintController loControl = new ActivityPrintController();
             loControl.setGRider(oApp);
-            //loControl.setVSAObject(oTransProcess);
             loControl.setTransNox(sTransno);
 
             fxmlLoader.setController(loControl);
-
             //load the main interface
             Parent parent = fxmlLoader.load();
 
@@ -838,7 +836,6 @@ public class ActivityFormController implements Initializable, ScreenInterface {
                             }
                             if (oTrans.searchEventType(selectedType)) {
                                 loadActivityField();
-//                                textArea08.setText("");
                             } else {
                                 ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
                             }
@@ -881,10 +878,6 @@ public class ActivityFormController implements Initializable, ScreenInterface {
                                 oTrans.removeTown(fsValue);
                                 loadActivityField();
                                 loadTownTable();
-
-                                //                                townCitydata.clear();
-//                                tblViewCity.setItems(townCitydata);
-//                                tblViewCity.refresh();
                                 pnEditMode = oTrans.getEditMode();
                             } else {
                                 ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);

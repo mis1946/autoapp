@@ -1122,7 +1122,7 @@ public class InquiryFormController implements Initializable, ScreenInterface {
             InquiryRefundPrintController loControl = new InquiryRefundPrintController();
             loControl.setGRider(oApp);
             loControl.setTransNox(fsValue);
-
+            loControl.setObject(oTrans);
             fxmlLoader.setController(loControl);
 
             //load the main interface
@@ -2170,12 +2170,9 @@ public class InquiryFormController implements Initializable, ScreenInterface {
                     //Add Display for Observable List Table View
                     inqrequirementsdata.add(new InquiryTableRequirements(
                             bSubmitted //Check box
-                            ,
-                             oTransProcess.getInqReqSrc(lnCtr, "sDescript").toString().trim().toUpperCase() //Requirements Description
-                            ,
-                             sRecby.toUpperCase() //Received By
-                            ,
-                             sRecdate //Received Date
+                            ,oTransProcess.getInqReqSrc(lnCtr, "sDescript").toString().trim().toUpperCase() //Requirements Description
+                            ,sRecby.toUpperCase() //Received By
+                            ,sRecdate //Received Date
 
                     ));
 
@@ -2305,34 +2302,20 @@ public class InquiryFormController implements Initializable, ScreenInterface {
                 }
 
                 inqvsadata.add(new InquiryTableVehicleSalesAdvances(
-                        false,
-                         String.valueOf(lnCtr) //Row
-                        ,
-                         CommonUtils.xsDateShort((Date) oTransProcess.getInqRsv(lnCtr, 2)) //Date
-                        //, (String) oTransProcess.getInqRsv(lnCtr,2)
-                        ,
-                         sVsaType //Type
-                        ,
-                         (String) oTransProcess.getInqRsv(lnCtr, 3) //VSA No
-                        ,
-                         String.format("%.2f", oTransProcess.getInqRsv(lnCtr, 5)) //Amount
-                        //  ,CommonUtils.NumberFormat(0.00, oTransProcess.getInqRsv(lnCtr,5).toString())
-                        ,
-                         sVsaStat //Status
-                        ,
-                         (String) oTransProcess.getInqRsv(lnCtr, 6) // Remarks
-                        ,
-                         (String) oTransProcess.getInqRsv(lnCtr, 13) // Approved By
-                        ,
-                         (String) oTransProcess.getInqRsv(lnCtr, 14) // Approved Date
-                        ,
-                         (String) oTransProcess.getInqRsv(lnCtr, 1) // sTransNox
-                        ,
-                         (String) oTransProcess.getInqRsv(lnCtr, 20) // Client Name
-                        ,
-                         (String) oTransProcess.getInqRsv(lnCtr, 22) // SE Name
-                        ,
-                         (String) oTransProcess.getInqRsv(lnCtr, 21) // Unit Description
+                          false
+                        , String.valueOf(lnCtr) //Row
+                        , CommonUtils.xsDateShort((Date) oTransProcess.getInqRsv(lnCtr, 2)) //Date
+                        , sVsaType //Type
+                        ,(String) oTransProcess.getInqRsv(lnCtr, 3) //VSA No
+                        ,String.format("%.2f", oTransProcess.getInqRsv(lnCtr, 5)) //Amount
+                        ,sVsaStat //Status
+                        ,(String) oTransProcess.getInqRsv(lnCtr, 6) // Remarks
+                        ,(String) oTransProcess.getInqRsv(lnCtr, 13) // Approved By
+                        ,(String) oTransProcess.getInqRsv(lnCtr, 14) // Approved Date
+                        ,(String) oTransProcess.getInqRsv(lnCtr, 1) // sTransNox
+                        ,(String) oTransProcess.getInqRsv(lnCtr, 20) // Client Name
+                        ,(String) oTransProcess.getInqRsv(lnCtr, 22) // SE Name
+                        ,(String) oTransProcess.getInqRsv(lnCtr, 21) // Unit Description
 
                 ));
 
@@ -2431,31 +2414,19 @@ public class InquiryFormController implements Initializable, ScreenInterface {
                 }
 
                 bankappdata.add(new InquiryTableBankApplications(
-                        false,
-                         String.valueOf(lnCtr) //Row
-                        ,
-                         (String) oTransBankApp.getBankAppDet(lnCtr, 16) //Bank Name
-                        ,
-                         (String) oTransBankApp.getBankAppDet(lnCtr, 18) //Bank Branch
-                        ,
-                         sPayMode //Payment Mode
-                        ,
-                         (String) oTransBankApp.getBankAppDet(lnCtr, 19) //Bank Address
-                        ,
-                         (String) oTransBankApp.getBankAppDet(lnCtr, 8) //Remarks
-                        ,
-                         CommonUtils.xsDateShort((Date) oTransBankApp.getBankAppDet(lnCtr, 2)) //Applied Date
-                        ,
-                         sBankAppStat // Application Status
-                        ,
-                         CommonUtils.xsDateShort((Date) oTransBankApp.getBankAppDet(lnCtr, 3)) //Approval Date
-                        ,
-                         (String) oTransBankApp.getBankAppDet(lnCtr, 1) //sTransNox    
-                        ,
-                         (String) oTransBankApp.getBankAppDet(lnCtr, 14) //Cancelled By    
-                        ,
-                         CommonUtils.xsDateShort((Date) oTransBankApp.getBankAppDet(lnCtr, 15))//Cancelled Date  
-                //                    , (String) oTransBankApp.getBankAppDet(lnCtr,1) //Cancelled 
+                        false
+                        , String.valueOf(lnCtr) //Row
+                        ,(String) oTransBankApp.getBankAppDet(lnCtr, 16) //Bank Name
+                        ,(String) oTransBankApp.getBankAppDet(lnCtr, 18) //Bank Branch
+                        ,sPayMode //Payment Mode
+                        ,(String) oTransBankApp.getBankAppDet(lnCtr, 19) //Bank Address
+                        ,(String) oTransBankApp.getBankAppDet(lnCtr, 8) //Remarks
+                        ,CommonUtils.xsDateShort((Date) oTransBankApp.getBankAppDet(lnCtr, 2)) //Applied Date
+                        ,sBankAppStat // Application Status
+                        ,CommonUtils.xsDateShort((Date) oTransBankApp.getBankAppDet(lnCtr, 3)) //Approval Date
+                        ,(String) oTransBankApp.getBankAppDet(lnCtr, 1) //sTransNox    
+                        ,(String) oTransBankApp.getBankAppDet(lnCtr, 14) //Cancelled By    
+                        ,CommonUtils.xsDateShort((Date) oTransBankApp.getBankAppDet(lnCtr, 15))//Cancelled Date  
                 ));
             }
             initBankApplication();
@@ -2517,18 +2488,12 @@ public class InquiryFormController implements Initializable, ScreenInterface {
             for (lnCtr = 1; lnCtr <= oTransFollowUp.getFollowUpCount(); lnCtr++) {
                 followupdata.add(new InquiryTableFollowUp(
                         String.valueOf(lnCtr) //Row
-                        ,
-                         (String) oTransFollowUp.getDetail(lnCtr, 1) //sTransNo 
-                        ,
-                         CommonUtils.xsDateShort((Date) oTransFollowUp.getDetail(lnCtr, 3)) //Follow up Date
-                        ,
-                         CommonUtils.xsDateShort((Date) oTransFollowUp.getDetail(lnCtr, 8)) //Next Follow up Date
-                        ,
-                         (String) oTransFollowUp.getDetail(lnCtr, 6) //Medium
-                        ,
-                         (String) oTransFollowUp.getDetail(lnCtr, 16) //Platform
-                        ,
-                         (String) oTransFollowUp.getDetail(lnCtr, 4) //Remarks
+                        ,(String) oTransFollowUp.getDetail(lnCtr, 1) //sTransNo 
+                        ,CommonUtils.xsDateShort((Date) oTransFollowUp.getDetail(lnCtr, 3)) //Follow up Date
+                        ,CommonUtils.xsDateShort((Date) oTransFollowUp.getDetail(lnCtr, 8)) //Next Follow up Date
+                        ,(String) oTransFollowUp.getDetail(lnCtr, 6) //Medium
+                        ,(String) oTransFollowUp.getDetail(lnCtr, 16) //Platform
+                        ,(String) oTransFollowUp.getDetail(lnCtr, 4) //Remarks
 
                 ));
             }

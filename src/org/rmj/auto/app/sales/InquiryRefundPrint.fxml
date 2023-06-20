@@ -16,7 +16,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="AnchorMain" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:id="AnchorMain" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" >
    <stylesheets>
       <URL value="@../css/MainPanelStyle.css" />
       <URL value="@../css/FrameStyle.css" />
@@ -72,7 +72,7 @@
                <bottom>
                   <AnchorPane prefHeight="51.0" prefWidth="626.0" style="-fx-background-color: #515151; -fx-background-radius: 5;" BorderPane.alignment="CENTER">
                      <children>
-                        <Button fx:id="btnClose" contentDisplay="TOP" layoutX="556.0" layoutY="1.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="80.0" text="Close" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
+                        <Button fx:id="btnClose" contentDisplay="TOP" mnemonicParsing="false" prefHeight="50.0" prefWidth="80.0" text="Close" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
                            <effect>
                               <Blend />
                            </effect>
@@ -82,7 +82,7 @@
                         </Button>
                         <HBox layoutX="5.0" layoutY="5.0" spacing="1.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0">
                            <children>
-                              <Button fx:id="btnChangeAmt" contentDisplay="TOP" mnemonicParsing="false" prefHeight="72.0" prefWidth="200.0" text="Change amount to be refunded">
+                              <Button fx:id="btnChangeAmt" contentDisplay="TOP" mnemonicParsing="false" prefHeight="72.0" prefWidth="180.0" text="Change amount to be refunded">
                                  <effect>
                                     <Blend />
                                  </effect>
@@ -93,7 +93,7 @@
                               <VBox spacing="3.0">
                                  <children>
                                     <TextField fx:id="txtField01" alignment="CENTER_RIGHT" promptText="0.00" />
-                                    <Button fx:id="btnUpdateAmt" contentDisplay="TOP" mnemonicParsing="false" prefHeight="47.0" prefWidth="200.0" text="Update Refund Amount">
+                                    <Button fx:id="btnUpdateAmt" contentDisplay="TOP" mnemonicParsing="false" prefHeight="47.0" prefWidth="150.0" text="Update Refund Amount">
                                        <effect>
                                           <Blend />
                                        </effect>
@@ -103,6 +103,26 @@
                                     </Button>
                                  </children>
                               </VBox>
+                           </children>
+                        </HBox>
+                        <HBox layoutX="371.0" layoutY="5.0" spacing="1.0" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="86.0" AnchorPane.topAnchor="5.0">
+                           <children>
+                              <Button fx:id="btnCancel" contentDisplay="TOP" mnemonicParsing="false" prefHeight="72.0" prefWidth="80.0" text="Cancel">
+                                 <effect>
+                                    <Blend />
+                                 </effect>
+                                 <graphic>
+                                    <FontAwesomeIconView glyphName="TIMES" size="20" />
+                                 </graphic>
+                              </Button>
+                              <Button fx:id="btnPrint" contentDisplay="TOP" mnemonicParsing="false" prefHeight="50.0" prefWidth="80.0" text="Print">
+                                 <effect>
+                                    <Blend />
+                                 </effect>
+                                 <graphic>
+                                    <FontAwesomeIconView glyphName="PRINT" size="20" />
+                                 </graphic>
+                              </Button>
                            </children>
                         </HBox>
                      </children>

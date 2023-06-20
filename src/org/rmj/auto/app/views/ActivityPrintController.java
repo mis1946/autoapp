@@ -174,13 +174,15 @@ public class ActivityPrintController implements Initializable, ScreenInterface {
         actMasterData.clear();
         if (oTrans.OpenRecord(psTransNox)) {
             for (lnCtr = 1; lnCtr <= oTrans.getItemCount(); lnCtr++) {
-                String dApproved = CommonUtils.xsDateShort((Date) oTrans.getDetail(lnCtr, "dApproved"));
-                if (dApproved.isEmpty()) {
-                    dApproved = "";
+                String dApproved = " ";
+                if (!((String) oTrans.getDetail(lnCtr, "sApproved")).isEmpty()) {
+                    dApproved = CommonUtils.xsDateShort((Date) oTrans.getDetail(lnCtr, "dApproved"));
                 }
-                String dEntry = dEntry = CommonUtils.xsDateShort((Date) oTrans.getDetail(lnCtr, "dEntryDte"));;
+                String dEntry = dEntry = CommonUtils.xsDateShort((Date) oTrans.getDetail(lnCtr, "dEntryDte"));
                 if (dEntry.isEmpty()) {
                     dEntry = " ";
+                } else {
+                    dEntry = dEntry = CommonUtils.xsDateShort((Date) oTrans.getDetail(lnCtr, "dEntryDte"));
                 }
                 String from = CommonUtils.xsDateLong((Date) oTrans.getDetail(lnCtr, "dDateFrom"));
                 String to = CommonUtils.xsDateLong((Date) oTrans.getDetail(lnCtr, "dDateThru"));

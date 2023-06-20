@@ -75,7 +75,7 @@ public class ActivityMemberEntryDialogController implements Initializable, Scree
         tblViewDepart.setOnMouseClicked(event -> {
             ActivityMemberTable selectedDepartment = tblViewDepart.getSelectionModel().getSelectedItem();
             if (selectedDepartment != null) {
-                String departmentID = selectedDepartment.getTblindex14();
+                String departmentID = selectedDepartment.getTblindexMem14();
 
                 loadEmployeeTable(departmentID);
             }
@@ -114,31 +114,40 @@ public class ActivityMemberEntryDialogController implements Initializable, Scree
                     ShowMessageFX.Information(null, pxeModuleName, "No items selected to add.");
                 } else {
                     int i = 0;
+                    int lnfind = 0;
+
                     if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure you want to add?")) {
                         // Call the addTown here
                         for (ActivityMemberTable item : selectedItems) {
 
-                            String fsEmployID = item.getTblindex13();
-                            String fsEmpName = item.getTblindex25();
-                            String fsDept = item.getTblindex24();
-//                            String fsDeptID = item.getTblindex14();
-                            // Assuming there is a method to retrieve the transaction number
+                            String fsEmployID = item.getTblindexMem13();
+                            String fsEmpName = item.getTblindexMem25();
+                            String fsDept = item.getTblindexMem24();
                             try {
-                                System.out.println(fsEmployID + " " + fsEmpName + " " + fsDept);
-                                boolean add = oTrans.addMember(fsEmployID, fsEmpName, fsDept);
-                                System.out.println(add);
-                                if (add) {
-                                    i = i + 1;
-                                } else {
-                                    // Handle approval failure
-                                    ShowMessageFX.Error(null, pxeModuleName, "Failed to add Employee.");
+                                boolean fsEmp = false;
+                                for (int lnCtr = 1; lnCtr <= oTrans.getActMemberCount(); lnCtr++) {
+                                    if (oTrans.getActMember(lnCtr, "sCompnyNm").toString().equals(fsEmpName)
+                                            && oTrans.getActMember(lnCtr, "cOriginal").toString().equals("1")) {
+                                        ShowMessageFX.Error(null, pxeModuleName, "Skipping, Failed to add Employee, " + fsEmpName + " already exist.");
+                                        fsEmp = true;
+                                        break;
+                                    }
+                                }
+                                if (!fsEmp) {
+                                    lnfind++;
+                                    System.out.println(lnfind);
+                                    boolean add = oTrans.addMember(fsEmployID, fsEmpName, fsDept);
                                 }
                             } catch (SQLException e) {
                                 // Handle SQL exception
                                 ShowMessageFX.Error(null, pxeModuleName, "An error occurred while adding employee: " + e.getMessage());
                             }
                         }
-                        ShowMessageFX.Information(null, pxeModuleName, "Added Employee successfully.");
+                        if (lnfind >= 1) {
+                            ShowMessageFX.Information(null, pxeModuleName, "Added Employee successfully.");
+                        } else {
+                            ShowMessageFX.Error(null, pxeModuleName, "Failed to add employee");
+                        }
                         CommonUtils.closeStage(btnAdd);
                     }
 
@@ -204,7 +213,7 @@ public class ActivityMemberEntryDialogController implements Initializable, Scree
             tblViewEmployee.getItems().forEach(item -> item.getSelect().setSelected(newValue));
             updateSelectedCount();
         });
-        tblindex25.setCellValueFactory(new PropertyValueFactory<>("tblindex25"));
+        tblindex25.setCellValueFactory(new PropertyValueFactory<>("tblindexMem25"));
     }
 
     //storing values on bankentrydata
@@ -233,7 +242,7 @@ public class ActivityMemberEntryDialogController implements Initializable, Scree
 
     private void initDepartTable() {
 
-        tblindex24.setCellValueFactory(new PropertyValueFactory<>("tblindex24"));
+        tblindex24.setCellValueFactory(new PropertyValueFactory<>("tblindexMem24"));
     }
 
 }

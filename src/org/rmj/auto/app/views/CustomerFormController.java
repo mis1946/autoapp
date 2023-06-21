@@ -1242,8 +1242,8 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                             return;
                         }
                     }
-                    clearVehicleInfoFields();
                     if (oTransVehicle.searchAvailableVhcl()) {
+                        clearVehicleInfoFields();
                         loadClientVehicleInfo();
                         bBtnVhclAvl = true;
                         pnVEditMode = oTransVehicle.getEditMode();

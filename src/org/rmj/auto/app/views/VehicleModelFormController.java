@@ -337,7 +337,7 @@ public class VehicleModelFormController implements Initializable {
             } else
                txtField.selectAll();
         } catch (SQLException ex) {
-          Logger.getLogger(VehicleMakeFormController.class.getName()).log(Level.SEVERE, null, ex);
+          Logger.getLogger(VehicleModelFormController.class.getName()).log(Level.SEVERE, null, ex);
         }
     };
     

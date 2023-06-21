@@ -1260,8 +1260,8 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                             return;
                         }
                     }
-                    clearVehicleInfoFields();
                     if (oTransVehicle.NewRecord()) {
+                        clearVehicleInfoFields();
                         bBtnVhclAvl = false;
                         txtField24V.requestFocus();
                         pnVEditMode = oTransVehicle.getEditMode();
@@ -1288,7 +1288,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                     clearVehicleInfoFields();
                     break;
                 case "btnTransfer":
-
+                    loadTransferOwnershipWindow();
                     break;
 
             }
@@ -1306,6 +1306,52 @@ public class CustomerFormController implements Initializable, ScreenInterface {
             ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
         }
     }
+    
+    /*OPEN WINDOW FOR TRANSFER OWNERSHIP*/
+   private void loadTransferOwnershipWindow() {
+       try {
+            Stage stage = new Stage();
+
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            fxmlLoader.setLocation(getClass().getResource("VehicleNewOwnerForm.fxml"));
+
+            VehicleNewOwnerFormController loControl = new VehicleNewOwnerFormController();
+            loControl.setGRider(oApp);
+            fxmlLoader.setController(loControl);
+
+            //load the main interface
+            Parent parent = fxmlLoader.load();
+
+            parent.setOnMousePressed(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    xOffset = event.getSceneX();
+                    yOffset = event.getSceneY();
+                }
+            });
+
+            parent.setOnMouseDragged(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    stage.setX(event.getScreenX() - xOffset);
+                    stage.setY(event.getScreenY() - yOffset);
+                }
+            });
+
+            //set the main interface as the scene
+            Scene scene = new Scene(parent);
+            stage.setScene(scene);
+            stage.initStyle(StageStyle.TRANSPARENT);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle("");
+            stage.showAndWait();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
+            System.exit(1);
+        }
+   }
 
     /*OPEN WINDOW FOR VEHICLE DESCRIPTION ENTRY*/
     private void loadVehicleDescriptionWindow() {
@@ -2445,22 +2491,24 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                                 txtField26V.requestFocus();
                                 return;
                             }
-
-                            if (oTransVehicle.isMakeFrameOK(lsValue)) {
-                                if (oTransVehicle.isModelFrameOK(lsValue)) {
-                                    oTransVehicle.setMaster(lnIndex, lsValue);
+                            
+                            if (lsValue.length() > 5) {
+                                if (oTransVehicle.isMakeFrameOK(lsValue)) {
+                                    if (oTransVehicle.isModelFrameOK(lsValue)) {
+                                        oTransVehicle.setMaster(lnIndex, lsValue);
+                                    } else {
+                                        ShowMessageFX.Warning(getStage(), oTransVehicle.getMessage(), "Warning", null);
+                                        txtField03V.setText("");
+                                        oTransVehicle.setMaster(lnIndex, "");
+                                        loadEngineFrameWindow(1, true);
+                                    }
                                 } else {
                                     ShowMessageFX.Warning(getStage(), oTransVehicle.getMessage(), "Warning", null);
                                     txtField03V.setText("");
                                     oTransVehicle.setMaster(lnIndex, "");
-                                    loadEngineFrameWindow(1, true);
+                                    loadEngineFrameWindow(0, true);
                                 }
-                            } else {
-                                ShowMessageFX.Warning(getStage(), oTransVehicle.getMessage(), "Warning", null);
-                                txtField03V.setText("");
-                                oTransVehicle.setMaster(lnIndex, "");
-                                loadEngineFrameWindow(0, true);
-                            }
+                            } 
 
                             break;
                         case 4:
@@ -2478,14 +2526,16 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                                 return;
                             }
                             
-                            if (oTransVehicle.isModelEngineOK(lsValue)) {
-                                oTransVehicle.setMaster(lnIndex, lsValue);
-                            } else {
-                                ShowMessageFX.Warning(getStage(), oTransVehicle.getMessage(), "Warning", null);
-                                txtField04V.setText("");
-                                oTransVehicle.setMaster(lnIndex, "");
-                                loadEngineFrameWindow(2, true);
-                            }
+                            if (lsValue.length() > 3) {
+                                if (oTransVehicle.isModelEngineOK(lsValue)) {
+                                    oTransVehicle.setMaster(lnIndex, lsValue);
+                                } else {
+                                    ShowMessageFX.Warning(getStage(), oTransVehicle.getMessage(), "Warning", null);
+                                    txtField04V.setText("");
+                                    oTransVehicle.setMaster(lnIndex, "");
+                                    loadEngineFrameWindow(2, true);
+                                }
+                            } 
                             break;
                     }
                 }
@@ -3438,7 +3488,15 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                !lbShow (TRUE)= visible
          */
         boolean lbShow = (fnValue == EditMode.ADDNEW || fnValue == EditMode.UPDATE);
-
+        
+//        if (!txtField26V.getText().isEmpty()){
+//            txtField03V.setDisable(!lbShow);
+//            txtField04V.setDisable(!lbShow);
+//        } else {
+//            txtField03V.setDisable(true);
+//            txtField04V.setDisable(true);
+//        }
+        
         txtField03V.setDisable(!lbShow);
         txtField04V.setDisable(!lbShow);
         txtField08V.setDisable(!lbShow);

@@ -126,6 +126,9 @@ public class VehicleTypeFormController implements Initializable {
         setCapsLockBehavior(txtField03);
         setCapsLockBehavior(txtField04);
         txtField02.focusedProperty().addListener(txtField_Focus);  // Description
+        txtField01.focusedProperty().addListener(txtField_Focus);  // Engine
+        txtField03.focusedProperty().addListener(txtField_Focus);  // Variant A
+        txtField04.focusedProperty().addListener(txtField_Focus);  // Variant B
         
         txtField01.setOnKeyPressed(this::txtField_KeyPressed); 
         txtField03.setOnKeyPressed(this::txtField_KeyPressed); 
@@ -498,10 +501,6 @@ public class VehicleTypeFormController implements Initializable {
 
     }
     
-    public void loadField(){
-    
-    }
-    
     public void loadVehicleParameterList(){
         try {
             /*Populate table*/
@@ -583,12 +582,27 @@ public class VehicleTypeFormController implements Initializable {
                     case 2: 
                         oTrans.setMaster(lnIndex, lsValue); //Handle Encoded Value
                         break;
+                    case 1:
+                        if (!oTrans.getMaster(9).toString().trim().equals(txtField01.getText().trim())){
+                            txtField01.setText("");
+                        }
+                        break;
+                    case 3:
+                        if (!oTrans.getMaster(10).toString().trim().equals(txtField03.getText().trim())){
+                            txtField03.setText("");
+                        }
+                        break;
+                    case 4:
+                        if (!oTrans.getMaster(11).toString().trim().equals(txtField04.getText().trim())){
+                            txtField04.setText("");
+                        }
+                        break;
                 }
 
             } else
                txtField.selectAll();
         } catch (SQLException ex) {
-          Logger.getLogger(VehicleMakeFormController.class.getName()).log(Level.SEVERE, null, ex);
+          Logger.getLogger(VehicleTypeFormController.class.getName()).log(Level.SEVERE, null, ex);
         }
     };
      

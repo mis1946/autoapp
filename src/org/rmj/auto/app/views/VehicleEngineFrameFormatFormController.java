@@ -337,7 +337,7 @@ public class VehicleEngineFrameFormatFormController implements Initializable {
 
             initbutton(pnEditMode);
         } catch (SQLException ex) {
-            Logger.getLogger(VehicleColorFormController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(VehicleEngineFrameFormatFormController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -385,7 +385,7 @@ public class VehicleEngineFrameFormatFormController implements Initializable {
                 txtField.selectAll();
             }
         } catch (SQLException ex) {
-            Logger.getLogger(VehicleMakeFormController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(VehicleEngineFrameFormatFormController.class.getName()).log(Level.SEVERE, null, ex);
         }
     };
 

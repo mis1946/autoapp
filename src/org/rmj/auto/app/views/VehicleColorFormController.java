@@ -291,7 +291,7 @@ public class VehicleColorFormController implements Initializable {
                 txtField.selectAll();
             }
         } catch (SQLException ex) {
-            Logger.getLogger(VehicleMakeFormController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(VehicleColorFormController.class.getName()).log(Level.SEVERE, null, ex);
         }
     };
 

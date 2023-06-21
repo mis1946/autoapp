@@ -1315,7 +1315,7 @@ public class ActivityFormController implements Initializable, ScreenInterface {
             tblViewActivityMembers.setItems(actMembersData);
             initActMembersTable();
         } catch (SQLException e) {
-            ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
+            ShowMessageFX.Warning(getStage(), e.getMessage(), "W arning", null);
         }
 
     }

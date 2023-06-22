@@ -24,6 +24,7 @@ import org.rmj.appdriver.GRider;
 import org.rmj.appdriver.agentfx.CommonUtils;
 import org.rmj.appdriver.agentfx.ShowMessageFX;
 import org.rmj.appdriver.callback.MasterCallback;
+import org.rmj.appdriver.constants.EditMode;
 import org.rmj.auto.clients.base.Activity;
 
 /**
@@ -35,6 +36,7 @@ public class ActivityTypeAddSourceController implements Initializable, ScreenInt
 
     private MasterCallback oListener;
     private final String pxeModuleName = "Activity Type Add Source";
+    private int pnEditMode;//Modifying fields
     private Activity oTrans;
     private GRider oApp;
     @FXML
@@ -46,6 +48,14 @@ public class ActivityTypeAddSourceController implements Initializable, ScreenInt
     private ComboBox<String> comboBox29;
     @FXML
     private Button btnAdd;
+    @FXML
+    private Button btnSearch;
+    @FXML
+    private Button btnCancel;
+    @FXML
+    private Button btnSave;
+
+    private int pnRow = 0;
 
     /**
      * Initializes the controller class.
@@ -57,6 +67,9 @@ public class ActivityTypeAddSourceController implements Initializable, ScreenInt
         comboBox29.setItems(cType);
         btnClose.setOnAction(this::cmdButton_Click);
         btnAdd.setOnAction(this::cmdButton_Click);
+        btnSearch.setOnAction(this::cmdButton_Click);
+        btnCancel.setOnAction(this::cmdButton_Click);
+        btnSave.setOnAction(this::cmdButton_Click);
 
         setCapsLockBehavior(txtField05);
         comboBox29.setOnAction(e -> {
@@ -70,6 +83,8 @@ public class ActivityTypeAddSourceController implements Initializable, ScreenInt
 
         }
         );
+        pnEditMode = EditMode.UNKNOWN;
+        initButton(pnEditMode);
     }
 
     @Override
@@ -88,7 +103,10 @@ public class ActivityTypeAddSourceController implements Initializable, ScreenInt
             case "btnClose":
                 CommonUtils.closeStage(btnClose);
                 break;
-            case "btnAdd":
+            case "btnSearch":
+
+                break;
+            case "btnSave":
                 if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure you want to save?")) {
                 } else {
                     return;
@@ -117,12 +135,18 @@ public class ActivityTypeAddSourceController implements Initializable, ScreenInt
                 } catch (SQLException ex) {
                     Logger.getLogger(ActivityTypeAddSourceController.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                CommonUtils.closeStage(btnAdd);
                 break;
             default:
                 ShowMessageFX.Warning(null, pxeModuleName, "Button with name " + lsButton + " not registered.");
                 break;
 
+            case "btnCancel":
+                if (ShowMessageFX.OkayCancel(getStage(), "Are you sure you want to cancel?", pxeModuleName, null) == true) {
+                    clearFields();
+                    pnEditMode = EditMode.UNKNOWN;
+                }
+                break;
+            case "btnAdd":
         }
     }
 
@@ -167,6 +191,20 @@ public class ActivityTypeAddSourceController implements Initializable, ScreenInt
     public void clearFields() {
         txtField05.clear(); // sActSrcex
         comboBox29.setValue(null); //sEventTyp
+    }
+
+    private void initButton(int fnValue) {
+        pnRow = 0;
+        boolean lbShow = (fnValue == EditMode.ADDNEW || fnValue == EditMode.UPDATE);
+
+        comboBox29.setDisable(!lbShow);
+        txtField05.setDisable(!lbShow);
+        btnAdd.setVisible(!lbShow);
+        btnAdd.setManaged(!lbShow);
+        btnCancel.setVisible(lbShow);
+        btnCancel.setManaged(lbShow);
+        btnSave.setVisible(lbShow);
+        btnSave.setManaged(lbShow);
 
     }
 }

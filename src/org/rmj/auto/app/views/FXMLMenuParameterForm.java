@@ -21,24 +21,31 @@ import org.rmj.appdriver.GRider;
 import org.rmj.appdriver.agentfx.ShowMessageFX;
 
 /**
- *
+ * FXMLMenuParameterForm is a class that represents a form window for displaying parameters using JavaFX.
  * @author Arsiela 
  * Date Created: 06-21-2023
  */
 public class FXMLMenuParameterForm {
+    // Variables to track the window movement
     private double xOffset = 0;
     private double yOffset = 0;
     
-    /*Open Parameter window*/
-    public void FXMLMenuParameterForm(ScreenInterface fsiController, GRider oApp, String fsController) {
+    /**
+     * Opens the parameter window.
+     * 
+     * @param fsiController The controller implementing the ScreenInterface interface.
+     * @param oApp The GRider object.
+     * @param fsFxml The path to the FXML file for the parameter form.
+     */
+    public void FXMLMenuParameterForm(ScreenInterface fsiController, GRider oApp, String fsFxml) {
         try {
             Stage stage = new Stage();
             ScreenInterface fxObj = fsiController;
-            fxObj.setGRider(oApp);
             
             FXMLLoader fxmlLoader = new FXMLLoader();
-            fxmlLoader.setLocation(getClass().getResource(fsController));
+            fxmlLoader.setLocation(getClass().getResource(fsFxml));
             fxmlLoader.setController(fxObj);
+            fxObj.setGRider(oApp);
 
             //load the main interface
             Parent parent = fxmlLoader.load();

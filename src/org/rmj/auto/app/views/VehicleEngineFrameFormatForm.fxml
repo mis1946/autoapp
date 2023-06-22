@@ -81,8 +81,8 @@
                                                 <Label id="LabelDesc" fx:id="lblManufacturing" layoutX="20.0" layoutY="76.0" text="Frame Manufacturing" GridPane.columnIndex="4" GridPane.rowIndex="2" />
                                                 <Label id="LabelDesc" fx:id="lblCode" prefHeight="14.0" prefWidth="101.0" text="Engine Code" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                                                 <Label id="LabelDesc" fx:id="lblLength" prefHeight="14.0" prefWidth="130.0" text="Engine No Length" GridPane.columnIndex="4" GridPane.rowIndex="3" />
-                                                <TextField fx:id="txtField07" disable="true" editable="false" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                                                <TextField fx:id="txtField09" disable="true" editable="false" GridPane.columnIndex="5" GridPane.rowIndex="1" />
+                                                <TextField fx:id="txtField07" promptText="Search F3" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                                <TextField fx:id="txtField09" promptText="Search F3" GridPane.columnIndex="5" GridPane.rowIndex="1" />
                                                 <TextField fx:id="txtField02_make" GridPane.columnIndex="5" GridPane.rowIndex="2" />
                                                 <TextField fx:id="txtField02" GridPane.columnIndex="2" GridPane.rowIndex="3" />
                                                 <TextField fx:id="txtField03" GridPane.columnIndex="5" GridPane.rowIndex="3" />

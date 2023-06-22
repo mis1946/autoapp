@@ -85,7 +85,7 @@
                                                 <Font name="Arial Bold" size="12.0" />
                                              </font>
                                           </Label>
-                                          <TextField fx:id="txtField03" disable="true" editable="false" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                                          <TextField fx:id="txtField03" promptText="Search F3" GridPane.columnIndex="2" GridPane.rowIndex="2" />
                                           <ComboBox fx:id="comboBox05" prefWidth="220.0" GridPane.columnIndex="2" GridPane.rowIndex="8" />
                                           <ComboBox fx:id="comboBox06" prefWidth="220.0" GridPane.columnIndex="2" GridPane.rowIndex="10" />
                                           <Label id="LabelDesc" text="Body Type" GridPane.columnIndex="2" GridPane.rowIndex="9" />

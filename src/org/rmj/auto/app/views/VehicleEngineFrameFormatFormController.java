@@ -22,6 +22,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import org.rmj.appdriver.GRider;
 import org.rmj.appdriver.agentfx.CommonUtils;
@@ -44,6 +45,7 @@ public class VehicleEngineFrameFormatFormController implements Initializable {
     private final String pxeModuleName = "Vehicle Engine / Frame";
     private int pnCodeType;
     private boolean pbState;
+    private boolean pbOpenEvent = false;
     private String psCodeType;
     private String psMakeID, psMakeDesc;
     private String psModelID, psModelDesc;
@@ -114,6 +116,11 @@ public class VehicleEngineFrameFormatFormController implements Initializable {
         pbState = fbValue;
         return pbState;
     }
+    
+    public Boolean setOpenEvent(Boolean fbValue) {
+        pbOpenEvent = fbValue;
+        return pbOpenEvent;
+    }
 
     private Stage getStage() {
         return (Stage) btnSave.getScene().getWindow();
@@ -131,25 +138,28 @@ public class VehicleEngineFrameFormatFormController implements Initializable {
         oTrans = new VehicleEngineFrame(oApp, oApp.getBranchCode(), true); //Initialize ClientMaster
         oTrans.setCallback(oListener);
         oTrans.setWithUI(true);
-
-        txtField07.setText(psMakeDesc);
-        txtField09.setText(psModelDesc);
-
+        
+        if(pbOpenEvent){
+            txtField07.setText(psMakeDesc);
+            txtField09.setText(psModelDesc);
+        }
         comboBox10.setItems(cCodeType);
         comboBox10.setOnAction(event -> {
             txtField02_make.clear();
             txtField02_frame.clear();
             txtField02.clear();
             txtField03.clear();
-            txtField09.setText(psModelDesc);
             pnEditMode = EditMode.UNKNOWN;
+            if(!pbOpenEvent){
+                txtField07.setText("");
+                txtField09.setText("");
+            }
             initbutton(pnEditMode);
             pnCodeType = comboBox10.getSelectionModel().getSelectedIndex();
             showFields(pnCodeType);
         });
         
         if (pbState){
-            
             comboBox10.getSelectionModel().select(pnCodeType); //Code Type
             showFields(pnCodeType);
         }
@@ -168,7 +178,10 @@ public class VehicleEngineFrameFormatFormController implements Initializable {
         txtField02_frame.focusedProperty().addListener(txtField_Focus);  // Frame Pattern
         txtField02.focusedProperty().addListener(txtField_Focus);  // Engine Pattern
         txtField03.focusedProperty().addListener(txtField_Focus);  // Length
-
+        
+        txtField07.setOnKeyPressed(this::txtField_KeyPressed);
+        txtField09.setOnKeyPressed(this::txtField_KeyPressed);
+        
         //Button SetOnAction using cmdButton_Click() method
         btnClose.setOnAction(this::cmdButton_Click);
         btnSearch.setOnAction(this::cmdButton_Click);
@@ -255,10 +268,12 @@ public class VehicleEngineFrameFormatFormController implements Initializable {
                     txtField03.clear();
                     oTrans.setCodeType(pnCodeType);
                     if (oTrans.NewRecord()) {
-                        oTrans.setMaster(6, psMakeID);
-                        oTrans.setMaster(7, psMakeDesc);
-                        oTrans.setMaster(8, psModelID);
-                        oTrans.setMaster(9, psModelDesc);
+                        if (pbOpenEvent){
+                            oTrans.setMaster(6, psMakeID);
+                            oTrans.setMaster(7, psMakeDesc);
+                            oTrans.setMaster(8, psModelID);
+                            oTrans.setMaster(9, psModelDesc);
+                        }
                         pnEditMode = oTrans.getEditMode();
                     } else {
                         ShowMessageFX.Warning(null, pxeModuleName, oTrans.getMessage());
@@ -341,16 +356,65 @@ public class VehicleEngineFrameFormatFormController implements Initializable {
         }
     }
 
+    /*CLIENT VEHICLE INFORMATION*/
+    private void txtField_KeyPressed(KeyEvent event) {
+        TextField txtField = (TextField) event.getSource();
+        int lnIndex = Integer.parseInt(((TextField) event.getSource()).getId().substring(8, 10));
+        String txtFieldID = ((TextField) event.getSource()).getId();
+        try {
+            switch (event.getCode()) {
+                case F3:
+                case TAB:
+                case ENTER:
+                    switch (lnIndex) {
+                        case 7: //MAKE
+                            if (oTrans.searchVehicleMake(txtField07.getText())) {
+                            } else {
+                                ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                                txtField07.setText("");
+                            }
+                            loadEngineFrameField();
+                            break;
+                        case 9: //MODEL
+                            if (oTrans.getMaster(7).toString().isEmpty()) {
+                                ShowMessageFX.Warning(getStage(), "Please select Vehicle Make.", "Warning", null);
+                                oTrans.setMaster(9, "");
+                                txtField07.requestFocus();
+                                return;
+                            }
+                            if (oTrans.searchVehicleModel(txtField09.getText())) {
+                            } else {
+                                ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                                txtField09.setText("");
+                            }
+                            loadEngineFrameField();
+                            break;
+                    }
+            }
+
+        } catch (SQLException e) {
+            ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
+        }
+
+        switch (event.getCode()) {
+            case ENTER:
+            case DOWN:
+                CommonUtils.SetNextFocus(txtField);
+                break;
+            case UP:
+                CommonUtils.SetPreviousFocus(txtField);
+        }
+    }
+    
     private void loadEngineFrameField() {
         try {
 
-            comboBox10.getSelectionModel().select(Integer.parseInt(String.valueOf((Long) oTrans.getMaster(10)))); //Code Type
+            comboBox10.getSelectionModel().select(Integer.parseInt((String) oTrans.getMaster(10))); //Code Type
             txtField07.setText((String) oTrans.getMaster(7));
-            if (!String.valueOf((Long) oTrans.getMaster(10)).equals("0")) {
+            if (!((String) oTrans.getMaster(10)).equals("0")) {
                 txtField02_frame.setText((String) oTrans.getMaster(2)); //Frame / Engine Pattern
                 txtField02.setText((String) oTrans.getMaster(2)); //Frame / Engine Pattern
                 txtField03.setText(String.valueOf((Integer) oTrans.getMaster(3))); //Frame / Engine Pattern
-                comboBox10.getSelectionModel().select(Integer.parseInt(String.valueOf((Long) oTrans.getMaster(10)))); //Code Type
                 txtField09.setText((String) oTrans.getMaster(9));
             } else {
                 txtField02_make.setText((String) oTrans.getMaster(2)); //Manufacturing
@@ -374,6 +438,8 @@ public class VehicleEngineFrameFormatFormController implements Initializable {
                 /*Lost Focus*/
                 switch (lnIndex) {
                     case 2:
+                    case 7:
+                    case 9:
                         oTrans.setMaster(lnIndex, lsValue); //Handle Encoded Value
                         break;
                     case 3:
@@ -391,7 +457,13 @@ public class VehicleEngineFrameFormatFormController implements Initializable {
 
     private void initbutton(int fnValue) {
         boolean lbShow = (fnValue == EditMode.ADDNEW || fnValue == EditMode.UPDATE);
-
+        if(pbOpenEvent){
+            txtField07.setDisable(true);
+            txtField09.setDisable(true);
+        } else {
+            txtField07.setDisable(!(fnValue == EditMode.ADDNEW));
+            txtField09.setDisable(!(fnValue == EditMode.ADDNEW));
+        }
         comboBox10.setDisable(lbShow);
         txtField02_make.setDisable(!lbShow);
         txtField02_frame.setDisable(!lbShow);

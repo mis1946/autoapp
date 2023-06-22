@@ -1421,6 +1421,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
             loControl.setModelDesc((String) oTransVehicle.getMaster(26));
             loControl.setCodeType(fnCodeType);
             loControl.setState(fbState);
+            loControl.setOpenEvent(true);
             fxmlLoader.setController(loControl);
 
             //load the main interface
@@ -2508,7 +2509,15 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                                     oTransVehicle.setMaster(lnIndex, "");
                                     loadEngineFrameWindow(0, true);
                                 }
-                            } 
+                            } else {
+                                if(!lsValue.isEmpty()){
+                                    ShowMessageFX.Warning(getStage(), "Frame Number must not be less than 5 characters.", "Warning", null);
+                                    oTransVehicle.setMaster(lnIndex, "");
+                                    txtField03V.setText("");
+                                } else {
+                                    oTransVehicle.setMaster(lnIndex, "");
+                                }
+                            }
 
                             break;
                         case 4:
@@ -2535,7 +2544,15 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                                     oTransVehicle.setMaster(lnIndex, "");
                                     loadEngineFrameWindow(2, true);
                                 }
-                            } 
+                            }  else {
+                                if(!lsValue.isEmpty()){
+                                    ShowMessageFX.Warning(getStage(), "Engine Number must not be less than 3 characters.", "Warning", null);
+                                    oTransVehicle.setMaster(lnIndex, "");
+                                    txtField04V.setText("");
+                                } else {
+                                    oTransVehicle.setMaster(lnIndex, "");
+                                }
+                            }
                             break;
                     }
                 }

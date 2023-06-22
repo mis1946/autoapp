@@ -26,6 +26,7 @@ import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import org.rmj.appdriver.GRider;
 import org.rmj.appdriver.agentfx.CommonUtils;
@@ -53,6 +54,7 @@ public class VehicleModelFormController implements Initializable {
     private String sMakeDesc = "";
     private int lnRow;
     private int lnCtr;
+    private boolean pbOpenEvent = false;
     
     private ObservableList<VehicleDescriptionTableParameter> vhclparamdata = FXCollections.observableArrayList();
     ObservableList<String> cUnitType = FXCollections.observableArrayList("COMMERCIAL VEHICLE", "PRIVATE VEHICLE", "LIGHT PRIVATE VEHICLE", "MEDIUM PRIVATE VEHICLE" );
@@ -99,6 +101,11 @@ public class VehicleModelFormController implements Initializable {
     public void setMakeDesc(String fsValue){
        sMakeDesc = fsValue;
     }
+    
+    public Boolean setOpenEvent(Boolean fbValue) {
+        pbOpenEvent = fbValue;
+        return pbOpenEvent;
+    }
     /**
      * Initializes the controller class.
      */
@@ -112,6 +119,10 @@ public class VehicleModelFormController implements Initializable {
         oTrans.setCallback(oListener);
         oTrans.setWithUI(true);
         loadVehicleParameterList();
+        
+        if(pbOpenEvent){
+            txtField03.setText(sMakeDesc); 
+        }
         
         comboBox04.setItems( cUnitType);
         comboBox05.setItems( cBodyType);
@@ -139,6 +150,7 @@ public class VehicleModelFormController implements Initializable {
             return row;
         });
         
+        txtField03.setOnKeyPressed(this::txtField_KeyPressed);
         //Button SetOnAction using cmdButton_Click() method
         btnRefresh.setOnAction(this::cmdButton_Click);
         btnClose.setOnAction(this::cmdButton_Click);
@@ -169,10 +181,11 @@ public class VehicleModelFormController implements Initializable {
             case "btnAdd":
                 clearFields();
                 if(oTrans.NewRecord()){
-                    
-                    txtField03.setText(sMakeDesc); 
-                    oTrans.setMaster(3, sMakeID);
-                    oTrans.setMaster(13, sMakeDesc);
+                    if(pbOpenEvent){
+                        txtField03.setText(sMakeDesc); 
+                        oTrans.setMaster(3, sMakeID);
+                        oTrans.setMaster(13, sMakeDesc);
+                    }
                     pnEditMode = oTrans.getEditMode();
                 } else {
                     ShowMessageFX.Warning(null, pxeModuleName, oTrans.getMessage());
@@ -228,6 +241,42 @@ public class VehicleModelFormController implements Initializable {
             Logger.getLogger(VehicleModelFormController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }    
+    
+    /*CLIENT VEHICLE INFORMATION*/
+    private void txtField_KeyPressed(KeyEvent event) {
+        TextField txtField = (TextField) event.getSource();
+        int lnIndex = Integer.parseInt(((TextField) event.getSource()).getId().substring(8, 10));
+        String txtFieldID = ((TextField) event.getSource()).getId();
+        try {
+            switch (event.getCode()) {
+                case F3:
+                case TAB:
+                case ENTER:
+                    switch (lnIndex) {
+                        case 3: //MAKE
+                            if (oTrans.searchVehicleMake(txtField03.getText())) {
+                                txtField03.setText((String) oTrans.getMaster(13));
+                            } else {
+                                ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                                txtField03.setText("");
+                            }
+                            break;
+                    }
+            }
+
+        } catch (SQLException e) {
+            ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
+        }
+
+        switch (event.getCode()) {
+            case ENTER:
+            case DOWN:
+                CommonUtils.SetNextFocus(txtField);
+                break;
+            case UP:
+                CommonUtils.SetPreviousFocus(txtField);
+        }
+    }
     
     public void loadVehicleParameterList(){
         try {
@@ -391,7 +440,11 @@ public class VehicleModelFormController implements Initializable {
      
     private void initbutton(int fnValue) {
         boolean lbShow = (fnValue == EditMode.ADDNEW || fnValue == EditMode.UPDATE);
-        
+        if(pbOpenEvent){
+            txtField03.setDisable(true);
+        } else {
+            txtField03.setDisable(!(fnValue == EditMode.ADDNEW));
+        }
         txtField02.setDisable(!lbShow);
         comboBox04.setDisable(!lbShow);
         comboBox05.setDisable(!lbShow);

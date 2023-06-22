@@ -11,6 +11,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
@@ -74,14 +75,6 @@
                     <bottom>
                         <AnchorPane prefHeight="0.0" prefWidth="527.0" style="-fx-background-color: #515151;">
                             <children>
-                                <Button fx:id="btnAdd" contentDisplay="TOP" layoutX="10.0" layoutY="5.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="70.0" text="Add" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="5.0">
-                                    <effect>
-                                        <Blend />
-                                    </effect>
-                                    <graphic>
-                                        <FontAwesomeIconView glyphName="PLUS" size="20" />
-                                    </graphic>
-                                </Button>
                                 <Button fx:id="btnClose" contentDisplay="TOP" layoutX="416.0" layoutY="5.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="70.0" text="Close" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="5.0">
                                     <effect>
                                         <Blend />
@@ -90,6 +83,43 @@
                                         <FontAwesomeIconView glyphName="POWER_OFF" size="20" />
                                     </graphic>
                                 </Button>
+                                <HBox prefHeight="55.0" prefWidth="200.0" AnchorPane.bottomAnchor="2.0" AnchorPane.leftAnchor="2.0" AnchorPane.topAnchor="2.0">
+                                    <children>
+                                        <Button fx:id="btnAdd" contentDisplay="TOP" mnemonicParsing="false" prefHeight="50.0" prefWidth="70.0" text="Add">
+                                            <effect>
+                                                <Blend />
+                                            </effect>
+                                            <graphic>
+                                                <FontAwesomeIconView glyphName="PLUS" size="20" />
+                                            </graphic>
+                                            <HBox.margin>
+                                                <Insets left="2.0" top="2.0" />
+                                            </HBox.margin>
+                                        </Button>
+                                        <Button fx:id="btnCancel" contentDisplay="TOP" mnemonicParsing="false" prefHeight="50.0" prefWidth="70.0" text="Cancel">
+                                            <effect>
+                                                <Blend />
+                                            </effect>
+                                            <graphic>
+                                                <FontAwesomeIconView glyphName="CLOSE" size="20" />
+                                            </graphic>
+                                            <HBox.margin>
+                                                <Insets left="2.0" top="2.0" />
+                                            </HBox.margin>
+                                        </Button>
+                                        <Button fx:id="btnSearch" contentDisplay="TOP" mnemonicParsing="false" prefHeight="50.0" prefWidth="70.0" text="Search">
+                                            <effect>
+                                                <Blend />
+                                            </effect>
+                                            <graphic>
+                                                <FontAwesomeIconView glyphName="SEARCH" size="20" />
+                                            </graphic>
+                                            <HBox.margin>
+                                                <Insets left="2.0" top="2.0" />
+                                            </HBox.margin>
+                                        </Button>
+                                    </children>
+                                </HBox>
                             </children>
                         </AnchorPane>
                     </bottom>

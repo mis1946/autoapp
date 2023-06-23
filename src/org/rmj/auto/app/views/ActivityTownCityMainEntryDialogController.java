@@ -60,7 +60,6 @@ public class ActivityTownCityMainEntryDialogController implements Initializable,
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
         btnClose.setOnAction(this::cmdButton_Click);
         btnAddTown.setOnAction(this::cmdButton_Click);
         loadTownTable();

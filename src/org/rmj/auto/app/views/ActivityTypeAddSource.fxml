@@ -60,7 +60,7 @@
                                         </Label>
                                         <Label id="LabelDesc" text="Source" GridPane.columnIndex="4" />
                                         <ComboBox fx:id="comboBox29" prefWidth="120.0" promptText="Choose Type" GridPane.columnIndex="2" />
-                                        <TextField fx:id="txtField05" GridPane.columnIndex="5" GridPane.columnSpan="2" />
+                                        <TextField fx:id="txtField02" GridPane.columnIndex="5" GridPane.columnSpan="2" />
                                     </children>
                                     <opaqueInsets>
                                         <Insets />
@@ -83,7 +83,7 @@
                                         <FontAwesomeIconView glyphName="POWER_OFF" size="20" />
                                     </graphic>
                                 </Button>
-                                <HBox prefHeight="56.0" prefWidth="313.0" spacing="2.0" AnchorPane.bottomAnchor="2.0" AnchorPane.leftAnchor="2.0" AnchorPane.topAnchor="2.0">
+                                <HBox prefHeight="56.0" prefWidth="313.0" spacing="2.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="5.0">
                                     <children>
                                         <Button fx:id="btnAdd" contentDisplay="TOP" mnemonicParsing="false" prefHeight="50.0" prefWidth="70.0" text="Add">
                                             <effect>

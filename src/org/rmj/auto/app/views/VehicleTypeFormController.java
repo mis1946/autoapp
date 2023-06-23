@@ -126,6 +126,9 @@ public class VehicleTypeFormController implements Initializable {
         setCapsLockBehavior(txtField03);
         setCapsLockBehavior(txtField04);
         txtField02.focusedProperty().addListener(txtField_Focus);  // Description
+        txtField01.focusedProperty().addListener(txtField_Focus);  // Engine
+        txtField03.focusedProperty().addListener(txtField_Focus);  // Variant A
+        txtField04.focusedProperty().addListener(txtField_Focus);  // Variant B
         
         txtField01.setOnKeyPressed(this::txtField_KeyPressed); 
         txtField03.setOnKeyPressed(this::txtField_KeyPressed); 
@@ -457,22 +460,28 @@ public class VehicleTypeFormController implements Initializable {
                         case 1: //Engine Size
                             if (oTrans.searchTypeEngine(txtField01.getText())){
                                 txtField01.setText(oTrans.getMaster(9).toString());
-                            } else 
+                            } else {
+                                txtField01.setText("");
                                 ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
+                            }
                         break;
 
                         case 3: //Variant Code A
                             if (oTrans.searchTypeVariant(txtField03.getText(), "A")){
                                 txtField03.setText(oTrans.getMaster(10).toString());
-                            } else 
+                            } else {
+                                txtField03.setText("");
                                 ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
+                            }
                         break;
 
                         case 4: //Variant Code B 
                             if (oTrans.searchTypeVariant(txtField04.getText(), "B")){
-                                 txtField04.setText(oTrans.getMaster(11).toString());
-                            } else 
-                                ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);                            
+                                txtField04.setText(oTrans.getMaster(11).toString());
+                            } else {
+                                txtField04.setText("");
+                                ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
+                            }
                         break;      
                     } 
                     break;
@@ -490,10 +499,6 @@ public class VehicleTypeFormController implements Initializable {
             CommonUtils.SetPreviousFocus(txtField);
         }
 
-    }
-    
-    public void loadField(){
-    
     }
     
     public void loadVehicleParameterList(){
@@ -577,12 +582,27 @@ public class VehicleTypeFormController implements Initializable {
                     case 2: 
                         oTrans.setMaster(lnIndex, lsValue); //Handle Encoded Value
                         break;
+                    case 1:
+                        if (!oTrans.getMaster(9).toString().trim().equals(txtField01.getText().trim())){
+                            txtField01.setText("");
+                        }
+                        break;
+                    case 3:
+                        if (!oTrans.getMaster(10).toString().trim().equals(txtField03.getText().trim())){
+                            txtField03.setText("");
+                        }
+                        break;
+                    case 4:
+                        if (!oTrans.getMaster(11).toString().trim().equals(txtField04.getText().trim())){
+                            txtField04.setText("");
+                        }
+                        break;
                 }
 
             } else
                txtField.selectAll();
         } catch (SQLException ex) {
-          Logger.getLogger(VehicleMakeFormController.class.getName()).log(Level.SEVERE, null, ex);
+          Logger.getLogger(VehicleTypeFormController.class.getName()).log(Level.SEVERE, null, ex);
         }
     };
      

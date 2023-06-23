@@ -29,7 +29,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" fx:id="AnchorMain" prefHeight="1182.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" >
+<AnchorPane id="AnchorPane" fx:id="AnchorMain" prefHeight="1182.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <StackPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -243,7 +243,7 @@
                                                    <center>
                                                       <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                                                          <children>
-                                                            <TabPane tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                            <TabPane fx:id="tabPaneMain" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                               <tabs>
                                                                 <Tab fx:id="tabCustomerInquiry" style="-fx-font-weight: bold; -fx-font-family: Arial;" text="Customer Inquiry">
                                                                   <content>
@@ -783,34 +783,7 @@
                                                                                           </AnchorPane>
                                                                                           <AnchorPane>
                                                                                              <children>
-                                                                                                <HBox layoutX="130.0" prefHeight="65.0" prefWidth="216.0" spacing="10.0">
-                                                                                                   <children>
-                                                                                                      <Button fx:id="btnProcess" contentDisplay="TOP" mnemonicParsing="false" prefHeight="50.0" prefWidth="70.0" text="Process">
-                                                                                                         <effect>
-                                                                                                            <Blend />
-                                                                                                         </effect>
-                                                                                                         <graphic>
-                                                                                                            <FontAwesomeIconView glyphName="CARET_DOWN" size="20" />
-                                                                                                         </graphic>
-                                                                                                      </Button>
-                                                                                                      <Button fx:id="btnModify" contentDisplay="TOP" mnemonicParsing="false" prefHeight="50.0" prefWidth="70.0" text="Modify">
-                                                                                                         <effect>
-                                                                                                            <Blend />
-                                                                                                         </effect>
-                                                                                                         <graphic>
-                                                                                                            <FontAwesomeIconView glyphName="EDIT" size="20" />
-                                                                                                         </graphic>
-                                                                                                      </Button>
-                                                                                                      <Button fx:id="btnApply" contentDisplay="TOP" mnemonicParsing="false" prefHeight="50.0" prefWidth="70.0" text="Apply">
-                                                                                                         <effect>
-                                                                                                            <Blend />
-                                                                                                         </effect>
-                                                                                                         <graphic>
-                                                                                                            <FontAwesomeIconView glyphName="PLUS_CIRCLE" size="20" />
-                                                                                                         </graphic>
-                                                                                                      </Button>
-                                                                                                   </children>
-                                                                                                </HBox>
+                                                                                                <HBox layoutX="130.0" prefHeight="65.0" prefWidth="216.0" spacing="10.0" />
                                                                                              </children>
                                                                                              <VBox.margin>
                                                                                                 <Insets top="5.0" />
@@ -1059,6 +1032,30 @@
                                                                      </effect>
                                                                      <graphic>
                                                                         <FontAwesomeIconView glyphName="TIMES" size="20" />
+                                                                     </graphic>
+                                                                  </Button>
+                                                                  <Button fx:id="btnProcess" contentDisplay="TOP" mnemonicParsing="false" prefHeight="50.0" prefWidth="70.0" text="Process">
+                                                                     <effect>
+                                                                        <Blend />
+                                                                     </effect>
+                                                                     <graphic>
+                                                                        <FontAwesomeIconView glyphName="CARET_DOWN" size="20" />
+                                                                     </graphic>
+                                                                  </Button>
+                                                                  <Button fx:id="btnModify" contentDisplay="TOP" mnemonicParsing="false" prefHeight="50.0" prefWidth="70.0" text="Modify">
+                                                                     <effect>
+                                                                        <Blend />
+                                                                     </effect>
+                                                                     <graphic>
+                                                                        <FontAwesomeIconView glyphName="EDIT" size="20" />
+                                                                     </graphic>
+                                                                  </Button>
+                                                                  <Button fx:id="btnApply" contentDisplay="TOP" mnemonicParsing="false" prefHeight="50.0" prefWidth="70.0" text="Apply">
+                                                                     <effect>
+                                                                        <Blend />
+                                                                     </effect>
+                                                                     <graphic>
+                                                                        <FontAwesomeIconView glyphName="PLUS_CIRCLE" size="20" />
                                                                      </graphic>
                                                                   </Button>
                                                                </children>

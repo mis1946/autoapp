@@ -163,6 +163,11 @@ public class InquiryLostSaleFormController implements Initializable {
         
         btnTlost.setOnAction(this::cmdButton_Click);
         btnDlost.setOnAction(this::cmdButton_Click);
+        
+        if (oTransFollowUp.NewRecord()){
+        } else {
+            ShowMessageFX.Warning(null, pxeModuleName, oTransFollowUp.getMessage());
+        }
     }
     
     private static void setCapsLockBehavior(TextField textField) {
@@ -199,9 +204,19 @@ public class InquiryLostSaleFormController implements Initializable {
                 if (setSelection()){
                     oTransFollowUp.setTransNox(sSourceNo);
                     if (oTransFollowUp.SaveRecord()){
+                        try {
+                            if(oTransFollowUp.LostSale()){
+                            }else {
+                                ShowMessageFX.Warning(null, pxeModuleName, oTransFollowUp.getMessage());
+                                return;
+                            }
+                        } catch (SQLException ex) {
+                            Logger.getLogger(InquiryLostSaleFormController.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                         ShowMessageFX.Information(null, pxeModuleName, oTransFollowUp.getMessage());
                     } else {
-                        ShowMessageFX.Warning(null, pxeModuleName, "Failed to Save Inquiry Lost Sales Remarks Form.");
+                        //ShowMessageFX.Warning(null, pxeModuleName, "Failed to Save Inquiry Lost Sales Remarks Form.");
+                        ShowMessageFX.Warning(null, pxeModuleName, oTransFollowUp.getMessage());
                         return;
                     }
                 } else {
@@ -296,21 +311,25 @@ public class InquiryLostSaleFormController implements Initializable {
                 ShowMessageFX.Warning("No `Tag` selected.", pxeModuleName, "Please select `Tag` value.");
                 comboBox04.requestFocus();
                 return false;
-            }else 
+            }else { 
                 oTransFollowUp.setFollowUp(4,comboBox04.getValue().toString());
-            if (comboBox13.getSelectionModel().getSelectedIndex() < 0){
-                ShowMessageFX.Warning("No `Reason` selected.", pxeModuleName, "Please select `Reason` value.");
-                comboBox13.requestFocus();
-                return false;
-            }else 
-                oTransFollowUp.setFollowUp(13,comboBox13.getValue().toString());
-            if (comboBox10.getSelectionModel().getSelectedIndex() < 0){
-                ShowMessageFX.Warning("No `Goods Category` selected.", pxeModuleName, "Please select `Goods Category` value.");
-                comboBox10.requestFocus();
-                return false;
-            }else 
-                oTransFollowUp.setFollowUp(10,comboBox10.getValue().toString());
-            
+                if (comboBox13.getSelectionModel().getSelectedIndex() < 0){
+                    ShowMessageFX.Warning("No `Reason` selected.", pxeModuleName, "Please select `Reason` value.");
+                    comboBox13.requestFocus();
+                    return false;
+                }else{ 
+                    oTransFollowUp.setFollowUp(13,comboBox13.getValue().toString());
+                }
+            }
+            if ( (comboBox13.getSelectionModel().getSelectedIndex() != 4) && (comboBox13.getSelectionModel().getSelectedIndex() != 3) ){
+                if (comboBox10.getSelectionModel().getSelectedIndex() < 0){
+                    ShowMessageFX.Warning("No `Goods Category` selected.", pxeModuleName, "Please select `Goods Category` value.");
+                    comboBox10.requestFocus();
+                    return false;
+                }else {
+                    oTransFollowUp.setFollowUp(10,comboBox10.getValue().toString());
+                }
+            }
         } catch (SQLException ex) {
              ShowMessageFX.Warning(getStage(),ex.getMessage(), "Warning", null);
         }

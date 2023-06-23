@@ -81,7 +81,7 @@ public class VehicleDescriptionFormController implements Initializable, ScreenIn
     ObservableList<String> cModelsize = FXCollections.observableArrayList("BANTAM", "SMALL", "MEDIUM", "LARGE");
 
     @FXML
-    private AnchorPane AnchorMain;
+    public AnchorPane AnchorMain;
     @FXML
     private Button btnAdd;
     @FXML
@@ -326,10 +326,9 @@ public class VehicleDescriptionFormController implements Initializable, ScreenIn
                         if (oTrans.SaveRecord()){
                             ShowMessageFX.Information(getStage(), "Transaction save successfully.", pxeModuleName, null);
                             loadVehicleDescTable();
-                            if (pnEditMode == EditMode.ADDNEW){
-                                pagecounter = (oTrans.getItemCount()-1) + pagination.getCurrentPageIndex() * ROWS_PER_PAGE;
-                            }
-                            getSelectedItem(filteredData.get(pagecounter).getTblindex11());
+                            pagination.setPageFactory(this::createPage);
+                            getSelectedItem((String) oTrans.getMaster(1));
+                            
                             pnEditMode = oTrans.getEditMode();
                         } else {
                             ShowMessageFX.Warning(getStage(),oTrans.getMessage() ,"Warning", "Error while saving Vehicle Description");
@@ -399,7 +398,7 @@ public class VehicleDescriptionFormController implements Initializable, ScreenIn
             vhcldescdata.clear();
             if (oTrans.LoadList("")){
                 String sDescription ;
-                for (lnCtr = 1; lnCtr <= oTrans.getItemCount(); lnCtr++){
+                for (lnCtr = 1; lnCtr <= oTrans.getDetailCount(); lnCtr++){
                     sDescription = oTrans.getDetail(lnCtr,"sModelDsc").toString() 
                             + " " + oTrans.getDetail(lnCtr,"sTypeDesc").toString()
                             + " " + oTrans.getDetail(lnCtr,"sTransMsn").toString()
@@ -559,15 +558,18 @@ public class VehicleDescriptionFormController implements Initializable, ScreenIn
     /*Populate Text Field Based on selected address in table*/
     private void getSelectedItem(String TransNo){
        oldTransNo = TransNo;
+        System.out.println(TransNo);
         if (oTrans.OpenRecord(TransNo)){
+            loadVehicleDescField();
+        /*
             //txtField02.setText(vhcldescdata.get(pagecounter).getTblindex10()); //Description 
-            txtField03.setText(vhcldescdata.get(pagecounter).getTblindex02()); //Make
-            txtField04.setText(vhcldescdata.get(pagecounter).getTblindex05()); //Model
-            txtField05.setText(vhcldescdata.get(pagecounter).getTblindex09()); //Color
-            txtField06.setText(vhcldescdata.get(pagecounter).getTblindex06()); //Type
-            txtField08.setText(vhcldescdata.get(pagecounter).getTblindex04()); //Year
+            txtField03.setText(filteredData.get(pagecounter).getTblindex02()); //Make
+            txtField04.setText(filteredData.get(pagecounter).getTblindex05()); //Model
+            txtField05.setText(filteredData.get(pagecounter).getTblindex09()); //Color
+            txtField06.setText(filteredData.get(pagecounter).getTblindex06()); //Type
+            txtField08.setText(filteredData.get(pagecounter).getTblindex04()); //Year
 
-            switch (vhcldescdata.get(pagecounter).getTblindex07()) { //Transmission
+            switch (filteredData.get(pagecounter).getTblindex07()) { //Transmission
                 case "AT":
                     comboBox07.getSelectionModel().select(0);
                     break;
@@ -581,9 +583,10 @@ public class VehicleDescriptionFormController implements Initializable, ScreenIn
                     break;
             }
 
-            comboBox09.getSelectionModel().select(Integer.parseInt(vhcldescdata.get(pagecounter).getTblindex08())); //Vehicle Size
-            oldPnRow = pagecounter;   
+            comboBox09.getSelectionModel().select(Integer.parseInt(filteredData.get(pagecounter).getTblindex08())); //Vehicle Size
+        */    oldPnRow = pagecounter;   
         }
+            
 
     }
      
@@ -888,6 +891,7 @@ public class VehicleDescriptionFormController implements Initializable, ScreenIn
             loControl.setGRider(oApp);
             loControl.setMakeID(sSourceID);
             loControl.setMakeDesc(sSourceDesc);
+            loControl.setOpenEvent(true);
             fxmlLoader.setController(loControl);
 
             //load the main interface

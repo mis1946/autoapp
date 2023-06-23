@@ -84,14 +84,6 @@
                                     <FontAwesomeIconView glyphName="FOLDER_OPEN" size="20" />
                                  </graphic>
                               </Button>
-                              <Button fx:id="btnVEdit" contentDisplay="TOP" layoutX="81.0" layoutY="10.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="70.0" text="Edit">
-                                 <effect>
-                                    <Blend />
-                                 </effect>
-                                 <graphic>
-                                    <FontAwesomeIconView glyphName="EDIT" size="20" />
-                                 </graphic>
-                              </Button>
                               <Button fx:id="btnVSave" contentDisplay="TOP" layoutX="152.0" layoutY="10.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="280.0" text="Attach INSERTED Vehicle Record to Customer">
                                  <effect>
                                     <Blend />
@@ -167,7 +159,7 @@
                                        <children>
                                           <TabPane fx:id="tabPaneMain" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                             <tabs>
-                                              <Tab style="-fx-font-weight: bold; -fx-font-family: arial;" text="Customer">
+                                              <Tab fx:id="tabCustomer" style="-fx-font-weight: bold; -fx-font-family: arial;" text="Customer">
                                                    <content>
                                                       <AnchorPane>
                                                          <children>
@@ -668,7 +660,7 @@
                                                       </AnchorPane>
                                                    </content>
                                                 </Tab>
-                                              <Tab style="-fx-font-weight: bold; -fx-font-family: arial;" text="Vehicle Information">
+                                              <Tab fx:id="tabVhclInfo" style="-fx-font-weight: bold; -fx-font-family: arial;" text="Vehicle Information">
                                                    <content>
                                                       <AnchorPane>
                                                          <children>
@@ -694,13 +686,13 @@
                                                                                                 <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="5.0" vgrow="SOMETIMES" />
                                                                                              </rowConstraints>
                                                                                              <children>
-                                                                                                <TableView fx:id="tblViewVhclInfo" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                                                                                <TableView fx:id="tblViewVhclInfo" onMouseClicked="#tblViewVhclInfo_Clicked" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                                                                                    <columns>
-                                                                                                      <TableColumn fx:id="tblVhcllist01" minWidth="-Infinity" prefWidth="35.0" text="Row" />
-                                                                                                      <TableColumn fx:id="tblVhcllist02" minWidth="-Infinity" text="CS No" />
-                                                                                                      <TableColumn fx:id="tblVhcllist03" text="Plate No" />
-                                                                                                      <TableColumn fx:id="tblVhcllist04" minWidth="-Infinity" prefWidth="300.0" text="Description" />
-                                                                                                      <TableColumn fx:id="tblVhcllist05" minWidth="-Infinity" prefWidth="280.0" text="Selling Dealer" />
+                                                                                                      <TableColumn fx:id="tblVhcllist01" editable="false" minWidth="-Infinity" prefWidth="35.0" sortable="false" text="Row" />
+                                                                                                      <TableColumn fx:id="tblVhcllist02" editable="false" minWidth="-Infinity" sortable="false" text="CS No" />
+                                                                                                      <TableColumn fx:id="tblVhcllist03" editable="false" sortable="false" text="Plate No" />
+                                                                                                      <TableColumn fx:id="tblVhcllist04" editable="false" minWidth="-Infinity" prefWidth="300.0" sortable="false" text="Description" />
+                                                                                                      <TableColumn fx:id="tblVhcllist05" editable="false" minWidth="-Infinity" prefWidth="280.0" sortable="false" text="Selling Dealer" />
                                                                                                    </columns>
                                                                                                 </TableView>
                                                                                              </children>
@@ -723,11 +715,11 @@
                                                                                              <children>
                                                                                                 <TableView fx:id="tblViewVhclHsty" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                                                                                    <columns>
-                                                                                                      <TableColumn fx:id="tblVhcllHsty01" minWidth="-Infinity" prefWidth="35.0" text="Row" />
-                                                                                                      <TableColumn fx:id="tblVhcllHsty02" minWidth="-Infinity" prefWidth="110.0" text="Transeferred Date" />
-                                                                                                      <TableColumn fx:id="tblVhcllHsty03" minWidth="-Infinity" prefWidth="300.0" text="Previous Owner" />
-                                                                                                      <TableColumn fx:id="tblVhcllHsty04" minWidth="-Infinity" prefWidth="110.0" text="Transferred By" />
-                                                                                                      <TableColumn fx:id="tblVhcllHsty05" minWidth="-Infinity" prefWidth="300.0" text="Remarks" />
+                                                                                                      <TableColumn fx:id="tblVhcllHsty01" editable="false" minWidth="-Infinity" prefWidth="35.0" sortable="false" text="Row" />
+                                                                                                      <TableColumn fx:id="tblVhcllHsty02" editable="false" minWidth="-Infinity" prefWidth="110.0" sortable="false" text="Transeferred Date" />
+                                                                                                      <TableColumn fx:id="tblVhcllHsty03" editable="false" minWidth="-Infinity" prefWidth="300.0" sortable="false" text="Previous Owner" />
+                                                                                                      <TableColumn fx:id="tblVhcllHsty04" editable="false" minWidth="-Infinity" prefWidth="110.0" sortable="false" text="Transferred By" />
+                                                                                                      <TableColumn fx:id="tblVhcllHsty05" editable="false" minWidth="-Infinity" prefWidth="300.0" sortable="false" text="Remarks" />
                                                                                                    </columns>
                                                                                                 </TableView>
                                                                                              </children>
@@ -757,22 +749,35 @@
                                                                                     <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="10.0" />
                                                                                     <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="80.0" />
                                                                                     <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="200.0" />
-                                                                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="60.0" />
+                                                                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="65.0" />
                                                                                  </columnConstraints>
                                                                                  <rowConstraints>
                                                                                     <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="5.0" vgrow="SOMETIMES" />
                                                                                     <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
                                                                                     <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
+                                                                                    <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="15.0" vgrow="SOMETIMES" />
+                                                                                    <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
+                                                                                    <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
                                                                                     <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="5.0" vgrow="SOMETIMES" />
                                                                                  </rowConstraints>
                                                                                  <children>
-                                                                                    <TextField fx:id="txtField25V" promptText="Search F3" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                                                                                    <Button fx:id="btnVhclMnl" mnemonicParsing="false" prefHeight="25.0" prefWidth="30.0" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                                                                                       <graphic>
+                                                                                          <FontAwesomeIconView glyphName="TH" />
+                                                                                       </graphic>
+                                                                                    </Button>
+                                                                                    <Button fx:id="btnVhclAvl" mnemonicParsing="false" prefHeight="25.0" prefWidth="30.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                                                                                       <graphic>
+                                                                                          <FontAwesomeIconView glyphName="CAR" />
+                                                                                       </graphic>
+                                                                                    </Button>
                                                                                     <Button fx:id="btnVhclDesc" mnemonicParsing="false" prefHeight="25.0" prefWidth="30.0" text="..." GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                                                                    <TextField fx:id="txtField27V" promptText="Search F3" GridPane.columnIndex="6" GridPane.rowIndex="1" />
-                                                                                    <TextField fx:id="txtField32V" promptText="Search F3" GridPane.columnIndex="3" GridPane.rowIndex="2" />
-                                                                                    <TextField fx:id="txtField29V" promptText="Search F3" GridPane.columnIndex="9" GridPane.rowIndex="1" />
-                                                                                    <TextField fx:id="txtField31V" promptText="Search F3" GridPane.columnIndex="6" GridPane.rowIndex="2" />
-                                                                                    <TextField fx:id="txtField33V" promptText="Search F3" GridPane.columnIndex="9" GridPane.rowIndex="2" />
+                                                                                    <TextField fx:id="txtField24V" promptText="Search F3" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                                                                                    <TextField fx:id="txtField26V" promptText="Search F3" GridPane.columnIndex="6" GridPane.rowIndex="1" />
+                                                                                    <TextField fx:id="txtField28V" promptText="Search F3" GridPane.columnIndex="9" GridPane.rowIndex="1" />
+                                                                                    <TextField fx:id="txtField31V" promptText="Search F3" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                                                                                    <TextField fx:id="txtField30V" promptText="Search F3" GridPane.columnIndex="6" GridPane.rowIndex="2" />
+                                                                                    <TextField fx:id="txtField32V" promptText="Search F3" GridPane.columnIndex="9" GridPane.rowIndex="2" />
                                                                                     <Label id="LabelDesc" text="Make" GridPane.columnIndex="2" GridPane.rowIndex="1">
                                                                                        <font>
                                                                                           <Font name="Arial" size="12.0" />
@@ -803,53 +808,21 @@
                                                                                           <Font name="Arial" size="12.0" />
                                                                                        </font>
                                                                                     </Label>
+                                                                                    <Separator prefWidth="200.0" style="-fx-background-color: orange;" GridPane.columnSpan="11" GridPane.rowIndex="3" />
+                                                                                    <Label id="LabelDesc" text="Plate Number" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+                                                                                    <TextField fx:id="txtField20V" GridPane.columnIndex="3" GridPane.rowIndex="4" />
+                                                                                    <Label id="LabelDesc" text="Frame Number" GridPane.columnIndex="5" GridPane.rowIndex="4" />
+                                                                                    <TextField fx:id="txtField03V" GridPane.columnIndex="6" GridPane.rowIndex="4" />
+                                                                                    <Label id="LabelDesc" text="Key Number" GridPane.columnIndex="8" GridPane.rowIndex="4" />
+                                                                                    <TextField fx:id="txtField11V" GridPane.columnIndex="9" GridPane.rowIndex="4" />
+                                                                                    <Label id="LabelDesc" text="CS Number" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+                                                                                    <TextField fx:id="txtField08V" GridPane.columnIndex="3" GridPane.rowIndex="5" />
+                                                                                    <Label id="LabelDesc" text="Engine Number" GridPane.columnIndex="5" GridPane.rowIndex="5" />
+                                                                                    <TextField fx:id="txtField04V" GridPane.columnIndex="6" GridPane.rowIndex="5" />
+                                                                                    <Button fx:id="btnEngFrm" mnemonicParsing="false" prefHeight="25.0" prefWidth="30.0" text="..." GridPane.columnIndex="8" GridPane.rowIndex="5" />
                                                                                  </children>
                                                                               </GridPane>
                                                                               <Separator style="-fx-background-color: orange;" />
-                                                                              <GridPane vgap="4.0">
-                                                                                 <columnConstraints>
-                                                                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="60.0" />
-                                                                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="40.0" />
-                                                                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="80.0" />
-                                                                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="150.0" />
-                                                                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="10.0" />
-                                                                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="90.0" />
-                                                                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="190.0" />
-                                                                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="10.0" />
-                                                                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="80.0" />
-                                                                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="200.0" />
-                                                                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="60.0" />
-                                                                                 </columnConstraints>
-                                                                                 <rowConstraints>
-                                                                                    <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="5.0" vgrow="SOMETIMES" />
-                                                                                    <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
-                                                                                    <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
-                                                                                    <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="5.0" vgrow="SOMETIMES" />
-                                                                                 </rowConstraints>
-                                                                                 <children>
-                                                                                    <Button fx:id="btnVhclAvl" mnemonicParsing="false" prefHeight="25.0" prefWidth="30.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                                                                                       <graphic>
-                                                                                          <FontAwesomeIconView glyphName="CAR" />
-                                                                                       </graphic>
-                                                                                    </Button>
-                                                                                    <Button fx:id="btnVhclMnl" mnemonicParsing="false" prefHeight="25.0" prefWidth="30.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
-                                                                                       <graphic>
-                                                                                          <FontAwesomeIconView glyphName="TH" />
-                                                                                       </graphic>
-                                                                                    </Button>
-                                                                                    <TextField fx:id="txtField21V" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-                                                                                    <TextField fx:id="txtField12V" GridPane.columnIndex="9" GridPane.rowIndex="1" />
-                                                                                    <TextField fx:id="txtField03V" GridPane.columnIndex="6" GridPane.rowIndex="1" />
-                                                                                    <TextField fx:id="txtField08V" GridPane.columnIndex="3" GridPane.rowIndex="2" />
-                                                                                    <TextField fx:id="txtField04V" GridPane.columnIndex="6" GridPane.rowIndex="2" />
-                                                                                    <Label id="LabelDesc" text="Plate Number" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                                                                                    <Label id="LabelDesc" text="CS Number" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-                                                                                    <Label id="LabelDesc" text="Frame Number" GridPane.columnIndex="5" GridPane.rowIndex="1" />
-                                                                                    <Label id="LabelDesc" text="Engine Number" GridPane.columnIndex="5" GridPane.rowIndex="2" />
-                                                                                    <Label id="LabelDesc" text="Key Number" GridPane.columnIndex="8" GridPane.rowIndex="1" />
-                                                                                    <Button fx:id="btnEngFrm" mnemonicParsing="false" prefHeight="25.0" prefWidth="30.0" text="..." GridPane.columnIndex="8" GridPane.rowIndex="2" />
-                                                                                 </children>
-                                                                              </GridPane>
                                                                               <AnchorPane prefHeight="17.0" style="-fx-background-color: #FACEA1;">
                                                                                  <children>
                                                                                     <Label alignment="CENTER" text="Miscellaneous" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -881,11 +854,11 @@
                                                                                     <Label id="LabelDesc" text="Selling Dealer" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                                                                     <Label id="LabelDesc" text="Place of Registration" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2" />
                                                                                     <Label id="LabelDesc" text="Remarks" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                                                                                    <TextField fx:id="txtField09V" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                                                                                    <DatePicker fx:id="txtField22V" GridPane.columnIndex="5" GridPane.rowIndex="1" />
+                                                                                    <TextField fx:id="txtField09V" promptText="Search F3" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                                                                    <DatePicker fx:id="txtField21V" GridPane.columnIndex="5" GridPane.rowIndex="1" />
                                                                                     <Label id="LabelDesc" text="Register Date" GridPane.columnIndex="4" GridPane.rowIndex="1" />
-                                                                                    <TextField fx:id="txtField23V" GridPane.columnIndex="2" GridPane.columnSpan="4" GridPane.rowIndex="2" />
-                                                                                    <TextArea fx:id="textArea35V" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.columnSpan="4" GridPane.rowIndex="3" GridPane.rowSpan="2" />
+                                                                                    <TextField fx:id="txtField22V" promptText="Search F3" GridPane.columnIndex="2" GridPane.columnSpan="4" GridPane.rowIndex="2" />
+                                                                                    <TextArea fx:id="textArea34V" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.columnSpan="4" GridPane.rowIndex="3" GridPane.rowSpan="2" />
                                                                                  </children>
                                                                               </GridPane>
                                                                            </children>

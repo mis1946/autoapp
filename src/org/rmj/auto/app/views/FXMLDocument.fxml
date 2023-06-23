@@ -79,8 +79,8 @@
                                                             <items>
                                                                 <Menu mnemonicParsing="false" text="Activity">
                                                                     <items>
-                                                                        <MenuItem fx:id="mnuActivityApproval" mnemonicParsing="false" onAction="#mnuActivityApprovClick" text="Activiy Approval" />
                                                                         <MenuItem fx:id="mnuActivity" mnemonicParsing="false" onAction="#mnuActivityClick" text="Activity Entry" />
+                                                                        <MenuItem fx:id="mnuActivityApproval" mnemonicParsing="false" onAction="#mnuActivityApprovClick" text="Activiy Approval" />
                                                                         <Menu mnemonicParsing="false" text="Parameter">
                                                                             <items>
                                                                                 <MenuItem fx:id="mnuActType" mnemonicParsing="false" onAction="#mnuActivityTypeClick" text="Activity Type" />

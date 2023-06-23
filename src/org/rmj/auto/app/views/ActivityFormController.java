@@ -95,6 +95,8 @@ public class ActivityFormController implements Initializable, ScreenInterface {
     private Button btnPrint;
     @FXML
     private Button btnClose;
+    private double xOffset = 0;
+    private double yOffset = 0;
     @FXML
     private TableView tblViewTasks;
     @FXML
@@ -130,8 +132,6 @@ public class ActivityFormController implements Initializable, ScreenInterface {
     private TableColumn<ActivityMemberTable, Boolean> tblselected;
     @FXML
     private CheckBox selectAllCheckBoxEmployee;
-    double xOffset;
-    double yOffset;
     @FXML
     private TextArea textArea02;    //sActTitle
     @FXML
@@ -1038,7 +1038,7 @@ public class ActivityFormController implements Initializable, ScreenInterface {
 
             ActivityTypeAddSourceController loControl = new ActivityTypeAddSourceController();
             loControl.setGRider(oApp);
-            loControl.setObject(oTrans);
+//            loControl.setObject(oTrans);
             fxmlLoader.setController(loControl);
 
             //load the main interface
@@ -1055,9 +1055,7 @@ public class ActivityFormController implements Initializable, ScreenInterface {
             parent.setOnMouseDragged(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
-                    double xOffset = 0;
                     stage.setX(event.getScreenX() - xOffset);
-                    double yOffset = 0;
                     stage.setY(event.getScreenY() - yOffset);
                 }
             });
@@ -1107,9 +1105,7 @@ public class ActivityFormController implements Initializable, ScreenInterface {
             parent.setOnMouseDragged(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
-                    double xOffset = 0;
                     stage.setX(event.getScreenX() - xOffset);
-                    double yOffset = 0;
                     stage.setY(event.getScreenY() - yOffset);
                 }
             });
@@ -1160,9 +1156,7 @@ public class ActivityFormController implements Initializable, ScreenInterface {
             parent.setOnMouseDragged(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
-                    double xOffset = 0;
                     stage.setX(event.getScreenX() - xOffset);
-                    double yOffset = 0;
                     stage.setY(event.getScreenY() - yOffset);
                 }
             });
@@ -1218,9 +1212,7 @@ public class ActivityFormController implements Initializable, ScreenInterface {
             parent.setOnMouseDragged(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
-                    double xOffset = 0;
                     stage.setX(event.getScreenX() - xOffset);
-                    double yOffset = 0;
                     stage.setY(event.getScreenY() - yOffset);
                 }
             });
@@ -1405,7 +1397,7 @@ public class ActivityFormController implements Initializable, ScreenInterface {
         txtField25.setDisable(!lbShow);
         txtField26.setDisable(!lbShow);
         txtField12.setDisable(!lbShow);
-        txtField11.setDisable(!lbShow);
+        txtField11.setDisable(true);
         txtField28.setDisable(!lbShow);
         textArea09.setDisable(!lbShow);
         // Button

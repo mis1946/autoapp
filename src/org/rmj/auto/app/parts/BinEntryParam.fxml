@@ -43,7 +43,7 @@
                                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="10.0" />
                                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="90.0" />
                                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="120.0" />
-                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="10.0" />
+                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="30.0" />
                                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="40.0" />
                                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="120.0" />
                                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="120.0" />
@@ -61,8 +61,8 @@
                                             </GridPane.margin>
                                         </Label>
                                         <Label id="LabelDesc" text="Bin Description" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                        <TextField fx:id="txtField02" promptText="Search: F3" GridPane.columnIndex="2" GridPane.columnSpan="4" GridPane.rowIndex="1" />
-                                        <TextField fx:id="txtField01" GridPane.columnIndex="2" GridPane.columnSpan="3" />
+                                        <TextField fx:id="txtField02" GridPane.columnIndex="2" GridPane.columnSpan="4" GridPane.rowIndex="1" />
+                                        <TextField fx:id="txtField01" GridPane.columnIndex="2" GridPane.columnSpan="2" />
                                         <CheckBox id="LabelDesc" fx:id="cboxActivate" mnemonicParsing="false" text="Activate" GridPane.columnIndex="2" GridPane.rowIndex="2" />
                                     </children>
                                     <opaqueInsets>

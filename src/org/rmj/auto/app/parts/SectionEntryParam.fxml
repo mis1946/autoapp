@@ -62,7 +62,7 @@
                                             </GridPane.margin>
                                         </Label>
                                         <Label id="LabelDesc" text="Section Description" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                        <TextField fx:id="txtField02" promptText="Search: F3" GridPane.columnIndex="2" GridPane.columnSpan="5" GridPane.rowIndex="1" />
+                                        <TextField fx:id="txtField02" GridPane.columnIndex="2" GridPane.columnSpan="5" GridPane.rowIndex="1" />
                                         <TextField fx:id="txtField01" GridPane.columnIndex="2" GridPane.columnSpan="2" />
                                         <CheckBox id="LabelDesc" fx:id="chboxActivate" mnemonicParsing="false" text="Activate" GridPane.columnIndex="2" GridPane.rowIndex="2" />
                                     </children>

@@ -25,7 +25,6 @@ import org.rmj.appdriver.agentfx.CommonUtils;
 import org.rmj.appdriver.agentfx.ShowMessageFX;
 import org.rmj.appdriver.callback.MasterCallback;
 import org.rmj.appdriver.constants.EditMode;
-import org.rmj.auto.clients.base.Activity;
 import org.rmj.auto.parameters.ActivitySource;
 
 /**

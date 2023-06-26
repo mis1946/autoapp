@@ -94,6 +94,24 @@
                                                                 <MenuItem mnemonicParsing="false" text="VIP Program Member Registration" />
                                                             </items>
                                                         </Menu>
+                                          <Menu mnemonicParsing="false" text="Parts">
+                                            <items>
+                                                <Menu mnemonicParsing="false" text="Item">
+                                                  <items>
+                                                    <MenuItem fx:id="mnuItemEntry" mnemonicParsing="false" onAction="#mnuItemEntryClicked" text="Item Entry" />
+                                                      <Menu mnemonicParsing="false" text="Parameter">
+                                                        <items>
+                                                          <MenuItem fx:id="mnuBinEntry" mnemonicParsing="false" onAction="#mnuBinEntryClicked" text="Bin Entry" />
+                                                            <MenuItem fx:id="mnuInvLocEntry" mnemonicParsing="false" onAction="#mnuInvLocEntryClicked" text="Inventory Location" />
+                                                            <MenuItem fx:id="mnuMeasureEntry" mnemonicParsing="false" onAction="#mnuMeasureEntryClicked" text="Measurement Entry" />
+                                                            <MenuItem fx:id="mnuSectionEntry" mnemonicParsing="false" onAction="#mnuSectionEntryClicked" text="Section Entry" />
+                                                            <MenuItem fx:id="mnuWarehsEntry" mnemonicParsing="false" onAction="#mnuWarehsEntryClicked" text="Warehouse Entry" />
+                                                        </items>
+                                                      </Menu>
+                                                  </items>
+                                                </Menu>
+                                            </items>
+                                          </Menu>
                                                         <Menu mnemonicParsing="false" text="Service">
                                                             <items>
                                                                 <MenuItem mnemonicParsing="false" text="Delete" />

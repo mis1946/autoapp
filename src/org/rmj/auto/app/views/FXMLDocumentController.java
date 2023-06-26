@@ -21,12 +21,15 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
@@ -39,12 +42,17 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import org.rmj.appdriver.GRider;
 import org.rmj.appdriver.SQLUtil;
+import org.rmj.appdriver.agentfx.CommonUtils;
 import org.rmj.appdriver.agentfx.ShowMessageFX;
+import org.rmj.appdriver.agentfx.callback.IFXML;
 import org.rmj.auto.app.bank.BankEntryFormController;
+import org.rmj.auto.app.parts.BinEntryParamController;
 import org.rmj.auto.app.sales.InquiryFormController;
 import org.rmj.auto.app.sales.SalesAgentFormController;
 import org.rmj.auto.app.sales.UnitReceivingFormController;
@@ -61,7 +69,11 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
     private GRider oApp;
     private int targetTabIndex = -1;
     private double tabsize;
-    FXMLMenuParameterForm parameter = new FXMLMenuParameterForm();
+    
+    // Variables to track the window movement
+    private double xOffset = 0;
+    private double yOffset = 0;
+    
     @FXML
     private Label AppUser;
     @FXML
@@ -102,6 +114,18 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
     private MenuItem mnuActivityApproval;
     @FXML
     private MenuItem mnuActType;
+    @FXML
+    private MenuItem mnuItemEntry;
+    @FXML
+    private MenuItem mnuBinEntry;
+    @FXML
+    private MenuItem mnuInvLocEntry;
+    @FXML
+    private MenuItem mnuMeasureEntry;
+    @FXML
+    private MenuItem mnuSectionEntry;
+    @FXML
+    private MenuItem mnuWarehsEntry;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -288,7 +312,59 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
 
         return null;
     }
+    
+    /*LOAD PARAMETER*/
+    /**
+     * Opens the parameter window.
+     * 
+     * @param fsiController The controller implementing the ScreenInterface interface.
+     * @param oApp The GRider object.
+     * @param fsFxml The path to the FXML file for the parameter form.
+     */
+    public void FXMLMenuParameterForm(ScreenInterface fsiController, String fsFxml) {
+        try {
+            Stage stage = new Stage();
+            ScreenInterface fxObj = fsiController;
+            
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            fxmlLoader.setLocation(getClass().getResource(fsFxml));
+            fxmlLoader.setController(fxObj);
+            fxObj.setGRider(oApp);
 
+            //load the main interface
+            Parent parent = fxmlLoader.load();
+
+            parent.setOnMousePressed(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    xOffset = event.getSceneX();
+                    yOffset = event.getSceneY();
+                }
+            });
+
+            parent.setOnMouseDragged(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    stage.setX(event.getScreenX() - xOffset);
+                    stage.setY(event.getScreenY() - yOffset);
+                }
+            });
+
+            //set the main interface as the scene
+            Scene scene = new Scene(parent);
+            stage.setScene(scene);
+            stage.initStyle(StageStyle.TRANSPARENT);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle("");
+            stage.showAndWait();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            ShowMessageFX.Warning(e.getMessage(), "Warning", null);
+            System.exit(1);
+        }
+    }
+    
     public ScreenInterface getController(String fsValue) {
         switch (fsValue) {
             case "FXMLMainScreen.fxml":
@@ -317,6 +393,16 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
                 return new ActivityApprovalController();
             case "ActivityTypeAddSource.fxml":
                 return new ActivityTypeAddSourceController();
+            case "BinEntryParam.fxml":
+                return new BinEntryParamController();
+            case "InventoryLocationParam.fxml":
+                //return new InventoryLocationParamController();
+            case "SectionEntryParam.fxml":
+               // return new SectionEntryParamController();
+            case "WareHouseEntryParam.fxml":
+                //return new WareHouseEntryParamController();
+            case "ItemEntryForm.fxml":
+                //return new ItemEntryFormController();
             default:
                 ShowMessageFX.Warning(null, "Warning", "Notify System Admin to Configure Screen Interface for " + fsValue);
                 return null;
@@ -348,6 +434,8 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
                 return "Activity";
             case "ActivityApproval.fxml":
                 return "Activity Approval";
+            case "ItemEntryForm.fxml":
+                return "Item Entry";
             default:
                 ShowMessageFX.Warning(null, "Warning", "Notify System Admin to Configure Tab Title for " + menuaction);
                 return null;
@@ -503,8 +591,42 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
     @FXML
     private void mnuActivityTypeClick(ActionEvent event) {
         String sformname = "ActivityTypeAddSource.fxml";
-        parameter.FXMLMenuParameterForm(getController(sformname), oApp, sformname);
+        FXMLMenuParameterForm(getController(sformname), sformname);
 
+    }
+    
+    @FXML
+    private void mnuItemEntryClicked(ActionEvent event) {
+    }
+
+    @FXML
+    private void mnuBinEntryClicked(ActionEvent event) {
+        String sformname = "BinEntryParam.fxml";
+        FXMLMenuParameterForm(getController(sformname), sformname);
+    }
+
+    @FXML
+    private void mnuInvLocEntryClicked(ActionEvent event) {
+        String sformname = "InventoryLocationParam.fxml";
+        FXMLMenuParameterForm(getController(sformname), sformname);
+    }
+
+    @FXML
+    private void mnuMeasureEntryClicked(ActionEvent event) {
+        String sformname = "MeasurementEntryParam.fxml";
+        FXMLMenuParameterForm(getController(sformname), sformname);
+    }
+
+    @FXML
+    private void mnuSectionEntryClicked(ActionEvent event) {
+        String sformname = "SectionEntryParam.fxml";
+        FXMLMenuParameterForm(getController(sformname), sformname);
+    }
+
+    @FXML
+    private void mnuWarehsEntryClicked(ActionEvent event) {
+        String sformname = "WareHouseEntryParam.fxml";
+        FXMLMenuParameterForm(getController(sformname), sformname);
     }
 
     /*SET CURRENT TIME*/
@@ -563,5 +685,7 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
     private void initMenu() {
 
     }
+
+    
 
 }

@@ -24,7 +24,8 @@ import org.rmj.appdriver.GRider;
 import org.rmj.appdriver.agentfx.CommonUtils;
 import org.rmj.appdriver.agentfx.ShowMessageFX;
 import org.rmj.appdriver.callback.MasterCallback;
-import org.rmj.auto.clients.base.Activity;
+import org.rmj.appdriver.constants.EditMode;
+import org.rmj.auto.parameters.ActivitySource;
 
 /**
  * FXML Controller class
@@ -35,50 +36,77 @@ public class ActivityTypeAddSourceController implements Initializable, ScreenInt
 
     private MasterCallback oListener;
     private final String pxeModuleName = "Activity Type Add Source";
-    private Activity oTrans;
+    private int pnEditMode;//Modifying fields
+    private ActivitySource oTrans;
     private GRider oApp;
     @FXML
     private Button btnClose;
     ObservableList<String> cType = FXCollections.observableArrayList("EVENT", "SALES CALL", "PROMO");
     @FXML
-    private TextField txtField05;
-    @FXML
     private ComboBox<String> comboBox29;
     @FXML
     private Button btnAdd;
+    @FXML
+    private Button btnSearch;
+    @FXML
+    private Button btnCancel;
+    @FXML
+    private Button btnSave;
+
+    private int pnRow = 0;
+    @FXML
+    private TextField txtField02;
 
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
-        txtField05.focusedProperty().addListener(txtField_Focus);
+        oListener = (int fnIndex, Object foValue) -> {
+            System.out.println("Set Class Value " + fnIndex + "-->" + foValue);
+        };
+        oTrans = new ActivitySource(oApp, oApp.getBranchCode(), true); //Initialize ClientMaster
+        oTrans.setCallback(oListener);
+        oTrans.setWithUI(true);
+        txtField02.focusedProperty().addListener(txtField_Focus);
         comboBox29.setItems(cType);
         btnClose.setOnAction(this::cmdButton_Click);
         btnAdd.setOnAction(this::cmdButton_Click);
+        btnSearch.setOnAction(this::cmdButton_Click);
+        btnCancel.setOnAction(this::cmdButton_Click);
+        btnSave.setOnAction(this::cmdButton_Click);
 
-        setCapsLockBehavior(txtField05);
+        setCapsLockBehavior(txtField02);
         comboBox29.setOnAction(e -> {
-            String selectedType = comboBox29.getValue();// Retrieve the type ID for the selected type
-            // Set the type ID in the text field
+            String selectedItem = comboBox29.getValue();// Retrieve the type ID for the selected type
+            switch (selectedItem) {
+                case "EVENT":
+                    selectedItem = "eve";
+                    break;
+                case "SALES CALL":
+                    selectedItem = "sal";
+                    break;
+                case "PROMO":
+                    selectedItem = "pro";
+                    break;
+                default:
+                    break;
+            }
             try {
-                oTrans.setMaster(29, selectedType); // Pass the selected type to the setMaster method
+                oTrans.setMaster(3, selectedItem); // Pass the selected type to the setMaster method
             } catch (SQLException ex) {
                 Logger.getLogger(ActivityTypeAddSourceController.class.getName()).log(Level.SEVERE, null, ex);
             }
 
         }
         );
+        pnEditMode = EditMode.UNKNOWN;
+        initButton(pnEditMode);
     }
 
     @Override
     public void setGRider(GRider foValue) {
         oApp = foValue;
-    }
-
-    public void setObject(Activity foValue) {
-        oTrans = foValue;
     }
 
     private void cmdButton_Click(ActionEvent event) {
@@ -88,46 +116,57 @@ public class ActivityTypeAddSourceController implements Initializable, ScreenInt
             case "btnClose":
                 CommonUtils.closeStage(btnClose);
                 break;
-            case "btnAdd":
-                if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure you want to save?")) {
-                } else {
-                    return;
-                }
-                String selectedType = comboBox29.getValue();
-                switch (selectedType) {
-                    case "EVENT":
-                        selectedType = "eve";
-                        break;
-                    case "SALES CALL":
-                        selectedType = "sal";
-                        break;
-                    case "PROMO":
-                        selectedType = "pro";
-                        break;
-                    default:
-                        break;
-                }
+            case "btnSearch":
                 try {
-                    if (oTrans.SaveEventType(selectedType, txtField05.getText())) {
+                if (oTrans.searchEventType()) {
+                    pnEditMode = EditMode.READY;
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(ActivityTypeAddSourceController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            break;
+
+            case "btnSave":
+                if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure, do you want to save?") == true) {
+                    if (oTrans.SaveRecord()) {
                         ShowMessageFX.Information(null, pxeModuleName, "New source added sucessfully.");
+                        pnEditMode = oTrans.getEditMode();
                     } else {
                         ShowMessageFX.Warning(null, pxeModuleName, oTrans.getMessage());
                         return;
                     }
-                } catch (SQLException ex) {
-                    Logger.getLogger(ActivityTypeAddSourceController.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                CommonUtils.closeStage(btnAdd);
+                break;
+            case "btnCancel":
+                if (ShowMessageFX.OkayCancel(getStage(), "Are you sure you want to cancel?", pxeModuleName, null) == true) {
+                    clearFields();
+                    pnEditMode = EditMode.UNKNOWN;
+                }
+                break;
+            case "btnAdd": //create
+                System.out.println("hello");
+                if (oTrans.NewRecord()) {
+                    try {
+                        loadActivitySourceField();
+                        clearFields();
+                        pnEditMode = oTrans.getEditMode();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ActivityTypeAddSourceController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                } else {
+                    ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                }
                 break;
             default:
                 ShowMessageFX.Warning(null, pxeModuleName, "Button with name " + lsButton + " not registered.");
                 break;
-
         }
+        initButton(pnEditMode);
     }
 
     private Stage getStage() {
-        return (Stage) txtField05.getScene().getWindow();
+        return (Stage) txtField02.getScene().getWindow();
     }
 
     private static void setCapsLockBehavior(TextField textField) {
@@ -150,13 +189,12 @@ public class ActivityTypeAddSourceController implements Initializable, ScreenInt
             if (!nv) {
                 /* Lost Focus */
                 switch (lnIndex) {
-                    case 5: //sActSrcex
+                    case 2: //sActSrcex
                         oTrans.setMaster(lnIndex, lsValue);
                         break;
                 }
             } else {
                 txtField.selectAll();
-
             }
         } catch (SQLException ex) {
             Logger.getLogger(ActivityTypeAddSourceController.class
@@ -165,8 +203,43 @@ public class ActivityTypeAddSourceController implements Initializable, ScreenInt
     };
 
     public void clearFields() {
-        txtField05.clear(); // sActSrcex
+        txtField02.clear(); // sActSrcex
         comboBox29.setValue(null); //sEventTyp
+    }
+
+    private void loadActivitySourceField() throws SQLException {
+        String selectedItem = oTrans.getMaster(3).toString();//sEventTyp
+        switch (selectedItem) {
+            case "sal":
+                selectedItem = "SALES CALL";
+                break;
+            case "eve":
+                selectedItem = "EVENT";
+                break;
+            case "pro":
+                selectedItem = "PROMO";
+                break;
+            default:
+                break;
+        }
+        if (!selectedItem.isEmpty()) {
+            comboBox29.getSelectionModel().select(selectedItem);
+        }
+        txtField02.setText((String) oTrans.getMaster(2)); // sActSrcex
+    }
+
+    private void initButton(int fnValue) {
+        pnRow = 0;
+        boolean lbShow = (fnValue == EditMode.ADDNEW || fnValue == EditMode.UPDATE);
+
+        comboBox29.setDisable(!lbShow);
+        txtField02.setDisable(!lbShow);
+        btnAdd.setVisible(!lbShow);
+        btnAdd.setManaged(!lbShow);
+        btnCancel.setVisible(lbShow);
+        btnCancel.setManaged(lbShow);
+        btnSave.setVisible(lbShow);
+        btnSave.setManaged(lbShow);
 
     }
 }

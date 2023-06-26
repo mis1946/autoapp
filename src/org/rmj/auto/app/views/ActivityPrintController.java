@@ -186,7 +186,6 @@ public class ActivityPrintController implements Initializable, ScreenInterface {
                 }
                 String from = CommonUtils.xsDateLong((Date) oTrans.getDetail(lnCtr, "dDateFrom"));
                 String to = CommonUtils.xsDateLong((Date) oTrans.getDetail(lnCtr, "dDateThru"));
-
                 String duration = from + " - " + to;
                 actMasterData.add(new ActivityTableList(
                         oTrans.getDetail(lnCtr, "sActvtyID").toString(),

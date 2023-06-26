@@ -50,6 +50,7 @@ import org.rmj.auto.app.sales.SalesAgentFormController;
 import org.rmj.auto.app.sales.UnitReceivingFormController;
 import org.rmj.auto.app.sales.VehicleEntryFormController;
 import org.rmj.auto.app.sales.VehicleSalesApprovalController;
+import org.rmj.auto.app.views.ActivityFormController;
 
 /**
  *
@@ -60,7 +61,7 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
     private GRider oApp;
     private int targetTabIndex = -1;
     private double tabsize;
-
+    FXMLMenuParameterForm parameter = new FXMLMenuParameterForm();
     @FXML
     private Label AppUser;
     @FXML
@@ -99,6 +100,8 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
     private MenuItem mnuActivity;
     @FXML
     private MenuItem mnuActivityApproval;
+    @FXML
+    private MenuItem mnuActType;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -312,6 +315,8 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
                 return new ActivityFormController();
             case "ActivityApproval.fxml":
                 return new ActivityApprovalController();
+            case "ActivityTypeAddSource.fxml":
+                return new ActivityTypeAddSourceController();
             default:
                 ShowMessageFX.Warning(null, "Warning", "Notify System Admin to Configure Screen Interface for " + fsValue);
                 return null;
@@ -406,6 +411,7 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
 
     @FXML
     private void mnuSupplierInfoClick(ActionEvent event) {
+
         String sformname = "SupplierInfo.fxml";
         //check tab
         if (checktabs(SetTabTitle(sformname)) == 1) {
@@ -492,6 +498,13 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
         if (checktabs(SetTabTitle(sformname)) == 1) {
             setScene2(loadAnimate(sformname));
         }
+    }
+
+    @FXML
+    private void mnuActivityTypeClick(ActionEvent event) {
+        String sformname = "ActivityTypeAddSource.fxml";
+        parameter.FXMLMenuParameterForm(getController(sformname), oApp, sformname);
+
     }
 
     /*SET CURRENT TIME*/

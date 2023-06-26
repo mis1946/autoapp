@@ -1,0 +1,212 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/javafx/FXMLController.java to edit this template
+ */
+package org.rmj.auto.app.parts;
+
+import java.net.URL;
+import java.sql.SQLException;
+import java.util.ResourceBundle;
+import javafx.beans.property.ReadOnlyBooleanPropertyBase;
+import javafx.beans.value.ChangeListener;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.TextField;
+import javafx.stage.Stage;
+import org.rmj.appdriver.GRider;
+import org.rmj.appdriver.agentfx.CommonUtils;
+import org.rmj.appdriver.agentfx.ShowMessageFX;
+import org.rmj.appdriver.callback.MasterCallback;
+import org.rmj.appdriver.constants.EditMode;
+import org.rmj.auto.app.views.ScreenInterface;
+import org.rmj.auto.app.views.ScreenInterface;
+
+/**
+ * FXML Controller class
+ *
+ * @author John Dave, DATE CREATED 06-24-2023
+ */
+public class BinEntryParamController implements Initializable, ScreenInterface {
+
+    private MasterCallback oListener;
+    private final String pxeModuleName = "Bin Entry Form";
+    private int pnEditMode;//Modifying fields
+//    private Warehouse oTrans;
+    private GRider oApp;
+    @FXML
+    private Button btnClose;
+    @FXML
+    private Button btnAdd;
+    @FXML
+    private Button btnSave;
+    @FXML
+    private Button btnEdit;
+    @FXML
+    private Button btnCancel;
+    @FXML
+    private Button btnSearch;
+    @FXML
+    private Button btnDeactivate;
+    @FXML
+    private TextField txtField02;
+    @FXML
+    private TextField txtField01;
+    private int pnRow = 0;
+    @FXML
+    private CheckBox cboxActivate;
+
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+//        oTrans = new Bin(oApp, oApp.getBranchCode(), true); //Initialize ClientMaster
+//        oTrans.setCallback(oListener);
+//        oTrans.setWithUI(true);
+
+        setCapsLockBehavior(txtField02);
+        txtField02.focusedProperty().addListener(txtField_Focus);
+        btnClose.setOnAction(this::cmdButton_Click);
+        btnAdd.setOnAction(this::cmdButton_Click);
+        btnSearch.setOnAction(this::cmdButton_Click);
+        btnDeactivate.setOnAction(this::cmdButton_Click);
+        btnCancel.setOnAction(this::cmdButton_Click);
+        btnSave.setOnAction(this::cmdButton_Click);
+        btnEdit.setOnAction(this::cmdButton_Click);
+        pnEditMode = EditMode.UNKNOWN;
+        initButton(pnEditMode);
+    }
+
+    @Override
+    public void setGRider(GRider foValue) {
+        oApp = foValue;
+    }
+
+    private static void setCapsLockBehavior(TextField textField) {
+        textField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (textField.getText() != null) {
+                textField.setText(newValue.toUpperCase());
+            }
+        });
+    }
+
+    private void loadBinField() {
+//        txtField01.setText((String) oTrans.getMaster(2)); //
+//        txtField02.setText((String) oTrans.getMaster(2)); //
+//        chboxActivate.setSelected(oTrans.getMaster(2).toString());
+
+    }
+
+    private void cmdButton_Click(ActionEvent event) {
+        String lsButton = ((Button) event.getSource()).getId();
+        switch (lsButton) {
+            case "btnAdd": //create
+                System.out.println("hello");
+//                if (oTrans.NewRecord()) {
+//                    try {
+//                        loadBinField();
+//                        clearFields();
+//                        pnEditMode = oTrans.getEditMode();
+//                    } catch (SQLException ex) {
+//                        Logger.getLogger(BinEntryParamController.class.getName()).log(Level.SEVERE, null, ex);
+//                    }
+//                } else {
+//                    ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+//                }
+                break;
+            case "btnSave":
+//                if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure, do you want to save?") == true) {
+//                    if (oTrans.SaveRecord()) {
+//                        ShowMessageFX.Information(null, pxeModuleName, "New bin added sucessfully.");
+//                        pnEditMode = oTrans.getEditMode();
+//                    } else {
+//                        ShowMessageFX.Warning(null, pxeModuleName, oTrans.getMessage());
+//                        return;
+//                    }
+//                }
+                break;
+            case "btnEdit":
+                break;
+
+            case "btnCancel":
+                if (ShowMessageFX.OkayCancel(getStage(), "Are you sure you want to cancel?", pxeModuleName, null) == true) {
+                    clearFields();
+                    pnEditMode = EditMode.UNKNOWN;
+                }
+                break;
+            case "btnDeactivate":
+                break;
+            case "btnSearch":
+//                try {
+//                if (oTrans.searchEventType()) {
+//                    pnEditMode = EditMode.READY;
+//                }
+//            } catch (SQLException ex) {
+//                Logger.getLogger(BinEntryParamController.class.getName()).log(Level.SEVERE, null, ex);
+//            }
+                break;
+            case "btnClose":
+                CommonUtils.closeStage(btnClose);
+                break;
+            default:
+                ShowMessageFX.Warning(null, pxeModuleName, "Button with name " + lsButton + " not registered.");
+                break;
+        }
+        initButton(pnEditMode);
+    }
+    final ChangeListener<? super Boolean> txtField_Focus = (o, ov, nv) -> {
+//        try {
+        TextField txtField = (TextField) ((ReadOnlyBooleanPropertyBase) o).getBean();
+        int lnIndex = Integer.parseInt(txtField.getId().substring(8, 10));
+        String lsValue = txtField.getText().toUpperCase();
+
+        if (lsValue == null) {
+            return;
+        }
+        if (!nv) {
+            /* Lost Focus */
+            switch (lnIndex) {
+                case 2: //
+//                        oTrans.setMaster(lnIndex, lsValue);
+                    break;
+            }
+        } else {
+            txtField.selectAll();
+        }
+//        } catch (SQLException ex) {
+//            Logger.getLogger(BinEntryParamController.class
+//                    .getName()).log(Level.SEVERE, null, ex);
+//        }
+    };
+
+    private void clearFields() {
+        txtField01.clear(); //
+        txtField02.clear(); //
+        cboxActivate.setSelected(false);
+    }
+
+    private Stage getStage() {
+        return (Stage) txtField02.getScene().getWindow();
+    }
+
+    private void initButton(int fnValue) {
+        pnRow = 0;
+        boolean lbShow = (fnValue == EditMode.ADDNEW || fnValue == EditMode.UPDATE);
+        txtField02.setDisable(true);
+        txtField02.setDisable(!lbShow);
+        cboxActivate.setDisable(!lbShow);
+        btnAdd.setVisible(!lbShow);
+        btnAdd.setManaged(!lbShow);
+        btnCancel.setVisible(lbShow);
+        btnCancel.setManaged(lbShow);
+        btnSave.setVisible(lbShow);
+        btnSave.setManaged(lbShow);
+        btnEdit.setVisible(false);
+        btnEdit.setManaged(false);
+        if (fnValue == EditMode.READY) { //show edit if user clicked save / browse
+            btnEdit.setVisible(true);
+            btnEdit.setManaged(true);
+
+        }
+    }
+}

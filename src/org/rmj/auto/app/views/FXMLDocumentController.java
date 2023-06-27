@@ -127,6 +127,16 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
     private MenuItem mnuSectionEntry;
     @FXML
     private MenuItem mnuWarehsEntry;
+    @FXML
+    private MenuItem mnuVhclMakeEntry;
+    @FXML
+    private MenuItem mnuVhclModelEntry;
+    @FXML
+    private MenuItem mnuVhclTypeEntry;
+    @FXML
+    private MenuItem mnuVhclColorEntry;
+    @FXML
+    private MenuItem mnuVhclEngFrmEntry;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -351,6 +361,16 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
                 //return new WareHouseEntryParamController();
             case "ItemEntryForm.fxml":
                 //return new ItemEntryFormController();
+            case "VehicleMakeForm.fxml":
+                return new VehicleMakeFormController();
+            case "VehicleModelForm.fxml":
+                return new VehicleModelFormController();
+            case "VehicleTypeForm.fxml":
+                return new VehicleTypeFormController();
+            case "VehicleColorForm.fxml":
+                return new VehicleColorFormController();
+            case "VehicleEngineFrameFormatForm.fxml":
+                return new VehicleEngineFrameFormatFormController();
             default:
                 ShowMessageFX.Warning(null, "Warning", "Notify System Admin to Configure Screen Interface for " + fsValue);
                 return null;
@@ -454,7 +474,8 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
             setScene2(loadAnimate(sformname));
         }
     }
-
+    
+    /*SALES*/
     @FXML
     private void mnuSalesAgentClick(ActionEvent event) {
         String sformname = "SalesAgentForm.fxml";
@@ -471,6 +492,37 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
         if (checktabs(SetTabTitle(sformname)) == 1) {
             setScene2(loadAnimate(sformname));
         }
+    }
+    /*VEHICLE DESCRIPTION PARAMETERS*/
+    
+    @FXML
+    private void mnuVhclMakeEntryClicked(ActionEvent event) {
+        String sformname = "VehicleMakeForm.fxml";
+        param.FXMLMenuParameterForm(getController(sformname), oApp, sformname);
+    }
+
+    @FXML
+    private void mnuVhclModelEntryClicked(ActionEvent event) {
+        String sformname = "VehicleModelForm.fxml";
+        param.FXMLMenuParameterForm(getController(sformname), oApp, sformname);
+    }
+
+    @FXML
+    private void mnuVhclTypeEntryClicked(ActionEvent event) {
+        String sformname = "VehicleTypeForm.fxml";
+        param.FXMLMenuParameterForm(getController(sformname), oApp, sformname);
+    }
+
+    @FXML
+    private void mnuVhclColorEntryClicked(ActionEvent event) {
+        String sformname = "VehicleColorForm.fxml";
+        param.FXMLMenuParameterForm(getController(sformname), oApp, sformname);
+    }
+
+    @FXML
+    private void mnuVhclEngFrmEntryClicked(ActionEvent event) {
+        String sformname = "VehicleEngineFrameFormatForm.fxml";
+        param.FXMLMenuParameterForm(getController(sformname), oApp, sformname);
     }
 
     @FXML
@@ -490,7 +542,7 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
             setScene2(loadAnimate(sformname));
         }
     }
-
+    
     @FXML
     private void mnuVhclRsrvAppClick(ActionEvent event) {
         String sformname = "VehicleSalesApproval.fxml";
@@ -499,7 +551,7 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
             setScene2(loadAnimate(sformname));
         }
     }
-
+    
     @FXML
     private void mnuInquiryClick(ActionEvent event) {
         String sformname = "InquiryForm.fxml";
@@ -508,7 +560,8 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
             setScene2(loadAnimate(sformname));
         }
     }
-
+    
+    /*ACCOUNTING*/
     @FXML
     private void mnuBankClick(ActionEvent event) {
         String sformname = "BankEntryForm.fxml";
@@ -517,7 +570,8 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
             setScene2(loadAnimate(sformname));
         }
     }
-
+    
+    /*ACTIVITY*/
     @FXML
     private void mnuActivityClick(ActionEvent event) {
         String sformname = "ActivityForm.fxml";
@@ -543,8 +597,15 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
 
     }
     
+    
+    /*PARTS*/
     @FXML
     private void mnuItemEntryClicked(ActionEvent event) {
+        String sformname = "ItemEntryForm.fxml";
+        //check tab
+        if (checktabs(SetTabTitle(sformname)) == 1) {
+            setScene2(loadAnimate(sformname));
+        }
     }
 
     @FXML

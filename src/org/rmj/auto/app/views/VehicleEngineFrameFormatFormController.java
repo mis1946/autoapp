@@ -36,7 +36,7 @@ import org.rmj.auto.parameters.VehicleEngineFrame;
  *
  * @author Arsiela Date Created: 06-05-2023
  */
-public class VehicleEngineFrameFormatFormController implements Initializable {
+public class VehicleEngineFrameFormatFormController implements Initializable, ScreenInterface {
 
     private GRider oApp;
     private MasterCallback oListener;

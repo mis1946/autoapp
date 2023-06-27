@@ -39,7 +39,7 @@ import org.rmj.auto.parameters.VehicleMake;
  * @author Arsiela
  * Date Created: 05-22-2023
  */
-public class VehicleMakeFormController implements Initializable {
+public class VehicleMakeFormController implements Initializable, ScreenInterface {
     private GRider oApp;
     private MasterCallback oListener;
     private VehicleMake oTrans;
@@ -165,11 +165,11 @@ public class VehicleMakeFormController implements Initializable {
                     if(oTrans.SaveRecord()){
                         ShowMessageFX.Information(null, pxeModuleName, "Vehicle Make save sucessfully.");
                         loadVehicleParameterList();
-                        if (pnEditMode == EditMode.ADDNEW){
-                            lnRow = (oTrans.getItemCount()-1) ;
-                        }
+//                        if (pnEditMode == EditMode.ADDNEW){
+//                            lnRow = (oTrans.getItemCount()-1) ;
+//                        }
                         
-                        getSelectedItem(vhclparamdata.get(lnRow).getTblindex04());
+                        getSelectedItem((String) oTrans.getMaster(1));
                         pnEditMode = oTrans.getEditMode();
 
                     } else {
@@ -203,7 +203,7 @@ public class VehicleMakeFormController implements Initializable {
             vhclparamdata.clear();
             String sRecStat = "";
             if(oTrans.LoadList()){
-                for (lnCtr = 1; lnCtr <= oTrans.getItemCount(); lnCtr++){
+                for (lnCtr = 1; lnCtr <= oTrans.getDetailCount(); lnCtr++){
                     if(oTrans.getDetail(lnCtr,4).toString().equals("1")){
                         sRecStat = "Y";
                     } else {
@@ -252,15 +252,19 @@ public class VehicleMakeFormController implements Initializable {
     //Populate Text Field Based on selected transaction in table
     private void getSelectedItem(String TransNo) {
         oldTransNo = TransNo;
-        if (oTrans.OpenRecord(TransNo)){
-            if (vhclparamdata.get(lnRow).getTblindex03().equals("Y")){
-                pnEditMode = oTrans.getEditMode();
-            } else {
-                pnEditMode = EditMode.UNKNOWN;
+        try {
+            if (oTrans.OpenRecord(TransNo)) {
+                if (((String) oTrans.getMaster(4)).equals("1")) {
+                    pnEditMode = oTrans.getEditMode();
+                } else {
+                    pnEditMode = EditMode.UNKNOWN;
+                }   
+                txtField02.setText((String) oTrans.getMaster(2)); // Description
             }
-            
-            txtField02.setText(vhclparamdata.get(lnRow).getTblindex02()); // Description
+        } catch (SQLException ex) {
+            Logger.getLogger(VehicleMakeFormController.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
         initbutton(pnEditMode);
     }
     

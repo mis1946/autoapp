@@ -73,6 +73,7 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
     // Variables to track the window movement
     private double xOffset = 0;
     private double yOffset = 0;
+    FXMLMenuParameterForm param = new FXMLMenuParameterForm();
     
     @FXML
     private Label AppUser;
@@ -312,59 +313,6 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
 
         return null;
     }
-    
-    /*LOAD PARAMETER*/
-    /**
-     * Opens the parameter window.
-     * 
-     * @param fsiController The controller implementing the ScreenInterface interface.
-     * @param oApp The GRider object.
-     * @param fsFxml The path to the FXML file for the parameter form.
-     */
-    public void FXMLMenuParameterForm(ScreenInterface fsiController, String fsFxml) {
-        try {
-            Stage stage = new Stage();
-            ScreenInterface fxObj = fsiController;
-            
-            FXMLLoader fxmlLoader = new FXMLLoader();
-            fxmlLoader.setLocation(getClass().getResource(fsFxml));
-            fxmlLoader.setController(fxObj);
-            fxObj.setGRider(oApp);
-
-            //load the main interface
-            Parent parent = fxmlLoader.load();
-
-            parent.setOnMousePressed(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent event) {
-                    xOffset = event.getSceneX();
-                    yOffset = event.getSceneY();
-                }
-            });
-
-            parent.setOnMouseDragged(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent event) {
-                    stage.setX(event.getScreenX() - xOffset);
-                    stage.setY(event.getScreenY() - yOffset);
-                }
-            });
-
-            //set the main interface as the scene
-            Scene scene = new Scene(parent);
-            stage.setScene(scene);
-            stage.initStyle(StageStyle.TRANSPARENT);
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.setTitle("");
-            stage.showAndWait();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            ShowMessageFX.Warning(e.getMessage(), "Warning", null);
-            System.exit(1);
-        }
-    }
-    
     public ScreenInterface getController(String fsValue) {
         switch (fsValue) {
             case "FXMLMainScreen.fxml":
@@ -591,7 +539,7 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
     @FXML
     private void mnuActivityTypeClick(ActionEvent event) {
         String sformname = "ActivityTypeAddSource.fxml";
-        FXMLMenuParameterForm(getController(sformname), sformname);
+        param.FXMLMenuParameterForm(getController(sformname),oApp, sformname);
 
     }
     
@@ -602,31 +550,31 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
     @FXML
     private void mnuBinEntryClicked(ActionEvent event) {
         String sformname = "BinEntryParam.fxml";
-        FXMLMenuParameterForm(getController(sformname), sformname);
+        param.FXMLMenuParameterForm(getController(sformname), oApp, sformname);
     }
 
     @FXML
     private void mnuInvLocEntryClicked(ActionEvent event) {
         String sformname = "InventoryLocationParam.fxml";
-        FXMLMenuParameterForm(getController(sformname), sformname);
+        param.FXMLMenuParameterForm(getController(sformname), oApp, sformname);
     }
 
     @FXML
     private void mnuMeasureEntryClicked(ActionEvent event) {
         String sformname = "MeasurementEntryParam.fxml";
-        FXMLMenuParameterForm(getController(sformname), sformname);
+        param.FXMLMenuParameterForm(getController(sformname), oApp, sformname);
     }
 
     @FXML
     private void mnuSectionEntryClicked(ActionEvent event) {
         String sformname = "SectionEntryParam.fxml";
-        FXMLMenuParameterForm(getController(sformname), sformname);
+        param.FXMLMenuParameterForm(getController(sformname), oApp, sformname);
     }
 
     @FXML
     private void mnuWarehsEntryClicked(ActionEvent event) {
         String sformname = "WareHouseEntryParam.fxml";
-        FXMLMenuParameterForm(getController(sformname), sformname);
+        param.FXMLMenuParameterForm(getController(sformname), oApp, sformname);
     }
 
     /*SET CURRENT TIME*/

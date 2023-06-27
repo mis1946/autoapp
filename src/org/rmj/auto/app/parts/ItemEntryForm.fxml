@@ -3,13 +3,17 @@
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Pagination?>
 <?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.effect.Blend?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -20,7 +24,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" fx:id="AnchorMain" prefHeight="620.0" stylesheets="@../css/FrameStyle.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane id="AnchorPane" fx:id="AnchorMain" prefHeight="620.0" stylesheets="@../css/FrameStyle.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.rmj.auto.app.parts.ItemEntryFormController">
    <children>
       <StackPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -51,9 +55,9 @@
                                        <children>
                                           <GridPane prefHeight="30.0" prefWidth="279.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="0.0">
                                              <columnConstraints>
-                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="110.0" />
-                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="200.0" />
-                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="110.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="150.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="10.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="250.0" />
                                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="110.0" />
                                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="300.0" />
                                                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="240.0" />
@@ -62,18 +66,8 @@
                                                 <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                              </rowConstraints>
                                              <children>
-                                                <Label text="DESCRIPTION" GridPane.columnIndex="3">
-                                                   <font>
-                                                      <Font name="Arial Bold" size="12.0" />
-                                                   </font>
-                                                </Label>
-                                                <TextField fx:id="textSeek01" promptText="Search" GridPane.columnIndex="4" />
-                                                <Label text="PART NUMBER">
-                                                   <font>
-                                                      <Font name="Arial Bold" size="12.0" />
-                                                   </font>
-                                                </Label>
-                                                <TextField GridPane.columnIndex="1" />
+                                                <TextField fx:id="txtSeeks01" promptText="Search" GridPane.columnIndex="2" />
+                                                <ComboBox prefWidth="150.0" />
                                              </children>
                                           </GridPane>
                                        </children>
@@ -86,7 +80,7 @@
                                     <AnchorPane style="-fx-border-color: orange; -fx-border-radius: 5;" BorderPane.alignment="CENTER">
                                        <children>
                                           <Pagination fx:id="pagination" maxPageIndicatorCount="3" minHeight="390.0" minWidth="430.0" AnchorPane.bottomAnchor="3.0" AnchorPane.leftAnchor="3.0" AnchorPane.rightAnchor="3.0" AnchorPane.topAnchor="3.0" />
-                                          <TableView fx:id="tblVhclEntryList" layoutX="4.0" layoutY="4.0" onMouseClicked="#tblVhclEntryList_Clicked" prefWidth="430.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="3.0" AnchorPane.rightAnchor="3.0" AnchorPane.topAnchor="3.0">
+                                          <TableView fx:id="tblItemList" layoutX="4.0" layoutY="4.0" onMouseClicked="#tblVhclEntryList_Clicked" prefWidth="430.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="3.0" AnchorPane.rightAnchor="3.0" AnchorPane.topAnchor="3.0">
                                              <columns>
                                                 <TableColumn fx:id="tblindex01" maxWidth="35.0" minWidth="35.0" prefWidth="35.0" text="Row" />
                                                 <TableColumn fx:id="tblindex02" minWidth="80.0" prefWidth="123.0" text="Part Number" />
@@ -158,260 +152,315 @@
                                                       </AnchorPane>
                                                    </bottom>
                                                    <center>
-                                                      <AnchorPane style="-fx-border-color: orange; -fx-border-radius: 5;">
-                                                         <children>
-                                                            <VBox layoutX="6.0" layoutY="6.0" spacing="5.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
-                                                               <children>
-                                                                  <HBox spacing="5.0" VBox.vgrow="NEVER">
-                                                                     <children>
-                                                                        <VBox spacing="5.0">
-                                                                           <children>
-                                                                              <GridPane style="-fx-border-color: #dddddd; -fx-border-radius: 5;">
-                                                                                 <columnConstraints>
-                                                                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="10.0" />
-                                                                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="100.0" />
-                                                                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="80.0" prefWidth="170.0" />
-                                                                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="30.0" prefWidth="60.0" />
-                                                                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="10.0" />
-                                                                                 </columnConstraints>
-                                                                                 <rowConstraints>
-                                                                                    <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
-                                                                                    <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="5.0" vgrow="SOMETIMES" />
-                                                                                    <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
-                                                                                    <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
-                                                                                    <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
-                                                                                    <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
-                                                                                    <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="5.0" vgrow="SOMETIMES" />
-                                                                                 </rowConstraints>
-                                                                                 <children>
-                                                                                    <Label text="Stock ID" GridPane.columnIndex="1" GridPane.rowIndex="2">
-                                                                                       <font>
-                                                                                          <Font name="Arial Bold" size="12.0" />
-                                                                                       </font>
-                                                                                    </Label>
-                                                                                    <Label id="LabelDesc" text="Part Number" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="3" />
-                                                                                    <Label id="LabelDesc" text="Description*" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                                                                                    <Label id="LabelDesc" text="Brief Description" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                                                                                    <TextField GridPane.columnIndex="2" GridPane.rowIndex="2" />
-                                                                                    <TextField GridPane.columnIndex="2" GridPane.rowIndex="3" />
-                                                                                    <TextField GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="4" />
-                                                                                    <TextField GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="5" />
-                                                                                    <AnchorPane style="-fx-background-color: #FACEA1;" GridPane.columnSpan="5">
-                                                                                       <children>
-                                                                                          <Label layoutX="43.0" layoutY="8.0" text="Item Information" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                                                                             <font>
-                                                                                                <Font name="Arial Bold" size="12.0" />
-                                                                                             </font>
-                                                                                          </Label>
-                                                                                       </children>
-                                                                                    </AnchorPane>
-                                                                                 </children>
-                                                                              </GridPane>
-                                                                              <GridPane style="-fx-border-color: #dddddd; -fx-border-radius: 5;">
-                                                                                 <columnConstraints>
-                                                                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="10.0" />
-                                                                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="100.0" />
-                                                                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="80.0" prefWidth="200.0" />
-                                                                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="5.0" />
-                                                                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="30.0" />
-                                                                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="-Infinity" prefWidth="10.0" />
-                                                                                 </columnConstraints>
-                                                                                 <rowConstraints>
-                                                                                    <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
-                                                                                    <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="5.0" vgrow="SOMETIMES" />
-                                                                                    <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
-                                                                                    <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
-                                                                                    <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="5.0" vgrow="SOMETIMES" />
-                                                                                 </rowConstraints>
-                                                                                 <children>
-                                                                                    <Label id="LabelDesc" text="Brand Name" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                                                                                    <Label id="LabelDesc" text="Unit Price" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                                                                                    <TextField promptText="Search F3" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-                                                                                    <TextField GridPane.columnIndex="2" GridPane.rowIndex="3" />
-                                                                                    <AnchorPane style="-fx-background-color: #FACEA1;" GridPane.columnSpan="6">
-                                                                                       <children>
-                                                                                          <Label layoutX="39.0" layoutY="5.0" text="Pricing" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                                                                             <font>
-                                                                                                <Font name="Arial Bold" size="12.0" />
-                                                                                             </font>
-                                                                                          </Label>
-                                                                                       </children>
-                                                                                    </AnchorPane>
-                                                                                    <Button mnemonicParsing="false" text="..." GridPane.columnIndex="4" GridPane.rowIndex="2" />
-                                                                                 </children>
-                                                                              </GridPane>
-                                                                           </children>
-                                                                        </VBox>
-                                                                        <GridPane style="-fx-border-color: #dddddd; -fx-border-radius: 5;">
-                                                                           <columnConstraints>
-                                                                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="10.0" />
-                                                                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="250.0" prefWidth="300.0" />
-                                                                              <ColumnConstraints hgrow="SOMETIMES" minWidth="-Infinity" prefWidth="10.0" />
-                                                                           </columnConstraints>
-                                                                           <rowConstraints>
-                                                                              <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
-                                                                              <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="200.0" vgrow="SOMETIMES" />
-                                                                              <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="5.0" vgrow="SOMETIMES" />
-                                                                           </rowConstraints>
-                                                                           <children>
-                                                                              <AnchorPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #FACEA1;" GridPane.columnSpan="3">
-                                                                                 <children>
-                                                                                    <Label layoutX="85.0" layoutY="-8.0" text="Image" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                                                                       <font>
-                                                                                          <Font name="Arial Bold" size="12.0" />
-                                                                                       </font>
-                                                                                    </Label>
-                                                                                 </children>
-                                                                              </AnchorPane>
-                                                                           </children>
-                                                                        </GridPane>
-                                                                     </children>
-                                                                  </HBox>
-                                                                  <HBox spacing="5.0">
-                                                                     <children>
-                                                                        <GridPane style="-fx-border-color: #dddddd; -fx-border-radius: 5;">
-                                                                           <columnConstraints>
-                                                                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="10.0" />
-                                                                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="100.0" />
-                                                                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="80.0" prefWidth="170.0" />
-                                                                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="5.0" />
-                                                                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="30.0" />
-                                                                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="30.0" />
-                                                                              <ColumnConstraints hgrow="SOMETIMES" minWidth="-Infinity" prefWidth="10.0" />
-                                                                           </columnConstraints>
-                                                                           <rowConstraints>
-                                                                              <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
-                                                                              <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="5.0" vgrow="SOMETIMES" />
-                                                                              <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
-                                                                              <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
-                                                                              <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
-                                                                              <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
-                                                                              <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="5.0" vgrow="SOMETIMES" />
-                                                                           </rowConstraints>
-                                                                           <children>
-                                                                              <AnchorPane style="-fx-background-color: #FACEA1;" GridPane.columnSpan="7">
-                                                                                 <children>
-                                                                                    <Label text="Classification" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                                                                       <font>
-                                                                                          <Font name="Arial Bold" size="12.0" />
-                                                                                       </font>
-                                                                                    </Label>
-                                                                                 </children>
-                                                                              </AnchorPane>
-                                                                              <TextField promptText="Search F3" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-                                                                              <Button maxWidth="25.0" mnemonicParsing="false" text="..." GridPane.columnIndex="4" GridPane.rowIndex="2" />
-                                                                              <TextField promptText="Search F3" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-                                                                              <Button maxWidth="25.0" mnemonicParsing="false" text="..." GridPane.columnIndex="4" GridPane.rowIndex="3" />
-                                                                              <TextField promptText="Search F3" GridPane.columnIndex="2" GridPane.rowIndex="4" />
-                                                                              <TextField promptText="Search F3" GridPane.columnIndex="2" GridPane.rowIndex="5" />
-                                                                              <Label id="LabelDesc" text="Measurement*" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                                                                              <Label id="LabelDesc" text="Location*" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                                                                              <Label id="LabelDesc" text="Category" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                                                                              <Button maxWidth="25.0" mnemonicParsing="false" text="&lt;" GridPane.columnIndex="4" GridPane.rowIndex="4" />
-                                                                              <Button maxWidth="25.0" mnemonicParsing="false" text="..." GridPane.columnIndex="5" GridPane.rowIndex="4" />
-                                                                              <Button maxWidth="25.0" mnemonicParsing="false" text="..." GridPane.columnIndex="4" GridPane.rowIndex="5" />
-                                                                              <Label id="LabelDesc" text="Inv. Type*" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                                                                           </children>
-                                                                        </GridPane>
-                                                                        <GridPane style="-fx-border-color: #dddddd; -fx-border-radius: 5;">
-                                                                           <columnConstraints>
-                                                                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="10.0" />
-                                                                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="100.0" />
-                                                                              <ColumnConstraints hgrow="SOMETIMES" minWidth="100.0" prefWidth="150.0" />
-                                                                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="25.0" />
-                                                                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="25.0" />
-                                                                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="10.0" />
-                                                                           </columnConstraints>
-                                                                           <rowConstraints>
-                                                                              <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
-                                                                              <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="5.0" vgrow="SOMETIMES" />
-                                                                              <RowConstraints minHeight="-Infinity" prefHeight="90.0" vgrow="SOMETIMES" />
-                                                                              <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="5.0" vgrow="SOMETIMES" />
-                                                                           </rowConstraints>
-                                                                           <children>
-                                                                              <AnchorPane style="-fx-background-color: #FACEA1;" GridPane.columnSpan="6">
-                                                                                 <children>
-                                                                                    <Label text="Model" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                                                                       <font>
-                                                                                          <Font name="Arial Bold" size="12.0" />
-                                                                                       </font>
-                                                                                    </Label>
-                                                                                 </children>
-                                                                              </AnchorPane>
-                                                                              <Button contentDisplay="CENTER" mnemonicParsing="false" GridPane.columnIndex="3">
-                                                                                 <graphic>
-                                                                                    <FontAwesomeIconView glyphName="PLUS" size="10.0" />
-                                                                                 </graphic>
-                                                                              </Button>
-                                                                              <Button mnemonicParsing="false" prefHeight="15.0" prefWidth="15.0" GridPane.columnIndex="4">
-                                                                                 <graphic>
-                                                                                    <FontAwesomeIconView glyphName="MINUS" size="10.0" />
-                                                                                 </graphic>
-                                                                              </Button>
-                                                                              <TableView prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="2">
-                                                                                 <columns>
-                                                                                    <TableColumn prefWidth="22.0" />
-                                                                                    <TableColumn prefWidth="24.0" />
-                                                                                    <TableColumn minWidth="-Infinity" prefWidth="200.0" text="Model" />
-                                                                                    <TableColumn minWidth="-Infinity" prefWidth="100.0" text="Year" />
-                                                                                 </columns>
-                                                                              </TableView>
-                                                                           </children>
-                                                                        </GridPane>
-                                                                     </children>
-                                                                  </HBox>
-                                                                  <GridPane maxWidth="690.0" style="-fx-border-color: #dddddd; -fx-border-radius: 5;" VBox.vgrow="ALWAYS">
-                                                                     <columnConstraints>
-                                                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="10.0" />
-                                                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="100.0" />
-                                                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="570.0" minWidth="10.0" prefWidth="270.0" />
-                                                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="25.0" />
-                                                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="25.0" />
-                                                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="10.0" />
-                                                                     </columnConstraints>
-                                                                     <rowConstraints>
-                                                                        <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
-                                                                        <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="5.0" vgrow="SOMETIMES" />
-                                                                        <RowConstraints minHeight="-Infinity" prefHeight="60.0" vgrow="SOMETIMES" />
-                                                                        <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="5.0" vgrow="SOMETIMES" />
-                                                                     </rowConstraints>
-                                                                     <children>
-                                                                        <AnchorPane style="-fx-background-color: #FACEA1;" GridPane.columnSpan="6">
-                                                                           <children>
-                                                                              <Label text="Supersede(s)" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                                                                 <font>
-                                                                                    <Font name="Arial Bold" size="12.0" />
-                                                                                 </font>
-                                                                              </Label>
-                                                                           </children>
-                                                                        </AnchorPane>
-                                                                        <Button mnemonicParsing="false" GridPane.columnIndex="4">
-                                                                           <graphic>
-                                                                              <FontAwesomeIconView glyphName="MINUS" size="10.0" />
-                                                                           </graphic>
-                                                                        </Button>
-                                                                        <Button mnemonicParsing="false" GridPane.columnIndex="3">
-                                                                           <graphic>
-                                                                              <FontAwesomeIconView glyphName="PLUS" size="10.0" />
-                                                                           </graphic>
-                                                                        </Button>
-                                                                        <TableView prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="2">
-                                                                           <columns>
-                                                                              <TableColumn prefWidth="24.0" />
-                                                                              <TableColumn prefWidth="30.0" />
-                                                                              <TableColumn minWidth="-Infinity" prefWidth="200.0" text="Part Number" />
-                                                                              <TableColumn minWidth="-Infinity" prefWidth="250.0" text="Description" />
-                                                                           </columns>
-                                                                        </TableView>
-                                                                     </children>
-                                                                  </GridPane>
-                                                               </children>
-                                                            </VBox>
-                                                         </children>
+                                                      <TabPane>
                                                          <BorderPane.margin>
                                                             <Insets bottom="3.0" />
                                                          </BorderPane.margin>
-                                                      </AnchorPane>
+                                                         <tabs>
+                                                            <Tab closable="false" style="-fx-font-family: Arial; -fx-font-weight: Bold;" text="Item Information">
+                                                               <content>
+                                                                  <AnchorPane style="-fx-border-color: orange; -fx-border-radius: 5;">
+                                                                     <children>
+                                                                        <HBox spacing="3.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
+                                                                           <children>
+                                                                              <VBox spacing="3.0">
+                                                                                 <children>
+                                                                                    <GridPane style="-fx-border-color: #dddddd; -fx-border-radius: 5;" VBox.vgrow="NEVER">
+                                                                                       <columnConstraints>
+                                                                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="10.0" />
+                                                                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="100.0" />
+                                                                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="80.0" prefWidth="120.0" />
+                                                                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="20.0" prefWidth="80.0" />
+                                                                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="0.0" prefWidth="60.0" />
+                                                                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="5.0" />
+                                                                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="30.0" />
+                                                                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="10.0" />
+                                                                                       </columnConstraints>
+                                                                                       <rowConstraints>
+                                                                                          <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="21.0" vgrow="SOMETIMES" />
+                                                                                          <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="5.0" vgrow="SOMETIMES" />
+                                                                                          <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
+                                                                                          <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
+                                                                                          <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
+                                                                                          <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
+                                                                                          <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
+                                                                                          <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
+                                                                                          <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="5.0" vgrow="SOMETIMES" />
+                                                                                       </rowConstraints>
+                                                                                       <children>
+                                                                                          <AnchorPane style="-fx-background-color: #FACEA1;" GridPane.columnSpan="8">
+                                                                                             <children>
+                                                                                                <Label layoutX="43.0" layoutY="8.0" text="Item Information" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                                                                   <font>
+                                                                                                      <Font name="Arial Bold" size="12.0" />
+                                                                                                   </font>
+                                                                                                </Label>
+                                                                                             </children>
+                                                                                          </AnchorPane>
+                                                                                          <Label text="Stock ID" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                                                                             <font>
+                                                                                                <Font name="Arial Bold" size="12.0" />
+                                                                                             </font>
+                                                                                          </Label>
+                                                                                          <Label id="LabelDesc" text="Part Number" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="3" />
+                                                                                          <Label id="LabelDesc" text="Description*" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                                                                                          <Label id="LabelDesc" text="Brief Description" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                                                                                          <TextField GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="2" />
+                                                                                          <TextField GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="3" />
+                                                                                          <TextField promptText="Search F3" GridPane.columnIndex="2" GridPane.columnSpan="3" GridPane.rowIndex="4" />
+                                                                                          <TextField GridPane.columnIndex="2" GridPane.columnSpan="5" GridPane.rowIndex="5" />
+                                                                                          <TextField GridPane.columnIndex="2" GridPane.columnSpan="5" GridPane.rowIndex="6" />
+                                                                                          <TextField GridPane.columnIndex="2" GridPane.rowIndex="7" />
+                                                                                          <Label id="LabelDesc" text="Brand Name" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                                                                                          <Button fx:id="btnBrandName" mnemonicParsing="false" text="..." GridPane.columnIndex="6" GridPane.rowIndex="4" />
+                                                                                          <Label id="LabelDesc" text="Unit Price" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+                                                                                       </children>
+                                                                                    </GridPane>
+                                                                                    <GridPane style="-fx-border-color: #dddddd; -fx-border-radius: 5;">
+                                                                                       <columnConstraints>
+                                                                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="10.0" />
+                                                                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="100.0" />
+                                                                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="80.0" prefWidth="250.0" />
+                                                                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="5.0" />
+                                                                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="30.0" />
+                                                                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="-Infinity" prefWidth="10.0" />
+                                                                                       </columnConstraints>
+                                                                                       <rowConstraints>
+                                                                                          <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="21.0" vgrow="SOMETIMES" />
+                                                                                          <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="5.0" vgrow="SOMETIMES" />
+                                                                                          <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
+                                                                                          <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
+                                                                                          <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
+                                                                                          <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
+                                                                                          <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="5.0" vgrow="SOMETIMES" />
+                                                                                       </rowConstraints>
+                                                                                       <children>
+                                                                                          <AnchorPane style="-fx-background-color: #FACEA1;" GridPane.columnSpan="6">
+                                                                                             <children>
+                                                                                                <Label text="Classification" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                                                                   <font>
+                                                                                                      <Font name="Arial Bold" size="12.0" />
+                                                                                                   </font>
+                                                                                                </Label>
+                                                                                             </children>
+                                                                                          </AnchorPane>
+                                                                                          <TextField promptText="Search F3" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                                                                                          <TextField promptText="Search F3" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                                                                                          <TextField promptText="Search F3" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+                                                                                          <TextField promptText="Search F3" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+                                                                                          <Button fx:id="btnCategory" maxWidth="25.0" mnemonicParsing="false" text="..." GridPane.columnIndex="4" GridPane.rowIndex="3" />
+                                                                                          <Button fx:id="btnInvType" maxWidth="25.0" mnemonicParsing="false" text="..." GridPane.columnIndex="4" GridPane.rowIndex="2" />
+                                                                                          <Label id="LabelDesc" text="Measurement*" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                                                                                          <Label id="LabelDesc" text="Location*" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                                                                                          <Label id="LabelDesc" text="Category" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                                                                          <Button fx:id="btnMeasurement" maxWidth="25.0" mnemonicParsing="false" text="..." GridPane.columnIndex="4" GridPane.rowIndex="5" />
+                                                                                          <Button fx:id="btnLocation" maxWidth="25.0" mnemonicParsing="false" text="..." GridPane.columnIndex="4" GridPane.rowIndex="4" />
+                                                                                          <Label id="LabelDesc" text="Inv. Type*" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                                                                       </children>
+                                                                                    </GridPane>
+                                                                                    <GridPane layoutX="10.0" layoutY="200.0" style="-fx-border-color: #dddddd; -fx-border-radius: 5;" VBox.vgrow="SOMETIMES">
+                                                                                       <columnConstraints>
+                                                                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="10.0" />
+                                                                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="0.0" prefWidth="0.0" />
+                                                                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="30.0" />
+                                                                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="80.0" prefWidth="150.0" />
+                                                                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="10.0" />
+                                                                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="30.0" />
+                                                                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="100.0" prefWidth="150.0" />
+                                                                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="-Infinity" prefWidth="10.0" />
+                                                                                       </columnConstraints>
+                                                                                       <rowConstraints>
+                                                                                          <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="21.0" vgrow="SOMETIMES" />
+                                                                                          <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="5.0" vgrow="SOMETIMES" />
+                                                                                          <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="35.0" vgrow="SOMETIMES" />
+                                                                                          <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
+                                                                                          <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
+                                                                                          <RowConstraints minHeight="-Infinity" prefHeight="10.0" vgrow="SOMETIMES" />
+                                                                                       </rowConstraints>
+                                                                                       <children>
+                                                                                          <AnchorPane style="-fx-background-color: #FACEA1;" GridPane.columnSpan="8">
+                                                                                             <children>
+                                                                                                <Label text="Unit Conversion " AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                                                                   <font>
+                                                                                                      <Font name="Arial Bold" size="12.0" />
+                                                                                                   </font>
+                                                                                                </Label>
+                                                                                             </children>
+                                                                                          </AnchorPane>
+                                                                                          <TextField GridPane.columnIndex="3" GridPane.rowIndex="3" />
+                                                                                          <TextField GridPane.columnIndex="3" GridPane.rowIndex="4" />
+                                                                                          <ComboBox prefWidth="150.0" GridPane.columnIndex="6" GridPane.rowIndex="3" />
+                                                                                          <TextField GridPane.columnIndex="6" GridPane.rowIndex="4" />
+                                                                                          <Label id="LabelDesc" text="Unit" GridPane.columnIndex="5" GridPane.rowIndex="3" />
+                                                                                          <Label id="LabelDesc" text="Qty" GridPane.columnIndex="5" GridPane.rowIndex="4" />
+                                                                                          <Label id="LabelDesc" text="Unit" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                                                                                          <Label id="LabelDesc" text="Qty" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+                                                                                          <Label text="Qty Applied on Inventory" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="2">
+                                                                                             <font>
+                                                                                                <Font name="Arial Bold" size="12.0" />
+                                                                                             </font>
+                                                                                          </Label>
+                                                                                          <Label layoutX="21.0" layoutY="43.0" text="Equivalent Unit for Transferred Materials" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="5" GridPane.columnSpan="2" GridPane.rowIndex="2">
+                                                                                             <font>
+                                                                                                <Font name="Arial Bold" size="12.0" />
+                                                                                             </font>
+                                                                                          </Label>
+                                                                                       </children>
+                                                                                    </GridPane>
+                                                                                 </children>
+                                                                              </VBox>
+                                                                              <VBox spacing="3.0" HBox.hgrow="SOMETIMES">
+                                                                                 <children>
+                                                                                    <GridPane maxWidth="690.0" style="-fx-border-color: #dddddd; -fx-border-radius: 5;">
+                                                                                       <columnConstraints>
+                                                                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="10.0" />
+                                                                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="50.0" prefWidth="100.0" />
+                                                                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="570.0" minWidth="10.0" prefWidth="270.0" />
+                                                                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="25.0" />
+                                                                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="25.0" />
+                                                                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="10.0" />
+                                                                                       </columnConstraints>
+                                                                                       <rowConstraints>
+                                                                                          <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="21.0" vgrow="SOMETIMES" />
+                                                                                          <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="5.0" vgrow="SOMETIMES" />
+                                                                                          <RowConstraints minHeight="-Infinity" prefHeight="90.0" vgrow="SOMETIMES" />
+                                                                                          <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="5.0" vgrow="SOMETIMES" />
+                                                                                       </rowConstraints>
+                                                                                       <children>
+                                                                                          <AnchorPane style="-fx-background-color: #FACEA1;" GridPane.columnSpan="6">
+                                                                                             <children>
+                                                                                                <Label text="Supersede(s)" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                                                                   <font>
+                                                                                                      <Font name="Arial Bold" size="12.0" />
+                                                                                                   </font>
+                                                                                                </Label>
+                                                                                             </children>
+                                                                                          </AnchorPane>
+                                                                                          <Button fx:id="btnSupsDel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="18.0" prefWidth="24.0" GridPane.columnIndex="4">
+                                                                                             <graphic>
+                                                                                                <FontAwesomeIconView glyphName="MINUS" size="10.0" />
+                                                                                             </graphic>
+                                                                                          </Button>
+                                                                                          <Button fx:id="btnSupsAdd" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="18.0" prefWidth="24.0" GridPane.columnIndex="3">
+                                                                                             <graphic>
+                                                                                                <FontAwesomeIconView glyphName="PLUS" size="10.0" />
+                                                                                             </graphic>
+                                                                                          </Button>
+                                                                                          <TableView prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="2">
+                                                                                             <columns>
+                                                                                                <TableColumn prefWidth="24.0" />
+                                                                                                <TableColumn prefWidth="30.0" />
+                                                                                                <TableColumn minWidth="-Infinity" prefWidth="200.0" text="Part Number" />
+                                                                                                <TableColumn minWidth="-Infinity" prefWidth="250.0" text="Description" />
+                                                                                             </columns>
+                                                                                          </TableView>
+                                                                                       </children>
+                                                                                    </GridPane>
+                                                                                    <GridPane style="-fx-border-color: #dddddd; -fx-border-radius: 5;">
+                                                                                       <columnConstraints>
+                                                                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="10.0" />
+                                                                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="50.0" prefWidth="100.0" />
+                                                                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="100.0" prefWidth="150.0" />
+                                                                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="25.0" />
+                                                                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="25.0" />
+                                                                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="10.0" />
+                                                                                       </columnConstraints>
+                                                                                       <rowConstraints>
+                                                                                          <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="21.0" vgrow="SOMETIMES" />
+                                                                                          <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="5.0" vgrow="SOMETIMES" />
+                                                                                          <RowConstraints minHeight="-Infinity" prefHeight="90.0" vgrow="SOMETIMES" />
+                                                                                          <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="5.0" vgrow="SOMETIMES" />
+                                                                                       </rowConstraints>
+                                                                                       <children>
+                                                                                          <AnchorPane style="-fx-background-color: #FACEA1;" GridPane.columnSpan="6">
+                                                                                             <children>
+                                                                                                <Label text="Model" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                                                                   <font>
+                                                                                                      <Font name="Arial Bold" size="12.0" />
+                                                                                                   </font>
+                                                                                                </Label>
+                                                                                             </children>
+                                                                                          </AnchorPane>
+                                                                                          <Button fx:id="btnModelAdd" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="18.0" prefWidth="24.0" GridPane.columnIndex="3">
+                                                                                             <graphic>
+                                                                                                <FontAwesomeIconView glyphName="PLUS" size="10.0" />
+                                                                                             </graphic>
+                                                                                          </Button>
+                                                                                          <Button fx:id="btnModelDel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="18.0" prefWidth="24.0" GridPane.columnIndex="4">
+                                                                                             <graphic>
+                                                                                                <FontAwesomeIconView glyphName="MINUS" size="10.0" />
+                                                                                             </graphic>
+                                                                                          </Button>
+                                                                                          <TableView prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="2">
+                                                                                             <columns>
+                                                                                                <TableColumn prefWidth="22.0" />
+                                                                                                <TableColumn prefWidth="24.0" />
+                                                                                                <TableColumn minWidth="-Infinity" prefWidth="200.0" text="Model" />
+                                                                                                <TableColumn minWidth="-Infinity" prefWidth="100.0" text="Year" />
+                                                                                             </columns>
+                                                                                          </TableView>
+                                                                                       </children>
+                                                                                    </GridPane>
+                                                                                    <GridPane alignment="CENTER_LEFT" maxWidth="300.0" style="-fx-border-color: #dddddd; -fx-border-radius: 5;" VBox.vgrow="SOMETIMES">
+                                                                                       <columnConstraints>
+                                                                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="10.0" />
+                                                                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="190.0" prefWidth="300.0" />
+                                                                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="25.0" />
+                                                                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="25.0" />
+                                                                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="10.0" />
+                                                                                       </columnConstraints>
+                                                                                       <rowConstraints>
+                                                                                          <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="21.0" vgrow="SOMETIMES" />
+                                                                                          <RowConstraints minHeight="-Infinity" prefHeight="175.0" vgrow="SOMETIMES" />
+                                                                                          <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="5.0" vgrow="SOMETIMES" />
+                                                                                       </rowConstraints>
+                                                                                       <children>
+                                                                                          <AnchorPane style="-fx-background-color: #FACEA1;" GridPane.columnSpan="5">
+                                                                                             <children>
+                                                                                                <Label layoutX="85.0" layoutY="-8.0" text="Image" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                                                                   <font>
+                                                                                                      <Font name="Arial Bold" size="12.0" />
+                                                                                                   </font>
+                                                                                                </Label>
+                                                                                             </children>
+                                                                                          </AnchorPane>
+                                                                                          <Button fx:id="btnCapture" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="18.0" prefWidth="24.0" GridPane.columnIndex="2">
+                                                                                             <graphic>
+                                                                                                <FontAwesomeIconView glyphName="CAMERA" size="10" />
+                                                                                             </graphic>
+                                                                                          </Button>
+                                                                                          <Button fx:id="btnUpload" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="18.0" prefWidth="24.0" GridPane.columnIndex="3">
+                                                                                             <graphic>
+                                                                                                <FontAwesomeIconView glyphName="UPLOAD" size="10" />
+                                                                                             </graphic>
+                                                                                          </Button>
+                                                                                          <AnchorPane GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="1">
+                                                                                             <children>
+                                                                                                <ImageView fx:id="imgPartsPic" fitHeight="150.0" fitWidth="200.0" layoutX="37.0" layoutY="13.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="3.0" AnchorPane.leftAnchor="3.0" AnchorPane.rightAnchor="3.0" AnchorPane.topAnchor="3.0" />
+                                                                                             </children>
+                                                                                          </AnchorPane>
+                                                                                       </children>
+                                                                                    </GridPane>
+                                                                                 </children>
+                                                                              </VBox>
+                                                                           </children>
+                                                                        </HBox>
+                                                                     </children>
+                                                                  </AnchorPane>
+                                                               </content>
+                                                            </Tab>
+                                                            <Tab closable="false" style="-fx-font-family: Arial; -fx-font-weight: Bold;" text="On-Request">
+                                                               <content>
+                                                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                                                               </content>
+                                                            </Tab>
+                                                            <Tab closable="false" style="-fx-font-family: Arial; -fx-font-weight: Bold;" text="Price History">
+                                                               <content>
+                                                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                                                               </content>
+                                                            </Tab>
+                                                         </tabs>
+                                                      </TabPane>
                                                    </center>
                                                 </BorderPane>
                                              </children>

@@ -711,7 +711,6 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                             oTransMobile.removeMobile(oTransMobile.getItemCount());
                             oTransEmail.removeEmail(oTransEmail.getItemCount());
                             oTransSocMed.removeSocMed(oTransSocMed.getItemCount());
-
                         } else {
                             return;
                         }
@@ -2699,7 +2698,14 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                                 pnEditMode = EditMode.UNKNOWN;
                             }
 
-                            initButton(pnEditMode);
+                            if (selectedIndex == 0) {
+                                initButton(pnEditMode);
+                            } else if (selectedIndex == 1) {
+                                initVhclInfoButton(pnVEditMode);
+                                if (bBtnVhclAvl){
+                                    disableFields();
+                                }
+                            }
                             break;
                         case "txtField26": //Search by Name
                             if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
@@ -2743,7 +2749,15 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                                 //}
                                 pnEditMode = EditMode.UNKNOWN;
                             }
-                            initButton(pnEditMode);
+                            
+                            if (selectedIndex == 0) {
+                                initButton(pnEditMode);
+                            } else if (selectedIndex == 1) {
+                                initVhclInfoButton(pnVEditMode);
+                                if (bBtnVhclAvl){
+                                    disableFields();
+                                }
+                            }
                             break;
                         case "txtField10": //Citizenship
                             if (oTrans.searchCitizenship(txtField10.getText(), false)) {

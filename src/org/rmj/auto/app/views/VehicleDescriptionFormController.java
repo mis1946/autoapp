@@ -940,6 +940,7 @@ public class VehicleDescriptionFormController implements Initializable, ScreenIn
             loControl.setGRider(oApp);
             loControl.setMakeID(sSourceID);
             loControl.setMakeDesc(sSourceDesc);
+            loControl.setOpenEvent(true);
             fxmlLoader.setController(loControl);
 
             //load the main interface

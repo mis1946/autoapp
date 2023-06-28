@@ -6,6 +6,9 @@
 package org.rmj.auto.app.parts;
 
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
@@ -18,29 +21,42 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Pagination;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.FileChooser;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.rmj.appdriver.GRider;
 import org.rmj.appdriver.agentfx.CommonUtils;
 import org.rmj.appdriver.agentfx.ShowMessageFX;
 import org.rmj.appdriver.callback.MasterCallback;
 import org.rmj.appdriver.constants.EditMode;
+import org.rmj.auto.app.views.ScreenInterface;
 import org.rmj.auto.app.views.VehicleDescriptionTableList;
 import org.rmj.auto.app.views.unloadForm;
+import static org.rmj.webcamfx.ui.CameraType.Webcam;
+import org.rmj.webcamfx.ui.WebCamFX;
+import org.rmj.webcamfx.ui.Webcam;
 
 /**
  * FXML Controller class
@@ -48,7 +64,7 @@ import org.rmj.auto.app.views.unloadForm;
  * @author Arsiela
  * Date Created: 06-27-2023
  */
-public class ItemEntryFormController implements Initializable {
+public class ItemEntryFormController implements Initializable, ScreenInterface {
     
     private GRider oApp;
     private MasterCallback oListener;
@@ -61,6 +77,9 @@ public class ItemEntryFormController implements Initializable {
     private String sTransNo = "";
     private int lnRow;
     private int lnCtr;
+    private Image pimage;
+    private String psFileName;
+    private String psFileUrl;
     
     private int pnRow = -1;
     private int oldPnRow = -1;
@@ -69,8 +88,11 @@ public class ItemEntryFormController implements Initializable {
     private double yOffset = 0;
     
     private ObservableList<ItemEntryTableList> itemdata = FXCollections.observableArrayList();
+    private ObservableList<ItemEntryTableList> supersededata = FXCollections.observableArrayList();
+    private ObservableList<ItemEntryTableList> modeldata = FXCollections.observableArrayList();
     private FilteredList<ItemEntryTableList> filteredData;
     private static final int ROWS_PER_PAGE = 50;
+    WebCamFX webcam = new WebCamFX(); //Open Camera
     @FXML
     private AnchorPane AnchorMain;
     @FXML
@@ -121,6 +143,28 @@ public class ItemEntryFormController implements Initializable {
     private ImageView imgPartsPic;
     @FXML
     private TextField txtSeeks01;
+    @FXML
+    private TableView tblSupersede;
+    @FXML
+    private TableColumn tblindex01_sups;
+    @FXML
+    private TableColumn tblindex02_sups;
+    @FXML
+    private TableColumn tblindex03_sups;
+    @FXML
+    private TableColumn tblindex04_sups;
+    @FXML
+    private TableView tblModel;
+    @FXML
+    private TableColumn tblindex01_model;
+    @FXML
+    private TableColumn tblindex02_model;
+    @FXML
+    private TableColumn tblindex03_model;
+    @FXML
+    private TableColumn tblindex04_model;
+    @FXML
+    private Button btnLoadPhoto;
     
     private Stage getStage() {
         return (Stage) txtSeeks01.getScene().getWindow();
@@ -144,7 +188,21 @@ public class ItemEntryFormController implements Initializable {
         btnClose.setOnAction(this::cmdButton_Click);
         btnAdd.setOnAction(this::cmdButton_Click);
         btnEdit.setOnAction(this::cmdButton_Click);
+        btnCancel.setOnAction(this::cmdButton_Click);
         btnSave.setOnAction(this::cmdButton_Click);
+        
+        btnBrandName.setOnAction(this::cmdButton_Click);
+        btnCategory.setOnAction(this::cmdButton_Click);
+        btnInvType.setOnAction(this::cmdButton_Click);
+        btnMeasurement.setOnAction(this::cmdButton_Click);
+        btnLocation.setOnAction(this::cmdButton_Click);
+        btnSupsAdd.setOnAction(this::cmdButton_Click);
+        btnSupsDel.setOnAction(this::cmdButton_Click);
+        btnModelAdd.setOnAction(this::cmdButton_Click);
+        btnModelDel.setOnAction(this::cmdButton_Click);
+        btnCapture.setOnAction(this::cmdButton_Click);
+        btnUpload.setOnAction(this::cmdButton_Click);
+        btnLoadPhoto.setOnAction(this::cmdButton_Click);
 
         pnEditMode = EditMode.UNKNOWN;
         initbutton(pnEditMode);
@@ -177,6 +235,56 @@ public class ItemEntryFormController implements Initializable {
 //        try {
             String lsButton = ((Button) event.getSource()).getId();
             switch (lsButton) {
+                case "btnBrandName":
+                    break;
+                case "btnInvType":
+                    break;
+                case "btnCategory":
+                    break;
+                case "btnLocation":
+                    break;
+                case "btnMeasurement":
+                    break;
+                case "btnSupsDel":
+                    break;
+                case "btnSupsAdd":
+                    break;
+                case "btnModelAdd":
+                    break;
+                case "btnModelDel":
+                    break;
+                case "btnCapture":
+                    try {
+                        Stage stage = new Stage();
+                        webcam.start(stage);
+                        captureImage();
+                    } catch (Exception ex) {
+                        Logger.getLogger(ItemEntryFormController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    break;
+                case "btnUpload":
+                    FileChooser fileChooser = new FileChooser();
+                    // Set the title and extension filters if desired
+                    fileChooser.setTitle("Select Image File");
+                    fileChooser.getExtensionFilters().addAll(
+                            new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg"));
+                    // Show the file chooser dialog
+                    File selectedFile = fileChooser.showOpenDialog(btnUpload.getScene().getWindow());
+                    if (selectedFile != null) {
+                        // Load the selected image file
+                        Image image = new Image(selectedFile.toURI().toString());
+                        imgPartsPic.setImage(image);
+                        
+                        psFileUrl = selectedFile.toURI().toString();
+                        psFileName = selectedFile.getName();
+                        pimage = new Image(selectedFile.toURI().toString());
+                    }
+                    break;
+                case "btnLoadPhoto":
+                    if (!psFileUrl.isEmpty()){
+                        loadPhotoWindow();
+                    }
+                    break;
                 case "btnAdd":
 //                    if (oTrans.NewRecord()) {
 //                        pnEditMode = oTrans.getEditMode();
@@ -234,8 +342,81 @@ public class ItemEntryFormController implements Initializable {
 //            Logger.getLogger(ItemEntryFormController.class.getName()).log(Level.SEVERE, null, ex);
 //        }
     }
+    
+    /*OPEN PHOTO WINDOW*/
+    private void loadPhotoWindow(){
+        try {
+            Stage stage = new Stage();
 
-    public void loadVehicleParameterList() {
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            fxmlLoader.setLocation(getClass().getResource("ItemPhoto.fxml"));
+
+            ItemPhotoController loControl = new ItemPhotoController();
+            loControl.setGRider(oApp);
+            loControl.setPicName(psFileName);
+            loControl.setPicUrl(psFileUrl);
+            fxmlLoader.setController(loControl);
+
+            //load the main interface
+            Parent parent = fxmlLoader.load();
+
+            parent.setOnMousePressed(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    xOffset = event.getSceneX();
+                    yOffset = event.getSceneY();
+                }
+            });
+
+            parent.setOnMouseDragged(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    stage.setX(event.getScreenX() - xOffset);
+                    stage.setY(event.getScreenY() - yOffset);
+                }
+            });
+
+            //set the main interface as the scene
+            Scene scene = new Scene(parent);
+            stage.setScene(scene);
+            stage.initStyle(StageStyle.TRANSPARENT);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle("");
+            stage.showAndWait();
+            
+        } catch (IOException e) {
+            e.printStackTrace();
+            ShowMessageFX.Warning(getStage(),e.getMessage(), "Warning", null);
+            System.exit(1);
+        }
+    
+    }
+    
+    /*TODO*/
+    /*OPEN CAMERA*/
+    private void captureImage() {
+//        if (webcam.isOpen()) {
+//            try {
+//                // Capture image from webcam
+//                BufferedImage bufferedImage = webcam.getImage();
+//
+//                // Convert BufferedImage to JavaFX Image
+//                Image image = SwingFXUtils.toFXImage(bufferedImage, null);
+//
+//                // Display the captured image in ImageView
+//                imgPartsPic.setImage(image);
+//
+//                // Save the captured image to a file (optional)
+//                // File outputFile = new File("captured_image.png");
+//                // ImageIO.write(bufferedImage, "png", outputFile);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }
+    }
+
+
+    public void loadItemList() {
 //        try {
 //            /*Populate table*/
 //            itemdata.clear();
@@ -243,7 +424,8 @@ public class ItemEntryFormController implements Initializable {
 //            if (oTrans.LoadList()) {
 //                for (lnCtr = 1; lnCtr <= oTrans.getItemCount(); lnCtr++) {
 //                    itemdata.add(new ItemEntryTableList(
-//                            String.valueOf(lnCtr) //Row
+//                               false
+//                            , String.valueOf(lnCtr) //Row
 //                    ));
 //                }
 //                initItemList();
@@ -259,9 +441,9 @@ public class ItemEntryFormController implements Initializable {
 
     private void initItemList() {
         boolean lbShow = (pnEditMode == EditMode.READY || pnEditMode == EditMode.UPDATE);
-        tblindex01.setCellValueFactory(new PropertyValueFactory<>("tblindex01"));
-        tblindex02.setCellValueFactory(new PropertyValueFactory<>("tblindex02"));
-        tblindex03.setCellValueFactory(new PropertyValueFactory<>("tblindex03"));
+        tblindex01.setCellValueFactory(new PropertyValueFactory<>("tblindex02"));
+        tblindex02.setCellValueFactory(new PropertyValueFactory<>("tblindex03"));
+        tblindex03.setCellValueFactory(new PropertyValueFactory<>("tblindex04"));
 
         tblItemList.widthProperty().addListener((ObservableValue<? extends Number> source, Number oldWidth, Number newWidth) -> {
             TableHeaderRow header = (TableHeaderRow) tblItemList.lookup("TableHeaderRow");
@@ -272,7 +454,85 @@ public class ItemEntryFormController implements Initializable {
 
         tblItemList.setItems(itemdata);
     }
+    
+     public void loadSupersedeList() {
+//        try {
+//            /*Populate table*/
+//            supersededata.clear();
+//            String sRecStat = "";
+//            if (oTrans.LoadList()) {
+//                for (lnCtr = 1; lnCtr <= oTrans.getItemCount(); lnCtr++) {
+//                    itemdata.add(new ItemEntryTableList(
+//                            String.valueOf(lnCtr) //Row
+//                    ));
+//                }
+//                initSupersedeList();
+//            } else {
+//                ShowMessageFX.Warning(null, pxeModuleName, oTrans.getMessage());
+//                return;
+//            }
+//        } catch (SQLException e) {
+//            ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
+//        }
 
+    }
+
+    private void initSupersedeList() {
+        boolean lbShow = (pnEditMode == EditMode.READY || pnEditMode == EditMode.UPDATE);
+        tblindex01_sups.setCellValueFactory(new PropertyValueFactory<>("tblindex01"));
+        tblindex02_sups.setCellValueFactory(new PropertyValueFactory<>("tblindex02"));
+        tblindex03_sups.setCellValueFactory(new PropertyValueFactory<>("tblindex03"));
+        tblindex04_sups.setCellValueFactory(new PropertyValueFactory<>("tblindex04"));
+
+        tblSupersede.widthProperty().addListener((ObservableValue<? extends Number> source, Number oldWidth, Number newWidth) -> {
+            TableHeaderRow header = (TableHeaderRow) tblSupersede.lookup("TableHeaderRow");
+            header.reorderingProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+                header.setReordering(false);
+            });
+        });
+
+        tblSupersede.setItems(supersededata);
+    }
+    
+     public void loadModelList() {
+//        try {
+//            /*Populate table*/
+//            modeldata.clear();
+//            String sRecStat = "";
+//            if (oTrans.LoadList()) {
+//                for (lnCtr = 1; lnCtr <= oTrans.getItemCount(); lnCtr++) {
+//                    itemdata.add(new ItemEntryTableList(
+//                            String.valueOf(lnCtr) //Row
+//                    ));
+//                }
+//                initModelList();
+//            } else {
+//                ShowMessageFX.Warning(null, pxeModuleName, oTrans.getMessage());
+//                return;
+//            }
+//        } catch (SQLException e) {
+//            ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
+//        }
+
+    }
+
+    private void initModelList() {
+        boolean lbShow = (pnEditMode == EditMode.READY || pnEditMode == EditMode.UPDATE);
+        tblindex01_model.setCellValueFactory(new PropertyValueFactory<>("tblindex01"));
+        tblindex02_model.setCellValueFactory(new PropertyValueFactory<>("tblindex02"));
+        tblindex03_model.setCellValueFactory(new PropertyValueFactory<>("tblindex03"));
+        tblindex04_model.setCellValueFactory(new PropertyValueFactory<>("tblindex04"));
+
+        tblModel.widthProperty().addListener((ObservableValue<? extends Number> source, Number oldWidth, Number newWidth) -> {
+            TableHeaderRow header = (TableHeaderRow) tblModel.lookup("TableHeaderRow");
+            header.reorderingProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+                header.setReordering(false);
+            });
+        });
+
+        tblModel.setItems(modeldata);
+    }
+    
     //Populate Text Field Based on selected transaction in table
     private void getSelectedItem(String TransNo) {
 //        oldTransNo = TransNo;
@@ -407,13 +667,32 @@ public class ItemEntryFormController implements Initializable {
 
     private void initbutton(int fnValue) {
         boolean lbShow = (fnValue == EditMode.ADDNEW || fnValue == EditMode.UPDATE);
-
-        btnEdit.setDisable(true);
-        btnSave.setDisable(!lbShow);
-        btnAdd.setDisable(lbShow);
+        
+        btnBrandName.setVisible(lbShow);
+        btnCategory.setVisible(lbShow);
+        btnInvType.setVisible(lbShow);
+        btnMeasurement.setVisible(lbShow);
+        btnLocation.setVisible(lbShow);
+        
+        btnSupsAdd.setVisible(lbShow);
+        btnSupsDel.setVisible(lbShow);
+        btnModelAdd.setVisible(lbShow);
+        btnModelDel.setVisible(lbShow);
+        //btnCapture.setVisible(lbShow);
+        //btnUpload.setVisible(lbShow);
+        
+        btnAdd.setVisible(lbShow);
+        btnAdd.setManaged(lbShow);
+        btnEdit.setVisible(false);
+        btnEdit.setManaged(false);
+        btnCancel.setVisible(!lbShow);
+        btnCancel.setManaged(!lbShow);
+        btnSave.setVisible(!lbShow);
+        btnSave.setManaged(!lbShow);
 
         if (fnValue == EditMode.READY) {
-            btnEdit.setDisable(false);
+            btnEdit.setVisible(true);
+            btnEdit.setManaged(true);
         }
     }
 

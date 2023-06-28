@@ -53,6 +53,7 @@ import org.rmj.appdriver.agentfx.ShowMessageFX;
 import org.rmj.appdriver.agentfx.callback.IFXML;
 import org.rmj.auto.app.bank.BankEntryFormController;
 import org.rmj.auto.app.parts.BinEntryParamController;
+import org.rmj.auto.app.parts.ItemEntryFormController;
 import org.rmj.auto.app.sales.InquiryFormController;
 import org.rmj.auto.app.sales.SalesAgentFormController;
 import org.rmj.auto.app.sales.UnitReceivingFormController;
@@ -360,7 +361,7 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
             case "WareHouseEntryParam.fxml":
                 //return new WareHouseEntryParamController();
             case "ItemEntryForm.fxml":
-                //return new ItemEntryFormController();
+                return new ItemEntryFormController();
             case "VehicleMakeForm.fxml":
                 return new VehicleMakeFormController();
             case "VehicleModelForm.fxml":

@@ -65,7 +65,7 @@
                                         <Label id="LabelDesc" text="Measurement Description" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                         <TextField fx:id="txtField02" GridPane.columnIndex="2" GridPane.columnSpan="5" GridPane.rowIndex="1" />
                                         <TextField fx:id="txtField01" GridPane.columnIndex="2" GridPane.columnSpan="2" />
-                                        <CheckBox id="LabelDesc" fx:id="cboxActivate" mnemonicParsing="false" text="Activate" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                                        <CheckBox id="LabelDesc" fx:id="cboxActivate" mnemonicParsing="false" text="Active" GridPane.columnIndex="2" GridPane.rowIndex="3" />
                                         <Label id="LabelDesc" text="Measurement Abbrev" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                                         <TextField fx:id="txtField03" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="2" />
                                     </children>

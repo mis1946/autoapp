@@ -24,7 +24,6 @@ import org.rmj.appdriver.agentfx.ShowMessageFX;
 import org.rmj.appdriver.callback.MasterCallback;
 import org.rmj.appdriver.constants.EditMode;
 import org.rmj.auto.app.views.ScreenInterface;
-import org.rmj.auto.app.views.ScreenInterface;
 import org.rmj.auto.parts.parameters.PartsBin;
 
 /**
@@ -63,7 +62,7 @@ public class BinEntryParamController implements Initializable, ScreenInterface {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        oTrans = new PartsBin(oApp, oApp.getBranchCode(), true); //Initialize ClientMaster
+        oTrans = new PartsBin(oApp, oApp.getBranchCode(), true);
         oTrans.setCallback(oListener);
         oTrans.setWithUI(true);
 

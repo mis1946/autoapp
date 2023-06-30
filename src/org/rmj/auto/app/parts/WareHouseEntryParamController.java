@@ -63,7 +63,7 @@ public class WareHouseEntryParamController implements Initializable, ScreenInter
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        oTrans = new PartsWarehouse(oApp, oApp.getBranchCode(), true); //Initialize ClientMaster
+        oTrans = new PartsWarehouse(oApp, oApp.getBranchCode(), true);
         oTrans.setCallback(oListener);
         oTrans.setWithUI(true);
 

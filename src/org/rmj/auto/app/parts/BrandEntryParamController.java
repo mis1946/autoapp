@@ -62,7 +62,7 @@ public class BrandEntryParamController implements Initializable, ScreenInterface
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        oTrans = new PartsBrand(oApp, oApp.getBranchCode(), true); //Initialize ClientMaster
+        oTrans = new PartsBrand(oApp, oApp.getBranchCode(), true);
         oTrans.setCallback(oListener);
         oTrans.setWithUI(true);
 

@@ -67,7 +67,7 @@ public class MeasurementEntryParamController implements Initializable, ScreenInt
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        oTrans = new PartsMeasure(oApp, oApp.getBranchCode(), true); //Initialize ClientMaster
+        oTrans = new PartsMeasure(oApp, oApp.getBranchCode(), true);
         oTrans.setCallback(oListener);
         oTrans.setWithUI(true);
 

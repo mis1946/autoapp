@@ -24,19 +24,19 @@ import org.rmj.appdriver.agentfx.ShowMessageFX;
 import org.rmj.appdriver.callback.MasterCallback;
 import org.rmj.appdriver.constants.EditMode;
 import org.rmj.auto.app.views.ScreenInterface;
-import org.rmj.auto.parts.parameters.PartsBin;
+import org.rmj.auto.parts.parameters.PartsItemType;
 
 /**
  * FXML Controller class
  *
- * @author John Dave, DATE CREATED 06-24-2023
+ * @author John Dave DATE CREATED 06-30-2023
  */
-public class BinEntryParamController implements Initializable, ScreenInterface {
+public class InvTypeEntryParamController implements Initializable, ScreenInterface {
 
     private MasterCallback oListener;
-    private final String pxeModuleName = "Bin Entry Form";
+    private final String pxeModuleName = "Inventory Type Entry Form";
     private int pnEditMode;//Modifying fields
-    private PartsBin oTrans;
+    private PartsItemType oTrans;
     private GRider oApp;
     @FXML
     private Button btnClose;
@@ -56,18 +56,23 @@ public class BinEntryParamController implements Initializable, ScreenInterface {
     private TextField txtField02;
     @FXML
     private TextField txtField01;
-    private int pnRow = 0;
     @FXML
     private CheckBox cboxActivate;
+    private int pnRow = 0;
 
+    /**
+     * Initializes the controller class.
+     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        oTrans = new PartsBin(oApp, oApp.getBranchCode(), true);
+        oTrans = new PartsItemType(oApp, oApp.getBranchCode(), true);
         oTrans.setCallback(oListener);
         oTrans.setWithUI(true);
 
         setCapsLockBehavior(txtField02);
+        txtField01.focusedProperty().addListener(txtField_Focus);
         txtField02.focusedProperty().addListener(txtField_Focus);
+        CommonUtils.addTextLimiter(txtField01, 4);
         btnClose.setOnAction(this::cmdButton_Click);
         btnAdd.setOnAction(this::cmdButton_Click);
         btnSearch.setOnAction(this::cmdButton_Click);
@@ -78,6 +83,7 @@ public class BinEntryParamController implements Initializable, ScreenInterface {
         pnEditMode = EditMode.UNKNOWN;
         initButton(pnEditMode);
     }
+//
 
     @Override
     public void setGRider(GRider foValue) {
@@ -92,18 +98,18 @@ public class BinEntryParamController implements Initializable, ScreenInterface {
         });
     }
 
-    private void loadBinField() {
+    private void loadInvTypeField() {
         try {
-            txtField01.setText((String) oTrans.getMaster(1));
-            txtField02.setText((String) oTrans.getMaster(2));
+            txtField01.setText((String) oTrans.getMaster(1)); //
+            txtField02.setText((String) oTrans.getMaster(2)); //
             if (oTrans.getMaster(3).toString().equals("1")) {
                 cboxActivate.setSelected(true);
             } else {
                 cboxActivate.setSelected(false);
             }
-
+//
         } catch (SQLException ex) {
-            Logger.getLogger(BinEntryParamController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(InvTypeEntryParamController.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }
@@ -112,10 +118,10 @@ public class BinEntryParamController implements Initializable, ScreenInterface {
         try {
             String lsButton = ((Button) event.getSource()).getId();
             switch (lsButton) {
-                case "btnAdd":
+                case "btnAdd": //create
                     if (oTrans.NewRecord()) {
                         clearFields();
-                        loadBinField();
+                        loadInvTypeField();
                         pnEditMode = oTrans.getEditMode();
                     } else {
                         ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
@@ -124,14 +130,14 @@ public class BinEntryParamController implements Initializable, ScreenInterface {
                 case "btnSave":
                     if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure, do you want to save?") == true) {
                         if (txtField02.getText().trim().equals("")) {
-                            ShowMessageFX.Warning(getStage(), "Please enter a value for bin description", "Warning", null);
+                            ShowMessageFX.Warning(getStage(), "Please enter a value for inventory type description", "Warning", null);
                             txtField02.requestFocus();
                             return;
                         }
                         if (oTrans.SaveRecord()) {
-                            ShowMessageFX.Information(null, pxeModuleName, "New bin added sucessfully.");
+                            ShowMessageFX.Information(null, pxeModuleName, "New inventory type added sucessfully.");
                             if (oTrans.OpenRecord(oTrans.getMaster(1).toString())) {
-                                loadBinField();
+                                loadInvTypeField();
                                 pnEditMode = oTrans.getEditMode();
                             }
                         } else {
@@ -166,11 +172,11 @@ public class BinEntryParamController implements Initializable, ScreenInterface {
                         if (oTrans.UpdateRecordStatus(fsValue, fbStatus)) {
                             ShowMessageFX.Information(getStage(), oTrans.getMessage(), pxeModuleName, null);
                             if (oTrans.OpenRecord(oTrans.getMaster(1).toString())) {
-                                loadBinField();
+                                loadInvTypeField();
                                 pnEditMode = oTrans.getEditMode();
                             }
                         } else {
-                            ShowMessageFX.Information(getStage(), "Failed to update status.", pxeModuleName, null);
+                            ShowMessageFX.Information(getStage(), oTrans.getMessage(), pxeModuleName, null);
                             return;
                         }
                     }
@@ -178,7 +184,7 @@ public class BinEntryParamController implements Initializable, ScreenInterface {
 
                 case "btnSearch":
                     if (oTrans.searchRecord()) {
-                        loadBinField();
+                        loadInvTypeField();
                         pnEditMode = EditMode.READY;
                     }
                     break;
@@ -191,7 +197,7 @@ public class BinEntryParamController implements Initializable, ScreenInterface {
             }
             initButton(pnEditMode);
         } catch (SQLException ex) {
-            Logger.getLogger(BinEntryParamController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(InvTypeEntryParamController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     final ChangeListener<? super Boolean> txtField_Focus = (o, ov, nv) -> {
@@ -206,6 +212,7 @@ public class BinEntryParamController implements Initializable, ScreenInterface {
             if (!nv) {
                 /* Lost Focus */
                 switch (lnIndex) {
+                    case 1:
                     case 2:
                         oTrans.setMaster(lnIndex, lsValue);
                         break;
@@ -215,7 +222,7 @@ public class BinEntryParamController implements Initializable, ScreenInterface {
 
             }
         } catch (SQLException ex) {
-            Logger.getLogger(BinEntryParamController.class
+            Logger.getLogger(InvTypeEntryParamController.class
                     .getName()).log(Level.SEVERE, null, ex);
         }
     };
@@ -233,7 +240,7 @@ public class BinEntryParamController implements Initializable, ScreenInterface {
     private void initButton(int fnValue) {
         pnRow = 0;
         boolean lbShow = (fnValue == EditMode.ADDNEW || fnValue == EditMode.UPDATE);
-        txtField01.setDisable(true);
+        txtField01.setDisable(!lbShow);
         txtField02.setDisable(!lbShow);
         cboxActivate.setDisable(true);
         btnAdd.setVisible(!lbShow);
@@ -246,6 +253,7 @@ public class BinEntryParamController implements Initializable, ScreenInterface {
         btnEdit.setManaged(false);
         btnDeactivate.setVisible(false);
         btnDeactivate.setManaged(false);
+
         if (fnValue == EditMode.READY) {
             try {
                 //show edit if user clicked save / browse
@@ -265,5 +273,10 @@ public class BinEntryParamController implements Initializable, ScreenInterface {
             }
 
         }
+
+        if (fnValue == EditMode.UPDATE) {
+            txtField01.setDisable(true);
+        }
+
     }
 }

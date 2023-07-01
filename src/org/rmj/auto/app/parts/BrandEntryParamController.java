@@ -24,19 +24,19 @@ import org.rmj.appdriver.agentfx.ShowMessageFX;
 import org.rmj.appdriver.callback.MasterCallback;
 import org.rmj.appdriver.constants.EditMode;
 import org.rmj.auto.app.views.ScreenInterface;
-import org.rmj.auto.parts.parameters.PartsBin;
+import org.rmj.auto.parts.parameters.PartsBrand;
 
 /**
  * FXML Controller class
  *
- * @author John Dave, DATE CREATED 06-24-2023
+ * @author John Dave DATE CREATED 06-29-2023
  */
-public class BinEntryParamController implements Initializable, ScreenInterface {
+public class BrandEntryParamController implements Initializable, ScreenInterface {
 
     private MasterCallback oListener;
-    private final String pxeModuleName = "Bin Entry Form";
+    private final String pxeModuleName = "Brand Entry Form";
     private int pnEditMode;//Modifying fields
-    private PartsBin oTrans;
+    private PartsBrand oTrans;
     private GRider oApp;
     @FXML
     private Button btnClose;
@@ -62,7 +62,7 @@ public class BinEntryParamController implements Initializable, ScreenInterface {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        oTrans = new PartsBin(oApp, oApp.getBranchCode(), true);
+        oTrans = new PartsBrand(oApp, oApp.getBranchCode(), true);
         oTrans.setCallback(oListener);
         oTrans.setWithUI(true);
 
@@ -92,7 +92,7 @@ public class BinEntryParamController implements Initializable, ScreenInterface {
         });
     }
 
-    private void loadBinField() {
+    private void loadBrandField() {
         try {
             txtField01.setText((String) oTrans.getMaster(1));
             txtField02.setText((String) oTrans.getMaster(2));
@@ -115,7 +115,7 @@ public class BinEntryParamController implements Initializable, ScreenInterface {
                 case "btnAdd":
                     if (oTrans.NewRecord()) {
                         clearFields();
-                        loadBinField();
+                        loadBrandField();
                         pnEditMode = oTrans.getEditMode();
                     } else {
                         ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
@@ -124,14 +124,14 @@ public class BinEntryParamController implements Initializable, ScreenInterface {
                 case "btnSave":
                     if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure, do you want to save?") == true) {
                         if (txtField02.getText().trim().equals("")) {
-                            ShowMessageFX.Warning(getStage(), "Please enter a value for bin description", "Warning", null);
+                            ShowMessageFX.Warning(getStage(), "Please enter a value for brand description", "Warning", null);
                             txtField02.requestFocus();
                             return;
                         }
                         if (oTrans.SaveRecord()) {
-                            ShowMessageFX.Information(null, pxeModuleName, "New bin added sucessfully.");
+                            ShowMessageFX.Information(null, pxeModuleName, "New brand added sucessfully.");
                             if (oTrans.OpenRecord(oTrans.getMaster(1).toString())) {
-                                loadBinField();
+                                loadBrandField();
                                 pnEditMode = oTrans.getEditMode();
                             }
                         } else {
@@ -166,7 +166,7 @@ public class BinEntryParamController implements Initializable, ScreenInterface {
                         if (oTrans.UpdateRecordStatus(fsValue, fbStatus)) {
                             ShowMessageFX.Information(getStage(), oTrans.getMessage(), pxeModuleName, null);
                             if (oTrans.OpenRecord(oTrans.getMaster(1).toString())) {
-                                loadBinField();
+                                loadBrandField();
                                 pnEditMode = oTrans.getEditMode();
                             }
                         } else {
@@ -178,7 +178,7 @@ public class BinEntryParamController implements Initializable, ScreenInterface {
 
                 case "btnSearch":
                     if (oTrans.searchRecord()) {
-                        loadBinField();
+                        loadBrandField();
                         pnEditMode = EditMode.READY;
                     }
                     break;
@@ -191,7 +191,7 @@ public class BinEntryParamController implements Initializable, ScreenInterface {
             }
             initButton(pnEditMode);
         } catch (SQLException ex) {
-            Logger.getLogger(BinEntryParamController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BrandEntryParamController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     final ChangeListener<? super Boolean> txtField_Focus = (o, ov, nv) -> {
@@ -215,14 +215,14 @@ public class BinEntryParamController implements Initializable, ScreenInterface {
 
             }
         } catch (SQLException ex) {
-            Logger.getLogger(BinEntryParamController.class
+            Logger.getLogger(BrandEntryParamController.class
                     .getName()).log(Level.SEVERE, null, ex);
         }
     };
 
     private void clearFields() {
-        txtField01.clear();
-        txtField02.clear();
+        txtField01.clear(); //
+        txtField02.clear(); //
         cboxActivate.setSelected(false);
     }
 
@@ -261,7 +261,7 @@ public class BinEntryParamController implements Initializable, ScreenInterface {
                     btnDeactivate.setManaged(true);
                 }
             } catch (SQLException ex) {
-                Logger.getLogger(BinEntryParamController.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(BrandEntryParamController.class.getName()).log(Level.SEVERE, null, ex);
             }
 
         }

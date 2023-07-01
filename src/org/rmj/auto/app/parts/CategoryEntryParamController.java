@@ -70,7 +70,7 @@ public class CategoryEntryParamController implements Initializable, ScreenInterf
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        oTrans = new PartsCategory(oApp, oApp.getBranchCode(), true); //Initialize
+        oTrans = new PartsCategory(oApp, oApp.getBranchCode(), true);
         oTrans.setCallback(oListener);
         oTrans.setWithUI(true);
 
@@ -105,9 +105,9 @@ public class CategoryEntryParamController implements Initializable, ScreenInterf
 
     private void loadCategoryField() {
         try {
-            txtField01.setText((String) oTrans.getMaster(1)); //
-            txtField02.setText((String) oTrans.getMaster(2)); //
-            txtField07.setText((String) oTrans.getMaster(7)); //
+            txtField01.setText((String) oTrans.getMaster(1));
+            txtField02.setText((String) oTrans.getMaster(2));
+            txtField07.setText((String) oTrans.getMaster(7));
             if (oTrans.getMaster(4).toString().equals("1")) {
                 cboxActivate.setSelected(true);
             } else {
@@ -135,12 +135,17 @@ public class CategoryEntryParamController implements Initializable, ScreenInterf
                 case "btnSave":
                     if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure, do you want to save?") == true) {
                         if (txtField02.getText().trim().equals("")) {
-                            ShowMessageFX.Warning(getStage(), "Please enter a value for measure description", "Warning", null);
+                            ShowMessageFX.Warning(getStage(), "Please enter a value for category description", "Warning", null);
                             txtField02.requestFocus();
                             return;
                         }
+                        if (txtField07.getText().trim().equals("")) {
+                            ShowMessageFX.Warning(getStage(), "Please enter a value for inventory type", "Warning", null);
+                            txtField07.requestFocus();
+                            return;
+                        }
                         if (oTrans.SaveRecord()) {
-                            ShowMessageFX.Information(null, pxeModuleName, "New measure added sucessfully.");
+                            ShowMessageFX.Information(null, pxeModuleName, "New category added sucessfully.");
                             if (oTrans.OpenRecord(oTrans.getMaster(1).toString())) {
                                 loadCategoryField();
                                 pnEditMode = oTrans.getEditMode();
@@ -220,6 +225,7 @@ public class CategoryEntryParamController implements Initializable, ScreenInterf
                     case 7:
                         oTrans.setMaster(lnIndex, lsValue);
                         break;
+
                 }
             } else {
                 txtField.selectAll();
@@ -298,7 +304,6 @@ public class CategoryEntryParamController implements Initializable, ScreenInterf
                             } else {
                                 ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
                                 txtField07.clear();
-                                clearFields();
                             }
                             break;
                         default:

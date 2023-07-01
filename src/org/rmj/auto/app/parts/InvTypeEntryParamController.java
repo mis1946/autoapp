@@ -34,10 +34,9 @@ import org.rmj.auto.parts.parameters.PartsItemType;
 public class InvTypeEntryParamController implements Initializable, ScreenInterface {
 
     private MasterCallback oListener;
-    private final String pxeModuleName = "Measurement Entry Form";
+    private final String pxeModuleName = "Inventory Type Entry Form";
     private int pnEditMode;//Modifying fields
     private PartsItemType oTrans;
-
     private GRider oApp;
     @FXML
     private Button btnClose;
@@ -66,7 +65,7 @@ public class InvTypeEntryParamController implements Initializable, ScreenInterfa
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        oTrans = new PartsItemType(oApp, oApp.getBranchCode(), true); //Initialize ClientMaster
+        oTrans = new PartsItemType(oApp, oApp.getBranchCode(), true);
         oTrans.setCallback(oListener);
         oTrans.setWithUI(true);
 
@@ -99,7 +98,7 @@ public class InvTypeEntryParamController implements Initializable, ScreenInterfa
         });
     }
 
-    private void loadMeasureField() {
+    private void loadInvTypeField() {
         try {
             txtField01.setText((String) oTrans.getMaster(1)); //
             txtField02.setText((String) oTrans.getMaster(2)); //
@@ -122,7 +121,7 @@ public class InvTypeEntryParamController implements Initializable, ScreenInterfa
                 case "btnAdd": //create
                     if (oTrans.NewRecord()) {
                         clearFields();
-                        loadMeasureField();
+                        loadInvTypeField();
                         pnEditMode = oTrans.getEditMode();
                     } else {
                         ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
@@ -136,9 +135,9 @@ public class InvTypeEntryParamController implements Initializable, ScreenInterfa
                             return;
                         }
                         if (oTrans.SaveRecord()) {
-                            ShowMessageFX.Information(null, pxeModuleName, "New Inventory Type added sucessfully.");
+                            ShowMessageFX.Information(null, pxeModuleName, "New inventory type added sucessfully.");
                             if (oTrans.OpenRecord(oTrans.getMaster(1).toString())) {
-                                loadMeasureField();
+                                loadInvTypeField();
                                 pnEditMode = oTrans.getEditMode();
                             }
                         } else {
@@ -173,11 +172,11 @@ public class InvTypeEntryParamController implements Initializable, ScreenInterfa
                         if (oTrans.UpdateRecordStatus(fsValue, fbStatus)) {
                             ShowMessageFX.Information(getStage(), oTrans.getMessage(), pxeModuleName, null);
                             if (oTrans.OpenRecord(oTrans.getMaster(1).toString())) {
-                                loadMeasureField();
+                                loadInvTypeField();
                                 pnEditMode = oTrans.getEditMode();
                             }
                         } else {
-                            ShowMessageFX.Information(getStage(), "Failed to update status.", pxeModuleName, null);
+                            ShowMessageFX.Information(getStage(), oTrans.getMessage(), pxeModuleName, null);
                             return;
                         }
                     }
@@ -185,7 +184,7 @@ public class InvTypeEntryParamController implements Initializable, ScreenInterfa
 
                 case "btnSearch":
                     if (oTrans.searchRecord()) {
-                        loadMeasureField();
+                        loadInvTypeField();
                         pnEditMode = EditMode.READY;
                     }
                     break;
@@ -229,8 +228,8 @@ public class InvTypeEntryParamController implements Initializable, ScreenInterfa
     };
 
     private void clearFields() {
-        txtField01.clear(); //
-        txtField02.clear(); //
+        txtField01.clear();
+        txtField02.clear();
         cboxActivate.setSelected(false);
     }
 

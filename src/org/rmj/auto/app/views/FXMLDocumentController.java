@@ -53,7 +53,14 @@ import org.rmj.appdriver.agentfx.ShowMessageFX;
 import org.rmj.appdriver.agentfx.callback.IFXML;
 import org.rmj.auto.app.bank.BankEntryFormController;
 import org.rmj.auto.app.parts.BinEntryParamController;
+import org.rmj.auto.app.parts.BrandEntryParamController;
+import org.rmj.auto.app.parts.CategoryEntryParamController;
+import org.rmj.auto.app.parts.InvTypeEntryParamController;
+import org.rmj.auto.app.parts.InventoryLocationParamController;
 import org.rmj.auto.app.parts.ItemEntryFormController;
+import org.rmj.auto.app.parts.MeasurementEntryParamController;
+import org.rmj.auto.app.parts.SectionEntryParamController;
+import org.rmj.auto.app.parts.WareHouseEntryParamController;
 import org.rmj.auto.app.sales.InquiryFormController;
 import org.rmj.auto.app.sales.SalesAgentFormController;
 import org.rmj.auto.app.sales.UnitReceivingFormController;
@@ -138,6 +145,12 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
     private MenuItem mnuVhclColorEntry;
     @FXML
     private MenuItem mnuVhclEngFrmEntry;
+    @FXML
+    private MenuItem mnuBrandEntry;
+    @FXML
+    private MenuItem mnuCategoryEntry;
+    @FXML
+    private MenuItem mnuInvTypeEntry;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -328,40 +341,22 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
         switch (fsValue) {
             case "FXMLMainScreen.fxml":
                 return new FXMLMainScreenController();
-            case "CustomerForm.fxml":
-                return new CustomerFormController();
-//               case "SupplierInfo.fxml":
-//                    return new SupplierInfoController();
-            case "SalesAgentForm.fxml":
-                return new SalesAgentFormController();
-            case "VehicleDescriptionForm.fxml":
-                return new VehicleDescriptionFormController();
-            case "VehicleEntryForm.fxml":
-                return new VehicleEntryFormController();
-            case "UnitReceivingForm.fxml":
-                return new UnitReceivingFormController();
-            case "InquiryForm.fxml":
-                return new InquiryFormController();
-            case "VehicleSalesApproval.fxml":
-                return new VehicleSalesApprovalController();
-            case "BankEntryForm.fxml":
-                return new BankEntryFormController();
+            /*DIRECTORY*/
             case "ActivityForm.fxml":
                 return new ActivityFormController();
             case "ActivityApproval.fxml":
                 return new ActivityApprovalController();
             case "ActivityTypeAddSource.fxml":
                 return new ActivityTypeAddSourceController();
-            case "BinEntryParam.fxml":
-                return new BinEntryParamController();
-            case "InventoryLocationParam.fxml":
-                //return new InventoryLocationParamController();
-            case "SectionEntryParam.fxml":
-               // return new SectionEntryParamController();
-            case "WareHouseEntryParam.fxml":
-                //return new WareHouseEntryParamController();
-            case "ItemEntryForm.fxml":
-                return new ItemEntryFormController();
+            case "CustomerForm.fxml":
+                return new CustomerFormController();
+//               case "SupplierInfo.fxml":
+//                    return new SupplierInfoController();
+            /*SALES*/
+            case "SalesAgentForm.fxml":
+                return new SalesAgentFormController();
+            case "VehicleDescriptionForm.fxml":
+                return new VehicleDescriptionFormController();
             case "VehicleMakeForm.fxml":
                 return new VehicleMakeFormController();
             case "VehicleModelForm.fxml":
@@ -372,6 +367,35 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
                 return new VehicleColorFormController();
             case "VehicleEngineFrameFormatForm.fxml":
                 return new VehicleEngineFrameFormatFormController();
+            case "VehicleEntryForm.fxml":
+                return new VehicleEntryFormController();
+            case "UnitReceivingForm.fxml":
+                return new UnitReceivingFormController();
+            case "InquiryForm.fxml":
+                return new InquiryFormController();
+            case "VehicleSalesApproval.fxml":
+                return new VehicleSalesApprovalController();
+            case "BankEntryForm.fxml":
+                return new BankEntryFormController();
+            /*PARTS*/
+            case "ItemEntryForm.fxml":
+                return new ItemEntryFormController();
+            case "InventoryLocationParam.fxml":
+                return new InventoryLocationParamController();
+            case "BinEntryParam.fxml":
+                return new BinEntryParamController();
+            case "SectionEntryParam.fxml":
+                return new SectionEntryParamController();
+            case "WareHouseEntryParam.fxml":
+                return new WareHouseEntryParamController();
+            case "CategoryEntryParam.fxml":
+                return new CategoryEntryParamController();
+            case "InvTypeEntryParam.fxml":
+                return new InvTypeEntryParamController();
+            case "MeasurementEntryParam.fxml":
+                return new MeasurementEntryParamController();
+            case "BrandEntryParam.fxml":
+                return new BrandEntryParamController();
             default:
                 ShowMessageFX.Warning(null, "Warning", "Notify System Admin to Configure Screen Interface for " + fsValue);
                 return null;
@@ -381,10 +405,16 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
     //Set tab title
     public String SetTabTitle(String menuaction) {
         switch (menuaction) {
+            /*DIRECTORY*/
+            case "ActivityForm.fxml":
+                return "Activity";
+            case "ActivityApproval.fxml":
+                return "Activity Approval";
             case "CustomerForm.fxml":
                 return "Customer";
             case "SupplierInfo.fxml":
                 return "Supplier";
+            /*SALES*/
             case "SalesAgentForm.fxml":
                 return "Sales Agent";
             case "VehicleDescriptionForm.fxml":
@@ -397,12 +427,10 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
                 return "Inquiry";
             case "VehicleSalesApproval.fxml":
                 return "Vehicle Reservation Approval";
+            /*ACCOUNTING*/
             case "BankEntryForm.fxml":
                 return "Bank";
-            case "ActivityForm.fxml":
-                return "Activity";
-            case "ActivityApproval.fxml":
-                return "Activity Approval";
+            /*PARTS*/
             case "ItemEntryForm.fxml":
                 return "Item Entry";
             default:
@@ -638,6 +666,24 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
         String sformname = "WareHouseEntryParam.fxml";
         param.FXMLMenuParameterForm(getController(sformname), oApp, sformname);
     }
+    
+    @FXML
+    private void mnuBrandEntryClicked(ActionEvent event) {
+        String sformname = "BrandEntryParam.fxml";
+        param.FXMLMenuParameterForm(getController(sformname), oApp, sformname);
+    }
+
+    @FXML
+    private void mnuCategoryEntryClicked(ActionEvent event) {
+        String sformname = "CategoryEntryParam.fxml";
+        param.FXMLMenuParameterForm(getController(sformname), oApp, sformname);
+    }
+
+    @FXML
+    private void mnuInvTypeEntryClicked(ActionEvent event) {
+        String sformname = "InvTypeEntryParam.fxml";
+        param.FXMLMenuParameterForm(getController(sformname), oApp, sformname);
+    }
 
     /*SET CURRENT TIME*/
     private void getTime() {
@@ -695,6 +741,8 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
     private void initMenu() {
 
     }
+
+    
 
     
 

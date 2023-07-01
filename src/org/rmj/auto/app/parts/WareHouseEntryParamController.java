@@ -9,7 +9,6 @@ import java.sql.SQLException;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.beans.InvalidationListener;
 import javafx.beans.property.ReadOnlyBooleanPropertyBase;
 import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
@@ -36,7 +35,7 @@ public class WareHouseEntryParamController implements Initializable, ScreenInter
 
     private MasterCallback oListener;
     private final String pxeModuleName = "Warehouse Entry Form";
-    private int pnEditMode;//Modifying fields
+    private int pnEditMode;
     private PartsWarehouse oTrans;
     private GRider oApp;
     @FXML
@@ -95,8 +94,8 @@ public class WareHouseEntryParamController implements Initializable, ScreenInter
 
     private void loadWarehouseField() {
         try {
-            txtField01.setText((String) oTrans.getMaster(1)); //
-            txtField02.setText((String) oTrans.getMaster(2)); //
+            txtField01.setText((String) oTrans.getMaster(1));
+            txtField02.setText((String) oTrans.getMaster(2));
             if (oTrans.getMaster(3).toString().equals("1")) {
                 cboxActivate.setSelected(true);
             } else {
@@ -112,7 +111,7 @@ public class WareHouseEntryParamController implements Initializable, ScreenInter
         try {
             String lsButton = ((Button) event.getSource()).getId();
             switch (lsButton) {
-                case "btnAdd": //create
+                case "btnAdd":
                     if (oTrans.NewRecord()) {
                         clearFields();
                         loadWarehouseField();
@@ -221,8 +220,8 @@ public class WareHouseEntryParamController implements Initializable, ScreenInter
     };
 
     private void clearFields() {
-        txtField01.clear(); //
-        txtField02.clear(); //
+        txtField01.clear();
+        txtField02.clear();
         cboxActivate.setSelected(false);
     }
 

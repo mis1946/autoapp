@@ -54,9 +54,9 @@ import org.rmj.appdriver.constants.EditMode;
 import org.rmj.auto.app.views.ScreenInterface;
 import org.rmj.auto.app.views.VehicleDescriptionTableList;
 import org.rmj.auto.app.views.unloadForm;
-import static org.rmj.webcamfx.ui.CameraType.Webcam;
-import org.rmj.webcamfx.ui.WebCamFX;
-import org.rmj.webcamfx.ui.Webcam;
+//import static org.rmj.webcamfx.ui.CameraType.Webcam;
+//import org.rmj.webcamfx.ui.WebCamFX;
+//import org.rmj.webcamfx.ui.Webcam;
 
 /**
  * FXML Controller class
@@ -92,7 +92,7 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
     private ObservableList<ItemEntryTableList> modeldata = FXCollections.observableArrayList();
     private FilteredList<ItemEntryTableList> filteredData;
     private static final int ROWS_PER_PAGE = 50;
-    WebCamFX webcam = new WebCamFX(); //Open Camera
+//    WebCamFX webcam = new WebCamFX(); //Open Camera
     @FXML
     private AnchorPane AnchorMain;
     @FXML
@@ -254,13 +254,13 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
                 case "btnModelDel":
                     break;
                 case "btnCapture":
-                    try {
-                        Stage stage = new Stage();
-                        webcam.start(stage);
-                        captureImage();
-                    } catch (Exception ex) {
-                        Logger.getLogger(ItemEntryFormController.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+//                    try {
+//                        Stage stage = new Stage();
+//                        webcam.start(stage);
+//                        captureImage();
+//                    } catch (Exception ex) {
+//                        Logger.getLogger(ItemEntryFormController.class.getName()).log(Level.SEVERE, null, ex);
+//                    }
                     break;
                 case "btnUpload":
                     FileChooser fileChooser = new FileChooser();

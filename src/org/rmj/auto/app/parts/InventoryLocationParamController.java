@@ -41,7 +41,7 @@ public class InventoryLocationParamController implements Initializable, ScreenIn
 
     private MasterCallback oListener;
     private final String pxeModuleName = "Inventory Location Entry Form";
-    private int pnEditMode;//Modifying fields
+    private int pnEditMode;
     private int pnRow = 0;
     private PartsItemLocation oTrans;
     private GRider oApp;
@@ -71,15 +71,14 @@ public class InventoryLocationParamController implements Initializable, ScreenIn
     private TextField txtField09;
     @FXML
     private TextField txtField11;
-    @FXML
-    private Button btnCreate;
+//    private Button btnCreate;
 
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        oTrans = new PartsItemLocation(oApp, oApp.getBranchCode(), true); //Initialize ClientMaster
+        oTrans = new PartsItemLocation(oApp, oApp.getBranchCode(), true);
         oTrans.setCallback(oListener);
         oTrans.setWithUI(true);
         setCapsLockBehavior(txtField02);
@@ -92,15 +91,43 @@ public class InventoryLocationParamController implements Initializable, ScreenIn
         txtField11.setOnKeyPressed(this::txtField_KeyPressed);
         txtField07.textProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue.isEmpty()) {
-                txtField02.clear(); // Clear the contents of textField02
+                txtField02.clear();
                 try {
+                    oTrans.setMaster(6, "");
+                    oTrans.setMaster(7, "");
                     oTrans.setMaster(2, "");
+                    loadLocationField();
                 } catch (SQLException ex) {
                     Logger.getLogger(InventoryLocationParamController.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });
-        btnCreate.setOnAction(this::cmdButton_Click);
+        txtField09.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.isEmpty()) {
+                try {
+                    oTrans.setMaster(8, "");
+                    oTrans.setMaster(9, "");
+                    generateLocation();
+                    loadLocationField();
+                } catch (SQLException ex) {
+                    Logger.getLogger(InventoryLocationParamController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+            }
+        });
+        txtField11.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.isEmpty()) {
+                try {
+                    oTrans.setMaster(10, "");
+                    oTrans.setMaster(11, "");
+                    generateLocation();
+                    loadLocationField();
+                } catch (SQLException ex) {
+                    Logger.getLogger(InventoryLocationParamController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+            }
+        });
         btnClose.setOnAction(this::cmdButton_Click);
         btnAdd.setOnAction(this::cmdButton_Click);
         btnSearch.setOnAction(this::cmdButton_Click);
@@ -113,6 +140,7 @@ public class InventoryLocationParamController implements Initializable, ScreenIn
     }
 
     @Override
+
     public void setGRider(GRider foValue) {
         oApp = foValue;
     }
@@ -127,41 +155,45 @@ public class InventoryLocationParamController implements Initializable, ScreenIn
 
     private void loadLocationField() {
         try {
-            txtField01.setText((String) oTrans.getMaster(1)); //
-            txtField02.setText((String) oTrans.getMaster(2)); //
-            txtField07.setText((String) oTrans.getMaster(7)); //
-            txtField09.setText((String) oTrans.getMaster(9)); //
-            txtField11.setText((String) oTrans.getMaster(11)); //
+            txtField01.setText((String) oTrans.getMaster(1));
+            txtField07.setText((String) oTrans.getMaster(7));
+            txtField09.setText((String) oTrans.getMaster(9));
+            txtField11.setText((String) oTrans.getMaster(11));
+            txtField02.setText((String) oTrans.getMaster(2));
             if (oTrans.getMaster(3).toString().equals("1")) {
                 cboxActivate.setSelected(true);
             } else {
                 cboxActivate.setSelected(false);
+
             }
 
         } catch (SQLException ex) {
-            Logger.getLogger(InventoryLocationParamController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(InventoryLocationParamController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
 
+    }
+
+    private void generateLocation() { //autogenerate location
+        try {
+            String lsgen = "";
+            String warehouse = (String) oTrans.getMaster(7);
+            String section = (String) oTrans.getMaster(9);
+            String bin = (String) oTrans.getMaster(11);
+            section = section.isEmpty() ? "" : "-" + section;
+            bin = bin.isEmpty() ? "" : "-" + bin;
+            lsgen = warehouse + section + bin;
+            oTrans.setMaster(2, lsgen);
+        } catch (SQLException ex) {
+            Logger.getLogger(InventoryLocationParamController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     private void cmdButton_Click(ActionEvent event) {
         try {
             String lsButton = ((Button) event.getSource()).getId();
             switch (lsButton) {
-
-                case "btnCreate":
-                    if (!txtField07.getText().isEmpty()) {
-                        txtField02.setText((String) oTrans.getMaster(7) + "-" + (String) oTrans.getMaster(9)
-                                + "-" + (String) oTrans.getMaster(11));
-                        String lsValue = txtField02.getText();
-                        oTrans.setMaster(2, lsValue);
-                    } else {
-                        ShowMessageFX.Warning(getStage(), "Please input warehouse description first!", "Warning", null);
-                        return;
-                    }
-
-                    break;
-                case "btnAdd": //create
+                case "btnAdd":
                     if (oTrans.NewRecord()) {
                         clearFields();
                         loadLocationField();
@@ -175,16 +207,6 @@ public class InventoryLocationParamController implements Initializable, ScreenIn
                         if (txtField07.getText().trim().equals("")) {
                             ShowMessageFX.Warning(getStage(), "Please enter a value for warehouse description", "Warning", null);
                             txtField07.requestFocus();
-                            return;
-                        }
-                        if (txtField09.getText().trim().equals("")) {
-                            ShowMessageFX.Warning(getStage(), "Please enter a value for section description", "Warning", null);
-                            txtField09.requestFocus();
-                            return;
-                        }
-                        if (txtField11.getText().trim().equals("")) {
-                            ShowMessageFX.Warning(getStage(), "Please enter a value for bin description", "Warning", null);
-                            txtField11.requestFocus();
                             return;
                         }
                         if (txtField02.getText().trim().equals("")) {
@@ -236,7 +258,6 @@ public class InventoryLocationParamController implements Initializable, ScreenIn
                         } else {
                             ShowMessageFX.Information(getStage(), oTrans.getMessage(), pxeModuleName, null);
 
-                            ShowMessageFX.Information(getStage(), "Failed to update status.", pxeModuleName, null);
                             return;
                         }
                     }
@@ -261,17 +282,19 @@ public class InventoryLocationParamController implements Initializable, ScreenIn
                     break;
             }
             initButton(pnEditMode);
+
         } catch (SQLException ex) {
-            Logger.getLogger(InventoryLocationParamController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(InventoryLocationParamController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     private void clearFields() {
-        txtField01.clear(); //
-        txtField02.clear(); //
-        txtField07.clear(); //
-        txtField09.clear(); //
-        txtField11.clear(); //
+        txtField01.setText("");
+        txtField02.setText("");
+        txtField07.setText("");
+        txtField09.setText("");
+        txtField11.setText("");
         cboxActivate.setSelected(false);
     }
 
@@ -283,7 +306,7 @@ public class InventoryLocationParamController implements Initializable, ScreenIn
         pnRow = 0;
         boolean lbShow = (fnValue == EditMode.ADDNEW || fnValue == EditMode.UPDATE);
         txtField01.setDisable(true);
-        txtField02.setDisable(!lbShow);
+        txtField02.setDisable(true);
         txtField07.setDisable(!lbShow);
         txtField09.setDisable(!lbShow);
         txtField11.setDisable(!lbShow);
@@ -294,7 +317,7 @@ public class InventoryLocationParamController implements Initializable, ScreenIn
         btnCancel.setManaged(lbShow);
         btnSave.setVisible(lbShow);
         btnSave.setManaged(lbShow);
-        btnCreate.setDisable(!lbShow);
+//        btnCreate.setDisable(!lbShow);
         btnEdit.setVisible(false);
         btnEdit.setManaged(false);
         btnDeactivate.setVisible(false);
@@ -312,20 +335,22 @@ public class InventoryLocationParamController implements Initializable, ScreenIn
                     btnDeactivate.setText("Activate");
                     btnDeactivate.setVisible(true);
                     btnDeactivate.setManaged(true);
+
                 }
             } catch (SQLException ex) {
-                Logger.getLogger(InventoryLocationParamController.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(InventoryLocationParamController.class
+                        .getName()).log(Level.SEVERE, null, ex);
             }
 
         }
     }
 
     private void txtField_KeyPressed(KeyEvent event) {
+
         TextField txtField = (TextField) event.getSource();
         int lnIndex = Integer.parseInt(((TextField) event.getSource()).getId().substring(8, 10));
         String txtFieldID = ((TextField) event.getSource()).getId();
         String lsValue = txtField.getText();
-
         try {
             switch (event.getCode()) {
                 case F3:
@@ -334,48 +359,60 @@ public class InventoryLocationParamController implements Initializable, ScreenIn
                     switch (txtFieldID) {
                         case "txtField07": //warehouse
                             if (oTrans.searchWarehouse(txtField07.getText())) {
+                                generateLocation();
                                 loadLocationField();
                             } else {
                                 ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
-                                txtField07.clear();
-                                txtField02.clear();
+                                txtField07.setText("");
+                                oTrans.setMaster(6, "");
+                                oTrans.setMaster(7, "");
 
                             }
                             break;
                         case "txtField09": //section
                             if (oTrans.searchSection(txtField09.getText())) {
+                                generateLocation();
                                 loadLocationField();
                             } else {
                                 ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
                                 txtField09.clear();
+                                oTrans.setMaster(8, "");
+                                oTrans.setMaster(9, "");
+
                             }
                             initButton(pnEditMode);
                             break;
                         case "txtField11": //bin
                             if (oTrans.searchBin(txtField11.getText())) {
+                                generateLocation();
                                 loadLocationField();
                             } else {
                                 ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
                                 txtField11.clear();
+                                oTrans.setMaster(10, "");
+                                oTrans.setMaster(11, "");
+
                             }
                             break;
                         default:
                             break;
-
                     }
                     break;
             }
         } catch (SQLException e) {
             ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
         }
-
+        generateLocation();
         switch (event.getCode()) {
             case ENTER:
+            case F3:
+            case TAB:
             case DOWN:
                 CommonUtils.SetNextFocus(txtField);
                 break;
             case UP:
                 CommonUtils.SetPreviousFocus(txtField);
+
         }
 
     }

@@ -102,8 +102,8 @@ public class MeasurementEntryParamController implements Initializable, ScreenInt
 
     private void loadMeasureField() {
         try {
-            txtField01.setText((String) oTrans.getMaster(1)); //
-            txtField02.setText((String) oTrans.getMaster(2)); //
+            txtField01.setText((String) oTrans.getMaster(1));
+            txtField02.setText((String) oTrans.getMaster(2));
             txtField03.setText((String) oTrans.getMaster(3));
             if (oTrans.getMaster(4).toString().equals("1")) {
                 cboxActivate.setSelected(true);
@@ -231,8 +231,8 @@ public class MeasurementEntryParamController implements Initializable, ScreenInt
     };
 
     private void clearFields() {
-        txtField01.clear(); //
-        txtField02.clear(); //
+        txtField01.clear();
+        txtField02.clear();
         txtField03.clear();
         cboxActivate.setSelected(false);
     }

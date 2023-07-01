@@ -17,7 +17,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="363.0" prefWidth="603.0" stylesheets="@../css/FrameStyle.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane id="AnchorPane" prefHeight="317.0" prefWidth="603.0" stylesheets="@../css/FrameStyle.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <StackPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
@@ -71,12 +71,10 @@
                                         <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="30.0" vgrow="SOMETIMES" />
                                         <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="30.0" vgrow="SOMETIMES" />
                                         <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="30.0" vgrow="SOMETIMES" />
-                                        <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                        <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                        <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="2.0" vgrow="SOMETIMES" />
-                                        <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                        <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                         <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="10.0" vgrow="SOMETIMES" />
+                                        <RowConstraints maxHeight="0.0" minHeight="-Infinity" prefHeight="0.0" vgrow="SOMETIMES" />
+                                        <RowConstraints maxHeight="32.0" minHeight="10.0" prefHeight="32.0" vgrow="SOMETIMES" />
+                                        <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                     </rowConstraints>
                                     <children>
                                         <Label text="Location ID" GridPane.columnIndex="11">
@@ -92,17 +90,12 @@
                                         <TextField fx:id="txtField07" promptText="Search: F3" GridPane.columnIndex="12" GridPane.columnSpan="5" GridPane.rowIndex="1" />
                                         <TextField fx:id="txtField09" promptText="Search: F3" GridPane.columnIndex="12" GridPane.columnSpan="5" GridPane.rowIndex="2" />
                                         <TextField fx:id="txtField11" promptText="Search: F3" GridPane.columnIndex="12" GridPane.columnSpan="5" GridPane.rowIndex="3" />
-                                        <Button fx:id="btnCreate" mnemonicParsing="false" prefHeight="22.0" prefWidth="315.0" text="CREATE LOCATION DESCRIPTION " GridPane.columnIndex="12" GridPane.columnSpan="5" GridPane.rowIndex="4">
-                                            <GridPane.margin>
-                                                <Insets />
-                                            </GridPane.margin>
-                                        </Button>
-                                        <TextField fx:id="txtField02" GridPane.columnIndex="12" GridPane.columnSpan="5" GridPane.rowIndex="7" />
-                                        <CheckBox id="LabelDesc" fx:id="cboxActivate" mnemonicParsing="false" text="Active" GridPane.columnIndex="12" GridPane.rowIndex="8" />
+                                        <TextField fx:id="txtField02" GridPane.columnIndex="12" GridPane.columnSpan="5" GridPane.rowIndex="6" />
+                                        <CheckBox id="LabelDesc" fx:id="cboxActivate" mnemonicParsing="false" text="Active" GridPane.columnIndex="12" GridPane.rowIndex="7" />
                                         <Label id="LabelDesc" text="Section Description" GridPane.columnIndex="11" GridPane.rowIndex="2" />
                                         <Label id="LabelDesc" text="Bin Description" GridPane.columnIndex="11" GridPane.rowIndex="3" />
-                                        <Label id="LabelDesc" text="Location Description" GridPane.columnIndex="11" GridPane.rowIndex="7" />
-                                        <Separator prefWidth="426.0" style="-fx-background-color: ORANGE;" GridPane.columnIndex="10" GridPane.columnSpan="14" GridPane.rowIndex="5" />
+                                        <Label id="LabelDesc" text="Location Description" GridPane.columnIndex="11" GridPane.rowIndex="6" />
+                                        <Separator prefWidth="426.0" style="-fx-background-color: ORANGE;" GridPane.columnIndex="10" GridPane.columnSpan="14" GridPane.rowIndex="4" />
                                     </children>
                                     <opaqueInsets>
                                         <Insets />

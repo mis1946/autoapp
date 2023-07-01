@@ -94,8 +94,8 @@ public class BinEntryParamController implements Initializable, ScreenInterface {
 
     private void loadBinField() {
         try {
-            txtField01.setText((String) oTrans.getMaster(1)); //
-            txtField02.setText((String) oTrans.getMaster(2)); //
+            txtField01.setText((String) oTrans.getMaster(1));
+            txtField02.setText((String) oTrans.getMaster(2));
             if (oTrans.getMaster(3).toString().equals("1")) {
                 cboxActivate.setSelected(true);
             } else {
@@ -112,7 +112,7 @@ public class BinEntryParamController implements Initializable, ScreenInterface {
         try {
             String lsButton = ((Button) event.getSource()).getId();
             switch (lsButton) {
-                case "btnAdd": //create
+                case "btnAdd":
                     if (oTrans.NewRecord()) {
                         clearFields();
                         loadBinField();
@@ -221,8 +221,8 @@ public class BinEntryParamController implements Initializable, ScreenInterface {
     };
 
     private void clearFields() {
-        txtField01.clear(); //
-        txtField02.clear(); //
+        txtField01.clear();
+        txtField02.clear();
         cboxActivate.setSelected(false);
     }
 

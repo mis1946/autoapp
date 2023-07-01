@@ -43,10 +43,19 @@ public class FXMLMenuParameterForm {
             ScreenInterface fxObj = fsiController;
             
             FXMLLoader fxmlLoader = new FXMLLoader();
-            fxmlLoader.setLocation(getClass().getResource(fsFxml));
+            //fxmlLoader.setLocation(getClass().getResource(fsFxml));
+            //fxmlLoader.setController(fxObj);
+            //fxObj.setGRider(oApp);
+            
+            // Get the class of any class in the desired package to retrieve the package information
+            Class<?> clazz = fxObj.getClass();
+            // Construct the correct path to the FXML file using the package information
+            String fxmlPath = clazz.getPackage().getName().replace(".", "/") + "/" + fsFxml;
+            // Load the FXML file using the constructed path
+            fxmlLoader.setLocation(clazz.getClassLoader().getResource(fxmlPath));
             fxmlLoader.setController(fxObj);
             fxObj.setGRider(oApp);
-
+            
             //load the main interface
             Parent parent = fxmlLoader.load();
 

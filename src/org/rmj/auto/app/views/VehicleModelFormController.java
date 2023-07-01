@@ -41,7 +41,7 @@ import org.rmj.auto.parameters.VehicleModel;
  * @author Arsiela
  * Date Created: 05-24-2023
  */
-public class VehicleModelFormController implements Initializable {
+public class VehicleModelFormController implements Initializable, ScreenInterface {
     private GRider oApp;
     private MasterCallback oListener;
     private VehicleModel oTrans;
@@ -209,11 +209,11 @@ public class VehicleModelFormController implements Initializable {
                     if(oTrans.SaveRecord()){
                         ShowMessageFX.Information(null, pxeModuleName, "Vehicle Make save sucessfully.");
                         loadVehicleParameterList();
-                        if (pnEditMode == EditMode.ADDNEW){
-                            lnRow = (oTrans.getItemCount()-1) ;
-                        }
+//                        if (pnEditMode == EditMode.ADDNEW){
+//                            lnRow = (oTrans.getItemCount()-1) ;
+//                        }
                         
-                        getSelectedItem(vhclparamdata.get(lnRow).getTblindex04());
+                        getSelectedItem((String) oTrans.getMaster(1));
                         pnEditMode = oTrans.getEditMode();
 
                     } else {
@@ -284,7 +284,7 @@ public class VehicleModelFormController implements Initializable {
             vhclparamdata.clear();
             String sRecStat = "";
             if(oTrans.LoadList()){
-                for (lnCtr = 1; lnCtr <= oTrans.getItemCount(); lnCtr++){
+                for (lnCtr = 1; lnCtr <= oTrans.getDetailCount(); lnCtr++){
                     if(oTrans.getDetail(lnCtr,8).toString().equals("1")){
                         sRecStat = "Y";
                     } else {
@@ -333,38 +333,49 @@ public class VehicleModelFormController implements Initializable {
     //Populate Text Field Based on selected transaction in table
     private void getSelectedItem(String TransNo) {
         oldTransNo = TransNo;
-        if (oTrans.OpenRecord(TransNo)) {
-            if (vhclparamdata.get(lnRow).getTblindex03().equals("Y")) {
-                pnEditMode = oTrans.getEditMode();
-            } else {
-                pnEditMode = EditMode.UNKNOWN;
+        
+        try {
+            if (oTrans.OpenRecord(TransNo)) {
+                //if (vhclparamdata.get(lnRow).getTblindex03().equals("Y")) {
+                if (((String) oTrans.getMaster(8)).equals("1")) {
+                    pnEditMode = oTrans.getEditMode();
+                } else {
+                    pnEditMode = EditMode.UNKNOWN;
+                }
+                //txtField03.setText(vhclparamdata.get(lnRow).getTblindex09()); // Make
+                //txtField02.setText(vhclparamdata.get(lnRow).getTblindex02()); // Description
+                
+                txtField03.setText((String) oTrans.getMaster(13)); // Make
+                txtField02.setText((String) oTrans.getMaster(2)); // Model
+                
+                //sUnitType
+                switch ((String) oTrans.getMaster(4)) {
+                    case "com":
+                        comboBox04.getSelectionModel().select(0);
+                        break;
+                    case "pr":
+                        comboBox04.getSelectionModel().select(1);
+                        break;
+                    case "lpr":
+                        comboBox04.getSelectionModel().select(2);
+                        break;
+                    case "mpr":
+                        comboBox04.getSelectionModel().select(3);
+                        break;
+                    default:
+                        break;
+                }
+                //sBodyType
+                //comboBox05.setValue(vhclparamdata.get(lnRow).getTblindex06());
+                comboBox05.setValue((String) oTrans.getMaster(5));
+                //sVhclSize
+                //comboBox06.getSelectionModel().select(Integer.parseInt(vhclparamdata.get(lnRow).getTblindex07()));
+                comboBox06.getSelectionModel().select(Integer.parseInt((String) oTrans.getMaster(6)));
             }
-            txtField03.setText(vhclparamdata.get(lnRow).getTblindex09()); // MakeID
-            txtField02.setText(vhclparamdata.get(lnRow).getTblindex02()); // Description
-
-            //sUnitType
-            switch (vhclparamdata.get(lnRow).getTblindex05()) {
-                case "com":
-                    comboBox04.getSelectionModel().select(0);
-                    break;
-                case "pr":
-                    comboBox04.getSelectionModel().select(1);
-                    break;
-                case "lpr":
-                    comboBox04.getSelectionModel().select(2);
-                    break;
-                case "mpr":
-                    comboBox04.getSelectionModel().select(3);
-                    break;
-                default:
-                    break;
-            }
-            //sBodyType
-            comboBox05.setValue(vhclparamdata.get(lnRow).getTblindex06());
-            //sVhclSize
-            comboBox06.getSelectionModel().select(Integer.parseInt(vhclparamdata.get(lnRow).getTblindex07()));
-
+        } catch (SQLException ex) {
+            Logger.getLogger(VehicleModelFormController.class.getName()).log(Level.SEVERE, null, ex);
         }
+
         initbutton(pnEditMode);
     }
     

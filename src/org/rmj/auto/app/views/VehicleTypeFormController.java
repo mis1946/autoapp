@@ -43,7 +43,7 @@ import org.rmj.auto.parameters.VehicleType;
  * @author Arsiela  
  * Date Created: 05-26-2023
  */
-public class VehicleTypeFormController implements Initializable {
+public class VehicleTypeFormController implements Initializable, ScreenInterface {
     private GRider oApp;
     private MasterCallback oListener;
     private VehicleType oTrans;
@@ -60,6 +60,7 @@ public class VehicleTypeFormController implements Initializable {
     private String lsFormula = "";
     private int lnRow;
     private int lnCtr;
+    private boolean pbOpenEvent = false;
     
     private ObservableList<VehicleDescriptionTableParameter> vhclparamdata = FXCollections.observableArrayList();
     ObservableList<String> cTypeFormat = FXCollections.observableArrayList(); 
@@ -94,6 +95,10 @@ public class VehicleTypeFormController implements Initializable {
     private TextField txtField01;
     @FXML
     private TextField txtField04;
+    @FXML
+    private TextField txtField12;
+    @FXML
+    private Label lblTitle;
     
      private Stage getStage(){
          return (Stage) txtField02.getScene().getWindow();
@@ -107,6 +112,10 @@ public class VehicleTypeFormController implements Initializable {
        sMakeDesc = fsValue;
     }
     
+    public Boolean setOpenEvent(Boolean fbValue) {
+        pbOpenEvent = fbValue;
+        return pbOpenEvent;
+    }
     /**
      * Initializes the controller class.
      */
@@ -125,14 +134,21 @@ public class VehicleTypeFormController implements Initializable {
         setCapsLockBehavior(txtField01);
         setCapsLockBehavior(txtField03);
         setCapsLockBehavior(txtField04);
+        setCapsLockBehavior(txtField12);
         txtField02.focusedProperty().addListener(txtField_Focus);  // Description
         txtField01.focusedProperty().addListener(txtField_Focus);  // Engine
         txtField03.focusedProperty().addListener(txtField_Focus);  // Variant A
         txtField04.focusedProperty().addListener(txtField_Focus);  // Variant B
+        txtField12.focusedProperty().addListener(txtField_Focus);  // Make
         
         txtField01.setOnKeyPressed(this::txtField_KeyPressed); 
         txtField03.setOnKeyPressed(this::txtField_KeyPressed); 
         txtField04.setOnKeyPressed(this::txtField_KeyPressed); 
+        txtField12.setOnKeyPressed(this::txtField_KeyPressed); 
+        
+        if(pbOpenEvent){
+            txtField12.setText(sMakeDesc); 
+        }
         
         tblParamList.setRowFactory(tv -> {
             TableRow<VehicleDescriptionTableParameter> row = new TableRow<>();
@@ -216,6 +232,9 @@ public class VehicleTypeFormController implements Initializable {
     }
     
     private boolean loadTypeFormat(){
+        if (sMakeID.isEmpty()){
+            return false;
+        }
         try {
             String lsFormat;
             cTypeFormat.clear();
@@ -381,28 +400,46 @@ public class VehicleTypeFormController implements Initializable {
                 break;
                 case "btnAdd":
                     clearFields();
-                    if (loadTypeFormat()) {
-                        txtField02.clear();
-                        if(oTrans.NewRecord()){
-                            pnEditMode = oTrans.getEditMode();
+                    txtField02.clear();
+                    if(oTrans.NewRecord()){
+                        if(pbOpenEvent){
+                            if (loadTypeFormat()) {
+                                txtField12.setText(sMakeDesc); 
+                                oTrans.setMaster(12, sMakeDesc);
+                                oTrans.setMaster(13, sMakeID);
+                            } else {
+                                ShowMessageFX.Warning(getStage(), "Error found while loading vehicle type format.","Warning", null);
+                                return;
+                            }
+                        } else {
+                            sMakeDesc = "";
+                            sMakeID = "";
+                        }
+                        pnEditMode = oTrans.getEditMode();
                         } else {
                             ShowMessageFX.Warning(null, pxeModuleName, oTrans.getMessage());
                             return;
                         }
-                    } else {
-                        return;
-                    }
                     break;
                 case "btnEdit":
                     clearFields();
-                    if (loadTypeFormat()) {
-                        if(oTrans.UpdateRecord()){
-                            pnEditMode = oTrans.getEditMode();
+                    if(oTrans.UpdateRecord()){
+                        if(pbOpenEvent){
+                            if (loadTypeFormat()) {
+                                txtField12.setText(sMakeDesc); 
+                                oTrans.setMaster(12, sMakeDesc);
+                                oTrans.setMaster(13, sMakeID);
+                            } else {
+                                ShowMessageFX.Warning(getStage(), "Error found while loading vehicle type format.","Warning", null);
+                                return;
+                            }
                         } else {
-                            ShowMessageFX.Warning(null, pxeModuleName, oTrans.getMessage());
-                            return;
+                            sMakeDesc = "";
+                            sMakeID = "";
                         }
+                        pnEditMode = oTrans.getEditMode();
                     } else {
+                        ShowMessageFX.Warning(null, pxeModuleName, oTrans.getMessage());
                         return;
                     }
                     break;
@@ -415,11 +452,11 @@ public class VehicleTypeFormController implements Initializable {
                     if(oTrans.SaveRecord()){
                         ShowMessageFX.Information(null, pxeModuleName, "Vehicle Make save sucessfully.");
                         loadVehicleParameterList();
-                        if (pnEditMode == EditMode.ADDNEW){
-                            lnRow = (oTrans.getItemCount()-1) ;
-                        }
+//                        if (pnEditMode == EditMode.ADDNEW){
+//                            lnRow = (oTrans.getItemCount()-1) ;
+//                        }
                         
-                        getSelectedItem(vhclparamdata.get(lnRow).getTblindex04());
+                        getSelectedItem((String) oTrans.getMaster(1));
                         pnEditMode = oTrans.getEditMode();
                     } else {
                         ShowMessageFX.Warning(null, pxeModuleName, oTrans.getMessage());
@@ -482,7 +519,27 @@ public class VehicleTypeFormController implements Initializable {
                                 txtField04.setText("");
                                 ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
                             }
-                        break;      
+                        break;  
+                        
+                        case 12: //Make
+                            if (oTrans.searchVehicleMake(txtField12.getText())){
+                                txtField12.setText(oTrans.getMaster(12).toString());
+                                sMakeID = oTrans.getMaster(13).toString();
+                                sMakeDesc = oTrans.getMaster(12).toString();
+                                if (loadTypeFormat()) {
+                                } else {
+                                    ShowMessageFX.Warning(getStage(), "Error found while loading vehicle type format.","Warning", null);
+                                    return;
+                                }
+                            } else {
+                                txtField12.setText("");
+                                sMakeID = "";
+                                sMakeDesc = "";
+                                cTypeFormat.clear();
+                                cmbFormat.setItems(null);
+                                ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
+                            }
+                        break;  
                     } 
                     break;
             }
@@ -507,7 +564,7 @@ public class VehicleTypeFormController implements Initializable {
             vhclparamdata.clear();
             String sRecStat = "";
             if(oTrans.LoadList()){
-                for (lnCtr = 1; lnCtr <= oTrans.getItemCount(); lnCtr++){
+                for (lnCtr = 1; lnCtr <= oTrans.getDetailCount(); lnCtr++){
                     if(oTrans.getDetail(lnCtr,4).toString().equals("1")){
                         sRecStat = "Y";
                     } else {
@@ -556,15 +613,21 @@ public class VehicleTypeFormController implements Initializable {
     //Populate Text Field Based on selected transaction in table
     private void getSelectedItem(String TransNo) {
         oldTransNo = TransNo;
-        if (oTrans.OpenRecord(TransNo)){
-            if (vhclparamdata.get(lnRow ).getTblindex03().equals("Y")){
-                pnEditMode = oTrans.getEditMode();
-            } else {
-                pnEditMode = EditMode.UNKNOWN;
-            }
-            
-            txtField02.setText(vhclparamdata.get(lnRow ).getTblindex02()); // Description
+        try {
+            if (oTrans.OpenRecord(TransNo)){
+                //if (vhclparamdata.get(lnRow ).getTblindex03().equals("Y")){
+                if (((String) oTrans.getMaster(4)).equals("1")){
+                    pnEditMode = oTrans.getEditMode();
+                } else {
+                    pnEditMode = EditMode.UNKNOWN;
+                }
+                
+                txtField02.setText((String) oTrans.getMaster(2)); // Description
         }
+        } catch (SQLException ex) {
+            Logger.getLogger(VehicleTypeFormController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
         clearFields();
         initbutton(pnEditMode);
     }
@@ -609,6 +672,20 @@ public class VehicleTypeFormController implements Initializable {
     private void initbutton(int fnValue) {
         boolean lbShow = (fnValue == EditMode.ADDNEW || fnValue == EditMode.UPDATE);
         
+        if(pbOpenEvent){
+            txtField12.setDisable(true);
+        } else {
+            txtField12.setDisable(false);
+        }
+        
+        if (lbShow){
+            lblTitle.setVisible(true);
+            txtField12.setVisible(true);
+        } else {
+            lblTitle.setVisible(false);
+            txtField12.setVisible(false);
+        }
+        
         btnAdd.setVisible(!lbShow);
         btnAdd.setManaged(!lbShow);
         //if lbShow = false hide btn          
@@ -633,6 +710,10 @@ public class VehicleTypeFormController implements Initializable {
     
    private void clearFields(){
         cmbFormat.setValue(null);
+        if (!pbOpenEvent){
+            cTypeFormat.clear();
+            txtField12.clear();
+        }
         txtField01.clear();
         txtField03.clear();
         txtField04.clear();

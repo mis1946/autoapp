@@ -718,18 +718,18 @@ public class VehicleDescriptionFormController implements Initializable, ScreenIn
            if (lsValue == null) return;
            if(!nv){ /*Lost Focus*/
                 switch (lnIndex){
-                    case 3: //sMakeIDxx
-                        oTrans.setMaster(15, lsValue); //Handle Encoded Value
-                        break;
-                    case 4: //sModelIDx
-                        oTrans.setMaster(16, lsValue); //Handle Encoded Value
-                        break;
-                    case 5: //sColorIDx
-                        oTrans.setMaster(17, lsValue); //Handle Encoded Value
-                        break;
-                    case 6: //sTypeIDxx
-                        oTrans.setMaster(18, lsValue); //Handle Encoded Value
-                        break;
+//                    case 3: //sMakeIDxx
+//                        oTrans.setMaster(15, lsValue); //Handle Encoded Value
+//                        break;
+//                    case 4: //sModelIDx
+//                        oTrans.setMaster(16, lsValue); //Handle Encoded Value
+//                        break;
+//                    case 5: //sColorIDx
+//                        oTrans.setMaster(17, lsValue); //Handle Encoded Value
+//                        break;
+//                    case 6: //sTypeIDxx
+//                        oTrans.setMaster(18, lsValue); //Handle Encoded Value
+//                        break;
                     case 8: //nYearModl
                         if (lsValue.trim().equals("")){
                             oTrans.setMaster(lnIndex,  0); //Handle Encoded Value     
@@ -940,6 +940,7 @@ public class VehicleDescriptionFormController implements Initializable, ScreenIn
             loControl.setGRider(oApp);
             loControl.setMakeID(sSourceID);
             loControl.setMakeDesc(sSourceDesc);
+            loControl.setOpenEvent(true);
             fxmlLoader.setController(loControl);
 
             //load the main interface

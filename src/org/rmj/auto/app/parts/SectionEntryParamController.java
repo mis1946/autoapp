@@ -35,7 +35,7 @@ public class SectionEntryParamController implements Initializable, ScreenInterfa
 
     private MasterCallback oListener;
     private final String pxeModuleName = "Section Entry Form";
-    private int pnEditMode;//Modifying fields
+    private int pnEditMode;
     private PartsSection oTrans;
     private GRider oApp;
     @FXML
@@ -94,8 +94,8 @@ public class SectionEntryParamController implements Initializable, ScreenInterfa
 
     private void loadSectionField() {
         try {
-            txtField01.setText((String) oTrans.getMaster(1)); //
-            txtField02.setText((String) oTrans.getMaster(2)); //
+            txtField01.setText((String) oTrans.getMaster(1));
+            txtField02.setText((String) oTrans.getMaster(2));
             if (oTrans.getMaster(3).toString().equals("1")) {
                 cboxActivate.setSelected(true);
             } else {
@@ -111,7 +111,7 @@ public class SectionEntryParamController implements Initializable, ScreenInterfa
         try {
             String lsButton = ((Button) event.getSource()).getId();
             switch (lsButton) {
-                case "btnAdd": //create
+                case "btnAdd":
                     if (oTrans.NewRecord()) {
                         clearFields();
                         loadSectionField();
@@ -146,7 +146,6 @@ public class SectionEntryParamController implements Initializable, ScreenInterfa
                         ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
                     }
                     break;
-
                 case "btnCancel":
                     if (ShowMessageFX.OkayCancel(getStage(), "Are you sure you want to cancel?", pxeModuleName, null) == true) {
                         clearFields();
@@ -174,7 +173,6 @@ public class SectionEntryParamController implements Initializable, ScreenInterfa
                         }
                     }
                     break;
-
                 case "btnSearch":
                     if (oTrans.searchRecord()) {
                         loadSectionField();
@@ -220,8 +218,8 @@ public class SectionEntryParamController implements Initializable, ScreenInterfa
     };
 
     private void clearFields() {
-        txtField01.clear(); //
-        txtField02.clear(); //
+        txtField01.clear();
+        txtField02.clear();
         cboxActivate.setSelected(false);
     }
 

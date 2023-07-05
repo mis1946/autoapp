@@ -173,7 +173,7 @@ public class WareHouseEntryParamController implements Initializable, ScreenInter
                                 pnEditMode = oTrans.getEditMode();
                             }
                         } else {
-                            ShowMessageFX.Information(getStage(), "Failed to update status.", pxeModuleName, null);
+                            ShowMessageFX.Information(getStage(), oTrans.getMessage(), pxeModuleName, null);
                             return;
                         }
                     }

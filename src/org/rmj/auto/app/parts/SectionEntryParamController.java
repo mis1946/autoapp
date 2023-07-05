@@ -128,7 +128,11 @@ public class SectionEntryParamController implements Initializable, ScreenInterfa
                             return;
                         }
                         if (oTrans.SaveRecord()) {
-                            ShowMessageFX.Information(null, pxeModuleName, "New section added sucessfully.");
+                            if (pnEditMode == EditMode.ADDNEW) {
+                                ShowMessageFX.Information(null, pxeModuleName, "New Section added sucessfully.");
+                            } else {
+                                ShowMessageFX.Information(null, pxeModuleName, "Section updated sucessfully.");
+                            }
                             if (oTrans.OpenRecord(oTrans.getMaster(1).toString())) {
                                 loadSectionField();
                                 pnEditMode = oTrans.getEditMode();

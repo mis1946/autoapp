@@ -174,7 +174,7 @@ public class BinEntryParamController implements Initializable, ScreenInterface {
                                 pnEditMode = oTrans.getEditMode();
                             }
                         } else {
-                            ShowMessageFX.Information(getStage(), "Failed to update status.", pxeModuleName, null);
+                            ShowMessageFX.Information(getStage(), oTrans.getMessage(), pxeModuleName, null);
                             return;
                         }
                     }

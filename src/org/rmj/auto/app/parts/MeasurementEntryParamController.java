@@ -138,7 +138,11 @@ public class MeasurementEntryParamController implements Initializable, ScreenInt
                             return;
                         }
                         if (oTrans.SaveRecord()) {
-                            ShowMessageFX.Information(null, pxeModuleName, "New measure added sucessfully.");
+                            if (pnEditMode == EditMode.ADDNEW) {
+                                ShowMessageFX.Information(null, pxeModuleName, "New Measurment added sucessfully.");
+                            } else {
+                                ShowMessageFX.Information(null, pxeModuleName, "Measurment updated sucessfully.");
+                            }
                             if (oTrans.OpenRecord(oTrans.getMaster(1).toString())) {
                                 loadMeasureField();
                                 pnEditMode = oTrans.getEditMode();

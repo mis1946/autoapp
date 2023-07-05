@@ -145,7 +145,11 @@ public class CategoryEntryParamController implements Initializable, ScreenInterf
                             return;
                         }
                         if (oTrans.SaveRecord()) {
-                            ShowMessageFX.Information(null, pxeModuleName, "New category added sucessfully.");
+                            if (pnEditMode == EditMode.ADDNEW) {
+                                ShowMessageFX.Information(null, pxeModuleName, "New Category added sucessfully.");
+                            } else {
+                                ShowMessageFX.Information(null, pxeModuleName, "Category updated sucessfully.");
+                            }
                             if (oTrans.OpenRecord(oTrans.getMaster(1).toString())) {
                                 loadCategoryField();
                                 pnEditMode = oTrans.getEditMode();

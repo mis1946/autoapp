@@ -77,6 +77,7 @@ public class BrandEntryParamController implements Initializable, ScreenInterface
         btnEdit.setOnAction(this::cmdButton_Click);
         pnEditMode = EditMode.UNKNOWN;
         initButton(pnEditMode);
+
     }
 
     @Override
@@ -129,7 +130,11 @@ public class BrandEntryParamController implements Initializable, ScreenInterface
                             return;
                         }
                         if (oTrans.SaveRecord()) {
-                            ShowMessageFX.Information(null, pxeModuleName, "New brand added sucessfully.");
+                            if (pnEditMode == EditMode.ADDNEW) {
+                                ShowMessageFX.Information(null, pxeModuleName, "New Brand added sucessfully.");
+                            } else {
+                                ShowMessageFX.Information(null, pxeModuleName, "Brand updated sucessfully.");
+                            }
                             if (oTrans.OpenRecord(oTrans.getMaster(1).toString())) {
                                 loadBrandField();
                                 pnEditMode = oTrans.getEditMode();
@@ -170,7 +175,7 @@ public class BrandEntryParamController implements Initializable, ScreenInterface
                                 pnEditMode = oTrans.getEditMode();
                             }
                         } else {
-                            ShowMessageFX.Information(getStage(), "Failed to update status.", pxeModuleName, null);
+                            ShowMessageFX.Information(getStage(), oTrans.getMessage(), pxeModuleName, null);
                             return;
                         }
                     }

@@ -135,7 +135,11 @@ public class InvTypeEntryParamController implements Initializable, ScreenInterfa
                             return;
                         }
                         if (oTrans.SaveRecord()) {
-                            ShowMessageFX.Information(null, pxeModuleName, "New inventory type added sucessfully.");
+                            if (pnEditMode == EditMode.ADDNEW) {
+                                ShowMessageFX.Information(null, pxeModuleName, "New Inventory Type added sucessfully.");
+                            } else {
+                                ShowMessageFX.Information(null, pxeModuleName, "Inventory Type updated sucessfully.");
+                            }
                             if (oTrans.OpenRecord(oTrans.getMaster(1).toString())) {
                                 loadInvTypeField();
                                 pnEditMode = oTrans.getEditMode();

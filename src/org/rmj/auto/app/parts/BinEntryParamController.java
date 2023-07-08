@@ -129,7 +129,11 @@ public class BinEntryParamController implements Initializable, ScreenInterface {
                             return;
                         }
                         if (oTrans.SaveRecord()) {
-                            ShowMessageFX.Information(null, pxeModuleName, "New bin added sucessfully.");
+                            if (pnEditMode == EditMode.ADDNEW) {
+                                ShowMessageFX.Information(null, pxeModuleName, "New Bin added sucessfully.");
+                            } else {
+                                ShowMessageFX.Information(null, pxeModuleName, "Bin updated sucessfully.");
+                            }
                             if (oTrans.OpenRecord(oTrans.getMaster(1).toString())) {
                                 loadBinField();
                                 pnEditMode = oTrans.getEditMode();
@@ -170,7 +174,7 @@ public class BinEntryParamController implements Initializable, ScreenInterface {
                                 pnEditMode = oTrans.getEditMode();
                             }
                         } else {
-                            ShowMessageFX.Information(getStage(), "Failed to update status.", pxeModuleName, null);
+                            ShowMessageFX.Information(getStage(), oTrans.getMessage(), pxeModuleName, null);
                             return;
                         }
                     }

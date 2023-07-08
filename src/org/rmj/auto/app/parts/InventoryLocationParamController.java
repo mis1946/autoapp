@@ -9,8 +9,6 @@ import java.sql.SQLException;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.beans.property.ReadOnlyBooleanPropertyBase;
-import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.fxml.FXML;
@@ -215,7 +213,11 @@ public class InventoryLocationParamController implements Initializable, ScreenIn
                             return;
                         }
                         if (oTrans.SaveRecord()) {
-                            ShowMessageFX.Information(null, pxeModuleName, "New location added sucessfully.");
+                            if (pnEditMode == EditMode.ADDNEW) {
+                                ShowMessageFX.Information(null, pxeModuleName, "New Inventory Location added sucessfully.");
+                            } else {
+                                ShowMessageFX.Information(null, pxeModuleName, "Inventory Location updated sucessfully.");
+                            }
                             if (oTrans.OpenRecord(oTrans.getMaster(1).toString())) {
                                 loadLocationField();
                                 pnEditMode = oTrans.getEditMode();

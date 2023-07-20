@@ -30,7 +30,7 @@
             <children>
                 <BorderPane prefHeight="200.0" prefWidth="200.0">
                     <StackPane.margin>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                        <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
                     </StackPane.margin>
                     <top>
                         <AnchorPane prefHeight="26.0" prefWidth="1256.0" BorderPane.alignment="CENTER">
@@ -53,16 +53,19 @@
                             <children>
                                 <BorderPane prefHeight="200.0" prefWidth="200.0">
                                     <top>
-                                        <AnchorPane prefHeight="25.0" prefWidth="738.0" BorderPane.alignment="CENTER">
+                                        <AnchorPane prefHeight="30.0" prefWidth="1142.0" BorderPane.alignment="CENTER">
                                             <children>
-                                                <AnchorPane style="-fx-background-color: #F88222;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                <AnchorPane prefHeight="30.0" prefWidth="1142.0" style="-fx-background-color: #F88222;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                             </children>
+                                            <BorderPane.margin>
+                                                <Insets top="2.0" />
+                                            </BorderPane.margin>
                                         </AnchorPane>
                                     </top>
                                     <center>
                                         <AnchorPane style="-fx-border-radius: 5; -fx-background-color: white; -fx-border-color: orange;" BorderPane.alignment="CENTER">
                                             <BorderPane.margin>
-                                                <Insets top="1.0" />
+                                                <Insets top="3.0" />
                                             </BorderPane.margin>
                                             <children>
                                                 <BorderPane layoutX="14.0" layoutY="8.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -72,13 +75,13 @@
                                                     <center>
                                                         <AnchorPane prefHeight="519.0" prefWidth="898.0" BorderPane.alignment="CENTER">
                                                             <children>
-                                                                <AnchorPane prefHeight="391.0" style="-fx-border-color: #B2B2B2; -fx-border-radius: 10; -fx-background-color: white;" stylesheets="@../css/releaseform.css" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0">
+                                                                <AnchorPane prefHeight="391.0" style="-fx-border-color: #B2B2B2; -fx-border-radius: 10; -fx-background-color: white;" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0">
                                                                     <children>
                                                                         <VBox prefHeight="200.0" prefWidth="100.0" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
                                                                             <children>
                                                                                 <HBox prefHeight="262.0" prefWidth="661.0" spacing="2.0">
                                                                                     <children>
-                                                                                        <AnchorPane id="release-form-container1" prefHeight="253.0" prefWidth="150.0" style="-fx-border-color: orange; -fx-background-color: white; -fx-border-radius: 5;" stylesheets="@../css/releaseform.css">
+                                                                                        <AnchorPane id="release-form-container1" prefHeight="253.0" prefWidth="150.0" style="-fx-border-color: orange; -fx-background-color: white; -fx-border-radius: 5;" stylesheets="@../css/FrameStyle.css">
                                                                                             <children>
                                                                                                 <GridPane AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="5.0">
                                                                                                     <columnConstraints>
@@ -100,25 +103,25 @@
                                                                                                     </rowConstraints>
                                                                                                     <children>
                                                                                                         <DatePicker GridPane.columnSpan="2" />
-                                                                                                        <Label text="Date" GridPane.rowIndex="1">
+                                                                                                        <Label id="LabelDesc" text="Date" GridPane.rowIndex="1">
                                                                                                             <font>
                                                                                                                 <Font name="Arial Bold" size="12.0" />
                                                                                                             </font>
                                                                                                         </Label>
                                                                                                         <TextField style="-fx-border-radius: 4;" GridPane.columnSpan="3" GridPane.rowIndex="2" />
-                                                                                                        <Label prefHeight="15.0" prefWidth="143.0" text="Release From No." GridPane.columnSpan="3" GridPane.rowIndex="3">
+                                                                                                        <Label id="LabelDesc" prefHeight="15.0" prefWidth="143.0" text="Release From No." GridPane.columnSpan="3" GridPane.rowIndex="3">
                                                                                                             <font>
                                                                                                                 <Font name="Arial Bold" size="12.0" />
                                                                                                             </font>
                                                                                                         </Label>
                                                                                                         <ComboBox prefHeight="24.0" prefWidth="288.0" style="-fx-border-radius: 4;" GridPane.columnSpan="3" GridPane.rowIndex="4" />
-                                                                                                        <Label prefHeight="17.0" prefWidth="155.0" text="Customer /Form Type No." GridPane.columnSpan="3" GridPane.rowIndex="5">
+                                                                                                        <Label id="LabelDesc" prefHeight="17.0" prefWidth="155.0" text="Customer /Form Type No." GridPane.columnSpan="3" GridPane.rowIndex="5">
                                                                                                             <font>
                                                                                                                 <Font name="Arial Bold" size="12.0" />
                                                                                                             </font>
                                                                                                         </Label>
                                                                                                         <TextField promptText="Search: F3" style="-fx-border-radius: 4;" GridPane.columnSpan="3" GridPane.rowIndex="6" />
-                                                                                                        <Label prefHeight="17.0" prefWidth="155.0" text="Vsp No." GridPane.columnSpan="2" GridPane.rowIndex="7">
+                                                                                                        <Label id="LabelDesc" prefHeight="17.0" prefWidth="155.0" text="Vsp No." GridPane.columnSpan="2" GridPane.rowIndex="7">
                                                                                                             <font>
                                                                                                                 <Font name="System Bold" size="12.0" />
                                                                                                             </font>
@@ -129,7 +132,7 @@
                                                                                                             </toggleGroup>
                                                                                                         </RadioButton>
                                                                                                         <RadioButton mnemonicParsing="false" text="Pre-Owned" toggleGroup="$carCategory" GridPane.columnIndex="2" GridPane.rowIndex="8" />
-                                                                                                        <Label prefHeight="17.0" prefWidth="155.0" text="Category" GridPane.columnSpan="2" GridPane.rowIndex="9">
+                                                                                                        <Label id="LabelDesc" prefHeight="17.0" prefWidth="155.0" text="Category" GridPane.columnSpan="2" GridPane.rowIndex="9">
                                                                                                             <font>
                                                                                                                 <Font name="Arial Bold" size="12.0" />
                                                                                                             </font>
@@ -170,43 +173,43 @@
                                                                                                     </rowConstraints>
                                                                                                     <children>
                                                                                                         <TextField style="-fx-border-radius: 4;" GridPane.columnSpan="6" />
-                                                                                                        <Label text="Customer Name" GridPane.rowIndex="1">
+                                                                                                        <Label id="LabelDesc" text="Customer Name" GridPane.rowIndex="1">
                                                                                                             <font>
                                                                                                                 <Font name="Arial Bold" size="12.0" />
                                                                                                             </font>
                                                                                                         </Label>
                                                                                                         <TextField style="-fx-border-radius: 4;" GridPane.columnSpan="6" GridPane.rowIndex="2" />
-                                                                                                        <Label text="Address" GridPane.rowIndex="3">
+                                                                                                        <Label id="LabelDesc" text="Address" GridPane.rowIndex="3">
                                                                                                             <font>
                                                                                                                 <Font name="Arial Bold" size="12.0" />
                                                                                                             </font>
                                                                                                         </Label>
                                                                                                         <TextField style="-fx-border-radius: 4;" GridPane.columnSpan="6" GridPane.rowIndex="4" />
-                                                                                                        <Label text="Unit Description" GridPane.rowIndex="5">
+                                                                                                        <Label id="LabelDesc" text="Unit Description" GridPane.rowIndex="5">
                                                                                                             <font>
                                                                                                                 <Font name="Arial Bold" size="12.0" />
                                                                                                             </font>
                                                                                                         </Label>
                                                                                                         <TextField style="-fx-border-radius: 4;" GridPane.rowIndex="6" />
-                                                                                                        <Label text="Plate No." GridPane.rowIndex="7">
+                                                                                                        <Label id="LabelDesc" text="Plate No." GridPane.rowIndex="7">
                                                                                                             <font>
                                                                                                                 <Font name="Arial Bold" size="12.0" />
                                                                                                             </font>
                                                                                                         </Label>
                                                                                                         <TextField style="-fx-border-radius: 4;" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-                                                                                                        <Label text="Cs No." GridPane.columnIndex="1" GridPane.rowIndex="7">
+                                                                                                        <Label id="LabelDesc" text="Cs No." GridPane.columnIndex="1" GridPane.rowIndex="7">
                                                                                                             <font>
                                                                                                                 <Font name="Arial Bold" size="12.0" />
                                                                                                             </font>
                                                                                                         </Label>
                                                                                                         <TextField style="-fx-border-radius: 4;" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="6" />
-                                                                                                        <Label text="Engine No." GridPane.columnIndex="2" GridPane.rowIndex="7">
+                                                                                                        <Label id="LabelDesc" text="Engine No." GridPane.columnIndex="2" GridPane.rowIndex="7">
                                                                                                             <font>
                                                                                                                 <Font name="Arial Bold" size="12.0" />
                                                                                                             </font>
                                                                                                         </Label>
                                                                                                         <TextField style="-fx-border-radius: 4;" GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.rowIndex="6" />
-                                                                                                        <Label text="Frame No." GridPane.columnIndex="4" GridPane.rowIndex="7">
+                                                                                                        <Label id="LabelDesc" text="Frame No." GridPane.columnIndex="4" GridPane.rowIndex="7">
                                                                                                             <font>
                                                                                                                 <Font name="Arial Bold" size="12.0" />
                                                                                                             </font>
@@ -236,27 +239,30 @@
                                                                                                 </GridPane>
                                                                                             </children>
                                                                                         </AnchorPane>
-                                                                                        <Text layoutX="13.0" layoutY="15.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Accessories">
+                                                                                        <Text layoutX="23.0" layoutY="15.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Accessories">
                                                                                             <font>
                                                                                                 <Font name="System Bold" size="12.0" />
                                                                                             </font>
                                                                                         </Text>
                                                                                     </children>
                                                                                     <VBox.margin>
-                                                                                        <Insets bottom="5.0" />
+                                                                                        <Insets bottom="10.0" />
                                                                                     </VBox.margin>
                                                                                 </AnchorPane>
                                                                             </children>
                                                                         </VBox>
                                                                     </children>
                                                                 </AnchorPane>
-                                                                <AnchorPane layoutX="51.0" layoutY="2.0" prefHeight="19.0" prefWidth="92.0" style="-fx-background-color: white;" />
-                                                                <Text layoutX="59.0" layoutY="15.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Release Form">
+                                                                <AnchorPane layoutX="32.0" layoutY="1.0" prefHeight="19.0" prefWidth="92.0" style="-fx-background-color: white;" />
+                                                                <Text layoutX="40.0" layoutY="15.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Release Form">
                                                                     <font>
                                                                         <Font name="System Bold" size="12.0" />
                                                                     </font>
                                                                 </Text>
                                                             </children>
+                                                            <BorderPane.margin>
+                                                                <Insets />
+                                                            </BorderPane.margin>
                                                         </AnchorPane>
                                                     </center>
                                                 </BorderPane>

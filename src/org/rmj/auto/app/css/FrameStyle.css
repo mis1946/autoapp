@@ -3,41 +3,41 @@ To change this license header, choose License Headers in Project Properties.
 To change this template file, choose Tools | Templates
 and open the template in the editor.
 */
-/* 
+/*
     Created on : Feb 1, 2023, 10:24:41 AM
     Author     : Arsiela
 */
 
 #LabelDesc {
-  -fx-text-fill: black;
-  -fx-font-family: "Arial"; 
-  -fx-font-size: 11.5px;
+    -fx-text-fill: black;
+    -fx-font-family: "Arial";
+    -fx-font-size: 11.5px;
 }
 
 .glyph-icon {
-   -fx-fill: black;
+    -fx-fill: black;
 }
 
 .button {
-  /*-fx-background-color: transparent;*/
-  -fx-text-fill: black;
-  -fx-font-family: "Arial";
-  -fx-font-size: 11.5px;
+    /*-fx-background-color: transparent;*/
+    -fx-text-fill: black;
+    -fx-font-family: "Arial";
+    -fx-font-size: 11.5px;
 }
 .button:hover
 {
-  -fx-background-color: #878787;
-  -fx-text-fill: white;
+    -fx-background-color: #878787;
+    -fx-text-fill: white;
 }
 
 #btnClose:hover{
-  -fx-background-color: #ed1800;
-  -fx-text-fill: white;
-    
+    -fx-background-color: #ed1800;
+    -fx-text-fill: white;
+
 }
 #btnClose:hover .glyph-icon, #btnClose:hover .glyph-icon
 {
-  -fx-fill: white;
+    -fx-fill: white;
 }
 
 .text-area {
@@ -45,9 +45,9 @@ and open the template in the editor.
     -fx-background-color:
         grey,
         white;
-   -fx-text-fill: black;
-   -fx-font-family: "Arial";
-   -fx-font-size: 11.5px;
+    -fx-text-fill: black;
+    -fx-font-family: "Arial";
+    -fx-font-size: 11.5px;
 }
 .text-area:disabled {
     -fx-text-fill: black;
@@ -58,7 +58,7 @@ and open the template in the editor.
 }
 .text-field {
     -fx-text-fill: black;
-    -fx-font-family: "Arial"; 
+    -fx-font-family: "Arial";
     -fx-font-size: 11.5px;
     -fx-opacity: 1.0;
     -fx-background-color:
@@ -87,7 +87,7 @@ and open the template in the editor.
 .check-box .box {
     -fx-background-color: white;
     -fx-border-color:grey;
-    -fx-border-radius:3px; 
+    -fx-border-radius:3px;
 
 }
 
@@ -100,7 +100,7 @@ and open the template in the editor.
     -fx-background-color: white;
     -fx-border-color: grey;
     -fx-text-alignment: center;
-    -fx-border-radius:3px; 
+    -fx-border-radius:3px;
     -fx-text-fill: black;
     -fx-font-size: 11.5px;
 }
@@ -108,19 +108,19 @@ and open the template in the editor.
 .combo-box-base:disabled,
 .list-cell:disabled,
 .check-box:disabled{
-  -fx-opacity: 1;
+    -fx-opacity: 1;
 }
 
 .combo-box-base:disabled,
 .list-cell:disabled,
 .check-box:disabled{
-  -fx-opacity: 1;
+    -fx-opacity: 1;
 }
 /*  Radio Button Css*/
 .radio-button {
     -fx-font-family: "Arial";
     -fx-font-size: 11.5px;
-    
+
 }
 .radio-button .radio {
     -fx-border-width: 1px;
@@ -130,7 +130,7 @@ and open the template in the editor.
     -fx-padding: 4px;
     -fx-font-family: "Arial";
     -fx-font-size: 11.5px;
-    
+
 }
 .radio-button .radio:selected {
     -fx-background-color: white;
@@ -162,7 +162,7 @@ and open the template in the editor.
 .table-row-cell:empty {
     -fx-background-color: white;
 }
- 
+
 .table-row-cell:empty .table-cell {
     -fx-border-width: 0px;
 }
@@ -185,9 +185,9 @@ and open the template in the editor.
     -fx-text-fill: black;
     -fx-font-size: 11px;
     -fx-font-weight: 300;
-    -fx-font-family: 'Open Sans','Helvetica Neue',Arial,sans-serif; 
+    -fx-font-family: 'Open Sans','Helvetica Neue',Arial,sans-serif;
     -fx-alignment: CENTER;
-    
+
 }
 .table-row-cell{
     -fx-background-color: -fx-table-cell-border-color, #D0D3D4;
@@ -204,14 +204,14 @@ and open the template in the editor.
 .table-row-cell:empty {
     -fx-background-color: white;
 }
- 
+
 .table-row-cell:empty .table-cell {
     -fx-border-width: 0px;
 }
 
 .table-view > .virtual-flow > .scroll-bar:vertical,
 .table-view > .virtual-flow > .scroll-bar:vertical > .track,
-.table-view > .virtual-flow > .scroll-bar:vertical > .track-background, 
+.table-view > .virtual-flow > .scroll-bar:vertical > .track-background,
 .table-view > .virtual-flow > .scroll-bar:horizontal,
 .table-view > .virtual-flow > .scroll-bar:horizontal > .track,
 .table-view > .virtual-flow > .scroll-bar:horizontal > .track-background {
@@ -224,3 +224,13 @@ and open the template in the editor.
     -fx-border-width: 1px 1px 1px 1px;
 }
 
+/*Vehicle Release Form Section */
+#release-form-container1,
+#release-form-container2,
+#release-form-container3{
+    -fx-background-radius: 5;
+    -fx-effect: dropshadow(gaussian,#c5c5c5, 0, 0, 0, 2);
+}
+#separator{
+    -fx-padding: 1px;
+}

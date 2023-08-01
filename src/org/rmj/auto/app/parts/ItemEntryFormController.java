@@ -61,7 +61,7 @@ import org.rmj.auto.app.views.unloadForm;
 /**
  * FXML Controller class
  *
- * @author Arsiela
+ * @author Arsiela to be continued by John Dave
  * Date Created: 06-27-2023
  */
 public class ItemEntryFormController implements Initializable, ScreenInterface {
@@ -78,8 +78,8 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
     private int lnRow;
     private int lnCtr;
     private Image pimage;
-    private String psFileName;
-    private String psFileUrl;
+    private String psFileName = "";
+    private String psFileUrl = "";
     
     private int pnRow = -1;
     private int oldPnRow = -1;
@@ -322,7 +322,7 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
                 case "btnClose":
                     if (ShowMessageFX.OkayCancel(null, "Close Tab", "Are you sure you want to close this Tab?") == true) {
                         if (unload != null) {
-                            unload.unloadForm(AnchorMain, oApp, "Customer");
+                            unload.unloadForm(AnchorMain, oApp, pxeModuleName);
                         } else {
                             ShowMessageFX.Warning(getStage(), "Please notify the system administrator to configure the null value at the close button.", "Warning", pxeModuleName);
                         }

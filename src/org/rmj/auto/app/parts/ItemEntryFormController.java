@@ -21,7 +21,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
-import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -31,6 +30,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Pagination;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -39,6 +39,11 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import static javafx.scene.input.KeyCode.DOWN;
+import static javafx.scene.input.KeyCode.ENTER;
+import static javafx.scene.input.KeyCode.F3;
+import static javafx.scene.input.KeyCode.TAB;
+import static javafx.scene.input.KeyCode.UP;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -52,8 +57,8 @@ import org.rmj.appdriver.agentfx.ShowMessageFX;
 import org.rmj.appdriver.callback.MasterCallback;
 import org.rmj.appdriver.constants.EditMode;
 import org.rmj.auto.app.views.ScreenInterface;
-import org.rmj.auto.app.views.VehicleDescriptionTableList;
 import org.rmj.auto.app.views.unloadForm;
+import org.rmj.auto.parts.base.ItemEntry;
 //import static org.rmj.webcamfx.ui.CameraType.Webcam;
 //import org.rmj.webcamfx.ui.WebCamFX;
 //import org.rmj.webcamfx.ui.Webcam;
@@ -61,17 +66,16 @@ import org.rmj.auto.app.views.unloadForm;
 /**
  * FXML Controller class
  *
- * @author Arsiela to be continued by John Dave
- * Date Created: 06-27-2023
+ * @author Arsiela to be continued by John Dave Date Created: 06-27-2023
  */
 public class ItemEntryFormController implements Initializable, ScreenInterface {
-    
+
     private GRider oApp;
     private MasterCallback oListener;
-    //private VehicleColor oTrans;
+    private ItemEntry oTrans;
     private int pnEditMode;
     private final String pxeModuleName = "Item Entry";
-    
+
     unloadForm unload = new unloadForm(); //Used in Close Button
     private String oldTransNo = "";
     private String sTransNo = "";
@@ -80,17 +84,18 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
     private Image pimage;
     private String psFileName = "";
     private String psFileUrl = "";
-    
+
     private int pnRow = -1;
     private int oldPnRow = -1;
     private int pagecounter;
     private double xOffset = 0;
     private double yOffset = 0;
-    
+
     private ObservableList<ItemEntryTableList> itemdata = FXCollections.observableArrayList();
     private ObservableList<ItemEntryTableList> supersededata = FXCollections.observableArrayList();
     private ObservableList<ItemEntryTableList> modeldata = FXCollections.observableArrayList();
     private FilteredList<ItemEntryTableList> filteredData;
+
     private static final int ROWS_PER_PAGE = 50;
 //    WebCamFX webcam = new WebCamFX(); //Open Camera
     @FXML
@@ -98,15 +103,13 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
     @FXML
     private Pagination pagination;
     @FXML
-    private TableView tblItemList;
+    private TableView<ItemEntryTableList> tblItemList;
     @FXML
-    private TableColumn tblindex01;
+    private TableColumn<ItemEntryTableList, String> tblindexRow;
     @FXML
-    private TableColumn tblindex02;
+    private TableColumn<ItemEntryTableList, String> tblindex02;
     @FXML
-    private TableColumn tblindex03;
-    @FXML
-    private TableColumn tblindex04;
+    private TableColumn<ItemEntryTableList, String> tblindex03;
     @FXML
     private Button btnAdd;
     @FXML
@@ -165,11 +168,34 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
     private TableColumn tblindex04_model;
     @FXML
     private Button btnLoadPhoto;
-    
+    @FXML
+    private TextField txtField12;
+    @FXML
+    private TextField txtField01;
+    @FXML
+    private TextField txtField03;
+    @FXML
+    private TextField txtField04;
+    @FXML
+    private TextField txtField13;
+    @FXML
+    private TextField textField02;
+    @FXML
+    private TextField txtField33;
+    @FXML
+    private TextField txtField34;
+    @FXML
+    private TableColumn<ItemEntryTableList, String> tblindex33;
+    @FXML
+    private TextField txtField32;
+    @FXML
+    private ComboBox comboBox01;
+    ObservableList<String> cItems = FXCollections.observableArrayList("Part Number", "Description");
+
     private Stage getStage() {
         return (Stage) txtSeeks01.getScene().getWindow();
     }
-    
+
     /**
      * Initializes the controller class.
      */
@@ -179,18 +205,17 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
             System.out.println("Set Class Value " + fnIndex + "-->" + foValue);
         };
 
-//        oTrans = new VehicleColor(oApp, oApp.getBranchCode(), true); //Initialize ClientMaster
-//        oTrans.setCallback(oListener);
-//        oTrans.setWithUI(true);
-//        loadItemList();
-
-        //Button SetOnAction using cmdButton_Click() method
+        oTrans = new ItemEntry(oApp, oApp.getBranchCode(), true); //Initialize ClientMaster
+        oTrans.setCallback(oListener);
+        oTrans.setWithUI(true);
+        loadItemList();
+        comboBox01.setItems(cItems);
         btnClose.setOnAction(this::cmdButton_Click);
         btnAdd.setOnAction(this::cmdButton_Click);
         btnEdit.setOnAction(this::cmdButton_Click);
         btnCancel.setOnAction(this::cmdButton_Click);
         btnSave.setOnAction(this::cmdButton_Click);
-        
+
         btnBrandName.setOnAction(this::cmdButton_Click);
         btnCategory.setOnAction(this::cmdButton_Click);
         btnInvType.setOnAction(this::cmdButton_Click);
@@ -204,14 +229,39 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
         btnUpload.setOnAction(this::cmdButton_Click);
         btnLoadPhoto.setOnAction(this::cmdButton_Click);
 
+        txtField33.focusedProperty().addListener(txtField_Focus);
+        txtField12.focusedProperty().addListener(txtField_Focus);
+        txtField33.focusedProperty().addListener(txtField_Focus);
+        txtField34.focusedProperty().addListener(txtField_Focus);
+
+        txtField33.setOnKeyPressed(this::txtField_KeyPressed);
+        txtField12.setOnKeyPressed(this::txtField_KeyPressed);
+        txtField33.setOnKeyPressed(this::txtField_KeyPressed);
+        txtField34.setOnKeyPressed(this::txtField_KeyPressed);
         pnEditMode = EditMode.UNKNOWN;
         initbutton(pnEditMode);
-    }    
-    
+
+        txtField12.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue && txtField12.getText().isEmpty()) {
+                txtField12.getStyleClass().add("required-field");
+            } else {
+                txtField12.getStyleClass().remove("required-field");
+            }
+        });
+        txtField34.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue && txtField34.getText().isEmpty()) {
+                txtField34.getStyleClass().add("required-field");
+            } else {
+                txtField34.getStyleClass().remove("required-field");
+            }
+        });
+        pagination.setPageFactory(this::createPage);
+    }
+
     public void setGRider(GRider foValue) {
         oApp = foValue;
     }
-    
+
     private static void setCapsLockBehavior(TextField textField) {
         textField.textProperty().addListener((observable, oldValue, newValue) -> {
             if (textField.getText() != null) {
@@ -219,41 +269,40 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
             }
         });
     }
-    
-    //use for creating new page on pagination 
+
+    //use for creating new page on pagination
     private Node createPage(int pageIndex) {
         int fromIndex = pageIndex * ROWS_PER_PAGE;
         int toIndex = Math.min(fromIndex + ROWS_PER_PAGE, itemdata.size());
-        if(itemdata.size()>0){
-           tblItemList.setItems(FXCollections.observableArrayList(itemdata.subList(fromIndex, toIndex))); 
+        if (itemdata.size() > 0) {
+            tblItemList.setItems(FXCollections.observableArrayList(itemdata.subList(fromIndex, toIndex)));
         }
         return tblItemList;
 
     }
 
     private void cmdButton_Click(ActionEvent event) {
-//        try {
-            String lsButton = ((Button) event.getSource()).getId();
-            switch (lsButton) {
-                case "btnBrandName":
-                    break;
-                case "btnInvType":
-                    break;
-                case "btnCategory":
-                    break;
-                case "btnLocation":
-                    break;
-                case "btnMeasurement":
-                    break;
-                case "btnSupsDel":
-                    break;
-                case "btnSupsAdd":
-                    break;
-                case "btnModelAdd":
-                    break;
-                case "btnModelDel":
-                    break;
-                case "btnCapture":
+        String lsButton = ((Button) event.getSource()).getId();
+        switch (lsButton) {
+            case "btnBrandName":
+                break;
+            case "btnInvType":
+                break;
+            case "btnCategory":
+                break;
+            case "btnLocation":
+                break;
+            case "btnMeasurement":
+                break;
+            case "btnSupsDel":
+                break;
+            case "btnSupsAdd":
+                break;
+            case "btnModelAdd":
+                break;
+            case "btnModelDel":
+                break;
+            case "btnCapture":
 //                    try {
 //                        Stage stage = new Stage();
 //                        webcam.start(stage);
@@ -261,47 +310,53 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
 //                    } catch (Exception ex) {
 //                        Logger.getLogger(ItemEntryFormController.class.getName()).log(Level.SEVERE, null, ex);
 //                    }
-                    break;
-                case "btnUpload":
-                    FileChooser fileChooser = new FileChooser();
-                    // Set the title and extension filters if desired
-                    fileChooser.setTitle("Select Image File");
-                    fileChooser.getExtensionFilters().addAll(
-                            new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg"));
-                    // Show the file chooser dialog
-                    File selectedFile = fileChooser.showOpenDialog(btnUpload.getScene().getWindow());
-                    if (selectedFile != null) {
-                        // Load the selected image file
-                        Image image = new Image(selectedFile.toURI().toString());
-                        imgPartsPic.setImage(image);
-                        
-                        psFileUrl = selectedFile.toURI().toString();
-                        psFileName = selectedFile.getName();
-                        pimage = new Image(selectedFile.toURI().toString());
-                    }
-                    break;
-                case "btnLoadPhoto":
-                    if (!psFileUrl.isEmpty()){
-                        loadPhotoWindow();
-                    }
-                    break;
-                case "btnAdd":
-//                    if (oTrans.NewRecord()) {
-//                        pnEditMode = oTrans.getEditMode();
-//                    } else {
-//                        ShowMessageFX.Warning(null, pxeModuleName, oTrans.getMessage());
-//                        return;
-//                    }
-                    break;
-                case "btnEdit":
+                break;
+            case "btnUpload":
+                FileChooser fileChooser = new FileChooser();
+                // Set the title and extension filters if desired
+                fileChooser.setTitle("Select Image File");
+                fileChooser.getExtensionFilters().addAll(
+                        new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg"));
+                // Show the file chooser dialog
+                File selectedFile = fileChooser.showOpenDialog(btnUpload.getScene().getWindow());
+                if (selectedFile != null) {
+                    // Load the selected image file
+                    Image image = new Image(selectedFile.toURI().toString());
+                    imgPartsPic.setImage(image);
+
+                    psFileUrl = selectedFile.toURI().toString();
+                    psFileName = selectedFile.getName();
+                    pimage = new Image(selectedFile.toURI().toString());
+                }
+                break;
+            case "btnLoadPhoto":
+                if (!psFileUrl.isEmpty()) {
+                    loadPhotoWindow();
+                }
+                break;
+            case "btnAdd":
+                if (oTrans.NewRecord()) {
+                    pnEditMode = oTrans.getEditMode();
+                } else {
+                    ShowMessageFX.Warning(null, pxeModuleName, oTrans.getMessage());
+                    return;
+                }
+                break;
+            case "btnEdit":
 //                    if (oTrans.UpdateRecord()) {
 //                        pnEditMode = oTrans.getEditMode();
 //                    } else {
 //                        ShowMessageFX.Warning(null, pxeModuleName, oTrans.getMessage());
 //                        return;
 //                    }
-                    break;
-                case "btnSave":
+                break;
+            case "btnCancel":
+                if (ShowMessageFX.OkayCancel(getStage(), "Are you sure you want to cancel?", pxeModuleName, null) == true) {
+                    clearFields();
+                    pnEditMode = EditMode.UNKNOWN;
+                }
+                break;
+            case "btnSave":
 //                    if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure you want to save?")) {
 //                    } else {
 //                        return;
@@ -317,34 +372,30 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
 //                        ShowMessageFX.Warning(null, pxeModuleName, oTrans.getMessage());
 //                        return;
 //                    }
-                    break;
+                break;
 
-                case "btnClose":
-                    if (ShowMessageFX.OkayCancel(null, "Close Tab", "Are you sure you want to close this Tab?") == true) {
-                        if (unload != null) {
-                            unload.unloadForm(AnchorMain, oApp, pxeModuleName);
-                        } else {
-                            ShowMessageFX.Warning(getStage(), "Please notify the system administrator to configure the null value at the close button.", "Warning", pxeModuleName);
-                        }
-                        break;
+            case "btnClose":
+                if (ShowMessageFX.OkayCancel(null, "Close Tab", "Are you sure you want to close this Tab?") == true) {
+                    if (unload != null) {
+                        unload.unloadForm(AnchorMain, oApp, pxeModuleName);
                     } else {
-                        return;
+                        ShowMessageFX.Warning(getStage(), "Please notify the system administrator to configure the null value at the close button.", "Warning", pxeModuleName);
                     }
-
-                default:
-                    ShowMessageFX.Warning(null, pxeModuleName, "Button with name " + lsButton + " not registered.");
                     break;
+                } else {
+                    return;
+                }
 
-            }
+            default:
+                ShowMessageFX.Warning(null, pxeModuleName, "Button with name " + lsButton + " not registered.");
+                break;
 
-            initbutton(pnEditMode);
-//        } catch (SQLException ex) {
-//            Logger.getLogger(ItemEntryFormController.class.getName()).log(Level.SEVERE, null, ex);
-//        }
+        }
+        initbutton(pnEditMode);
     }
-    
+
     /*OPEN PHOTO WINDOW*/
-    private void loadPhotoWindow(){
+    private void loadPhotoWindow() {
         try {
             Stage stage = new Stage();
 
@@ -383,17 +434,17 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setTitle("");
             stage.showAndWait();
-            
+
         } catch (IOException e) {
             e.printStackTrace();
-            ShowMessageFX.Warning(getStage(),e.getMessage(), "Warning", null);
+            ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
             System.exit(1);
         }
-    
+
     }
-    
+
     /*TODO*/
-    /*OPEN CAMERA*/
+ /*OPEN CAMERA*/
     private void captureImage() {
 //        if (webcam.isOpen()) {
 //            try {
@@ -415,47 +466,61 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
 //        }
     }
 
-
     public void loadItemList() {
-//        try {
-//            /*Populate table*/
-//            itemdata.clear();
-//            String sRecStat = "";
-//            if (oTrans.LoadList()) {
-//                for (lnCtr = 1; lnCtr <= oTrans.getItemCount(); lnCtr++) {
-//                    itemdata.add(new ItemEntryTableList(
-//                               false
-//                            , String.valueOf(lnCtr) //Row
-//                    ));
-//                }
-//                initItemList();
-//            } else {
-//                ShowMessageFX.Warning(null, pxeModuleName, oTrans.getMessage());
-//                return;
-//            }
-//        } catch (SQLException e) {
-//            ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
-//        }
+        try {
+            /*Populate table*/
+            itemdata.clear();
+            String sRecStat = "";
+            if (oTrans.LoadMasterList()) {
+                for (lnCtr = 1; lnCtr <= oTrans.getMasterDetailCount(); lnCtr++) {
+                    itemdata.add(new ItemEntryTableList(
+                            String.valueOf(lnCtr), //Row
+                            "",
+                            oTrans.getDetail(lnCtr, "sBarCodex").toString(),
+                            "",
+                            oTrans.getDetail(lnCtr, "sDescript").toString(),
+                            "",
+                            "",
+                            "",
+                            oTrans.getDetail(lnCtr, "sCategNme").toString(),
+                            ""
+                    ));
+                }
+                initItemList();
+            } else {
+                ShowMessageFX.Warning(null, pxeModuleName, oTrans.getMessage());
+                return;
+            }
+        } catch (SQLException e) {
+            ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
+        }
 
     }
 
     private void initItemList() {
-        boolean lbShow = (pnEditMode == EditMode.READY || pnEditMode == EditMode.UPDATE);
-        tblindex01.setCellValueFactory(new PropertyValueFactory<>("tblindex02"));
-        tblindex02.setCellValueFactory(new PropertyValueFactory<>("tblindex03"));
-        tblindex03.setCellValueFactory(new PropertyValueFactory<>("tblindex04"));
+        tblindexRow.setCellValueFactory(new PropertyValueFactory<>("tblindexRow"));
+        tblindex02.setCellValueFactory(new PropertyValueFactory<>("tblindex02"));
+        tblindex03.setCellValueFactory(new PropertyValueFactory<>("tblindex03"));
+        tblindex33.setCellValueFactory(new PropertyValueFactory<>("tblindex33"));
+
+        filteredData = new FilteredList<>(itemdata, b -> true);
+        autoSearch(txtSeeks01);
+        SortedList<ItemEntryTableList> sortedData = new SortedList<>(filteredData);
+        sortedData.comparatorProperty().bind(tblItemList.comparatorProperty());
+        tblItemList.setItems(sortedData);
 
         tblItemList.widthProperty().addListener((ObservableValue<? extends Number> source, Number oldWidth, Number newWidth) -> {
             TableHeaderRow header = (TableHeaderRow) tblItemList.lookup("TableHeaderRow");
             header.reorderingProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
                 header.setReordering(false);
             });
+            header.setDisable(true);
         });
 
         tblItemList.setItems(itemdata);
     }
-    
-     public void loadSupersedeList() {
+
+    public void loadSupersedeList() {
 //        try {
 //            /*Populate table*/
 //            supersededata.clear();
@@ -493,8 +558,8 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
 
         tblSupersede.setItems(supersededata);
     }
-    
-     public void loadModelList() {
+
+    public void loadModelList() {
 //        try {
 //            /*Populate table*/
 //            modeldata.clear();
@@ -532,7 +597,7 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
 
         tblModel.setItems(modeldata);
     }
-    
+
     //Populate Text Field Based on selected transaction in table
     private void getSelectedItem(String TransNo) {
 //        oldTransNo = TransNo;
@@ -546,36 +611,36 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
 //        }
 //        initbutton(pnEditMode);
     }
-    
-    private void autoSearch(TextField txtField){
+
+    private void autoSearch(TextField txtField) {
         int lnIndex = Integer.parseInt(txtField.getId().substring(8, 10));
-        boolean fsCode = true;
+
         txtField.textProperty().addListener((observable, oldValue, newValue) -> {
-            filteredData.setPredicate(clients-> {
-            // If filter text is empty, display all persons.
-            if (newValue == null || newValue.isEmpty()) {
-                return true;
-            }
-            // Compare order no. and last name of every person with filter text.
-            String lowerCaseFilter = newValue.toLowerCase();
-            switch (lnIndex){
-                    case 2:
-                        if(lnIndex == 2){
-//                            return (clients.getTblindex10().toLowerCase().contains(lowerCaseFilter)); // Does not match.   
-                        }else {
-//                            return (clients.getTblindex10().toLowerCase().contains(lowerCaseFilter)); // Does not match.
-                        }   
+            filteredData.setPredicate(clients -> {
+                // If filter text is empty, display all persons.
+                if (newValue == null || newValue.isEmpty()) {
+                    return true;
+                }
+                // Compare order no. and last name of every person with filter text.
+                String lowerCaseFilter = newValue.toLowerCase();
+                switch (lnIndex) {
+                    case 1:
+                        if (lnIndex == 1) {
+                            return (clients.getTblindex02().toLowerCase().contains(lowerCaseFilter)); // Does not match.
+                        } else {
+                            return (clients.getTblindex02().toLowerCase().contains(lowerCaseFilter)); // Does not match.
+                        }
                     default:
-                    return true;            
-            }
+                        return true;
+                }
             });
 
-        changeTableView(0, ROWS_PER_PAGE);
-      });
-      loadTab();
-    } 
-     
-    private void loadTab(){
+            changeTableView(0, ROWS_PER_PAGE);
+        });
+        loadTab();
+    }
+
+    private void loadTab() {
         int totalPage = (int) (Math.ceil(itemdata.size() * 1.0 / ROWS_PER_PAGE));
         pagination.setPageCount(totalPage);
         pagination.setCurrentPageIndex(0);
@@ -583,8 +648,8 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
         pagination.currentPageIndexProperty().addListener(
                 (observable, oldValue, newValue) -> changeTableView(newValue.intValue(), ROWS_PER_PAGE));
 
-    } 
-     
+    }
+
     private void changeTableView(int index, int limit) {
         int fromIndex = index * limit;
         int toIndex = Math.min(fromIndex + limit, itemdata.size());
@@ -593,34 +658,35 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
         SortedList<ItemEntryTableList> sortedData = new SortedList<>(
                 FXCollections.observableArrayList(filteredData.subList(Math.min(fromIndex, minIndex), minIndex)));
         sortedData.comparatorProperty().bind(tblItemList.comparatorProperty());
-        tblItemList.setItems(sortedData); 
+        tblItemList.setItems(sortedData);
     }
 
-     @FXML
+    @FXML
     private void tblVhclEntryList_Clicked(MouseEvent event) {
         if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
-             if(ShowMessageFX.OkayCancel(null, pxeModuleName, "You have unsaved data, are you sure you want to continue?") == true){   
-            } else
+            if (ShowMessageFX.OkayCancel(null, pxeModuleName, "You have unsaved data, are you sure you want to continue?") == true) {
+            } else {
                 return;
+            }
         }
 
-        pnRow = tblItemList.getSelectionModel().getSelectedIndex(); 
+        pnRow = tblItemList.getSelectionModel().getSelectedIndex();
         pagecounter = pnRow + pagination.getCurrentPageIndex() * ROWS_PER_PAGE;
-        if (pagecounter >= 0){
-            if(event.getClickCount() > 0){
+        if (pagecounter >= 0) {
+            if (event.getClickCount() > 0) {
 //                getSelectedItem(filteredData.get(pagecounter).getTblindex11()); //Populate field based on selected Item
-                tblItemList.setOnKeyReleased((KeyEvent t)-> {
+                tblItemList.setOnKeyReleased((KeyEvent t) -> {
                     KeyCode key = t.getCode();
-                    switch (key){
+                    switch (key) {
                         case DOWN:
                             pnRow = tblItemList.getSelectionModel().getSelectedIndex();
                             pagecounter = pnRow + pagination.getCurrentPageIndex() * ROWS_PER_PAGE;
                             if (pagecounter == tblItemList.getItems().size()) {
                                 pagecounter = tblItemList.getItems().size();
 //                                getSelectedItem(filteredData.get(pagecounter).getTblindex11());
-                            }else {
-                               int y = 1;
-                              pnRow = pnRow + y;
+                            } else {
+                                int y = 1;
+                                pnRow = pnRow + y;
 //                                getSelectedItem(filteredData.get(pagecounter).getTblindex11());
                             }
                             break;
@@ -630,65 +696,159 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
 //                            getSelectedItem(filteredData.get(pagecounter).getTblindex11());
                             break;
                         default:
-                          return; 
+                            return;
                     }
                 });
-            } 
+            }
             pnEditMode = EditMode.READY;
-            initbutton(pnEditMode);  
-        }     
+            initbutton(pnEditMode);
+        }
     }
-    
+
+    private void txtField_KeyPressed(KeyEvent event) {
+        TextField txtField = (TextField) event.getSource();
+        int lnIndex = Integer.parseInt(((TextField) event.getSource()).getId().substring(8, 10));
+        String txtFieldID = ((TextField) event.getSource()).getId();
+        String lsValue = txtField.getText();
+
+        try {
+            switch (event.getCode()) {
+                case F3:
+                case TAB:
+                case ENTER:
+                    switch (txtFieldID) {
+                        case "txtField32":
+                            if (oTrans.searchBrand(lsValue)) {
+                                loadItemInformationField();
+                            } else {
+                                ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                            }
+                            break;
+                        case "txtField12":
+                            if (oTrans.searchInvType(lsValue)) {
+                                loadItemInformationField();
+                            } else {
+                                ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                            }
+                            break;
+                        case "txtField33":
+                            if (oTrans.getMaster(12).toString().isEmpty()) {
+                                ShowMessageFX.Warning(getStage(), "Please select inventory type first", "Warning", null);
+                                return;
+                            }
+                            if (oTrans.searchInvCategory(lsValue, oTrans.getMaster(12).toString())) {
+                                loadItemInformationField();
+                            } else {
+                                ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                            }
+                            break;
+                        case "txtField34":
+                            if (oTrans.searchMeasure(lsValue)) {
+                                loadItemInformationField();
+                            } else {
+                                ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                            }
+                            break;
+                    }
+
+                    break;
+
+            }
+        } catch (SQLException e) {
+            ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
+        }
+        switch (event.getCode()) {
+            case ENTER:
+            case DOWN:
+                CommonUtils.SetNextFocus(txtField);
+                break;
+            case UP:
+                CommonUtils.SetPreviousFocus(txtField);
+        }
+
+    }
+
+    private void loadItemInformationField() {
+        try {
+            txtField32.setText((String) oTrans.getMaster(32));
+            txtField33.setText((String) oTrans.getMaster(33));
+            txtField12.setText((String) oTrans.getMaster(12));
+            txtField34.setText((String) oTrans.getMaster(34));
+        } catch (SQLException e) {
+            ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
+        }
+    }
     /*Set TextField Value to Master Class*/
     final ChangeListener<? super Boolean> txtField_Focus = (o, ov, nv) -> {
-//        try {
-//            TextField txtField = (TextField) ((ReadOnlyBooleanPropertyBase) o).getBean();
-//            int lnIndex = Integer.parseInt(txtField.getId().substring(8, 10));
-//            String lsValue = txtField.getText();
-//
-//            if (lsValue == null) {
-//                return;
-//            }
-//            if (!nv) {
-//                /*Lost Focus*/
-//                switch (lnIndex) {
-//                    case 2:
-//                        oTrans.setMaster(lnIndex, lsValue); //Handle Encoded Value
-//                        break;
-//                }
-//
-//            } else {
-//                txtField.selectAll();
-//            }
-//        } catch (SQLException ex) {
-//            Logger.getLogger(ItemEntryFormController.class.getName()).log(Level.SEVERE, null, ex);
-//        }
+        try {
+            TextField txtField = (TextField) ((ReadOnlyBooleanPropertyBase) o).getBean();
+            int lnIndex = Integer.parseInt(txtField.getId().substring(8, 10));
+            String lsValue = txtField.getText();
+
+            if (lsValue == null) {
+                return;
+            }
+            if (!nv) {
+                /*Lost Focus*/
+                switch (lnIndex) {
+                    case 2:
+                    case 32:
+                    case 12:
+                    case 5:
+                    case 34:
+                        oTrans.setMaster(lnIndex, lsValue); //Handle Encoded Value
+                        break;
+                }
+
+            } else {
+                txtField.selectAll();
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ItemEntryFormController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     };
+
+    private void clearFields() {
+        txtField01.setText("");
+        txtField03.setText("");
+        txtField04.setText("");
+        txtField32.setText("");
+        txtField33.setText("");
+        txtField34.setText("");
+        txtField12.setText("");
+    }
 
     private void initbutton(int fnValue) {
         boolean lbShow = (fnValue == EditMode.ADDNEW || fnValue == EditMode.UPDATE);
-        
+
         btnBrandName.setVisible(lbShow);
         btnCategory.setVisible(lbShow);
         btnInvType.setVisible(lbShow);
         btnMeasurement.setVisible(lbShow);
         btnLocation.setVisible(lbShow);
-        
-        btnSupsAdd.setVisible(lbShow);
-        btnSupsDel.setVisible(lbShow);
-        btnModelAdd.setVisible(lbShow);
-        btnModelDel.setVisible(lbShow);
+
+        txtField01.setDisable(!lbShow);
+        txtField03.setDisable(!lbShow);
+        txtField04.setDisable(!lbShow);
+        txtField32.setDisable(!lbShow);
+        txtField33.setDisable(!lbShow);
+        txtField34.setDisable(!lbShow);
+        txtField12.setDisable(!lbShow);
+        btnSupsAdd.setDisable(!lbShow);
+        btnSupsDel.setDisable(!lbShow);
+        btnModelAdd.setDisable(!lbShow);
+        btnModelDel.setDisable(!lbShow);
         //btnCapture.setVisible(lbShow);
         //btnUpload.setVisible(lbShow);
-        
-        btnAdd.setVisible(lbShow);
-        btnAdd.setManaged(lbShow);
+
+        btnAdd.setVisible(!lbShow);
+        btnAdd.setManaged(!lbShow);
         btnEdit.setVisible(false);
         btnEdit.setManaged(false);
-        btnCancel.setVisible(!lbShow);
-        btnCancel.setManaged(!lbShow);
-        btnSave.setVisible(!lbShow);
-        btnSave.setManaged(!lbShow);
+        btnCancel.setVisible(lbShow);
+        btnCancel.setManaged(lbShow);
+        btnSave.setVisible(lbShow);
+        btnSave.setManaged(lbShow);
 
         if (fnValue == EditMode.READY) {
             btnEdit.setVisible(true);
@@ -696,5 +856,4 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
         }
     }
 
-    
 }

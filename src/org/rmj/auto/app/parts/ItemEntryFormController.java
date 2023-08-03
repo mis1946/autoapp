@@ -9,6 +9,7 @@ import com.sun.javafx.scene.control.skin.TableHeaderRow;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
@@ -56,6 +57,7 @@ import org.rmj.appdriver.agentfx.CommonUtils;
 import org.rmj.appdriver.agentfx.ShowMessageFX;
 import org.rmj.appdriver.callback.MasterCallback;
 import org.rmj.appdriver.constants.EditMode;
+import org.rmj.auto.app.bank.BankEntryFormController;
 import org.rmj.auto.app.views.ScreenInterface;
 import org.rmj.auto.app.views.unloadForm;
 import org.rmj.auto.parts.base.ItemEntry;
@@ -179,8 +181,6 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
     @FXML
     private TextField txtField13;
     @FXML
-    private TextField textField02;
-    @FXML
     private TextField txtField33;
     @FXML
     private TextField txtField34;
@@ -188,9 +188,15 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
     private TableColumn<ItemEntryTableList, String> tblindex33;
     @FXML
     private TextField txtField32;
-    @FXML
-    private ComboBox comboBox01;
     ObservableList<String> cItems = FXCollections.observableArrayList("Part Number", "Description");
+    @FXML
+    private ComboBox<String> comboFilter;
+    @FXML
+    private TextField txtSeeks02;
+    @FXML
+    private TextField txtField02;
+    @FXML
+    private TextField txtField37;
 
     private Stage getStage() {
         return (Stage) txtSeeks01.getScene().getWindow();
@@ -209,12 +215,14 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
         oTrans.setCallback(oListener);
         oTrans.setWithUI(true);
         loadItemList();
-        comboBox01.setItems(cItems);
+        comboFilter.setItems(cItems);
         btnClose.setOnAction(this::cmdButton_Click);
         btnAdd.setOnAction(this::cmdButton_Click);
         btnEdit.setOnAction(this::cmdButton_Click);
         btnCancel.setOnAction(this::cmdButton_Click);
         btnSave.setOnAction(this::cmdButton_Click);
+
+        tblItemList.setOnMouseClicked(this::tblItemEntry_Clicked);
 
         btnBrandName.setOnAction(this::cmdButton_Click);
         btnCategory.setOnAction(this::cmdButton_Click);
@@ -229,33 +237,83 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
         btnUpload.setOnAction(this::cmdButton_Click);
         btnLoadPhoto.setOnAction(this::cmdButton_Click);
 
-        txtField33.focusedProperty().addListener(txtField_Focus);
+        setCapsLockBehavior(txtField01);
+        setCapsLockBehavior(txtField02);
+        setCapsLockBehavior(txtField32);
+        setCapsLockBehavior(txtField03);
+        setCapsLockBehavior(txtField04);
+        setCapsLockBehavior(txtField13);
+        setCapsLockBehavior(txtField12);
+        setCapsLockBehavior(txtField33);
+        setCapsLockBehavior(txtField34);
+
+        txtField01.focusedProperty().addListener(txtField_Focus);
+        txtField02.focusedProperty().addListener(txtField_Focus);
+        txtField32.focusedProperty().addListener(txtField_Focus);
+        txtField03.focusedProperty().addListener(txtField_Focus);
+        txtField04.focusedProperty().addListener(txtField_Focus);
+        txtField13.focusedProperty().addListener(txtField_Focus);
         txtField12.focusedProperty().addListener(txtField_Focus);
         txtField33.focusedProperty().addListener(txtField_Focus);
         txtField34.focusedProperty().addListener(txtField_Focus);
 
-        txtField33.setOnKeyPressed(this::txtField_KeyPressed);
+        txtField32.setOnKeyPressed(this::txtField_KeyPressed);
         txtField12.setOnKeyPressed(this::txtField_KeyPressed);
         txtField33.setOnKeyPressed(this::txtField_KeyPressed);
         txtField34.setOnKeyPressed(this::txtField_KeyPressed);
         pnEditMode = EditMode.UNKNOWN;
-        initbutton(pnEditMode);
+        initButton(pnEditMode);
+        addRequiredFieldListener(txtField02);
+        addRequiredFieldListener(txtField32);
+        addRequiredFieldListener(txtField03);
+        addRequiredFieldListener(txtField12);
+        addRequiredFieldListener(txtField34);
+        txtField12.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.isEmpty()) {
+                txtField33.clear();
+            }
+        });
 
-        txtField12.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue && txtField12.getText().isEmpty()) {
-                txtField12.getStyleClass().add("required-field");
-            } else {
-                txtField12.getStyleClass().remove("required-field");
-            }
-        });
-        txtField34.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue && txtField34.getText().isEmpty()) {
-                txtField34.getStyleClass().add("required-field");
-            } else {
-                txtField34.getStyleClass().remove("required-field");
-            }
-        });
         pagination.setPageFactory(this::createPage);
+        initCombo();
+
+    }
+
+    private void addRequiredFieldListener(TextField textField) {
+        textField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue && textField.getText().isEmpty()) {
+                textField.getStyleClass().add("required-field");
+            } else {
+                textField.getStyleClass().remove("required-field");
+            }
+        });
+    }
+
+    public void initCombo() {
+        comboFilter.setOnAction(e -> {
+            String selectedFilter = comboFilter.getSelectionModel().getSelectedItem();
+            txtSeeks01.setVisible(false);
+            txtSeeks01.setManaged(false);
+            txtSeeks02.setVisible(false);
+            txtSeeks02.setManaged(false);
+            switch (selectedFilter) {
+                case "Part Number":
+                    txtSeeks01.setText("");
+                    txtSeeks01.setVisible(true);
+                    txtSeeks01.setManaged(true);
+                    tblItemList.setItems(itemdata);
+                    break;
+                case "Description":
+                    txtSeeks02.setText("");
+                    txtSeeks02.setVisible(true);
+                    txtSeeks02.setManaged(true);
+                    tblItemList.setItems(itemdata);
+                    break;
+                default:
+                    System.out.println("INVALID OPERATOR!");
+                    break;
+            }
+        });
     }
 
     public void setGRider(GRider foValue) {
@@ -343,12 +401,12 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
                 }
                 break;
             case "btnEdit":
-//                    if (oTrans.UpdateRecord()) {
-//                        pnEditMode = oTrans.getEditMode();
-//                    } else {
-//                        ShowMessageFX.Warning(null, pxeModuleName, oTrans.getMessage());
-//                        return;
-//                    }
+                if (oTrans.UpdateRecord()) {
+                    pnEditMode = oTrans.getEditMode();
+                } else {
+                    ShowMessageFX.Warning(null, pxeModuleName, oTrans.getMessage());
+                    return;
+                }
                 break;
             case "btnCancel":
                 if (ShowMessageFX.OkayCancel(getStage(), "Are you sure you want to cancel?", pxeModuleName, null) == true) {
@@ -357,21 +415,62 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
                 }
                 break;
             case "btnSave":
-//                    if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure you want to save?")) {
-//                    } else {
+                //Validate before saving
+                if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure, do you want to save?") == true) {
+                    if (txtField02.getText().trim().equals("")) {
+                        ShowMessageFX.Warning(getStage(), "Please enter a valid value for Part Number", "Warning", null);
+                        txtField02.requestFocus();
+                        return;
+                    }
+                    if (txtField32.getText().trim().equals("")) {
+                        ShowMessageFX.Warning(getStage(), "Please enter a value for Brand Name.", "Warning", null);
+                        txtField32.requestFocus();
+                        return;
+                    }
+                    if (txtField03.getText().trim().equals("")) {
+                        ShowMessageFX.Warning(getStage(), "Please enter a valid value for Description.", "Warning", null);
+                        txtField03.requestFocus();
+                        return;
+                    }
+                    if (txtField04.getText().trim().equals("")) {
+                        ShowMessageFX.Warning(getStage(), "Please enter a value for Brief Description.", "Warning", null);
+                        txtField04.requestFocus();
+                        return;
+                    }
+//                    if (txtField13.getText().trim().equals("")) {
+//                        ShowMessageFX.Warning(getStage(), "Please enter a value for Unit Price.", "Warning", null);
+//                        txtField13.requestFocus();
 //                        return;
 //                    }
-//
-//                    if (oTrans.SaveRecord()) {
-//                        ShowMessageFX.Information(null, pxeModuleName, "Vehicle Make save sucessfully.");
-//                        loadItemsList();
-//
-//                        getSelectedItem();
-//                        pnEditMode = oTrans.getEditMode();
-//                    } else {
-//                        ShowMessageFX.Warning(null, pxeModuleName, oTrans.getMessage());
-//                        return;
-//                    }
+                    if (txtField12.getText().trim().equals("")) {
+                        ShowMessageFX.Warning(getStage(), "Please enter a value for Inventory Type", "Warning", null);
+                        txtField12.requestFocus();
+                        return;
+                    }
+                    if (txtField33.getText().trim().equals("")) {
+                        ShowMessageFX.Warning(getStage(), "Please enter a value for Category.", "Warning", null);
+                        txtField33.requestFocus();
+                        return;
+                    }
+                    if (txtField34.getText().trim().equals("")) {
+                        ShowMessageFX.Warning(getStage(), "Please enter a value for Measurement.", "Warning", null);
+                        txtField34.requestFocus();
+                        return;
+                    }
+                    //Proceed Saving
+                    if (oTrans.SaveRecord()) {
+                        ShowMessageFX.Information(getStage(), "Transaction save successfully.", pxeModuleName, null);
+                        loadItemInformationField();
+                        try {
+                            getSelectedItem((String) oTrans.getMaster(1));
+                        } catch (SQLException ex) {
+                            Logger.getLogger(BankEntryFormController.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        pnEditMode = oTrans.getEditMode();
+                    } else {
+                        ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", "Error while saving Item Information");
+                    }
+                }
                 break;
 
             case "btnClose":
@@ -391,7 +490,7 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
                 break;
 
         }
-        initbutton(pnEditMode);
+        initButton(pnEditMode);
     }
 
     /*OPEN PHOTO WINDOW*/
@@ -475,7 +574,7 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
                 for (lnCtr = 1; lnCtr <= oTrans.getMasterDetailCount(); lnCtr++) {
                     itemdata.add(new ItemEntryTableList(
                             String.valueOf(lnCtr), //Row
-                            "",
+                            oTrans.getDetail(lnCtr, "sStockIDx").toString(),
                             oTrans.getDetail(lnCtr, "sBarCodex").toString(),
                             "",
                             oTrans.getDetail(lnCtr, "sDescript").toString(),
@@ -505,6 +604,7 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
 
         filteredData = new FilteredList<>(itemdata, b -> true);
         autoSearch(txtSeeks01);
+        autoSearch(txtSeeks02);
         SortedList<ItemEntryTableList> sortedData = new SortedList<>(filteredData);
         sortedData.comparatorProperty().bind(tblItemList.comparatorProperty());
         tblItemList.setItems(sortedData);
@@ -600,16 +700,56 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
 
     //Populate Text Field Based on selected transaction in table
     private void getSelectedItem(String TransNo) {
-//        oldTransNo = TransNo;
-//        if (oTrans.OpenRecord(TransNo)) {
-//            if (itemdata.get(lnRow).getTblindex03().equals("Y")) {
-//                pnEditMode = oTrans.getEditMode();
-//            } else {
-//                pnEditMode = EditMode.UNKNOWN;
-//            }
-//
-//        }
-//        initbutton(pnEditMode);
+        oldTransNo = TransNo;
+        if (oTrans.OpenRecord(TransNo)) {
+            loadItemInformationField();
+        }
+        oldPnRow = pagecounter;
+
+    }
+
+    @FXML
+    private void tblItemEntry_Clicked(MouseEvent event) {
+        if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
+            if (ShowMessageFX.OkayCancel(null, pxeModuleName, "You have unsaved data, are you sure you want to continue?") == true) {
+            } else {
+                return;
+            }
+        }
+        pnRow = tblItemList.getSelectionModel().getSelectedIndex();
+        pagecounter = pnRow + pagination.getCurrentPageIndex() * ROWS_PER_PAGE;
+        if (pagecounter >= 0) {
+            if (event.getClickCount() > 0) {
+                getSelectedItem(filteredData.get(pagecounter).getTblindex01()); //Populate field based on selected Item
+
+                tblItemList.setOnKeyReleased((KeyEvent t) -> {
+                    KeyCode key = t.getCode();
+                    switch (key) {
+                        case DOWN:
+                            pnRow = tblItemList.getSelectionModel().getSelectedIndex();
+                            pagecounter = pnRow + pagination.getCurrentPageIndex() * ROWS_PER_PAGE;
+                            if (pagecounter == tblItemList.getItems().size()) {
+                                pagecounter = tblItemList.getItems().size();
+                                getSelectedItem(filteredData.get(pagecounter).getTblindex01());
+                            } else {
+                                int y = 1;
+                                pnRow = pnRow + y;
+                                getSelectedItem(filteredData.get(pagecounter).getTblindex01());
+                            }
+                            break;
+                        case UP:
+                            pnRow = tblItemList.getSelectionModel().getSelectedIndex();
+                            pagecounter = pnRow + pagination.getCurrentPageIndex() * ROWS_PER_PAGE;
+                            getSelectedItem(filteredData.get(pagecounter).getTblindex01());
+                            break;
+                        default:
+                            return;
+                    }
+                });
+            }
+            pnEditMode = EditMode.READY;
+            initButton(pnEditMode);
+        }
     }
 
     private void autoSearch(TextField txtField) {
@@ -621,15 +761,13 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
                 if (newValue == null || newValue.isEmpty()) {
                     return true;
                 }
-                // Compare order no. and last name of every person with filter text.
+                // Compare the appropriate field of every client with the filter text.
                 String lowerCaseFilter = newValue.toLowerCase();
                 switch (lnIndex) {
                     case 1:
-                        if (lnIndex == 1) {
-                            return (clients.getTblindex02().toLowerCase().contains(lowerCaseFilter)); // Does not match.
-                        } else {
-                            return (clients.getTblindex02().toLowerCase().contains(lowerCaseFilter)); // Does not match.
-                        }
+                        return clients.getTblindex02().toLowerCase().contains(lowerCaseFilter);
+                    case 2:
+                        return clients.getTblindex03().toLowerCase().contains(lowerCaseFilter);
                     default:
                         return true;
                 }
@@ -661,50 +799,6 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
         tblItemList.setItems(sortedData);
     }
 
-    @FXML
-    private void tblVhclEntryList_Clicked(MouseEvent event) {
-        if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
-            if (ShowMessageFX.OkayCancel(null, pxeModuleName, "You have unsaved data, are you sure you want to continue?") == true) {
-            } else {
-                return;
-            }
-        }
-
-        pnRow = tblItemList.getSelectionModel().getSelectedIndex();
-        pagecounter = pnRow + pagination.getCurrentPageIndex() * ROWS_PER_PAGE;
-        if (pagecounter >= 0) {
-            if (event.getClickCount() > 0) {
-//                getSelectedItem(filteredData.get(pagecounter).getTblindex11()); //Populate field based on selected Item
-                tblItemList.setOnKeyReleased((KeyEvent t) -> {
-                    KeyCode key = t.getCode();
-                    switch (key) {
-                        case DOWN:
-                            pnRow = tblItemList.getSelectionModel().getSelectedIndex();
-                            pagecounter = pnRow + pagination.getCurrentPageIndex() * ROWS_PER_PAGE;
-                            if (pagecounter == tblItemList.getItems().size()) {
-                                pagecounter = tblItemList.getItems().size();
-//                                getSelectedItem(filteredData.get(pagecounter).getTblindex11());
-                            } else {
-                                int y = 1;
-                                pnRow = pnRow + y;
-//                                getSelectedItem(filteredData.get(pagecounter).getTblindex11());
-                            }
-                            break;
-                        case UP:
-                            pnRow = tblItemList.getSelectionModel().getSelectedIndex();
-                            pagecounter = pnRow + pagination.getCurrentPageIndex() * ROWS_PER_PAGE;
-//                            getSelectedItem(filteredData.get(pagecounter).getTblindex11());
-                            break;
-                        default:
-                            return;
-                    }
-                });
-            }
-            pnEditMode = EditMode.READY;
-            initbutton(pnEditMode);
-        }
-    }
-
     private void txtField_KeyPressed(KeyEvent event) {
         TextField txtField = (TextField) event.getSource();
         int lnIndex = Integer.parseInt(((TextField) event.getSource()).getId().substring(8, 10));
@@ -719,15 +813,18 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
                     switch (txtFieldID) {
                         case "txtField32":
                             if (oTrans.searchBrand(lsValue)) {
-                                loadItemInformationField();
+                                txtField32.setText((String) oTrans.getMaster(32));
                             } else {
                                 ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
                             }
                             break;
                         case "txtField12":
                             if (oTrans.searchInvType(lsValue)) {
-                                loadItemInformationField();
+                                txtField12.setText((String) oTrans.getMaster(12));
+                                txtField33.clear();
                             } else {
+                                txtField12.clear();
+                                txtField12.requestFocus();
                                 ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
                             }
                             break;
@@ -737,14 +834,14 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
                                 return;
                             }
                             if (oTrans.searchInvCategory(lsValue, oTrans.getMaster(12).toString())) {
-                                loadItemInformationField();
+                                txtField33.setText((String) oTrans.getMaster(33));
                             } else {
                                 ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
                             }
                             break;
                         case "txtField34":
                             if (oTrans.searchMeasure(lsValue)) {
-                                loadItemInformationField();
+                                txtField34.setText((String) oTrans.getMaster(34));
                             } else {
                                 ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
                             }
@@ -769,11 +866,23 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
     }
 
     private void loadItemInformationField() {
+
+        String unitPrice = "0.00";
         try {
+            txtField01.setText((String) oTrans.getMaster(1));
+            txtField02.setText((String) oTrans.getMaster(2));
             txtField32.setText((String) oTrans.getMaster(32));
-            txtField33.setText((String) oTrans.getMaster(33));
+            txtField03.setText((String) oTrans.getMaster(3));
+            txtField04.setText((String) oTrans.getMaster(4));
+            if (!String.valueOf((BigDecimal) oTrans.getMaster(13)).equals("null")) {
+                unitPrice = String.valueOf((BigDecimal) oTrans.getMaster(13));
+            } // Format the double value with 2 decimal places
+            txtField13.setText(unitPrice);
             txtField12.setText((String) oTrans.getMaster(12));
+            txtField33.setText((String) oTrans.getMaster(33));
+            txtField37.setText((String) oTrans.getMaster(37));
             txtField34.setText((String) oTrans.getMaster(34));
+
         } catch (SQLException e) {
             ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
         }
@@ -793,8 +902,10 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
                 switch (lnIndex) {
                     case 2:
                     case 32:
+                    case 3:
+                    case 4:
                     case 12:
-                    case 5:
+                    case 33:
                     case 34:
                         oTrans.setMaster(lnIndex, lsValue); //Handle Encoded Value
                         break;
@@ -802,6 +913,7 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
 
             } else {
                 txtField.selectAll();
+
             }
         } catch (SQLException ex) {
             Logger.getLogger(ItemEntryFormController.class.getName()).log(Level.SEVERE, null, ex);
@@ -809,38 +921,47 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
     };
 
     private void clearFields() {
+        txtField02.getStyleClass().remove("required-field");
+        txtField03.getStyleClass().remove("required-field");
+        txtField32.getStyleClass().remove("required-field");
+        txtField12.getStyleClass().remove("required-field");
+        txtField34.getStyleClass().remove("required-field");
         txtField01.setText("");
+        txtField02.setText("");
         txtField03.setText("");
         txtField04.setText("");
         txtField32.setText("");
         txtField33.setText("");
         txtField34.setText("");
+        txtField37.setText("");
         txtField12.setText("");
     }
 
-    private void initbutton(int fnValue) {
+    private void initButton(int fnValue) {
         boolean lbShow = (fnValue == EditMode.ADDNEW || fnValue == EditMode.UPDATE);
-
         btnBrandName.setVisible(lbShow);
         btnCategory.setVisible(lbShow);
         btnInvType.setVisible(lbShow);
         btnMeasurement.setVisible(lbShow);
         btnLocation.setVisible(lbShow);
-
-        txtField01.setDisable(!lbShow);
+        txtField01.setDisable(true);
+        txtField02.setDisable(!lbShow);
         txtField03.setDisable(!lbShow);
-        txtField04.setDisable(!lbShow);
         txtField32.setDisable(!lbShow);
+        txtField04.setDisable(!lbShow);
+        txtField13.setDisable(true);
+        txtField12.setDisable(!lbShow);
         txtField33.setDisable(!lbShow);
         txtField34.setDisable(!lbShow);
-        txtField12.setDisable(!lbShow);
+        txtField37.setDisable(true);
         btnSupsAdd.setDisable(!lbShow);
         btnSupsDel.setDisable(!lbShow);
         btnModelAdd.setDisable(!lbShow);
         btnModelDel.setDisable(!lbShow);
-        //btnCapture.setVisible(lbShow);
-        //btnUpload.setVisible(lbShow);
-
+        btnCapture.setDisable(!lbShow);
+        btnUpload.setDisable(!lbShow);
+        tblSupersede.setDisable(!lbShow);
+        tblModel.setDisable(!lbShow);
         btnAdd.setVisible(!lbShow);
         btnAdd.setManaged(!lbShow);
         btnEdit.setVisible(false);
@@ -853,6 +974,10 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
         if (fnValue == EditMode.READY) {
             btnEdit.setVisible(true);
             btnEdit.setManaged(true);
+        }
+        if (fnValue == EditMode.UPDATE) {
+            txtField02.setDisable(true);
+
         }
     }
 

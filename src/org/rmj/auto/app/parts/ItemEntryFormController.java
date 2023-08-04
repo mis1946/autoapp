@@ -1131,12 +1131,17 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setTitle("");
             stage.showAndWait();
+            loadItemModelTable();
 
         } catch (IOException e) {
             e.printStackTrace();
             ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
             System.exit(1);
         }
+    }
+
+    private void loadItemModelTable() {
+
     }
 
     private void loadItemInformationField() {

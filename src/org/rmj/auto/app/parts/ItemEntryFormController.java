@@ -399,6 +399,7 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
             case "btnSupsAdd":
                 break;
             case "btnModelAdd":
+                loadItemModelDialog();
                 break;
             case "btnModelDel":
                 break;
@@ -1054,6 +1055,52 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
             fxmlLoader.setLocation(getClass().getResource("MeasurementEntryParam.fxml"));
 
             MeasurementEntryParamController loControl = new MeasurementEntryParamController();
+            loControl.setGRider(oApp);
+//            loControl.setObject(oTrans);
+            fxmlLoader.setController(loControl);
+
+            //load the main interface
+            Parent parent = fxmlLoader.load();
+
+            parent.setOnMousePressed(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    xOffset = event.getSceneX();
+                    yOffset = event.getSceneY();
+                }
+            });
+
+            parent.setOnMouseDragged(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    stage.setX(event.getScreenX() - xOffset);
+                    stage.setY(event.getScreenY() - yOffset);
+                }
+            });
+
+            //set the main interface as the scene/*
+            Scene scene = new Scene(parent);
+            stage.setScene(scene);
+            stage.initStyle(StageStyle.TRANSPARENT);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle("");
+            stage.showAndWait();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
+            System.exit(1);
+        }
+    }
+
+    private void loadItemModelDialog() {
+        try {
+            Stage stage = new Stage();
+
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            fxmlLoader.setLocation(getClass().getResource("ItemEntryModel.fxml"));
+
+            ItemEntryModelController loControl = new ItemEntryModelController();
             loControl.setGRider(oApp);
 //            loControl.setObject(oTrans);
             fxmlLoader.setController(loControl);

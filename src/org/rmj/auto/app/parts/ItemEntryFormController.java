@@ -15,6 +15,9 @@ import java.sql.SQLException;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.beans.property.ReadOnlyBooleanPropertyBase;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -52,6 +55,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Duration;
 import org.rmj.appdriver.GRider;
 import org.rmj.appdriver.agentfx.CommonUtils;
 import org.rmj.appdriver.agentfx.ShowMessageFX;
@@ -131,8 +135,6 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
     @FXML
     private Button btnMeasurement;
     @FXML
-    private Button btnLocation;
-    @FXML
     private Button btnSupsDel;
     @FXML
     private Button btnSupsAdd;
@@ -188,7 +190,7 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
     private TableColumn<ItemEntryTableList, String> tblindex33;
     @FXML
     private TextField txtField32;
-    ObservableList<String> cItems = FXCollections.observableArrayList("Part Number", "Description");
+    ObservableList<String> cItems = FXCollections.observableArrayList("PART NUMBER", "DESCRIPTION");
     @FXML
     private ComboBox<String> comboFilter;
     @FXML
@@ -228,7 +230,6 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
         btnCategory.setOnAction(this::cmdButton_Click);
         btnInvType.setOnAction(this::cmdButton_Click);
         btnMeasurement.setOnAction(this::cmdButton_Click);
-        btnLocation.setOnAction(this::cmdButton_Click);
         btnSupsAdd.setOnAction(this::cmdButton_Click);
         btnSupsDel.setOnAction(this::cmdButton_Click);
         btnModelAdd.setOnAction(this::cmdButton_Click);
@@ -267,6 +268,7 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
         addRequiredFieldListener(txtField32);
         addRequiredFieldListener(txtField03);
         addRequiredFieldListener(txtField12);
+        addRequiredFieldListener(txtField33);
         addRequiredFieldListener(txtField34);
         txtField12.textProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue.isEmpty()) {
@@ -282,11 +284,49 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
     private void addRequiredFieldListener(TextField textField) {
         textField.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue && textField.getText().isEmpty()) {
+                validateInput(textField);
+                shakeTextField(textField);
                 textField.getStyleClass().add("required-field");
             } else {
                 textField.getStyleClass().remove("required-field");
             }
         });
+    }
+
+    private void validateInput(TextField textField) {
+        if (textField.getText().isEmpty()) {
+            // Animate the TextField with a red border
+            Timeline timeline = new Timeline(
+                    new KeyFrame(Duration.ZERO, new KeyValue(textField.styleProperty(), "")),
+                    new KeyFrame(Duration.millis(100), new KeyValue(textField.styleProperty(), "-fx-border-color: red;"))
+            );
+            timeline.setCycleCount(2);
+            timeline.setAutoReverse(true);
+            timeline.play();
+        }
+    }
+
+    private void shakeTextField(TextField textField) {
+        Timeline timeline = new Timeline();
+        double originalX = textField.getTranslateX();
+
+        // Add keyframes for the animation
+        KeyFrame keyFrame1 = new KeyFrame(Duration.millis(0), new KeyValue(textField.translateXProperty(), 0));
+        KeyFrame keyFrame2 = new KeyFrame(Duration.millis(100), new KeyValue(textField.translateXProperty(), -5));
+        KeyFrame keyFrame3 = new KeyFrame(Duration.millis(200), new KeyValue(textField.translateXProperty(), 5));
+        KeyFrame keyFrame4 = new KeyFrame(Duration.millis(300), new KeyValue(textField.translateXProperty(), -5));
+        KeyFrame keyFrame5 = new KeyFrame(Duration.millis(400), new KeyValue(textField.translateXProperty(), 5));
+        KeyFrame keyFrame6 = new KeyFrame(Duration.millis(500), new KeyValue(textField.translateXProperty(), -5));
+        KeyFrame keyFrame7 = new KeyFrame(Duration.millis(600), new KeyValue(textField.translateXProperty(), 5));
+        KeyFrame keyFrame8 = new KeyFrame(Duration.millis(700), new KeyValue(textField.translateXProperty(), originalX));
+
+        // Add keyframes to the timeline
+        timeline.getKeyFrames().addAll(
+                keyFrame1, keyFrame2, keyFrame3, keyFrame4, keyFrame5, keyFrame6, keyFrame7, keyFrame8
+        );
+
+        // Play the animation
+        timeline.play();
     }
 
     public void initCombo() {
@@ -297,13 +337,13 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
             txtSeeks02.setVisible(false);
             txtSeeks02.setManaged(false);
             switch (selectedFilter) {
-                case "Part Number":
+                case "PART NUMBER":
                     txtSeeks01.setText("");
                     txtSeeks01.setVisible(true);
                     txtSeeks01.setManaged(true);
                     tblItemList.setItems(itemdata);
                     break;
-                case "Description":
+                case "DESCRIPTION":
                     txtSeeks02.setText("");
                     txtSeeks02.setVisible(true);
                     txtSeeks02.setManaged(true);
@@ -343,14 +383,16 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
         String lsButton = ((Button) event.getSource()).getId();
         switch (lsButton) {
             case "btnBrandName":
+                loadBrandDialog();
                 break;
             case "btnInvType":
+                loadInvTypeDialog();
                 break;
             case "btnCategory":
-                break;
-            case "btnLocation":
+                loadCategoryDialog();
                 break;
             case "btnMeasurement":
+                loadMeasurementDialog();
                 break;
             case "btnSupsDel":
                 break;
@@ -865,6 +907,191 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
 
     }
 
+    //parameter
+    private void loadBrandDialog() {
+        try {
+            Stage stage = new Stage();
+
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            fxmlLoader.setLocation(getClass().getResource("BrandEntryParam.fxml"));
+
+            BrandEntryParamController loControl = new BrandEntryParamController();
+            loControl.setGRider(oApp);
+//            loControl.setObject(oTrans);
+            fxmlLoader.setController(loControl);
+
+            //load the main interface
+            Parent parent = fxmlLoader.load();
+
+            parent.setOnMousePressed(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    xOffset = event.getSceneX();
+                    yOffset = event.getSceneY();
+                }
+            });
+
+            parent.setOnMouseDragged(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    stage.setX(event.getScreenX() - xOffset);
+                    stage.setY(event.getScreenY() - yOffset);
+                }
+            });
+
+            //set the main interface as the scene/*
+            Scene scene = new Scene(parent);
+            stage.setScene(scene);
+            stage.initStyle(StageStyle.TRANSPARENT);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle("");
+            stage.showAndWait();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
+            System.exit(1);
+        }
+    }
+
+    private void loadInvTypeDialog() {
+        try {
+            Stage stage = new Stage();
+
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            fxmlLoader.setLocation(getClass().getResource("InvTypeEntryParam.fxml"));
+
+            InvTypeEntryParamController loControl = new InvTypeEntryParamController();
+            loControl.setGRider(oApp);
+//            loControl.setObject(oTrans);
+            fxmlLoader.setController(loControl);
+
+            //load the main interface
+            Parent parent = fxmlLoader.load();
+
+            parent.setOnMousePressed(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    xOffset = event.getSceneX();
+                    yOffset = event.getSceneY();
+                }
+            });
+
+            parent.setOnMouseDragged(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    stage.setX(event.getScreenX() - xOffset);
+                    stage.setY(event.getScreenY() - yOffset);
+                }
+            });
+
+            //set the main interface as the scene/*
+            Scene scene = new Scene(parent);
+            stage.setScene(scene);
+            stage.initStyle(StageStyle.TRANSPARENT);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle("");
+            stage.showAndWait();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
+            System.exit(1);
+        }
+    }
+
+    private void loadCategoryDialog() {
+        try {
+            Stage stage = new Stage();
+
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            fxmlLoader.setLocation(getClass().getResource("CategoryEntryParam.fxml"));
+
+            CategoryEntryParamController loControl = new CategoryEntryParamController();
+            loControl.setGRider(oApp);
+//            loControl.setObject(oTrans);
+            fxmlLoader.setController(loControl);
+
+            //load the main interface
+            Parent parent = fxmlLoader.load();
+
+            parent.setOnMousePressed(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    xOffset = event.getSceneX();
+                    yOffset = event.getSceneY();
+                }
+            });
+
+            parent.setOnMouseDragged(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    stage.setX(event.getScreenX() - xOffset);
+                    stage.setY(event.getScreenY() - yOffset);
+                }
+            });
+
+            //set the main interface as the scene/*
+            Scene scene = new Scene(parent);
+            stage.setScene(scene);
+            stage.initStyle(StageStyle.TRANSPARENT);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle("");
+            stage.showAndWait();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
+            System.exit(1);
+        }
+    }
+
+    private void loadMeasurementDialog() {
+        try {
+            Stage stage = new Stage();
+
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            fxmlLoader.setLocation(getClass().getResource("MeasurementEntryParam.fxml"));
+
+            MeasurementEntryParamController loControl = new MeasurementEntryParamController();
+            loControl.setGRider(oApp);
+//            loControl.setObject(oTrans);
+            fxmlLoader.setController(loControl);
+
+            //load the main interface
+            Parent parent = fxmlLoader.load();
+
+            parent.setOnMousePressed(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    xOffset = event.getSceneX();
+                    yOffset = event.getSceneY();
+                }
+            });
+
+            parent.setOnMouseDragged(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    stage.setX(event.getScreenX() - xOffset);
+                    stage.setY(event.getScreenY() - yOffset);
+                }
+            });
+
+            //set the main interface as the scene/*
+            Scene scene = new Scene(parent);
+            stage.setScene(scene);
+            stage.initStyle(StageStyle.TRANSPARENT);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle("");
+            stage.showAndWait();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
+            System.exit(1);
+        }
+    }
+
     private void loadItemInformationField() {
 
         String unitPrice = "0.00";
@@ -925,6 +1152,7 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
         txtField03.getStyleClass().remove("required-field");
         txtField32.getStyleClass().remove("required-field");
         txtField12.getStyleClass().remove("required-field");
+        txtField33.getStyleClass().remove("required-field");
         txtField34.getStyleClass().remove("required-field");
         txtField01.setText("");
         txtField02.setText("");
@@ -943,7 +1171,6 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
         btnCategory.setVisible(lbShow);
         btnInvType.setVisible(lbShow);
         btnMeasurement.setVisible(lbShow);
-        btnLocation.setVisible(lbShow);
         txtField01.setDisable(true);
         txtField02.setDisable(!lbShow);
         txtField03.setDisable(!lbShow);

@@ -19,6 +19,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import org.rmj.appdriver.GRider;
 import org.rmj.appdriver.agentfx.CommonUtils;
@@ -37,7 +38,7 @@ public class ItemEntryModelController implements Initializable, ScreenInterface 
 
     private GRider oApp;
     private MasterCallback oListener;
-//    private ItemEntry oTrans;
+    private ItemEntry oTrans;
     private int pnEditMode;
     private final String pxeModuleName = "Item Entry Model";
 
@@ -48,17 +49,9 @@ public class ItemEntryModelController implements Initializable, ScreenInterface 
     @FXML
     private TableView<ItemEntryModelTable> tblVModelList;
     @FXML
-    private TableColumn<ItemEntryModelTable, String> tblIndex01;
-    @FXML
-    private TableColumn<ItemEntryModelTable, String> tblIndex02;
-    @FXML
-    private TableColumn<ItemEntryModelTable, String> tblIndex04;
-    @FXML
     private TableView<ItemEntryModelTable> tblVYear;
     @FXML
-    private TableColumn<ItemEntryModelTable, String> tblIndex02_yr;
-    @FXML
-    private TableColumn tblIndex03_yr;
+    private TableColumn<ItemEntryModelTable, String> tblIndex03_yr;
     @FXML
     private CheckBox selectModelAll;
     @FXML
@@ -70,6 +63,8 @@ public class ItemEntryModelController implements Initializable, ScreenInterface 
     @FXML
     private ComboBox<String> comboFilter;
     ObservableList<String> cItems = FXCollections.observableArrayList("MAKE", "MODEL");
+    private ObservableList<ItemEntryModelTable> itemModeldata = FXCollections.observableArrayList();
+    private ObservableList<ItemEntryModelTable> itemModelYear = FXCollections.observableArrayList();
     @FXML
     private TableColumn<ItemEntryModelTable, String> tblindexRow;
     @FXML
@@ -78,6 +73,14 @@ public class ItemEntryModelController implements Initializable, ScreenInterface 
     private Button btnFilterMake;
     @FXML
     private Button btnFilterModel;
+    @FXML
+    private TableColumn tblIndex06_mdl;
+    @FXML
+    private TableColumn tblIndex07_mdl;
+    @FXML
+    private TableColumn<ItemEntryModelTable, Boolean> tblindexselectModel;
+    @FXML
+    private TableColumn<ItemEntryModelTable, Boolean> tblindexselectYear;
 
     /**
      * Initializes the controller class.
@@ -87,16 +90,17 @@ public class ItemEntryModelController implements Initializable, ScreenInterface 
         oListener = (int fnIndex, Object foValue) -> {
             System.out.println("Set Class Value " + fnIndex + "-->" + foValue);
         };
-//        oTrans = new PartsMeasure(oApp, oApp.getBranchCode(), true);
-
-//        oTrans.setCallback(oListener);
-//        oTrans.setWithUI(true);
+        oTrans = new ItemEntry(oApp, oApp.getBranchCode(), true);;
+        oTrans.setCallback(oListener);
+        oTrans.setWithUI(true);
         comboFilter.setItems(cItems);
         btnFilterMake.setOnAction(this::cmdButton_Click);
         btnFilterModel.setOnAction(this::cmdButton_Click);
         btnClose.setOnAction(this::cmdButton_Click);
         btnAdd.setOnAction(this::cmdButton_Click);
-//        loadItemModelTable();
+        loadItemModelTable();
+        loadItemModelYearTable();
+
     }
 
     private void cmdButton_Click(ActionEvent event) {
@@ -213,19 +217,104 @@ public class ItemEntryModelController implements Initializable, ScreenInterface 
 //    }
 
     private void loadItemModelTable() {
-        initItemModelTable();
+        try {
+            itemModeldata.clear(); // Clear the previous data in the list
+            if (oTrans.loadInvModel("", false)) {
+                for (int lnCtr = 1; lnCtr <= oTrans.getVhclModelCount(); lnCtr++) {
+
+                    System.out.println(oTrans.getVhclModel(lnCtr, "sModelIDx").toString());
+                    System.out.println(oTrans.getVhclModel(lnCtr, "sMakeDesc").toString());
+                    System.out.println(oTrans.getVhclModel(lnCtr, "sModelDsc").toString());
+                    itemModeldata.add(new ItemEntryModelTable(
+                            String.valueOf(lnCtr), // ROW
+                            "",
+                            //                            oTrans.getVhclModel(lnCtr, "sStockIDx").toString(),
+                            oTrans.getVhclModel(lnCtr, "sModelIDx").toString(),
+                            oTrans.getVhclModel(lnCtr, "sMakeDesc").toString(),
+                            oTrans.getVhclModel(lnCtr, "sModelDsc").toString(),
+                            ""
+                    )
+                    );
+                }
+
+                // Set the Employeedata list as the items for tblViewEmployee TableView
+                tblVModelList.setItems(itemModeldata);
+
+                // Call the initEmployeeTable() method to initialize the TableView columns if needed
+                initItemModelTable();
+            }
+        } catch (SQLException e) {
+            ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
+        }
     }
 
     private void initItemModelTable() {
+        tblindexRow.setCellValueFactory(new PropertyValueFactory<>("tblindexRow"));  //Row
+        tblIndex06_mdl.setCellValueFactory(new PropertyValueFactory<>("tblIndex06_mdl"));
+        tblIndex07_mdl.setCellValueFactory(new PropertyValueFactory<>("tblIndex07_mdl"));
+        // Set up listener for "Select All" checkbox
+        tblindexselectModel.setCellValueFactory(new PropertyValueFactory<>("select"));
+        tblVModelList.getItems().forEach(item -> {
+            CheckBox selectModelAll = item.getSelect();
+            selectModelAll.setOnAction(event -> {
+                if (tblVModelList.getItems().stream().allMatch(tableItem -> tableItem.getSelect().isSelected())) {
+                    selectModelAll.setSelected(true);
+                } else {
+                    selectModelAll.setSelected(false);
+                }
+            });
+        });
+        selectModelAll.setOnAction(event -> {
+            boolean newValue = selectModelAll.isSelected();
+            tblVModelList.getItems().forEach(item -> item.getSelect().setSelected(newValue));
+        });
 
     }
 
     private void loadItemModelYearTable() {
-        initItemModelYearTable();
+        try {
+            itemModelYear.clear();
+            if (oTrans.loadInvModelYr("", false)) {
+                for (int lnCtr = 1; lnCtr <= oTrans.getVhclModelYrCount(); lnCtr++) {
+                    itemModelYear.add(new ItemEntryModelTable(
+                            "",
+                            "",
+                            "",
+                            "",
+                            "",
+                            String.valueOf((Integer) oTrans.getVhclModelYr(lnCtr, "nYearModl"))
+                    ));
+                }
+
+                // Set the Employeedata list as the items for tblViewEmployee TableView
+                tblVYear.setItems(itemModelYear);
+
+                // Call the initEmployeeTable() method to initialize the TableView columns if needed
+                initItemModelYearTable();
+            }
+        } catch (SQLException e) {
+            ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
+        }
     }
 
     private void initItemModelYearTable() {
-
+        // Set up listener for "Select All" checkbox
+        tblindexselectYear.setCellValueFactory(new PropertyValueFactory<>("select"));
+        tblVYear.getItems().forEach(item -> {
+            CheckBox selectYearAll = item.getSelect();
+            selectYearAll.setOnAction(event -> {
+                if (tblVYear.getItems().stream().allMatch(tableItem -> tableItem.getSelect().isSelected())) {
+                    selectYearAll.setSelected(true);
+                } else {
+                    selectYearAll.setSelected(false);
+                }
+            });
+        });
+        selectYearAll.setOnAction(event -> {
+            boolean newValue = selectYearAll.isSelected();
+            tblVYear.getItems().forEach(item -> item.getSelect().setSelected(newValue));
+        });
+        tblIndex03_yr.setCellValueFactory(new PropertyValueFactory<>("tblIndex03_yr"));
     }
 
 }

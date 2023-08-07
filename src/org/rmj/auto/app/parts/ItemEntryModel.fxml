@@ -84,7 +84,7 @@
                                                         <CheckBox fx:id="selectYearAll" mnemonicParsing="false" prefHeight="18.0" prefWidth="0.0" textAlignment="CENTER" />
                                                     </graphic>
                                                 </TableColumn>
-                                                <TableColumn fx:id="tblIndex03_yr" prefWidth="138.0" text="Year" />
+                                                <TableColumn fx:id="tblIndex03_yr" prefWidth="166.0" text="Year" />
                                             </columns>
                                         </TableView>
                                         <Label text="Model List" GridPane.columnIndex="1" GridPane.rowIndex="2">
@@ -102,7 +102,7 @@
                                                 <Tooltip text="Enter your search make here." />
                                             </tooltip>
                                         </TextField>
-                                        <TextField fx:id="txtSeeks02" prefHeight="22.0" prefWidth="197.0" promptText="Search Model" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                                        <TextField fx:id="txtSeeks02" prefHeight="22.0" prefWidth="197.0" promptText="Search Model" visible="false" GridPane.columnIndex="3" GridPane.rowIndex="1">
                                             <tooltip>
                                                 <Tooltip text="Enter your search model here." />
                                             </tooltip>
@@ -110,6 +110,7 @@
                                         <Button fx:id="btnFilterMake" mnemonicParsing="false" text="Filter" GridPane.columnIndex="5" GridPane.rowIndex="1" />
                                         <ComboBox fx:id="comboFilter" prefHeight="24.0" prefWidth="98.0" promptText="MAKE" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                         <Button fx:id="btnFilterModel" mnemonicParsing="false" text="Filter" GridPane.columnIndex="5" GridPane.rowIndex="1" />
+                              <CheckBox id="LabelDesc" mnemonicParsing="false" prefHeight="18.0" prefWidth="204.0" text="No Year Model" textAlignment="CENTER" GridPane.columnIndex="7" GridPane.rowIndex="1" />
                                     </children>
                                 </GridPane>
                             </children>

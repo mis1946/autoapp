@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -100,7 +101,6 @@ public class ItemEntryModelController implements Initializable, ScreenInterface 
         btnAdd.setOnAction(this::cmdButton_Click);
         loadItemModelTable();
         loadItemModelYearTable();
-
     }
 
     private void cmdButton_Click(ActionEvent event) {
@@ -161,44 +161,36 @@ public class ItemEntryModelController implements Initializable, ScreenInterface 
 //                }
                 break;
             case "btnFilterMake": //btn filter for Slip No
-//                String filterSlip = txtFieldSearch.getText().trim().toLowerCase();
-//                // Initialize the filteredData variable
-//                FilteredList<VehicleSalesApprovalTable> filteredTxtFieldSlip = new FilteredList<>(vhlApprovalData);
-//                // Apply the filter predicate based on the entered text
-//                filteredTxtFieldSlip.setPredicate(clients -> {
-//                    if (filterSlip.isEmpty()) {
-//                        // No filter text entered, show all data
-//                        return true;
-//                    } else {
-//                        // Filter based on Slip No, Customer Name, Unit Description, and SE Name
-//                        String slipNo = clients.getTblindex03().toLowerCase();
-//                        return slipNo.contains(filterSlip);
-//                    }
-//                });
-//                tblVhclApproval.setItems(filteredTxtFieldSlip);
-//                if (filteredTxtFieldSlip.isEmpty()) {
-//                    ShowMessageFX.Information(null, pxeModuleName, "No record found!");
-//                }
+                String filterMake = txtSeeks01.getText().trim().toLowerCase();
+                FilteredList<ItemEntryModelTable> filteredTxtFieldMake = new FilteredList<>(itemModeldata);
+                filteredTxtFieldMake.setPredicate(clients -> {
+                    if (filterMake.isEmpty()) {
+                        return true;
+                    } else {
+                        String make = clients.getTblIndex06_mdl().toLowerCase();
+                        return make.contains(filterMake);
+                    }
+                });
+                tblVModelList.setItems(filteredTxtFieldMake);
+                if (filteredTxtFieldMake.isEmpty()) {
+                    ShowMessageFX.Information(null, pxeModuleName, "No record found!");
+                }
                 break;
             case "btnFilterModel": //btn filter for Slip No
-//                String filterSlip = txtFieldSearch.getText().trim().toLowerCase();
-//                // Initialize the filteredData variable
-//                FilteredList<VehicleSalesApprovalTable> filteredTxtFieldSlip = new FilteredList<>(vhlApprovalData);
-//                // Apply the filter predicate based on the entered text
-//                filteredTxtFieldSlip.setPredicate(clients -> {
-//                    if (filterSlip.isEmpty()) {
-//                        // No filter text entered, show all data
-//                        return true;
-//                    } else {
-//                        // Filter based on Slip No, Customer Name, Unit Description, and SE Name
-//                        String slipNo = clients.getTblindex03().toLowerCase();
-//                        return slipNo.contains(filterSlip);
-//                    }
-//                });
-//                tblVhclApproval.setItems(filteredTxtFieldSlip);
-//                if (filteredTxtFieldSlip.isEmpty()) {
-//                    ShowMessageFX.Information(null, pxeModuleName, "No record found!");
-//                }
+                String filterModel = txtSeeks02.getText().trim().toLowerCase();
+                FilteredList<ItemEntryModelTable> filteredTxtFieldModel = new FilteredList<>(itemModeldata);
+                filteredTxtFieldModel.setPredicate(clients -> {
+                    if (filterModel.isEmpty()) {
+                        return true;
+                    } else {
+                        String make = clients.getTblIndex06_mdl().toLowerCase();
+                        return make.contains(filterModel);
+                    }
+                });
+                tblVModelList.setItems(filteredTxtFieldModel);
+                if (filteredTxtFieldModel.isEmpty()) {
+                    ShowMessageFX.Information(null, pxeModuleName, "No record found!");
+                }
                 break;
         }
     }
@@ -211,10 +203,10 @@ public class ItemEntryModelController implements Initializable, ScreenInterface 
     private Stage getStage() {
         return (Stage) txtSeeks01.getScene().getWindow();
     }
-//
-//    public void setObject(EntryModel foValue) {
-////        oTrans = foValue;
-//    }
+
+    public void setObject(ItemEntry foValue) {
+        oTrans = foValue;
+    }
 
     private void loadItemModelTable() {
         try {

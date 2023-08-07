@@ -1102,7 +1102,7 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
 
             ItemEntryModelController loControl = new ItemEntryModelController();
             loControl.setGRider(oApp);
-//            loControl.setObject(oTrans);
+            loControl.setObject(oTrans);
             fxmlLoader.setController(loControl);
 
             //load the main interface

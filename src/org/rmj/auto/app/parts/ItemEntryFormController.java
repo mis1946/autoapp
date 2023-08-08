@@ -1,3 +1,4 @@
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -34,6 +35,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Pagination;
 import javafx.scene.control.TableColumn;
@@ -98,6 +100,7 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
     private double yOffset = 0;
 
     private ObservableList<ItemEntryTableList> itemdata = FXCollections.observableArrayList();
+    private ObservableList<ItemEntryModelTable> itemModeldata = FXCollections.observableArrayList();
     private ObservableList<ItemEntryTableList> supersededata = FXCollections.observableArrayList();
     private ObservableList<ItemEntryTableList> modeldata = FXCollections.observableArrayList();
     private FilteredList<ItemEntryTableList> filteredData;
@@ -161,16 +164,6 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
     @FXML
     private TableColumn tblindex04_sups;
     @FXML
-    private TableView tblModel;
-    @FXML
-    private TableColumn tblindex01_model;
-    @FXML
-    private TableColumn tblindex02_model;
-    @FXML
-    private TableColumn tblindex03_model;
-    @FXML
-    private TableColumn tblindex04_model;
-    @FXML
     private Button btnLoadPhoto;
     @FXML
     private TextField txtField12;
@@ -199,6 +192,20 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
     private TextField txtField02;
     @FXML
     private TextField txtField37;
+    @FXML
+    private TableColumn<ItemEntryModelTable, Boolean> tblModelSelect;
+    @FXML
+    private CheckBox selectAllModelCheckBox;
+    @FXML
+    private TableColumn<ItemEntryModelTable, String> tblIndex06_mdl;
+    @FXML
+    private TableColumn<ItemEntryModelTable, String> tblIndex07_mdl;
+    @FXML
+    private TableColumn<ItemEntryModelTable, String> tblIndex03_yr;
+    @FXML
+    private TableColumn<ItemEntryModelTable, String> tblindexModelRow;
+    @FXML
+    private TableView<ItemEntryModelTable> tblModelView;
 
     private Stage getStage() {
         return (Stage) txtSeeks01.getScene().getWindow();
@@ -504,6 +511,7 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
                     if (oTrans.SaveRecord()) {
                         ShowMessageFX.Information(getStage(), "Transaction save successfully.", pxeModuleName, null);
                         loadItemInformationField();
+                        loadItemModelTable();
                         try {
                             getSelectedItem((String) oTrans.getMaster(1));
                         } catch (SQLException ex) {
@@ -702,50 +710,12 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
         tblSupersede.setItems(supersededata);
     }
 
-    public void loadModelList() {
-//        try {
-//            /*Populate table*/
-//            modeldata.clear();
-//            String sRecStat = "";
-//            if (oTrans.LoadList()) {
-//                for (lnCtr = 1; lnCtr <= oTrans.getItemCount(); lnCtr++) {
-//                    itemdata.add(new ItemEntryTableList(
-//                            String.valueOf(lnCtr) //Row
-//                    ));
-//                }
-//                initModelList();
-//            } else {
-//                ShowMessageFX.Warning(null, pxeModuleName, oTrans.getMessage());
-//                return;
-//            }
-//        } catch (SQLException e) {
-//            ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
-//        }
-
-    }
-
-    private void initModelList() {
-        boolean lbShow = (pnEditMode == EditMode.READY || pnEditMode == EditMode.UPDATE);
-        tblindex01_model.setCellValueFactory(new PropertyValueFactory<>("tblindex01"));
-        tblindex02_model.setCellValueFactory(new PropertyValueFactory<>("tblindex02"));
-        tblindex03_model.setCellValueFactory(new PropertyValueFactory<>("tblindex03"));
-        tblindex04_model.setCellValueFactory(new PropertyValueFactory<>("tblindex04"));
-
-        tblModel.widthProperty().addListener((ObservableValue<? extends Number> source, Number oldWidth, Number newWidth) -> {
-            TableHeaderRow header = (TableHeaderRow) tblModel.lookup("TableHeaderRow");
-            header.reorderingProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
-                header.setReordering(false);
-            });
-        });
-
-        tblModel.setItems(modeldata);
-    }
-
     //Populate Text Field Based on selected transaction in table
     private void getSelectedItem(String TransNo) {
         oldTransNo = TransNo;
         if (oTrans.OpenRecord(TransNo)) {
             loadItemInformationField();
+            loadItemModelTable();
         }
         oldPnRow = pagecounter;
 
@@ -1141,7 +1111,50 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
     }
 
     private void loadItemModelTable() {
+        try {
+            itemModeldata.clear(); // Clear the previous data in the list
+            if (oTrans.loadVhclModel()) {
+                for (int lnCtr = 1; lnCtr <= oTrans.getVhclModelCount(); lnCtr++) {
+                    itemModeldata.add(new ItemEntryModelTable(
+                            String.valueOf(lnCtr), // ROW
+                            "",
+                            oTrans.getVhclModel(lnCtr, "sModelIDx").toString(),
+                            oTrans.getVhclModel(lnCtr, "sMakeDesc").toString(),
+                            oTrans.getVhclModel(lnCtr, "sModelDsc").toString(),
+                            String.valueOf((Integer) oTrans.getVhclModelYr(lnCtr, "nYearModl"))
+                    )
+                    );
+                }
+                tblModelView.setItems(itemModeldata);
+                initItemModelTable();
+            }
+        } catch (SQLException e) {
+            ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
+        }
+    }
 
+    private void initItemModelTable() {
+        tblindexModelRow.setCellValueFactory(new PropertyValueFactory<>("tblindexRow"));
+        tblModelSelect.setCellValueFactory(new PropertyValueFactory<>("select"));
+        tblModelView.getItems().forEach(item -> {
+            CheckBox selectCheckBox = item.getSelect();
+            selectCheckBox.setOnAction(event -> {
+                if (tblModelView.getItems().stream().allMatch(tableItem -> tableItem.getSelect().isSelected())) {
+                    selectAllModelCheckBox.setSelected(true);
+                } else {
+                    selectAllModelCheckBox.setSelected(false);
+                }
+            });
+        });
+        selectAllModelCheckBox.setOnAction(event -> {
+            boolean newValue = selectAllModelCheckBox.isSelected();
+            if (!tblModelView.getItems().isEmpty()) {
+                tblModelView.getItems().forEach(item -> item.getSelect().setSelected(newValue));
+            }
+        });
+        tblIndex06_mdl.setCellValueFactory(new PropertyValueFactory<>("tblIndex06_mdl"));
+        tblIndex07_mdl.setCellValueFactory(new PropertyValueFactory<>("tblIndex07_mdl"));
+        tblIndex03_yr.setCellValueFactory(new PropertyValueFactory<>("tblIndex03_yr"));
     }
 
     private void loadItemInformationField() {
@@ -1240,7 +1253,7 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
         btnCapture.setDisable(!lbShow);
         btnUpload.setDisable(!lbShow);
         tblSupersede.setDisable(!lbShow);
-        tblModel.setDisable(!lbShow);
+        tblModelView.setDisable(!lbShow);
         btnAdd.setVisible(!lbShow);
         btnAdd.setManaged(!lbShow);
         btnEdit.setVisible(false);

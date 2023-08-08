@@ -54,7 +54,8 @@
                                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="34.0" minWidth="-Infinity" prefWidth="11.0" />
                                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="50.0" />
                                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="10.0" />
-                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="200.0" />
+                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="100.0" />
+                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="100.0" />
                                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="10.0" />
                                     </columnConstraints>
                                     <rowConstraints>
@@ -67,17 +68,16 @@
                                     <children>
                                         <TableView fx:id="tblVModelList" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="5" GridPane.rowIndex="3">
                                             <columns>
-                                                <TableColumn fx:id="tblindexRow" minWidth="-Infinity" prefWidth="30.0" text="Row" />
-                                                <TableColumn fx:id="tblindexselectModel" minWidth="-Infinity" prefWidth="30.0">
+                                                <TableColumn fx:id="tblindexselectModel" minWidth="-Infinity" prefWidth="41.0">
                                                     <graphic>
                                                         <CheckBox fx:id="selectModelAll" mnemonicParsing="false" prefHeight="18.0" prefWidth="0.0" textAlignment="CENTER" />
                                                     </graphic>
                                                 </TableColumn>
-                                                <TableColumn fx:id="tblIndex06_mdl" prefWidth="151.0" text="Make" />
-                                                <TableColumn fx:id="tblIndex07_mdl" prefWidth="154.0" text="Model" />
+                                                <TableColumn fx:id="tblIndex06_mdl" prefWidth="144.0" text="Make" />
+                                                <TableColumn fx:id="tblIndex07_mdl" prefWidth="181.0" text="Model" />
                                             </columns>
                                         </TableView>
-                                        <TableView fx:id="tblVYear" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="7" GridPane.rowIndex="3">
+                                        <TableView fx:id="tblVYear" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="7" GridPane.columnSpan="2" GridPane.rowIndex="3">
                                             <columns>
                                                 <TableColumn fx:id="tblindexselectYear" minWidth="-Infinity" prefWidth="30.0">
                                                     <graphic>
@@ -109,8 +109,12 @@
                                         </TextField>
                                         <Button fx:id="btnFilterMake" mnemonicParsing="false" text="Filter" GridPane.columnIndex="5" GridPane.rowIndex="1" />
                                         <ComboBox fx:id="comboFilter" prefHeight="24.0" prefWidth="98.0" promptText="MAKE" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                        <Button fx:id="btnFilterModel" mnemonicParsing="false" text="Filter" GridPane.columnIndex="5" GridPane.rowIndex="1" />
-                              <CheckBox id="LabelDesc" mnemonicParsing="false" prefHeight="18.0" prefWidth="204.0" text="No Year Model" textAlignment="CENTER" GridPane.columnIndex="7" GridPane.rowIndex="1" />
+                                        <Button fx:id="btnFilterModel" mnemonicParsing="false" text="Filter" visible="false" GridPane.columnIndex="5" GridPane.rowIndex="1" />
+                                        <CheckBox id="LabelDesc" fx:id="chckNoYear" mnemonicParsing="false" prefHeight="18.0" prefWidth="204.0" text="No Year Model" textAlignment="CENTER" GridPane.columnIndex="8" GridPane.rowIndex="2">
+                                            <padding>
+                                                <Insets bottom="2.0" />
+                                            </padding>
+                                        </CheckBox>
                                     </children>
                                 </GridPane>
                             </children>

@@ -4,6 +4,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.geometry.Rectangle2D?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Pagination?>
@@ -58,7 +59,7 @@
                                                     <children>
                                                         <GridPane prefHeight="30.0" prefWidth="279.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="0.0">
                                                             <columnConstraints>
-                                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="120.0" />
+                                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="140.0" />
                                                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="10.0" />
                                                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="250.0" />
                                                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="110.0" />
@@ -74,7 +75,7 @@
                                                                         <Tooltip text="Enter your search part number here." />
                                                                     </tooltip>
                                                                 </TextField>
-                                                                <ComboBox fx:id="comboFilter" prefHeight="24.0" prefWidth="167.0" promptText="Part Number" />
+                                                                <ComboBox fx:id="comboFilter" prefHeight="24.0" prefWidth="129.0" promptText="PART NUMBER" />
                                                                 <TextField fx:id="txtSeeks02" promptText="Search Description" visible="false" GridPane.columnIndex="2">
                                                                     <tooltip>
                                                                         <Tooltip text="Enter your search description here." />
@@ -444,12 +445,17 @@
                                                                                                                                 <FontAwesomeIconView glyphName="MINUS" size="10.0" />
                                                                                                                             </graphic>
                                                                                                                         </Button>
-                                                                                                                        <TableView fx:id="tblModel" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="2">
+                                                                                                                        <TableView fx:id="tblModelView" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="2">
                                                                                                                             <columns>
-                                                                                                                                <TableColumn fx:id="tblindex01_model" prefWidth="22.0" />
-                                                                                                                                <TableColumn fx:id="tblindex02_model" prefWidth="24.0" />
-                                                                                                                                <TableColumn fx:id="tblindex03_model" minWidth="-Infinity" prefWidth="200.0" text="Model" />
-                                                                                                                                <TableColumn fx:id="tblindex04_model" minWidth="-Infinity" prefWidth="100.0" text="Year" />
+                                                                                                                                <TableColumn fx:id="tblindexModelRow" prefWidth="40.0" text="Row" />
+                                                                                                                                <TableColumn fx:id="tblModelSelect" prefWidth="27.0">
+                                                                                                                                    <graphic>
+                                                                                                                                        <CheckBox fx:id="selectAllModelCheckBox" mnemonicParsing="false" prefHeight="18.0" prefWidth="6.0" />
+                                                                                                                                    </graphic>
+                                                                                                                                </TableColumn>
+                                                                                                                                <TableColumn fx:id="tblIndex06_mdl" minWidth="-Infinity" prefWidth="193.0" text="Make" />
+                                                                                                                                <TableColumn fx:id="tblIndex07_mdl" minWidth="-Infinity" prefWidth="190.0" text="Model" />
+                                                                                                                                <TableColumn fx:id="tblIndex03_yr" minWidth="-Infinity" prefWidth="130.0" text="Year" />
                                                                                                                             </columns>
                                                                                                                         </TableView>
                                                                                                                     </children>

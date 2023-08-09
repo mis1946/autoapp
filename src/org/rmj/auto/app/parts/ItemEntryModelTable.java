@@ -20,8 +20,9 @@ public class ItemEntryModelTable {
     private SimpleStringProperty tblIndex06_mdl;
     private SimpleStringProperty tblIndex07_mdl;
     private SimpleStringProperty tblIndex03_yr;
+    private SimpleStringProperty tblIndexRow_mdlyr;
 
-    public ItemEntryModelTable(String tblindexRow, String tblindex01, String tblindex02, String tblIndex06_mdl, String tblIndex07_mdl, String tblIndex03_yr) {
+    public ItemEntryModelTable(String tblindexRow, String tblindex01, String tblindex02, String tblIndex06_mdl, String tblIndex07_mdl, String tblIndex03_yr, String tblIndexRow_mdlyr) {
         this.tblindexRow = new SimpleStringProperty(tblindexRow);
         this.tblindex01 = new SimpleStringProperty(tblindex01);
         this.tblindex02 = new SimpleStringProperty(tblindex02);
@@ -29,6 +30,7 @@ public class ItemEntryModelTable {
         this.tblIndex06_mdl = new SimpleStringProperty(tblIndex06_mdl);
         this.tblIndex07_mdl = new SimpleStringProperty(tblIndex07_mdl);
         this.tblIndex03_yr = new SimpleStringProperty(tblIndex03_yr);
+        this.tblIndexRow_mdlyr = new SimpleStringProperty(tblIndexRow_mdlyr);
     }
 
     public String getTblindexRow() {
@@ -85,6 +87,14 @@ public class ItemEntryModelTable {
 
     public void setTblIndex03_yr(String tblIndex03_yr) {
         this.tblIndex03_yr.set(tblIndex03_yr);
+    }
+
+    public String getTblIndexRow_mdlyr() {
+        return tblIndexRow_mdlyr.get();
+    }
+
+    public void setTblIndexRow_mdlyr(String tblIndexRow_mdlyr) {
+        this.tblIndexRow_mdlyr.set(tblIndexRow_mdlyr);
     }
 
 }

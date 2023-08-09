@@ -8,6 +8,8 @@ package org.rmj.auto.app.parts;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -82,17 +84,25 @@ public class ItemEntryModelController implements Initializable, ScreenInterface 
     @FXML
     private CheckBox chckNoYear;
 
+    @Override
+    public void setGRider(GRider foValue) {
+        oApp = foValue;
+    }
+
+    private Stage getStage() {
+        return (Stage) txtSeeks01.getScene().getWindow();
+    }
+
+    public void setObject(ItemEntry foValue) {
+        oTrans = foValue;
+    }
+
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        oListener = (int fnIndex, Object foValue) -> {
-            System.out.println("Set Class Value " + fnIndex + "-->" + foValue);
-        };
-        oTrans = new ItemEntry(oApp, oApp.getBranchCode(), true);;
-        oTrans.setCallback(oListener);
-        oTrans.setWithUI(true);
+
         comboFilter.setItems(cItems);
 
         btnFilterMake.setOnAction(this::cmdButton_Click);
@@ -175,50 +185,92 @@ public class ItemEntryModelController implements Initializable, ScreenInterface 
             case "btnAdd":
                 ObservableList<ItemEntryModelTable> selectedItemsModel = FXCollections.observableArrayList();
                 ObservableList<ItemEntryModelTable> selectedItemsYear = FXCollections.observableArrayList();
+
+                // Check if any items are selected in tblVModelList
+                boolean isAnyModelItemSelected = false;
+                boolean isAnyYearItemSelected = false;
+
                 for (ItemEntryModelTable item : tblVModelList.getItems()) {
                     if (item.getSelect().isSelected()) {
                         selectedItemsModel.add(item);
+                        isAnyModelItemSelected = true;
                     }
                 }
+
                 for (ItemEntryModelTable item : tblVYear.getItems()) {
                     if (item.getSelect().isSelected()) {
                         selectedItemsYear.add(item);
+                        isAnyYearItemSelected = true;
                     }
                 }
 
-                if (selectedItemsModel.isEmpty() && selectedItemsYear.isEmpty()) {
+                if (!isAnyModelItemSelected && !isAnyYearItemSelected) {
                     ShowMessageFX.Information(null, pxeModuleName, "No items selected to add.");
+                } else if (!chckNoYear.isSelected() && !isAnyYearItemSelected) {
+                    ShowMessageFX.Information(null, pxeModuleName, "Please check the NoYearModel checkbox or select items in tblModelYear.");
                 } else {
                     int lnfind = 0;
-
+                    boolean add = false;
                     if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure you want to add?")) {
-                        for (ItemEntryModelTable item : selectedItemsModel) {
-                            for (ItemEntryModelTable items : selectedItemsYear) {
+                        if (chckNoYear.isSelected()) {
+                            for (ItemEntryModelTable item : selectedItemsModel) {
                                 String fsMakeDesc = item.getTblIndex06_mdl();
                                 String fsModelDesc = item.getTblIndex07_mdl();
                                 String fsModelCode = item.getTblindex02();
-                                String Year = items.getTblIndex03_yr();
+                                add = oTrans.addInvModel_Year(fsModelCode, fsModelDesc, fsMakeDesc, 0, true);
+                                if (!add) {
+                                    ShowMessageFX.Error(null, pxeModuleName, oTrans.getMessage());
+                                    return;
+                                }
 
                                 try {
-                                    int yearAsInt = Integer.parseInt(Year);
+                                    System.out.println("Model Count >>> " + oTrans.getInvModelCount());
+                                } catch (SQLException ex) {
+                                    Logger.getLogger(ItemEntryModelController.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                            }
 
-                                    boolean fsEmp = false; // Handle SQL exception
-                                    if (!fsEmp) {
-                                        lnfind++;
-                                        System.out.println(lnfind);
-                                        boolean add = oTrans.addInvModel_Year(fsModelCode, fsModelDesc, fsMakeDesc, yearAsInt, fsEmp);
+                        } else {
+                            //Inv Model Year
+                            for (ItemEntryModelTable item : selectedItemsModel) {
+
+                                String fsMakeDesc = item.getTblIndex06_mdl();
+                                String fsModelDesc = item.getTblIndex07_mdl();
+                                String fsModelCode = item.getTblindex02();
+
+                                System.out.println(fsMakeDesc);
+                                System.out.println(fsModelDesc);
+                                System.out.println(fsModelCode);
+
+                                for (ItemEntryModelTable items : selectedItemsYear) {
+                                    String Year = items.getTblIndex03_yr();
+                                    System.out.println(Year);
+
+                                    try {
+                                        int yearAsInt = Integer.parseInt(Year);
+                                        add = oTrans.addInvModel_Year(fsModelCode, fsModelDesc, fsMakeDesc, yearAsInt, false);
+                                        if (!add) {
+                                            ShowMessageFX.Error(null, pxeModuleName, oTrans.getMessage());
+                                            return;
+                                        }
+
+                                        try {
+                                            System.out.println("Model Count Year >>> " + oTrans.getInvModelYrCount());
+                                        } catch (SQLException ex) {
+                                            Logger.getLogger(ItemEntryModelController.class.getName()).log(Level.SEVERE, null, ex);
+                                        }
+
+                                    } catch (NumberFormatException e) {
+                                        // Handle the case where Year is not a valid integer
+                                        System.out.println("Invalid year value: " + Year);
+                                        // You might want to log or display an error message here
                                     }
-                                } catch (NumberFormatException e) {
-                                    // Handle the case where Year is not a valid integer
-                                    System.out.println("Invalid year value: " + Year);
-                                    // You might want to log or display an error message here
                                 }
                             }
                         }
-                        if (lnfind >= 1) {
+                        if (add) {
                             ShowMessageFX.Information(null, pxeModuleName, "Added Vehicle Model successfully.");
-                        } else {
-                            ShowMessageFX.Error(null, pxeModuleName, "Failed to add vehicle model");
+                            CommonUtils.closeStage(btnClose);
                         }
                     }
                 }
@@ -261,20 +313,6 @@ public class ItemEntryModelController implements Initializable, ScreenInterface 
         }
     }
 
-    @Override
-    public void setGRider(GRider foValue
-    ) {
-        oApp = foValue;
-    }
-
-    private Stage getStage() {
-        return (Stage) txtSeeks01.getScene().getWindow();
-    }
-
-    public void setObject(ItemEntry foValue) {
-        oTrans = foValue;
-    }
-
     private void loadItemModelTable() {
         try {
             itemModeldata.clear(); // Clear the previous data in the list
@@ -286,6 +324,7 @@ public class ItemEntryModelController implements Initializable, ScreenInterface 
                             oTrans.getVhclModel(lnCtr, "sModelIDx").toString(),
                             oTrans.getVhclModel(lnCtr, "sMakeDesc").toString(),
                             oTrans.getVhclModel(lnCtr, "sModelDsc").toString(),
+                            "",
                             ""
                     )
                     );
@@ -300,6 +339,7 @@ public class ItemEntryModelController implements Initializable, ScreenInterface 
         }
     }
 
+    @SuppressWarnings("unchecked")
     private void initItemModelTable() {
 
         tblIndex06_mdl.setCellValueFactory(new PropertyValueFactory<>("tblIndex06_mdl"));
@@ -311,8 +351,10 @@ public class ItemEntryModelController implements Initializable, ScreenInterface 
             CheckBox selectCheckBoxModel = item.getSelect();
             selectCheckBoxModel.setOnAction(event -> {
                 // Check if any checkbox is selected
+
                 boolean anySelected = tblVModelList.getItems().stream()
-                        .anyMatch(tableItem -> tableItem.getSelect().isSelected());
+                        .anyMatch(tableItem -> tableItem.getSelect().isSelected()
+                        );
 
                 if (anySelected) {
                     tblVYear.setDisable(false);
@@ -320,6 +362,29 @@ public class ItemEntryModelController implements Initializable, ScreenInterface 
                 } else {
                     tblVYear.setDisable(true);
                     chckNoYear.setSelected(true);
+                }
+
+                for (ItemEntryModelTable itemModel : tblVModelList.getItems()) {
+                    if (itemModel.getSelect().isSelected()) {
+                        if (itemModel.getTblIndex07_mdl().equals("COMMON")) {
+                            tblVYear.setDisable(true);
+                            chckNoYear.setSelected(true);
+
+                            for (ItemEntryModelTable itemModel2 : tblVModelList.getItems()) {
+                                if (itemModel2.getSelect().isSelected()) {
+                                    if (!itemModel2.getTblIndex07_mdl().equals("COMMON")) {
+                                        itemModel2.getSelect().setSelected(false);
+                                    }
+                                }
+                            }
+                        } else {
+                            if (itemModel.getTblIndex07_mdl().equals("COMMON")) {
+                                itemModel.getSelect().setSelected(false);
+                                tblVYear.setDisable(false);
+                                chckNoYear.setSelected(false);
+                            }
+                        }
+                    }
                 }
 
                 // Check if all checkboxes are selected and update selectModelAll accordingly
@@ -361,7 +426,8 @@ public class ItemEntryModelController implements Initializable, ScreenInterface 
                             "",
                             "",
                             "",
-                            String.valueOf((Integer) oTrans.getVhclModelYr(lnCtr, "nYearModl"))
+                            String.valueOf((Integer) oTrans.getVhclModelYr(lnCtr, "nYearModl")),
+                            ""
                     ));
                 }
 

@@ -68,23 +68,23 @@
                                     <children>
                                         <TableView fx:id="tblVModelList" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="5" GridPane.rowIndex="3">
                                             <columns>
-                                                <TableColumn fx:id="tblindexselectModel" minWidth="-Infinity" prefWidth="41.0">
+                                                <TableColumn fx:id="tblindexselectModel" minWidth="-Infinity" prefWidth="41.0" sortable="false">
                                                     <graphic>
                                                         <CheckBox fx:id="selectModelAll" mnemonicParsing="false" prefHeight="18.0" prefWidth="0.0" textAlignment="CENTER" />
                                                     </graphic>
                                                 </TableColumn>
-                                                <TableColumn fx:id="tblIndex06_mdl" prefWidth="144.0" text="Make" />
-                                                <TableColumn fx:id="tblIndex07_mdl" prefWidth="181.0" text="Model" />
+                                                <TableColumn fx:id="tblIndex06_mdl" prefWidth="144.0" sortable="false" text="Make" />
+                                                <TableColumn fx:id="tblIndex07_mdl" prefWidth="181.0" sortable="false" text="Model" />
                                             </columns>
                                         </TableView>
                                         <TableView fx:id="tblVYear" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="7" GridPane.columnSpan="2" GridPane.rowIndex="3">
                                             <columns>
-                                                <TableColumn fx:id="tblindexselectYear" minWidth="-Infinity" prefWidth="30.0">
+                                                <TableColumn fx:id="tblindexselectYear" minWidth="-Infinity" prefWidth="30.0" sortable="false">
                                                     <graphic>
                                                         <CheckBox fx:id="selectYearAll" mnemonicParsing="false" prefHeight="18.0" prefWidth="0.0" textAlignment="CENTER" />
                                                     </graphic>
                                                 </TableColumn>
-                                                <TableColumn fx:id="tblIndex03_yr" prefWidth="166.0" text="Year" />
+                                                <TableColumn fx:id="tblIndex03_yr" prefWidth="166.0" sortable="false" text="Year" />
                                             </columns>
                                         </TableView>
                                         <Label text="Model List" GridPane.columnIndex="1" GridPane.rowIndex="2">

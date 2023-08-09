@@ -64,6 +64,7 @@ import org.rmj.appdriver.agentfx.ShowMessageFX;
 import org.rmj.appdriver.callback.MasterCallback;
 import org.rmj.appdriver.constants.EditMode;
 import org.rmj.auto.app.bank.BankEntryFormController;
+import org.rmj.auto.app.views.ActivityMemberTable;
 import org.rmj.auto.app.views.ScreenInterface;
 import org.rmj.auto.app.views.unloadForm;
 import org.rmj.auto.parts.base.ItemEntry;
@@ -206,6 +207,8 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
     private TableColumn<ItemEntryModelTable, String> tblindexModelRow;
     @FXML
     private TableView<ItemEntryModelTable> tblModelView;
+    @FXML
+    private Button btnModelExpand;
 
     private Stage getStage() {
         return (Stage) txtSeeks01.getScene().getWindow();
@@ -241,6 +244,7 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
         btnSupsDel.setOnAction(this::cmdButton_Click);
         btnModelAdd.setOnAction(this::cmdButton_Click);
         btnModelDel.setOnAction(this::cmdButton_Click);
+        btnModelExpand.setOnAction(this::cmdButton_Click);
         btnCapture.setOnAction(this::cmdButton_Click);
         btnUpload.setOnAction(this::cmdButton_Click);
         btnLoadPhoto.setOnAction(this::cmdButton_Click);
@@ -402,6 +406,7 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
                 loadMeasurementDialog();
                 break;
             case "btnSupsDel":
+
                 break;
             case "btnSupsAdd":
                 break;
@@ -409,6 +414,41 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
                 loadItemModelDialog();
                 break;
             case "btnModelDel":
+                int lnRowModel = 0;
+                int lnRowModelYear = 0;
+
+                for (ItemEntryModelTable item : tblModelView.getItems()) {
+                    if (item.getSelect().isSelected()) {
+                        if (item.getTblIndex03_yr().equals("")) {
+                            lnRowModel++;
+                        } else {
+                            lnRowModelYear++;
+                        }
+                    }
+                }
+                Integer[] lnValueModel = new Integer[lnRowModel];
+                Integer[] lnValueModelYear = new Integer[lnRowModelYear];
+                lnRowModel = 0;
+                lnRowModelYear = 0;
+                for (ItemEntryModelTable item : tblModelView.getItems()) {
+                    if (item.getSelect().isSelected()) {
+
+                        if (item.getTblIndex03_yr().equals("")) {
+                            lnValueModel[lnRowModel] = Integer.parseInt(item.getTblIndexRow_mdlyr());
+                            lnRowModel++;
+                        } else {
+                            lnValueModelYear[lnRowModelYear] = Integer.parseInt(item.getTblIndexRow_mdlyr());
+                            lnRowModelYear++;
+                        }
+                    }
+
+                }
+                oTrans.removeInvModel_Year(lnValueModel, lnValueModelYear);
+                loadItemModelTable();
+                tblModelView.refresh();
+                break;
+            case "btnModelExpand":
+                loadItemModelExpandDialog();
                 break;
             case "btnCapture":
 //                    try {
@@ -443,7 +483,9 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
                 }
                 break;
             case "btnAdd":
+
                 if (oTrans.NewRecord()) {
+                    clearFields();
                     pnEditMode = oTrans.getEditMode();
                 } else {
                     ShowMessageFX.Warning(null, pxeModuleName, oTrans.getMessage());
@@ -512,6 +554,7 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
                         ShowMessageFX.Information(getStage(), "Transaction save successfully.", pxeModuleName, null);
                         loadItemInformationField();
                         loadItemModelTable();
+                        loadItemList();
                         try {
                             getSelectedItem((String) oTrans.getMaster(1));
                         } catch (SQLException ex) {
@@ -1063,13 +1106,59 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
         }
     }
 
+    private void loadItemModelExpandDialog() {
+        try {
+            Stage stage = new Stage();
+
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            fxmlLoader.setLocation(getClass().getResource("ItemEntryExpandModelTable.fxml"));
+            ItemEntryExpandModelTableController loControl = new ItemEntryExpandModelTableController();
+            loControl.setGRider(oApp);
+            loControl.setObject(oTrans);
+            fxmlLoader.setController(loControl);
+
+            //load the main interface
+            Parent parent = fxmlLoader.load();
+
+            parent.setOnMousePressed(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    xOffset = event.getSceneX();
+                    yOffset = event.getSceneY();
+                }
+            });
+
+            parent.setOnMouseDragged(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    stage.setX(event.getScreenX() - xOffset);
+                    stage.setY(event.getScreenY() - yOffset);
+                }
+            });
+
+            //set the main interface as the scene/*
+            Scene scene = new Scene(parent);
+            stage.setScene(scene);
+            stage.initStyle(StageStyle.TRANSPARENT);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle("");
+            stage.showAndWait();
+            loadItemModelTable();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
+            System.exit(1);
+        }
+
+    }
+
     private void loadItemModelDialog() {
         try {
             Stage stage = new Stage();
 
             FXMLLoader fxmlLoader = new FXMLLoader();
             fxmlLoader.setLocation(getClass().getResource("ItemEntryModel.fxml"));
-
             ItemEntryModelController loControl = new ItemEntryModelController();
             loControl.setGRider(oApp);
             loControl.setObject(oTrans);
@@ -1113,21 +1202,41 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
     private void loadItemModelTable() {
         try {
             itemModeldata.clear(); // Clear the previous data in the list
-            if (oTrans.loadVhclModel()) {
-                for (int lnCtr = 1; lnCtr <= oTrans.getVhclModelCount(); lnCtr++) {
-                    itemModeldata.add(new ItemEntryModelTable(
-                            String.valueOf(lnCtr), // ROW
-                            "",
-                            oTrans.getVhclModel(lnCtr, "sModelIDx").toString(),
-                            oTrans.getVhclModel(lnCtr, "sMakeDesc").toString(),
-                            oTrans.getVhclModel(lnCtr, "sModelDsc").toString(),
-                            String.valueOf((Integer) oTrans.getVhclModelYr(lnCtr, "nYearModl"))
-                    )
-                    );
-                }
-                tblModelView.setItems(itemModeldata);
-                initItemModelTable();
+            // if (oTrans.loadInvModel_year(oTrans.getMaster(1).toString())) {
+            //inv model
+            int lnRow = 0;
+            for (int lnCtr = 1; lnCtr <= oTrans.getInvModelCount(); lnCtr++) {
+                itemModeldata.add(new ItemEntryModelTable(
+                        String.valueOf(lnCtr), // ROW
+                        "",
+                        oTrans.getInvModel(lnCtr, "sModelCde").toString(),
+                        oTrans.getInvModel(lnCtr, "sMakeDesc").toString(),
+                        oTrans.getInvModel(lnCtr, "sModelDsc").toString(),
+                        "",
+                        String.valueOf(lnCtr) // ROW
+                )
+                );
             }
+
+            //inv model year
+            lnRow = oTrans.getInvModelCount();
+            for (int lnCtr = 1; lnCtr <= oTrans.getInvModelYrCount(); lnCtr++) {
+                lnRow = lnRow + 1;
+                itemModeldata.add(new ItemEntryModelTable(
+                        String.valueOf(lnRow), // ROW
+                        "",
+                        oTrans.getInvModelYr(lnCtr, "sModelCde").toString(),
+                        oTrans.getInvModelYr(lnCtr, "sMakeDesc").toString(),
+                        oTrans.getInvModelYr(lnCtr, "sModelDsc").toString(),
+                        String.valueOf((Integer) oTrans.getInvModelYr(lnCtr, "nYearModl")),
+                        String.valueOf(lnCtr) // ROW
+                )
+                );
+            }
+
+            tblModelView.setItems(itemModeldata);
+            initItemModelTable();
+            //}
         } catch (SQLException e) {
             ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
         }
@@ -1166,9 +1275,9 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
             txtField32.setText((String) oTrans.getMaster(32));
             txtField03.setText((String) oTrans.getMaster(3));
             txtField04.setText((String) oTrans.getMaster(4));
-            if (!String.valueOf((BigDecimal) oTrans.getMaster(13)).equals("null")) {
-                unitPrice = String.valueOf((BigDecimal) oTrans.getMaster(13));
-            } // Format the double value with 2 decimal places
+//            if (!String.valueOf((BigDecimal) oTrans.getMaster(13)).equals("null")) {
+//                unitPrice = String.valueOf((BigDecimal) oTrans.getMaster(13));
+//            } // Format the double value with 2 decimal places
             txtField13.setText(unitPrice);
             txtField12.setText((String) oTrans.getMaster(12));
             txtField33.setText((String) oTrans.getMaster(33));
@@ -1228,6 +1337,7 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
         txtField34.setText("");
         txtField37.setText("");
         txtField12.setText("");
+        itemModeldata.clear();
     }
 
     private void initButton(int fnValue) {
@@ -1250,6 +1360,7 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
         btnSupsDel.setDisable(!lbShow);
         btnModelAdd.setDisable(!lbShow);
         btnModelDel.setDisable(!lbShow);
+        btnModelExpand.setDisable(!lbShow);
         btnCapture.setDisable(!lbShow);
         btnUpload.setDisable(!lbShow);
         tblSupersede.setDisable(!lbShow);

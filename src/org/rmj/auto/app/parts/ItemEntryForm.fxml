@@ -488,7 +488,7 @@
                                                                                                                                         <FontAwesomeIconView glyphName="EXPAND" size="10.0" />
                                                                                                                                     </graphic>
                                                                                                                                     <tooltip>
-                                                                                                                                        <Tooltip text="Click to expand Model Table" />
+                                                                                                                                        <Tooltip text="Click to expand Model Table." />
                                                                                                                                     </tooltip>
                                                                                                                                 </Button>
                                                                                                                             </children>
@@ -532,6 +532,9 @@
                                                                                                                                     <graphic>
                                                                                                                                         <FontAwesomeIconView glyphName="UPLOAD" size="10" />
                                                                                                                                     </graphic>
+                                                                                                                                    <tooltip>
+                                                                                                                                        <Tooltip text="Click to upload image." />
+                                                                                                                                    </tooltip>
                                                                                                                                 </Button>
                                                                                                                                 <ImageView fx:id="imgPartsPic" fitHeight="150.0" fitWidth="220.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                                                                                                                                     <image>

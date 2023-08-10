@@ -1,4 +1,3 @@
-
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -552,6 +551,7 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
                     //Proceed Saving
                     if (oTrans.SaveRecord()) {
                         ShowMessageFX.Information(getStage(), "Transaction save successfully.", pxeModuleName, null);
+
                         loadItemInformationField();
                         loadItemModelTable();
                         loadItemList();
@@ -563,6 +563,7 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
                         pnEditMode = oTrans.getEditMode();
                     } else {
                         ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", "Error while saving Item Information");
+                        return;
                     }
                 }
                 break;
@@ -757,8 +758,10 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
     private void getSelectedItem(String TransNo) {
         oldTransNo = TransNo;
         if (oTrans.OpenRecord(TransNo)) {
+            clearFields();
             loadItemInformationField();
             loadItemModelTable();
+
         }
         oldPnRow = pagecounter;
 

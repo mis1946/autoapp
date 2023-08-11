@@ -9,12 +9,12 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.function.Predicate;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -44,9 +44,7 @@ public class ItemEntryModelController implements Initializable, ScreenInterface 
     private GRider oApp;
     private MasterCallback oListener;
     private ItemEntry oTrans;
-    private int pnEditMode;
     private final String pxeModuleName = "Item Entry Model";
-
     @FXML
     private Button btnAdd;
     @FXML
@@ -75,28 +73,15 @@ public class ItemEntryModelController implements Initializable, ScreenInterface 
     @FXML
     private Button btnFilterModel;
     @FXML
-    private TableColumn tblIndex06_mdl;
+    private TableColumn<ItemEntryModelTable, String> tblIndex06_mdl;
     @FXML
-    private TableColumn tblIndex07_mdl;
+    private TableColumn<ItemEntryModelTable, String> tblIndex07_mdl;
     @FXML
     private TableColumn<ItemEntryModelTable, Boolean> tblindexselectModel;
     @FXML
     private TableColumn<ItemEntryModelTable, Boolean> tblindexselectYear;
     @FXML
     private CheckBox chckNoYear;
-
-    @Override
-    public void setGRider(GRider foValue) {
-        oApp = foValue;
-    }
-
-    private Stage getStage() {
-        return (Stage) txtSeeks01.getScene().getWindow();
-    }
-
-    public void setObject(ItemEntry foValue) {
-        oTrans = foValue;
-    }
 
     /**
      * Initializes the controller class.
@@ -106,14 +91,13 @@ public class ItemEntryModelController implements Initializable, ScreenInterface 
 
         comboFilter.setItems(cItems);
 
-        btnFilterMake.setOnAction(this::cmdButton_Click);
-        btnFilterModel.setOnAction(this::cmdButton_Click);
-
         txtSeeks01.setOnKeyPressed(this::txtField_KeyPressed);
         txtSeeks02.setOnKeyPressed(this::txtField_KeyPressed);
 
         btnClose.setOnAction(this::cmdButton_Click);
         btnAdd.setOnAction(this::cmdButton_Click);
+        btnFilterMake.setOnAction(this::cmdButton_Click);
+        btnFilterModel.setOnAction(this::cmdButton_Click);
 
         CheckNoYear();
         loadItemModelTable();
@@ -130,6 +114,19 @@ public class ItemEntryModelController implements Initializable, ScreenInterface 
                 tblVYear.setDisable(false);
             }
         });
+    }
+
+    @Override
+    public void setGRider(GRider foValue) {
+        oApp = foValue;
+    }
+
+    private Stage getStage() {
+        return (Stage) txtSeeks01.getScene().getWindow();
+    }
+
+    public void setObject(ItemEntry foValue) {
+        oTrans = foValue;
     }
 
     private void txtField_KeyPressed(KeyEvent event) {
@@ -190,7 +187,6 @@ public class ItemEntryModelController implements Initializable, ScreenInterface 
                 // Check if any items are selected in tblVModelList
                 boolean isAnyModelItemSelected = false;
                 boolean isAnyYearItemSelected = false;
-                int check = 1;
                 for (ItemEntryModelTable item : tblVModelList.getItems()) {
                     if (item.getSelect().isSelected()) {
                         selectedItemsModel.add(item);
@@ -344,63 +340,64 @@ public class ItemEntryModelController implements Initializable, ScreenInterface 
         // Set up listener for "Select All" checkbox
         tblindexselectModel.setCellValueFactory(new PropertyValueFactory<>("select"));
 
-        tblVModelList.getItems().forEach(item -> {
-            CheckBox selectCheckBoxModel = item.getSelect();
-            selectCheckBoxModel.setOnAction(event -> {
-                // Check if any checkbox is selected
+        tblVModelList.getItems().forEach(new Consumer<ItemEntryModelTable>() {
+            @Override
+            public void accept(ItemEntryModelTable item) {
+                CheckBox selectCheckBoxModel = item.getSelect();
+                selectCheckBoxModel.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        // Check if any checkbox is selected
+                        boolean anySelected = false;
+                        for (ItemEntryModelTable itemModel : tblVModelList.getItems()) {
+                            if (itemModel.getSelect().isSelected()) {
+                                if (itemModel.getTblIndex07_mdl().equals("COMMON")) {
+                                    tblVYear.setDisable(true);
+                                    chckNoYear.setSelected(true);
+                                    chckNoYear.setVisible(false);
 
-                for (ItemEntryModelTable itemModel : tblVModelList.getItems()) {
-                    if (itemModel.getSelect().isSelected()) {
-                        if (itemModel.getTblIndex07_mdl().equals("COMMON")) {
-                            tblVYear.setDisable(true);
-                            chckNoYear.setSelected(true);
-                            chckNoYear.setVisible(false);
-
-                            for (ItemEntryModelTable itemModel2 : tblVModelList.getItems()) {
-                                if (itemModel2.getSelect().isSelected()) {
-                                    if (!itemModel2.getTblIndex07_mdl().equals("COMMON")) {
-                                        itemModel2.getSelect().setSelected(false);
+                                    for (ItemEntryModelTable itemModel2 : tblVModelList.getItems()) {
+                                        if (itemModel2.getSelect().isSelected()) {
+                                            if (!itemModel2.getTblIndex07_mdl().equals("COMMON")) {
+                                                itemModel2.getSelect().setSelected(false);
+                                            }
+                                        }
                                     }
+                                } else {
+                                    tblVYear.setDisable(false);
+                                    chckNoYear.setSelected(false);
+                                    chckNoYear.setVisible(true);
+                                    anySelected = true;
                                 }
                             }
-                        } else {
-                            if (itemModel.getTblIndex07_mdl().equals("COMMON")) {
-                                itemModel.getSelect().setSelected(false);
-                            }
                         }
-                    }
-                }
 
-                for (ItemEntryModelTable itemModel : tblVModelList.getItems()) {
-                    if (itemModel.getSelect().isSelected()) {
-                        if (itemModel.getTblIndex07_mdl().equals("COMMON")) {
-                            tblVYear.setDisable(true);
-                            chckNoYear.setSelected(true);
-                            chckNoYear.setVisible(false);
-                            break;
-                        } else {
+                        if (!chckNoYear.isSelected()) {
                             tblVYear.setDisable(false);
-                            chckNoYear.setSelected(false);
                             chckNoYear.setVisible(true);
+                            chckNoYear.setSelected(false);
                         }
+
+                        // Check if all checkboxes are selected and update selectModelAll accordingly
+                        boolean allSelected = tblVModelList.getItems().stream()
+                                .allMatch(new Predicate<ItemEntryModelTable>() {
+                                    @Override
+                                    public boolean test(ItemEntryModelTable tableItem) {
+                                        return tableItem.getSelect().isSelected();
+                                    }
+                                });
+                        selectModelAll.setSelected(allSelected);
+                        tblVYear.setDisable(!anySelected);
+                        chckNoYear.setVisible(anySelected);
+                        chckNoYear.setSelected(!anySelected);
+
                     }
-                }
-
-                if (!chckNoYear.isSelected()) {
-                    tblVYear.setDisable(false);
-                    chckNoYear.setVisible(true);
-                    chckNoYear.setSelected(false);
-                }
-
-//                // Check if all checkboxes are selected and update selectModelAll accordingly
-                boolean allSelected = tblVModelList.getItems().stream()
-                        .allMatch(tableItem -> tableItem.getSelect().isSelected());
-                selectModelAll.setSelected(allSelected);
-            });
+                });
+            }
         });
-//
+
         selectModelAll.setOnAction(event -> {
-            boolean newValue = selectModelAll.isSelected();
+            boolean selectAll = selectModelAll.isSelected();
 
             // Check/uncheck all items' checkboxes
             tblVModelList.getItems().forEach(new Consumer<ItemEntryModelTable>() {
@@ -410,21 +407,21 @@ public class ItemEntryModelController implements Initializable, ScreenInterface 
                         item.getSelect().setSelected(false);
                         chckNoYear.setVisible(true);
                     } else {
-                        item.getSelect().setSelected(newValue);
+                        item.getSelect().setSelected(selectAll);
                     }
 
                 }
             });
 
             // Enable/disable tableViewYear and unselect checkboxNoYear accordingly
-            if (newValue) {
+            if (selectAll) {
                 tblVYear.setDisable(false);
+                chckNoYear.setVisible(true);
                 chckNoYear.setSelected(false);
-
             } else {
                 tblVYear.setDisable(true);
+                chckNoYear.setVisible(false);
                 chckNoYear.setSelected(true);
-
             }
         });
     }
@@ -469,8 +466,8 @@ public class ItemEntryModelController implements Initializable, ScreenInterface 
             });
         });
         selectYearAll.setOnAction(event -> {
-            boolean newValue = selectYearAll.isSelected();
-            tblVYear.getItems().forEach(item -> item.getSelect().setSelected(newValue));
+            boolean selectedAll = selectYearAll.isSelected();
+            tblVYear.getItems().forEach(item -> item.getSelect().setSelected(selectedAll));
         });
 
         tblVYear.disabledProperty().addListener((observable, oldValue, newValue) -> {

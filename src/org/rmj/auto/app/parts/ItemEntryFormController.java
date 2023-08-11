@@ -294,26 +294,12 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
     private void addRequiredFieldListener(TextField textField) {
         textField.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue && textField.getText().isEmpty()) {
-                validateInput(textField);
                 shakeTextField(textField);
                 textField.getStyleClass().add("required-field");
             } else {
                 textField.getStyleClass().remove("required-field");
             }
         });
-    }
-
-    private void validateInput(TextField textField) {
-        if (textField.getText().isEmpty()) {
-            // Animate the TextField with a red border
-            Timeline timeline = new Timeline(
-                    new KeyFrame(Duration.ZERO, new KeyValue(textField.styleProperty(), "")),
-                    new KeyFrame(Duration.millis(100), new KeyValue(textField.styleProperty(), "-fx-border-color: red;"))
-            );
-            timeline.setCycleCount(2);
-            timeline.setAutoReverse(true);
-            timeline.play();
-        }
     }
 
     private void shakeTextField(TextField textField) {

@@ -7,8 +7,6 @@ package org.rmj.auto.app.parts;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -37,19 +35,16 @@ public class ItemEntryExpandModelTableController implements Initializable, Scree
     private GRider oApp;
     private MasterCallback oListener;
     private ItemEntry oTrans;
-    private int pnEditMode;
-    private final String pxeModuleName = "Item Entry Model";
-
-    private Button btnAdd;
     @FXML
     private Button btnClose;
+    @FXML
+    private Button btnRemove;
     @FXML
     private TableView<ItemEntryModelTable> tblVModelList;
     @FXML
     private TableColumn<ItemEntryModelTable, String> tblIndex03_yr;
     @FXML
     private CheckBox selectModelAll;
-    ObservableList<String> cItems = FXCollections.observableArrayList("MAKE", "MODEL");
     private ObservableList<ItemEntryModelTable> itemModeldata = FXCollections.observableArrayList();
     @FXML
     private TableColumn<ItemEntryModelTable, String> tblIndex06_mdl;
@@ -59,8 +54,6 @@ public class ItemEntryExpandModelTableController implements Initializable, Scree
     private TableColumn<ItemEntryModelTable, Boolean> tblindexselectModel;
     @FXML
     private TableColumn<ItemEntryModelTable, String> tblindexRowModel;
-    @FXML
-    private Button btnRemove;
 
     /**
      * Initializes the controller class.
@@ -74,7 +67,6 @@ public class ItemEntryExpandModelTableController implements Initializable, Scree
     }
 
     private void cmdButton_Click(ActionEvent event) {
-
         String lsButton = ((Button) event.getSource()).getId();
         switch (lsButton) {
             case "btnClose":
@@ -114,8 +106,6 @@ public class ItemEntryExpandModelTableController implements Initializable, Scree
                 loadItemModel_YearTable();
                 tblVModelList.refresh();
                 break;
-            default:
-                break;
         }
     }
 
@@ -134,9 +124,7 @@ public class ItemEntryExpandModelTableController implements Initializable, Scree
 
     private void loadItemModel_YearTable() {
         try {
-            itemModeldata.clear(); // Clear the previous data in the list
-            // if (oTrans.loadInvModel_year(oTrans.getMaster(1).toString())) {
-            //inv model
+            itemModeldata.clear();
             int lnRow = 0;
             for (int lnCtr = 1; lnCtr <= oTrans.getInvModelCount(); lnCtr++) {
                 itemModeldata.add(new ItemEntryModelTable(

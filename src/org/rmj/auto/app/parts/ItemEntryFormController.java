@@ -445,21 +445,30 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
 //                    }
                 break;
             case "btnUpload":
-                FileChooser fileChooser = new FileChooser();
-                // Set the title and extension filters if desired
-                fileChooser.setTitle("Select Image File");
-                fileChooser.getExtensionFilters().addAll(
-                        new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg"));
-                // Show the file chooser dialog
-                File selectedFile = fileChooser.showOpenDialog(btnUpload.getScene().getWindow());
-                if (selectedFile != null) {
-                    // Load the selected image file
-                    Image image = new Image(selectedFile.toURI().toString());
-                    imgPartsPic.setImage(image);
 
-                    psFileUrl = selectedFile.toURI().toString();
-                    psFileName = selectedFile.getName();
-                    pimage = new Image(selectedFile.toURI().toString());
+                if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
+                    FileChooser fileChooser = new FileChooser();
+                    // Set the title and extension filters if desired
+                    fileChooser.setTitle("Select Image File");
+                    fileChooser.getExtensionFilters().addAll(
+                            new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg"));
+                    // Show the file chooser dialog
+                    File selectedFile = fileChooser.showOpenDialog(btnUpload.getScene().getWindow());
+                    if (selectedFile != null) {
+                        // Load the selected image file
+                        Image image = new Image(selectedFile.toURI().toString());
+                        imgPartsPic.setImage(image);
+
+                        psFileUrl = selectedFile.toURI().toString();
+                        psFileName = selectedFile.getName();
+                        pimage = new Image(selectedFile.toURI().toString());
+
+                        try {
+                            oTrans.setMaster(26, psFileUrl);
+                        } catch (SQLException ex) {
+                            Logger.getLogger(ItemEntryFormController.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
                 }
                 break;
             case "btnLoadPhoto":
@@ -1273,10 +1282,23 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
             txtField37.setText((String) oTrans.getMaster(37));
             txtField34.setText((String) oTrans.getMaster(34));
 
+            String imageFilePath = oTrans.getMaster(26).toString();
+            String imageName = imageFilePath.substring(imageFilePath.lastIndexOf('/') + 1);
+            if (imageFilePath == null || imageFilePath.isEmpty()) {
+                Image NoImage = new Image("file:D:/GGC_SEG_Folder-Java/autoapp/src/org/rmj/auto/app/images/no-image-available.png");
+                imgPartsPic.setImage(NoImage);
+            } else {
+                psFileUrl = imageFilePath;
+                psFileName = imageName;
+                pimage = new Image(imageFilePath);
+                Image image = new Image(imageFilePath);
+                imgPartsPic.setImage(image);
+            }
         } catch (SQLException e) {
             ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
         }
     }
+
     /*Set TextField Value to Master Class*/
     final ChangeListener<? super Boolean> txtField_Focus = (o, ov, nv) -> {
         try {
@@ -1317,6 +1339,8 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
         txtField12.getStyleClass().remove("required-field");
         txtField33.getStyleClass().remove("required-field");
         txtField34.getStyleClass().remove("required-field");
+        Image imageError = new Image("file:D:/GGC_SEG_Folder-Java/autoapp/src/org/rmj/auto/app/images/no-image-available.png");
+        imgPartsPic.setImage(imageError);
         txtField01.setText("");
         txtField02.setText("");
         txtField03.setText("");

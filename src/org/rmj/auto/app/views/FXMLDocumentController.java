@@ -63,6 +63,7 @@ import org.rmj.auto.app.parts.SectionEntryParamController;
 import org.rmj.auto.app.parts.WareHouseEntryParamController;
 import org.rmj.auto.app.sales.InquiryFormController;
 import org.rmj.auto.app.sales.SalesAgentFormController;
+import org.rmj.auto.app.sales.UnitDeliveryReceiptFormController;
 import org.rmj.auto.app.sales.UnitReceivingFormController;
 import org.rmj.auto.app.sales.VehicleEntryFormController;
 import org.rmj.auto.app.sales.VehicleSalesApprovalController;
@@ -77,12 +78,12 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
     private GRider oApp;
     private int targetTabIndex = -1;
     private double tabsize;
-    
+
     // Variables to track the window movement
     private double xOffset = 0;
     private double yOffset = 0;
     FXMLMenuParameterForm param = new FXMLMenuParameterForm();
-    
+
     @FXML
     private Label AppUser;
     @FXML
@@ -151,6 +152,8 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
     private MenuItem mnuCategoryEntry;
     @FXML
     private MenuItem mnuInvTypeEntry;
+    @FXML
+    private MenuItem mnuUnitDeliveryReceipt;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -337,6 +340,7 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
 
         return null;
     }
+
     public ScreenInterface getController(String fsValue) {
         switch (fsValue) {
             case "FXMLMainScreen.fxml":
@@ -377,6 +381,8 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
                 return new VehicleSalesApprovalController();
             case "BankEntryForm.fxml":
                 return new BankEntryFormController();
+            case "UnitDeliveryReceiptForm.fxml":
+                return new UnitDeliveryReceiptFormController();
             /*PARTS*/
             case "ItemEntryForm.fxml":
                 return new ItemEntryFormController();
@@ -427,6 +433,8 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
                 return "Inquiry";
             case "VehicleSalesApproval.fxml":
                 return "Vehicle Reservation Approval";
+            case "UnitDeliveryReceiptForm.fxml":
+                return "Unit Delivery Receipt";
             /*ACCOUNTING*/
             case "BankEntryForm.fxml":
                 return "Bank";
@@ -503,7 +511,7 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
             setScene2(loadAnimate(sformname));
         }
     }
-    
+
     /*SALES*/
     @FXML
     private void mnuSalesAgentClick(ActionEvent event) {
@@ -522,8 +530,8 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
             setScene2(loadAnimate(sformname));
         }
     }
+
     /*VEHICLE DESCRIPTION PARAMETERS*/
-    
     @FXML
     private void mnuVhclMakeEntryClicked(ActionEvent event) {
         String sformname = "VehicleMakeForm.fxml";
@@ -571,7 +579,7 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
             setScene2(loadAnimate(sformname));
         }
     }
-    
+
     @FXML
     private void mnuVhclRsrvAppClick(ActionEvent event) {
         String sformname = "VehicleSalesApproval.fxml";
@@ -580,7 +588,7 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
             setScene2(loadAnimate(sformname));
         }
     }
-    
+
     @FXML
     private void mnuInquiryClick(ActionEvent event) {
         String sformname = "InquiryForm.fxml";
@@ -589,7 +597,16 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
             setScene2(loadAnimate(sformname));
         }
     }
-    
+
+    @FXML
+    private void mnuUnitDeliveryReceiptClick(ActionEvent event) {
+        String sformname = "UnitDeliveryReceiptForm.fxml";
+        //check tab
+        if (checktabs(SetTabTitle(sformname)) == 1) {
+            setScene2(loadAnimate(sformname));
+        }
+    }
+
     /*ACCOUNTING*/
     @FXML
     private void mnuBankClick(ActionEvent event) {
@@ -599,7 +616,7 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
             setScene2(loadAnimate(sformname));
         }
     }
-    
+
     /*ACTIVITY*/
     @FXML
     private void mnuActivityClick(ActionEvent event) {
@@ -622,11 +639,10 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
     @FXML
     private void mnuActivityTypeClick(ActionEvent event) {
         String sformname = "ActivityTypeAddSource.fxml";
-        param.FXMLMenuParameterForm(getController(sformname),oApp, sformname);
+        param.FXMLMenuParameterForm(getController(sformname), oApp, sformname);
 
     }
-    
-    
+
     /*PARTS*/
     @FXML
     private void mnuItemEntryClicked(ActionEvent event) {
@@ -666,7 +682,7 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
         String sformname = "WareHouseEntryParam.fxml";
         param.FXMLMenuParameterForm(getController(sformname), oApp, sformname);
     }
-    
+
     @FXML
     private void mnuBrandEntryClicked(ActionEvent event) {
         String sformname = "BrandEntryParam.fxml";
@@ -741,9 +757,5 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
     private void initMenu() {
 
     }
-
-    
-
-    
 
 }

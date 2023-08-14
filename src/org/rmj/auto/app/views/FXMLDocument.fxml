@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
 
-<AnchorPane id="AnchorPane" prefHeight="300.0" prefWidth="750.0" style="-fx-background-color: #FFFFFF;" stylesheets="@../css/MainPanelStyle.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" >
+<AnchorPane id="AnchorPane" prefHeight="300.0" prefWidth="750.0" style="-fx-background-color: #FFFFFF;" stylesheets="@../css/MainPanelStyle.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <StackPane prefHeight="300.0" prefWidth="750.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
@@ -94,27 +94,27 @@
                                                                 <MenuItem mnemonicParsing="false" text="VIP Program Member Registration" />
                                                             </items>
                                                         </Menu>
-                                          <Menu mnemonicParsing="false" text="Parts">
-                                            <items>
-                                                <Menu mnemonicParsing="false" text="Item">
-                                                  <items>
-                                                    <MenuItem fx:id="mnuItemEntry" mnemonicParsing="false" onAction="#mnuItemEntryClicked" text="Item Entry" />
-                                                      <Menu mnemonicParsing="false" text="Parameter">
-                                                        <items>
-                                                          <MenuItem fx:id="mnuBinEntry" mnemonicParsing="false" onAction="#mnuBinEntryClicked" text="Bin Entry" />
-                                                            <MenuItem fx:id="mnuBrandEntry" mnemonicParsing="false" onAction="#mnuBrandEntryClicked" text="Brand Entry" />
-                                                            <MenuItem fx:id="mnuCategoryEntry" mnemonicParsing="false" onAction="#mnuCategoryEntryClicked" text="Category Entry" />
-                                                            <MenuItem fx:id="mnuInvLocEntry" mnemonicParsing="false" onAction="#mnuInvLocEntryClicked" text="Inventory Location Entry" />
-                                                            <MenuItem fx:id="mnuInvTypeEntry" mnemonicParsing="false" onAction="#mnuInvTypeEntryClicked" text="Inventory Type Entry" />
-                                                            <MenuItem fx:id="mnuMeasureEntry" mnemonicParsing="false" onAction="#mnuMeasureEntryClicked" text="Measurement Entry" />
-                                                            <MenuItem fx:id="mnuSectionEntry" mnemonicParsing="false" onAction="#mnuSectionEntryClicked" text="Section Entry" />
-                                                            <MenuItem fx:id="mnuWarehsEntry" mnemonicParsing="false" onAction="#mnuWarehsEntryClicked" text="Warehouse Entry" />
-                                                        </items>
-                                                      </Menu>
-                                                  </items>
-                                                </Menu>
-                                            </items>
-                                          </Menu>
+                                                        <Menu mnemonicParsing="false" text="Parts">
+                                                            <items>
+                                                                <Menu mnemonicParsing="false" text="Item">
+                                                                    <items>
+                                                                        <MenuItem fx:id="mnuItemEntry" mnemonicParsing="false" onAction="#mnuItemEntryClicked" text="Item Entry" />
+                                                                        <Menu mnemonicParsing="false" text="Parameter">
+                                                                            <items>
+                                                                                <MenuItem fx:id="mnuBinEntry" mnemonicParsing="false" onAction="#mnuBinEntryClicked" text="Bin Entry" />
+                                                                                <MenuItem fx:id="mnuBrandEntry" mnemonicParsing="false" onAction="#mnuBrandEntryClicked" text="Brand Entry" />
+                                                                                <MenuItem fx:id="mnuCategoryEntry" mnemonicParsing="false" onAction="#mnuCategoryEntryClicked" text="Category Entry" />
+                                                                                <MenuItem fx:id="mnuInvLocEntry" mnemonicParsing="false" onAction="#mnuInvLocEntryClicked" text="Inventory Location Entry" />
+                                                                                <MenuItem fx:id="mnuInvTypeEntry" mnemonicParsing="false" onAction="#mnuInvTypeEntryClicked" text="Inventory Type Entry" />
+                                                                                <MenuItem fx:id="mnuMeasureEntry" mnemonicParsing="false" onAction="#mnuMeasureEntryClicked" text="Measurement Entry" />
+                                                                                <MenuItem fx:id="mnuSectionEntry" mnemonicParsing="false" onAction="#mnuSectionEntryClicked" text="Section Entry" />
+                                                                                <MenuItem fx:id="mnuWarehsEntry" mnemonicParsing="false" onAction="#mnuWarehsEntryClicked" text="Warehouse Entry" />
+                                                                            </items>
+                                                                        </Menu>
+                                                                    </items>
+                                                                </Menu>
+                                                            </items>
+                                                        </Menu>
                                                         <Menu mnemonicParsing="false" text="Service">
                                                             <items>
                                                                 <MenuItem mnemonicParsing="false" text="Delete" />
@@ -123,24 +123,25 @@
                                                         <Menu fx:id="menusales" mnemonicParsing="false" text="Vehicle Sales">
                                                             <items>
                                                                 <MenuItem fx:id="mnuSalesAgent" mnemonicParsing="false" onAction="#mnuSalesAgentClick" text="Sales Agent" />
-                                                <Menu mnemonicParsing="false" text="Vehicle Description">
-                                                  <items>
-                                                                      <MenuItem fx:id="mnuVhclDesc" mnemonicParsing="false" onAction="#mnuVhclDescClick" text="Vehicle Description" />
-                                                      <Menu mnemonicParsing="false" text="Parameter">
-                                                        <items>
-                                                          <MenuItem fx:id="mnuVhclMakeEntry" mnemonicParsing="false" onAction="#mnuVhclMakeEntryClicked" text="Make Entry" />
-                                                            <MenuItem fx:id="mnuVhclModelEntry" mnemonicParsing="false" onAction="#mnuVhclModelEntryClicked" text="Model Entry" />
-                                                            <MenuItem fx:id="mnuVhclTypeEntry" mnemonicParsing="false" onAction="#mnuVhclTypeEntryClicked" text="Type Entry" />
-                                                            <MenuItem fx:id="mnuVhclColorEntry" mnemonicParsing="false" onAction="#mnuVhclColorEntryClicked" text="Color Entry" />
-                                                            <MenuItem fx:id="mnuVhclEngFrmEntry" mnemonicParsing="false" onAction="#mnuVhclEngFrmEntryClicked" text="Engine / Frame Entry" />
-                                                        </items>
-                                                      </Menu>
-                                                  </items>
-                                                </Menu>
+                                                                <Menu mnemonicParsing="false" text="Vehicle Description">
+                                                                    <items>
+                                                                        <MenuItem fx:id="mnuVhclDesc" mnemonicParsing="false" onAction="#mnuVhclDescClick" text="Vehicle Description" />
+                                                                        <Menu mnemonicParsing="false" text="Parameter">
+                                                                            <items>
+                                                                                <MenuItem fx:id="mnuVhclMakeEntry" mnemonicParsing="false" onAction="#mnuVhclMakeEntryClicked" text="Make Entry" />
+                                                                                <MenuItem fx:id="mnuVhclModelEntry" mnemonicParsing="false" onAction="#mnuVhclModelEntryClicked" text="Model Entry" />
+                                                                                <MenuItem fx:id="mnuVhclTypeEntry" mnemonicParsing="false" onAction="#mnuVhclTypeEntryClicked" text="Type Entry" />
+                                                                                <MenuItem fx:id="mnuVhclColorEntry" mnemonicParsing="false" onAction="#mnuVhclColorEntryClicked" text="Color Entry" />
+                                                                                <MenuItem fx:id="mnuVhclEngFrmEntry" mnemonicParsing="false" onAction="#mnuVhclEngFrmEntryClicked" text="Engine / Frame Entry" />
+                                                                            </items>
+                                                                        </Menu>
+                                                                    </items>
+                                                                </Menu>
                                                                 <MenuItem fx:id="mnuVhclEntry" mnemonicParsing="false" onAction="#mnuVhclEntryClick" text="Vehicle Entry" />
                                                                 <MenuItem fx:id="mnuUnitRecv" mnemonicParsing="false" onAction="#mnuUnitRecvClick" text="Unit Receiving" />
                                                                 <MenuItem fx:id="mnuInquiry" mnemonicParsing="false" onAction="#mnuInquiryClick" text="Inquiry" />
                                                                 <MenuItem fx:id="mnuVhclRsrvApp" mnemonicParsing="false" onAction="#mnuVhclRsrvAppClick" text="Vehicle Reservation Approval" />
+                                                                <MenuItem fx:id="mnuUnitDeliveryReceipt" mnemonicParsing="false" onAction="#mnuUnitDeliveryReceiptClick" text="Unit Delivery Receipt" />
                                                             </items>
                                                         </Menu>
                                                         <Menu mnemonicParsing="false" text="Bank Transactions">

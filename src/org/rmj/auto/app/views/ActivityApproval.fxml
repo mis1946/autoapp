@@ -12,6 +12,7 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.effect.Blend?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
@@ -22,7 +23,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" fx:id="AnchorMain" prefHeight="582.0" prefWidth="1360.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" >
+<AnchorPane id="AnchorPane" fx:id="AnchorMain" prefHeight="582.0" prefWidth="1360.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
     <stylesheets>
         <URL value="@../css/FrameStyle.css" />
         <URL value="@../css/MainPanelStyle.css" />
@@ -73,6 +74,9 @@
                                                                         <URL value="@../css/FrameStyle.css" />
                                                                         <URL value="@../css/MainPanelStyle.css" />
                                                                     </stylesheets>
+                                                                    <tooltip>
+                                                                        <Tooltip text="Please choose type to filter." />
+                                                                    </tooltip>
                                                                 </ComboBox>
                                                                 <Label text="FILTER">
                                                                     <font>
@@ -85,6 +89,9 @@
                                                                             <HBox.margin>
                                                                                 <Insets />
                                                                             </HBox.margin>
+                                                                            <tooltip>
+                                                                                <Tooltip text="Enter words to filter." />
+                                                                            </tooltip>
                                                                         </TextField>
                                                                         <Label fx:id="lFrom" prefHeight="24.0" prefWidth="46.0" text="FROM">
                                                                             <font>
@@ -95,21 +102,60 @@
                                                                             <HBox.margin>
                                                                                 <Insets />
                                                                             </HBox.margin>
+                                                                            <tooltip>
+                                                                                <Tooltip text="Pick Date From to filter." />
+                                                                            </tooltip>
                                                                         </DatePicker>
                                                                         <Label fx:id="lTo" alignment="CENTER" prefHeight="24.0" prefWidth="33.0" text="TO">
                                                                             <font>
                                                                                 <Font name="System Bold" size="12.0" />
                                                                             </font>
                                                                         </Label>
-                                                                        <DatePicker fx:id="toDate" prefHeight="24.0" prefWidth="136.0" />
-                                                                        <ComboBox fx:id="comboType" prefHeight="24.0" prefWidth="150.0" promptText="Choose Type" />
-                                                                        <Button fx:id="btnActNo" mnemonicParsing="false" prefHeight="24.0" text="Filter" />
-                                                                        <Button fx:id="btnActTitle" mnemonicParsing="false" prefHeight="24.0" text="Filter" />
-                                                                        <Button fx:id="btnPerson" mnemonicParsing="false" prefHeight="24.0" text="Filter" />
-                                                                        <Button fx:id="btnDepart" mnemonicParsing="false" prefHeight="24.0" text="Filter" />
-                                                                        <Button fx:id="btnDate" mnemonicParsing="false" prefHeight="24.0" text="Filter" />
-                                                                        <Button fx:id="btnType" mnemonicParsing="false" prefHeight="24.0" text="Filter" />
-                                                                        <Button fx:id="btnRefresh" mnemonicParsing="false" prefHeight="24.0" text="Refresh" />
+                                                                        <DatePicker fx:id="toDate" prefHeight="24.0" prefWidth="136.0">
+                                                                            <tooltip>
+                                                                                <Tooltip text="Pick Date To, to filter." />
+                                                                            </tooltip>
+                                                                        </DatePicker>
+                                                                        <ComboBox fx:id="comboType" prefHeight="24.0" prefWidth="150.0" promptText="Choose Type">
+                                                                            <tooltip>
+                                                                                <Tooltip text="Please choose type to filter." />
+                                                                            </tooltip>
+                                                                        </ComboBox>
+                                                                        <Button fx:id="btnActNo" mnemonicParsing="false" prefHeight="24.0" text="Filter">
+                                                                            <tooltip>
+                                                                                <Tooltip text="Click to filter Activity No." />
+                                                                            </tooltip>
+                                                                        </Button>
+                                                                        <Button fx:id="btnActTitle" mnemonicParsing="false" prefHeight="24.0" text="Filter">
+                                                                            <tooltip>
+                                                                                <Tooltip text="Click to filter Activity Title." />
+                                                                            </tooltip>
+                                                                        </Button>
+                                                                        <Button fx:id="btnPerson" mnemonicParsing="false" prefHeight="24.0" text="Filter">
+                                                                            <tooltip>
+                                                                                <Tooltip text="Click to filter Person in Charge." />
+                                                                            </tooltip>
+                                                                        </Button>
+                                                                        <Button fx:id="btnDepart" mnemonicParsing="false" prefHeight="24.0" text="Filter">
+                                                                            <tooltip>
+                                                                                <Tooltip text="Click to filter Deparment in charge." />
+                                                                            </tooltip>
+                                                                        </Button>
+                                                                        <Button fx:id="btnDate" mnemonicParsing="false" prefHeight="24.0" text="Filter">
+                                                                            <tooltip>
+                                                                                <Tooltip text="Click to filter Date." />
+                                                                            </tooltip>
+                                                                        </Button>
+                                                                        <Button fx:id="btnType" mnemonicParsing="false" prefHeight="24.0" text="Filter">
+                                                                            <tooltip>
+                                                                                <Tooltip text="Click to filter Activity Type." />
+                                                                            </tooltip>
+                                                                        </Button>
+                                                                        <Button fx:id="btnRefresh" mnemonicParsing="false" prefHeight="24.0" text="Refresh">
+                                                                            <tooltip>
+                                                                                <Tooltip text="Click to refresh/reload." />
+                                                                            </tooltip>
+                                                                        </Button>
                                                                     </children>
                                                                     <GridPane.margin>
                                                                         <Insets />

@@ -8,6 +8,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.effect.Blend?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
@@ -19,7 +20,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane id="AnchorPane" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.rmj.auto.app.sales.InquiryLostSaleFormController">
    <children>
       <StackPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -102,7 +103,7 @@
                                           <Insets />
                                        </GridPane.margin>
                                     </Label>
-                                    <Label id="LabelDesc" text="Reasons" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                                    <Label id="LabelDesc" text="Reason" GridPane.columnIndex="1" GridPane.rowIndex="4">
                                        <padding>
                                           <Insets left="5.0" />
                                        </padding>
@@ -110,8 +111,24 @@
                                           <Insets />
                                        </GridPane.margin>
                                     </Label>
-                                    <ComboBox fx:id="comboBox04" prefWidth="180.0" GridPane.columnIndex="2" GridPane.columnSpan="3" GridPane.rowIndex="3" />
-                                    <ComboBox fx:id="comboBox13" prefWidth="380.0" GridPane.columnIndex="2" GridPane.columnSpan="4" GridPane.rowIndex="4" />
+                                    <ComboBox fx:id="comboBox04" prefWidth="180.0" GridPane.columnIndex="2" GridPane.columnSpan="3" GridPane.rowIndex="3">
+                                       <tooltip>
+                                          <Tooltip text="Please select Tag Type" />
+                                       </tooltip></ComboBox>
+                                    <ComboBox fx:id="comboBox13" prefWidth="380.0" GridPane.columnIndex="2" GridPane.columnSpan="4" GridPane.rowIndex="4">
+                                       <tooltip>
+                                          <Tooltip text="Please select Reason" />
+                                       </tooltip></ComboBox>
+                                    <Label alignment="BOTTOM_RIGHT" prefHeight="17.0" prefWidth="39.0" text="*" textFill="#fb0000" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                                       <font>
+                                          <Font name="Arial" size="12.0" />
+                                       </font>
+                                    </Label>
+                                    <Label alignment="BOTTOM_RIGHT" layoutX="20.0" layoutY="73.0" prefHeight="17.0" prefWidth="54.0" text="*" textFill="#fb0000" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                                       <font>
+                                          <Font name="Arial" size="12.0" />
+                                       </font>
+                                    </Label>
                                  </children>
                                  <opaqueInsets>
                                     <Insets />
@@ -161,7 +178,7 @@
                                           <Insets />
                                        </GridPane.margin>
                                     </Label>
-                                    <Label id="LabelDesc" text="Remarks (Required)" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="4">
+                                    <Label id="LabelDesc" text="Remarks" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="4">
                                        <GridPane.margin>
                                           <Insets />
                                        </GridPane.margin>
@@ -170,11 +187,22 @@
                                        <GridPane.margin>
                                           <Insets />
                                        </GridPane.margin>
+                                       <tooltip>
+                                          <Tooltip text="Please Fill in the Remarks" />
+                                       </tooltip>
                                     </TextArea>
-                                    <ComboBox fx:id="comboBox10" prefWidth="150.0" GridPane.columnIndex="3" GridPane.columnSpan="5" GridPane.rowIndex="1" />
+                                    <ComboBox fx:id="comboBox10" prefWidth="150.0" GridPane.columnIndex="3" GridPane.columnSpan="5" GridPane.rowIndex="1">
+                                       <tooltip>
+                                          <Tooltip text="Please select Goods Category" />
+                                       </tooltip></ComboBox>
                                     <Label text="Minimum of 20 characters; Accepts alpha-numeric characters only." textFill="#515151" GridPane.columnIndex="3" GridPane.columnSpan="3" GridPane.rowIndex="6">
                                        <font>
                                           <Font name="Arial" size="11.0" />
+                                       </font>
+                                    </Label>
+                                    <Label alignment="BOTTOM_RIGHT" prefHeight="17.0" prefWidth="55.0" text="*" textFill="#fb0000" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                                       <font>
+                                          <Font name="Arial" size="12.0" />
                                        </font>
                                     </Label>
                                  </children>

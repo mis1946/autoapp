@@ -16,6 +16,7 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.effect.Blend?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
@@ -181,8 +182,24 @@
                                                                            <children>
                                                                               <Label id="LabelDesc" stylesheets="@../css/FrameStyle.css" text="Customer Type" />
                                                                               <Label id="LabelDesc" stylesheets="@../css/FrameStyle.css" text="Company Name" GridPane.columnIndex="3" />
-                                                                              <ComboBox fx:id="comboBox18" prefHeight="24.0" prefWidth="160.0" GridPane.columnIndex="1" />
-                                                                              <TextField fx:id="txtField16" GridPane.columnIndex="4" />
+                                                                              <ComboBox fx:id="comboBox18" prefHeight="24.0" prefWidth="160.0" GridPane.columnIndex="1">
+                                                                                 <tooltip>
+                                                                                    <Tooltip text="Please choose Customer Type" />
+                                                                                 </tooltip></ComboBox>
+                                                                              <TextField fx:id="txtField16" GridPane.columnIndex="4">
+                                                                                 <tooltip>
+                                                                                    <Tooltip text="Please Fill in the Company Name" />
+                                                                                 </tooltip></TextField>
+                                                                              <Label alignment="BOTTOM_RIGHT" prefHeight="17.0" prefWidth="86.0" text="*" textFill="#fb0000">
+                                                                                 <font>
+                                                                                    <Font name="Arial" size="12.0" />
+                                                                                 </font>
+                                                                              </Label>
+                                                                              <Label fx:id="lbl_CName" alignment="BOTTOM_RIGHT" prefHeight="16.0" prefWidth="91.0" text="*" textFill="#fb0000" GridPane.columnIndex="3">
+                                                                                 <font>
+                                                                                    <Font name="Arial" size="12.0" />
+                                                                                 </font>
+                                                                              </Label>
                                                                            </children>
                                                                            <VBox.margin>
                                                                               <Insets bottom="2.0" left="20.0" right="10.0" />
@@ -225,8 +242,14 @@
                                                                               <Label id="LabelDesc" stylesheets="@../css/FrameStyle.css" text="Middle name" GridPane.rowIndex="2" />
                                                                               <Label id="LabelDesc" stylesheets="@../css/FrameStyle.css" text="Suffix" GridPane.columnIndex="3" />
                                                                               <Label id="LabelDesc" ellipsisString="" prefHeight="25.0" prefWidth="158.0" stylesheets="@../css/FrameStyle.css" text="Mother's Maiden Name" wrapText="true" GridPane.rowIndex="3" />
-                                                                              <TextField fx:id="txtField02" GridPane.columnIndex="1" />
-                                                                              <TextField fx:id="txtField03" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                                                              <TextField fx:id="txtField02" GridPane.columnIndex="1">
+                                                                                 <tooltip>
+                                                                                    <Tooltip text="Please Fill in the Last Name" />
+                                                                                 </tooltip></TextField>
+                                                                              <TextField fx:id="txtField03" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                                                                 <tooltip>
+                                                                                    <Tooltip text="Please Fill in the First Name" />
+                                                                                 </tooltip></TextField>
                                                                               <TextField fx:id="txtField04" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                                                                               <TextField fx:id="txtField06" prefColumnCount="8" GridPane.columnIndex="4" />
                                                                               <TextField fx:id="txtField05" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="3" />
@@ -239,11 +262,42 @@
                                                                               <TextField fx:id="txtField10" prefHeight="25.0" prefWidth="76.0" promptText="Search: F3" GridPane.columnIndex="10" GridPane.columnSpan="2" />
                                                                               <TextField fx:id="txtField25" promptText="Search: F3" GridPane.columnIndex="10" GridPane.columnSpan="3" GridPane.rowIndex="1" />
                                                                               <TextField fx:id="txtField12" promptText="Search: F3" GridPane.columnIndex="10" GridPane.columnSpan="3" GridPane.rowIndex="2" />
-                                                                              <ComboBox fx:id="comboBox08" prefWidth="150.0" GridPane.columnIndex="7" />
-                                                                              <ComboBox fx:id="comboBox09" prefWidth="150.0" GridPane.columnIndex="7" GridPane.rowIndex="1" />
+                                                                              <ComboBox fx:id="comboBox08" prefWidth="150.0" GridPane.columnIndex="7">
+                                                                                 <tooltip>
+                                                                                    <Tooltip text="Please select Gender" />
+                                                                                 </tooltip></ComboBox>
+                                                                              <ComboBox fx:id="comboBox09" prefWidth="150.0" GridPane.columnIndex="7" GridPane.rowIndex="1">
+                                                                                 <tooltip>
+                                                                                    <Tooltip text="Please select Civil Status" />
+                                                                                 </tooltip></ComboBox>
                                                                               <DatePicker fx:id="txtField11" GridPane.columnIndex="7" GridPane.rowIndex="2" />
                                                                               <Label id="LabelDesc" layoutX="304.0" layoutY="15.0" stylesheets="@../css/FrameStyle.css" text="Title" GridPane.columnIndex="3" GridPane.rowIndex="1" />
                                                                               <ComboBox fx:id="comboBox07" prefWidth="150.0" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                                                                              <Label fx:id="lbl_LName" alignment="BOTTOM_RIGHT" prefHeight="17.0" prefWidth="65.0" text="*" textFill="#fb0000">
+                                                                                 <font>
+                                                                                    <Font name="Arial" size="12.0" />
+                                                                                 </font>
+                                                                              </Label>
+                                                                              <Label fx:id="lbl_MName" alignment="BOTTOM_RIGHT" layoutX="10.0" layoutY="13.0" prefHeight="17.0" prefWidth="65.0" text="*" textFill="#fb0000" GridPane.rowIndex="1">
+                                                                                 <font>
+                                                                                    <Font name="Arial" size="12.0" />
+                                                                                 </font>
+                                                                              </Label>
+                                                                              <Label fx:id="lbl_title" alignment="BOTTOM_RIGHT" layoutX="10.0" layoutY="39.0" prefHeight="17.0" prefWidth="29.0" text="*" textFill="#fb0000" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                                                                                 <font>
+                                                                                    <Font name="Arial" size="12.0" />
+                                                                                 </font>
+                                                                              </Label>
+                                                                              <Label fx:id="lbl_gender" alignment="BOTTOM_RIGHT" layoutX="325.0" layoutY="39.0" prefHeight="17.0" prefWidth="46.0" text="*" textFill="#fb0000" GridPane.columnIndex="6">
+                                                                                 <font>
+                                                                                    <Font name="Arial" size="12.0" />
+                                                                                 </font>
+                                                                              </Label>
+                                                                              <Label fx:id="lbl_cvlstat" alignment="BOTTOM_RIGHT" layoutX="440.0" layoutY="13.0" prefHeight="16.0" prefWidth="64.0" text="*" textFill="#fb0000" GridPane.columnIndex="6" GridPane.rowIndex="1">
+                                                                                 <font>
+                                                                                    <Font name="Arial" size="12.0" />
+                                                                                 </font>
+                                                                              </Label>
                                                                            </children>
                                                                            <VBox.margin>
                                                                               <Insets left="20.0" right="10.0" />
@@ -302,16 +356,40 @@
                                                                                                                                     <Label id="LabelDesc" stylesheets="@../css/FrameStyle.css" text="House No." GridPane.columnIndex="1" GridPane.columnSpan="2" />
                                                                                                                                     <Label id="LabelDesc" stylesheets="@../css/FrameStyle.css" text="Town" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                                                                                                                                     <Label id="LabelDesc" stylesheets="@../css/FrameStyle.css" text="Barangay" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                                                                                                                                    <TextField fx:id="txtField03Addr" GridPane.columnIndex="2" GridPane.columnSpan="2" />
+                                                                                                                                    <TextField fx:id="txtField03Addr" GridPane.columnIndex="2" GridPane.columnSpan="2">
+                                                                                                                                       <tooltip>
+                                                                                                                                          <Tooltip text="Please Fill in the House Number" />
+                                                                                                                                       </tooltip></TextField>
                                                                                                                                     <TextField fx:id="txtField04Addr" GridPane.columnIndex="2" GridPane.columnSpan="9" GridPane.rowIndex="1" />
-                                                                                                                                    <TextField fx:id="txtField05Addr" promptText="Search: F3" GridPane.columnIndex="2" GridPane.columnSpan="9" GridPane.rowIndex="2" />
-                                                                                                                                    <TextField fx:id="txtField06Addr" promptText="Search: F3" GridPane.columnIndex="2" GridPane.columnSpan="6" GridPane.rowIndex="3" />
+                                                                                                                                    <TextField fx:id="txtField05Addr" promptText="Search: F3" GridPane.columnIndex="2" GridPane.columnSpan="9" GridPane.rowIndex="2">
+                                                                                                                                       <tooltip>
+                                                                                                                                          <Tooltip text="Please choose Town" />
+                                                                                                                                       </tooltip></TextField>
+                                                                                                                                    <TextField fx:id="txtField06Addr" promptText="Search: F3" GridPane.columnIndex="2" GridPane.columnSpan="6" GridPane.rowIndex="3">
+                                                                                                                                       <tooltip>
+                                                                                                                                          <Tooltip text="Please choose Barangay" />
+                                                                                                                                       </tooltip></TextField>
                                                                                                                                     <Label id="LabelDesc" stylesheets="@../css/FrameStyle.css" text="ZIP Code" GridPane.columnIndex="9" GridPane.rowIndex="3" />
                                                                                                                                     <TextField fx:id="txtField07Addr" GridPane.columnIndex="10" GridPane.rowIndex="3" />
                                                                                                                                     <Label id="LabelDesc" stylesheets="@../css/FrameStyle.css" text="Active" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                                                                                                                                     <RadioButton fx:id="radiobtn18AddY" mnemonicParsing="false" text="Yes" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="4" />
                                                                                                                                     <RadioButton fx:id="radiobtn18AddN" mnemonicParsing="false" text="No" GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.rowIndex="4" />
                                                                                                                                     <Label id="LabelDesc" layoutX="18.0" layoutY="23.0" stylesheets="@../css/FrameStyle.css" text="Street Name" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                                                                                                                    <Label alignment="BOTTOM_RIGHT" prefHeight="16.0" prefWidth="62.0" text="*" textFill="#fb0000" GridPane.columnIndex="1">
+                                                                                                                                       <font>
+                                                                                                                                          <Font name="Arial" size="12.0" />
+                                                                                                                                       </font>
+                                                                                                                                    </Label>
+                                                                                                                                    <Label alignment="BOTTOM_RIGHT" layoutX="15.0" layoutY="14.0" prefHeight="16.0" prefWidth="37.0" text="*" textFill="#fb0000" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                                                                                                                       <font>
+                                                                                                                                          <Font name="Arial" size="12.0" />
+                                                                                                                                       </font>
+                                                                                                                                    </Label>
+                                                                                                                                    <Label alignment="BOTTOM_RIGHT" layoutX="15.0" layoutY="66.0" prefHeight="16.0" prefWidth="59.0" text="*" textFill="#fb0000" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                                                                                                                                       <font>
+                                                                                                                                          <Font name="Arial" size="12.0" />
+                                                                                                                                       </font>
+                                                                                                                                    </Label>
                                                                                                                                  </children>
                                                                                                                               </GridPane>
                                                                                                                               <GridPane vgap="3.0">
@@ -401,9 +479,18 @@
                                                                                                                               <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="23.0" vgrow="SOMETIMES" />
                                                                                                                            </rowConstraints>
                                                                                                                            <children>
-                                                                                                                              <ComboBox fx:id="comboBox05Cont" prefWidth="156.0" GridPane.columnIndex="2" GridPane.columnSpan="3" />
-                                                                                                                              <ComboBox fx:id="comboBox04Cont" prefWidth="156.0" GridPane.columnIndex="2" GridPane.columnSpan="3" GridPane.rowIndex="1" />
-                                                                                                                              <TextField fx:id="txtField03Cont" GridPane.columnIndex="2" GridPane.columnSpan="3" GridPane.rowIndex="2" />
+                                                                                                                              <ComboBox fx:id="comboBox05Cont" prefWidth="156.0" GridPane.columnIndex="2" GridPane.columnSpan="3">
+                                                                                                                                 <tooltip>
+                                                                                                                                    <Tooltip text="Please select Contact Ownership" />
+                                                                                                                                 </tooltip></ComboBox>
+                                                                                                                              <ComboBox fx:id="comboBox04Cont" prefWidth="156.0" GridPane.columnIndex="2" GridPane.columnSpan="3" GridPane.rowIndex="1">
+                                                                                                                                 <tooltip>
+                                                                                                                                    <Tooltip text="Please select Contact Type" />
+                                                                                                                                 </tooltip></ComboBox>
+                                                                                                                              <TextField fx:id="txtField03Cont" GridPane.columnIndex="2" GridPane.columnSpan="3" GridPane.rowIndex="2">
+                                                                                                                                 <tooltip>
+                                                                                                                                    <Tooltip text="Please Fill in the Contact Number" />
+                                                                                                                                 </tooltip></TextField>
                                                                                                                               <Label id="LabelDesc" stylesheets="@../css/FrameStyle.css" text="Type" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                                                                                                               <Label id="LabelDesc" stylesheets="@../css/FrameStyle.css" text="Contact No" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                                                                                                                               <Label id="LabelDesc" stylesheets="@../css/FrameStyle.css" text="Active" GridPane.columnIndex="1" GridPane.rowIndex="3" />
@@ -415,6 +502,21 @@
                                                                                                                               <Label id="LabelDesc" stylesheets="@../css/FrameStyle.css" text="Ownership" GridPane.columnIndex="1" />
                                                                                                                               <Label id="LabelDesc" stylesheets="@../css/FrameStyle.css" text="Remarks" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                                                                                                                               <TextArea fx:id="textArea13Cont" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.columnSpan="4" GridPane.rowIndex="5" GridPane.rowSpan="2" />
+                                                                                                                              <Label alignment="BOTTOM_RIGHT" prefHeight="16.0" prefWidth="63.0" text="*" textFill="#fb0000" GridPane.columnIndex="1">
+                                                                                                                                 <font>
+                                                                                                                                    <Font name="Arial" size="12.0" />
+                                                                                                                                 </font>
+                                                                                                                              </Label>
+                                                                                                                              <Label alignment="BOTTOM_RIGHT" layoutX="15.0" layoutY="14.0" prefHeight="16.0" prefWidth="34.0" text="*" textFill="#fb0000" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                                                                                                                 <font>
+                                                                                                                                    <Font name="Arial" size="12.0" />
+                                                                                                                                 </font>
+                                                                                                                              </Label>
+                                                                                                                              <Label alignment="BOTTOM_RIGHT" layoutX="15.0" layoutY="40.0" prefHeight="16.0" prefWidth="67.0" text="*" textFill="#fb0000" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                                                                                                                 <font>
+                                                                                                                                    <Font name="Arial" size="12.0" />
+                                                                                                                                 </font>
+                                                                                                                              </Label>
                                                                                                                            </children>
                                                                                                                         </GridPane>
                                                                                                                      </children>
@@ -765,19 +867,46 @@
                                                                                        <graphic>
                                                                                           <FontAwesomeIconView glyphName="TH" />
                                                                                        </graphic>
+                                                                                       <tooltip>
+                                                                                          <Tooltip text="Manually Fill Vehicle Description" />
+                                                                                       </tooltip>
                                                                                     </Button>
                                                                                     <Button fx:id="btnVhclAvl" mnemonicParsing="false" prefHeight="25.0" prefWidth="30.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
                                                                                        <graphic>
                                                                                           <FontAwesomeIconView glyphName="CAR" />
                                                                                        </graphic>
+                                                                                       <tooltip>
+                                                                                          <Tooltip text="Select Vehicle that already exist" />
+                                                                                       </tooltip>
                                                                                     </Button>
-                                                                                    <Button fx:id="btnVhclDesc" mnemonicParsing="false" prefHeight="25.0" prefWidth="30.0" text="..." GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                                                                    <TextField fx:id="txtField24V" promptText="Search F3" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-                                                                                    <TextField fx:id="txtField26V" promptText="Search F3" GridPane.columnIndex="6" GridPane.rowIndex="1" />
-                                                                                    <TextField fx:id="txtField28V" promptText="Search F3" GridPane.columnIndex="9" GridPane.rowIndex="1" />
-                                                                                    <TextField fx:id="txtField31V" promptText="Search F3" GridPane.columnIndex="3" GridPane.rowIndex="2" />
-                                                                                    <TextField fx:id="txtField30V" promptText="Search F3" GridPane.columnIndex="6" GridPane.rowIndex="2" />
-                                                                                    <TextField fx:id="txtField32V" promptText="Search F3" GridPane.columnIndex="9" GridPane.rowIndex="2" />
+                                                                                    <Button fx:id="btnVhclDesc" mnemonicParsing="false" prefHeight="25.0" prefWidth="30.0" text="..." GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                                                                       <tooltip>
+                                                                                          <Tooltip text="Open Vehicle Description Entry" />
+                                                                                       </tooltip></Button>
+                                                                                    <TextField fx:id="txtField24V" promptText="Search F3" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                                                                                       <tooltip>
+                                                                                          <Tooltip text="Please choose Vehicle Make" />
+                                                                                       </tooltip></TextField>
+                                                                                    <TextField fx:id="txtField26V" promptText="Search F3" GridPane.columnIndex="6" GridPane.rowIndex="1">
+                                                                                       <tooltip>
+                                                                                          <Tooltip text="Please choose Vehicle Model" />
+                                                                                       </tooltip></TextField>
+                                                                                    <TextField fx:id="txtField28V" promptText="Search F3" GridPane.columnIndex="9" GridPane.rowIndex="1">
+                                                                                       <tooltip>
+                                                                                          <Tooltip text="Please choose Vehicle Type" />
+                                                                                       </tooltip></TextField>
+                                                                                    <TextField fx:id="txtField31V" promptText="Search F3" GridPane.columnIndex="3" GridPane.rowIndex="2">
+                                                                                       <tooltip>
+                                                                                          <Tooltip text="Please choose Vehicle Transmission" />
+                                                                                       </tooltip></TextField>
+                                                                                    <TextField fx:id="txtField30V" promptText="Search F3" GridPane.columnIndex="6" GridPane.rowIndex="2">
+                                                                                       <tooltip>
+                                                                                          <Tooltip text="Please choose Vehicle Color" />
+                                                                                       </tooltip></TextField>
+                                                                                    <TextField fx:id="txtField32V" promptText="Search F3" GridPane.columnIndex="9" GridPane.rowIndex="2">
+                                                                                       <tooltip>
+                                                                                          <Tooltip text="Please choose Vehicle Year" />
+                                                                                       </tooltip></TextField>
                                                                                     <Label id="LabelDesc" text="Make" GridPane.columnIndex="2" GridPane.rowIndex="1">
                                                                                        <font>
                                                                                           <Font name="Arial" size="12.0" />
@@ -810,16 +939,51 @@
                                                                                     </Label>
                                                                                     <Separator prefWidth="200.0" style="-fx-background-color: orange;" GridPane.columnSpan="11" GridPane.rowIndex="3" />
                                                                                     <Label id="LabelDesc" text="Plate Number" GridPane.columnIndex="2" GridPane.rowIndex="4" />
-                                                                                    <TextField fx:id="txtField20V" GridPane.columnIndex="3" GridPane.rowIndex="4" />
+                                                                                    <TextField fx:id="txtField20V" GridPane.columnIndex="3" GridPane.rowIndex="4">
+                                                                                       <tooltip>
+                                                                                          <Tooltip text="Please Fill in the Plate Number" />
+                                                                                       </tooltip></TextField>
                                                                                     <Label id="LabelDesc" text="Frame Number" GridPane.columnIndex="5" GridPane.rowIndex="4" />
-                                                                                    <TextField fx:id="txtField03V" GridPane.columnIndex="6" GridPane.rowIndex="4" />
+                                                                                    <TextField fx:id="txtField03V" GridPane.columnIndex="6" GridPane.rowIndex="4">
+                                                                                       <tooltip>
+                                                                                          <Tooltip text="Please Fill in the Frame Number" />
+                                                                                       </tooltip></TextField>
                                                                                     <Label id="LabelDesc" text="Key Number" GridPane.columnIndex="8" GridPane.rowIndex="4" />
                                                                                     <TextField fx:id="txtField11V" GridPane.columnIndex="9" GridPane.rowIndex="4" />
                                                                                     <Label id="LabelDesc" text="CS Number" GridPane.columnIndex="2" GridPane.rowIndex="5" />
-                                                                                    <TextField fx:id="txtField08V" GridPane.columnIndex="3" GridPane.rowIndex="5" />
+                                                                                    <TextField fx:id="txtField08V" GridPane.columnIndex="3" GridPane.rowIndex="5">
+                                                                                       <tooltip>
+                                                                                          <Tooltip text="Please Fill in the CS Number" />
+                                                                                       </tooltip></TextField>
                                                                                     <Label id="LabelDesc" text="Engine Number" GridPane.columnIndex="5" GridPane.rowIndex="5" />
-                                                                                    <TextField fx:id="txtField04V" GridPane.columnIndex="6" GridPane.rowIndex="5" />
-                                                                                    <Button fx:id="btnEngFrm" mnemonicParsing="false" prefHeight="25.0" prefWidth="30.0" text="..." GridPane.columnIndex="8" GridPane.rowIndex="5" />
+                                                                                    <TextField fx:id="txtField04V" GridPane.columnIndex="6" GridPane.rowIndex="5">
+                                                                                       <tooltip>
+                                                                                          <Tooltip text="Please Fill in the Engine Number" />
+                                                                                       </tooltip></TextField>
+                                                                                    <Button fx:id="btnEngFrm" mnemonicParsing="false" prefHeight="25.0" prefWidth="30.0" text="..." GridPane.columnIndex="8" GridPane.rowIndex="5">
+                                                                                       <tooltip>
+                                                                                          <Tooltip text="Add Engine and Frame Number" />
+                                                                                       </tooltip></Button>
+                                                                                    <Label fx:id="lbl_LName1" alignment="BOTTOM_RIGHT" prefHeight="17.0" prefWidth="78.0" text="*" textFill="#fb0000" GridPane.columnIndex="2" GridPane.rowIndex="4">
+                                                                                       <font>
+                                                                                          <Font name="Arial" size="12.0" />
+                                                                                       </font>
+                                                                                    </Label>
+                                                                                    <Label fx:id="lbl_LName2" alignment="BOTTOM_RIGHT" prefHeight="17.0" prefWidth="68.0" text="*" textFill="#fb0000" GridPane.columnIndex="2" GridPane.rowIndex="5">
+                                                                                       <font>
+                                                                                          <Font name="Arial" size="12.0" />
+                                                                                       </font>
+                                                                                    </Label>
+                                                                                    <Label fx:id="lbl_LName21" alignment="BOTTOM_RIGHT" prefHeight="17.0" prefWidth="85.0" text="*" textFill="#fb0000" GridPane.columnIndex="5" GridPane.rowIndex="4">
+                                                                                       <font>
+                                                                                          <Font name="Arial" size="12.0" />
+                                                                                       </font>
+                                                                                    </Label>
+                                                                                    <Label fx:id="lbl_LName22" alignment="BOTTOM_RIGHT" prefHeight="17.0" prefWidth="87.0" text="*" textFill="#fb0000" GridPane.columnIndex="5" GridPane.rowIndex="5">
+                                                                                       <font>
+                                                                                          <Font name="Arial" size="12.0" />
+                                                                                       </font>
+                                                                                    </Label>
                                                                                  </children>
                                                                               </GridPane>
                                                                               <Separator style="-fx-background-color: orange;" />

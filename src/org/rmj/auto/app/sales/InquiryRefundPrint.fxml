@@ -8,6 +8,7 @@
 <?import javafx.scene.control.ProgressIndicator?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.effect.Blend?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
@@ -92,7 +93,10 @@
                               </Button>
                               <VBox spacing="3.0">
                                  <children>
-                                    <TextField fx:id="txtField01" alignment="CENTER_RIGHT" promptText="0.00" />
+                                    <TextField fx:id="txtField01" alignment="CENTER_RIGHT" promptText="0.00">
+                                       <tooltip>
+                                          <Tooltip text="Please Fill in the Refund Amount" />
+                                       </tooltip></TextField>
                                     <Button fx:id="btnUpdateAmt" contentDisplay="TOP" mnemonicParsing="false" prefHeight="47.0" prefWidth="150.0" text="Update Refund Amount">
                                        <effect>
                                           <Blend />

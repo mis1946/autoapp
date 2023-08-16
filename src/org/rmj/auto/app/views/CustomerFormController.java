@@ -373,6 +373,26 @@ public class CustomerFormController implements Initializable, ScreenInterface {
     private Tab tabCustomer;
     @FXML
     private Tab tabVhclInfo;
+    @FXML
+    private Label lbl_CName;
+    @FXML
+    private Label lbl_LName;
+    @FXML
+    private Label lbl_MName;
+    @FXML
+    private Label lbl_title;
+    @FXML
+    private Label lbl_gender;
+    @FXML
+    private Label lbl_cvlstat;
+    @FXML
+    private Label lbl_LName1;
+    @FXML
+    private Label lbl_LName2;
+    @FXML
+    private Label lbl_LName21;
+    @FXML
+    private Label lbl_LName22;
 
     private Stage getStage() {
         return (Stage) txtField01.getScene().getWindow();

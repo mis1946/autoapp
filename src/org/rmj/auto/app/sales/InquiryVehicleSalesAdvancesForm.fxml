@@ -8,6 +8,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.effect.Blend?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
@@ -90,12 +91,18 @@
                               <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="5.0" vgrow="SOMETIMES" />
                            </rowConstraints>
                            <children>
-                              <ComboBox fx:id="comboBox12" prefWidth="170.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                              <ComboBox fx:id="comboBox12" prefWidth="170.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                                 <tooltip>
+                                    <Tooltip text="Please select Slip Type" />
+                                 </tooltip></ComboBox>
                               <TextField fx:id="txtField03" disable="true" GridPane.columnIndex="2" GridPane.rowIndex="2" />
                               <TextField fx:id="txtField05" alignment="CENTER_RIGHT" promptText="0.00" GridPane.columnIndex="6" GridPane.rowIndex="2">
                                  <GridPane.margin>
                                     <Insets />
                                  </GridPane.margin>
+                                 <tooltip>
+                                    <Tooltip text="Please Fill in the Advances Amount" />
+                                 </tooltip>
                               </TextField>
                               <TextArea fx:id="textArea06" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.columnSpan="6" GridPane.rowIndex="3" GridPane.rowSpan="2">
                                  <GridPane.margin>
@@ -130,6 +137,16 @@
                               <TextField fx:id="txtField15" disable="true" GridPane.columnIndex="6" GridPane.rowIndex="6" />
                               <Label id="LabelDesc" text="Approved Date" GridPane.columnIndex="5" GridPane.rowIndex="6" />
                               <TextField fx:id="txtField02" disable="true" GridPane.columnIndex="6" GridPane.rowIndex="1" />
+                              <Label alignment="BOTTOM_RIGHT" prefHeight="17.0" prefWidth="56.0" text="*" textFill="#fb0000" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                 <font>
+                                    <Font name="Arial" size="12.0" />
+                                 </font>
+                              </Label>
+                              <Label alignment="BOTTOM_RIGHT" layoutX="20.0" layoutY="22.0" prefHeight="17.0" prefWidth="47.0" text="*" textFill="#fb0000" GridPane.columnIndex="5" GridPane.rowIndex="2">
+                                 <font>
+                                    <Font name="Arial" size="12.0" />
+                                 </font>
+                              </Label>
                            </children>
                            <opaqueInsets>
                               <Insets />

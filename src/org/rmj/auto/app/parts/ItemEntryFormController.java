@@ -352,6 +352,7 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
         });
     }
 
+    @Override
     public void setGRider(GRider foValue) {
         oApp = foValue;
     }
@@ -960,7 +961,6 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
             stage.showAndWait();
 
         } catch (IOException e) {
-            e.printStackTrace();
             ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
             System.exit(1);
         }
@@ -1006,7 +1006,6 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
             stage.showAndWait();
 
         } catch (IOException e) {
-            e.printStackTrace();
             ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
             System.exit(1);
         }
@@ -1052,7 +1051,6 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
             stage.showAndWait();
 
         } catch (IOException e) {
-            e.printStackTrace();
             ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
             System.exit(1);
         }
@@ -1098,7 +1096,6 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
             stage.showAndWait();
 
         } catch (IOException e) {
-            e.printStackTrace();
             ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
             System.exit(1);
         }
@@ -1144,7 +1141,6 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
             loadItemModelTable();
 
         } catch (IOException e) {
-            e.printStackTrace();
             ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
             System.exit(1);
         }
@@ -1191,7 +1187,6 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
             loadItemModelTable();
 
         } catch (IOException e) {
-            e.printStackTrace();
             ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
             System.exit(1);
         }

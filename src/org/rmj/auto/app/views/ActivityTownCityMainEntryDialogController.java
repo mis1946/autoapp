@@ -43,7 +43,7 @@ public class ActivityTownCityMainEntryDialogController implements Initializable,
     private GRider oApp;
     private ObservableList<ActivityTownEntryTableList> townCitydata = FXCollections.observableArrayList();
     unloadForm unload = new unloadForm(); //Used in Close Button
-    private final String pxeModuleName = "ActivityMemberEntryDialogController"; //Form Title
+    private final String pxeModuleName = "Activity Member Entry"; //Form Title
     @FXML
     private TableColumn<ActivityTownEntryTableList, String> tblRow;
     @FXML

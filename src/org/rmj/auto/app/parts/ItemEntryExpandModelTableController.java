@@ -34,6 +34,7 @@ public class ItemEntryExpandModelTableController implements Initializable, Scree
 
     private GRider oApp;
     private MasterCallback oListener;
+    private final String pxeModuleName = "ItemEntry Expand Model Table";
     private ItemEntry oTrans;
     @FXML
     private Button btnClose;

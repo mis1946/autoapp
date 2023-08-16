@@ -6,6 +6,7 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.effect.Blend?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
@@ -59,8 +60,16 @@
                                             </GridPane.margin>
                                         </Label>
                                         <Label id="LabelDesc" text="Source" GridPane.columnIndex="4" />
-                                        <ComboBox fx:id="comboBox29" prefWidth="120.0" promptText="Choose Type" GridPane.columnIndex="2" />
-                                        <TextField fx:id="txtField02" GridPane.columnIndex="5" GridPane.columnSpan="2" />
+                                        <ComboBox fx:id="comboBox29" prefWidth="120.0" promptText="Choose Type" GridPane.columnIndex="2">
+                                            <tooltip>
+                                                <Tooltip text="Choose activity type." />
+                                            </tooltip>
+                                        </ComboBox>
+                                        <TextField fx:id="txtField02" GridPane.columnIndex="5" GridPane.columnSpan="2">
+                                            <tooltip>
+                                                <Tooltip text="Please fill in the Activity Source." />
+                                            </tooltip>
+                                        </TextField>
                                     </children>
                                     <opaqueInsets>
                                         <Insets />

@@ -56,7 +56,7 @@ public class BankEntryFormController implements Initializable, ScreenInterface {
     private GRider oApp;
     private BankInformation oTrans;
     unloadForm unload = new unloadForm(); //Object for closing form
-    private final String pxeModuleName = "Bank"; //Form Title
+    private final String pxeModuleName = "Bank Entry Form"; //Form Title
     private MasterCallback oListener;
 
     private int pnEditMode;//Modifying fields

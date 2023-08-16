@@ -40,7 +40,7 @@ public class ActivityVehicleEntryDialogController implements Initializable, Scre
     private Button btnClose;
     unloadForm unload = new unloadForm(); //Used in Close Button
     private ObservableList<ActivityVchlEntryTable> actVhclModelData = FXCollections.observableArrayList();
-    private final String pxeModuleName = "ActivityVehicleEntryDialog"; //Form Title
+    private final String pxeModuleName = "Activity Vehicle Entry"; //Form Title
     @FXML
     private AnchorPane AnchorMain;
     @FXML

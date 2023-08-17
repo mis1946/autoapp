@@ -19,6 +19,9 @@ import java.util.function.UnaryOperator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.beans.property.ReadOnlyBooleanPropertyBase;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -59,6 +62,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Callback;
+import javafx.util.Duration;
 import org.rmj.appdriver.GRider;
 import org.rmj.appdriver.SQLUtil;
 import org.rmj.appdriver.agentfx.CommonUtils;
@@ -445,6 +449,35 @@ public class CustomerFormController implements Initializable, ScreenInterface {
         setCapsLockBehavior(txtField25);
         setCapsLockBehavior(txtField26);
         setCapsLockBehavior(textArea15);
+        
+        /*Required Fields Animation*/
+        addRequiredFieldListener(txtField16);
+        addRequiredFieldListener(txtField02);
+        addRequiredFieldListener(txtField03);
+        addRequiredFieldListener(txtField03Addr);
+        addRequiredFieldListener(txtField05Addr);
+        addRequiredFieldListener(txtField06Addr);
+        addRequiredFieldListener(txtField03Cont);
+        //Vehicle Info
+        addRequiredFieldListener(txtField24V);
+        addRequiredFieldListener(txtField26V);
+        addRequiredFieldListener(txtField28V);
+        addRequiredFieldListener(txtField31V);
+        addRequiredFieldListener(txtField30V);
+        addRequiredFieldListener(txtField32V);
+        addRequiredFieldListener(txtField20V);//Plate No
+        addRequiredFieldListener(txtField08V);
+        addRequiredFieldListener(txtField03V);
+        addRequiredFieldListener(txtField04V);
+        
+        if (!txtField20V.getText().isEmpty()){
+            txtField08V.getStyleClass().remove("required-field");
+        } 
+        
+        if (!txtField08V.getText().isEmpty()){
+            txtField20V.getStyleClass().remove("required-field");
+        } 
+        
         /*Set Focus to set Value to Class*/
         txtField01.focusedProperty().addListener(txtField_Focus);
         txtField02.focusedProperty().addListener(txtField_Focus);
@@ -694,6 +727,42 @@ public class CustomerFormController implements Initializable, ScreenInterface {
         clearVehicleInfoFields();
         pnVEditMode = EditMode.UNKNOWN;
         initVhclInfoButton(pnEditMode);
+    }
+    
+    //Animation    
+    private void shakeTextField(TextField textField) {
+        Timeline timeline = new Timeline();
+        double originalX = textField.getTranslateX();
+
+        // Add keyframes for the animation
+        KeyFrame keyFrame1 = new KeyFrame(Duration.millis(0), new KeyValue(textField.translateXProperty(), 0));
+        KeyFrame keyFrame2 = new KeyFrame(Duration.millis(100), new KeyValue(textField.translateXProperty(), -5));
+        KeyFrame keyFrame3 = new KeyFrame(Duration.millis(200), new KeyValue(textField.translateXProperty(), 5));
+        KeyFrame keyFrame4 = new KeyFrame(Duration.millis(300), new KeyValue(textField.translateXProperty(), -5));
+        KeyFrame keyFrame5 = new KeyFrame(Duration.millis(400), new KeyValue(textField.translateXProperty(), 5));
+        KeyFrame keyFrame6 = new KeyFrame(Duration.millis(500), new KeyValue(textField.translateXProperty(), -5));
+        KeyFrame keyFrame7 = new KeyFrame(Duration.millis(600), new KeyValue(textField.translateXProperty(), 5));
+        KeyFrame keyFrame8 = new KeyFrame(Duration.millis(700), new KeyValue(textField.translateXProperty(), originalX));
+
+        // Add keyframes to the timeline
+        timeline.getKeyFrames().addAll(
+                keyFrame1, keyFrame2, keyFrame3, keyFrame4, keyFrame5, keyFrame6, keyFrame7, keyFrame8
+        );
+
+        // Play the animation
+        timeline.play();
+    }
+
+    //Validation
+    private void addRequiredFieldListener(TextField textField) {
+        textField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue && textField.getText().isEmpty()) {
+                shakeTextField(textField);
+                textField.getStyleClass().add("required-field");
+            } else {
+                textField.getStyleClass().remove("required-field");
+            }
+        });
     }
 
     private static void setCapsLockBehavior(TextField textField) {
@@ -981,6 +1050,10 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                                 }
                             }
                             /*Address*/
+                            /*Clear Red Color for required fileds*/
+                            txtField03Addr.getStyleClass().remove("required-field");
+                            txtField05Addr.getStyleClass().remove("required-field");
+                            txtField06Addr.getStyleClass().remove("required-field");
                             txtField03Addr.clear(); //House No
                             txtField04Addr.clear(); //Street / Address
                             txtField05Addr.clear(); // Town
@@ -1017,6 +1090,8 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                             comboBox05Cont.setValue(null); // Contact Ownership
                             comboBox04Cont.setValue(null); // Mobile Type
                             txtField03Cont.clear();  //Mobile Number
+                            /*Clear Red Color for required fileds*/
+                            txtField03Cont.getStyleClass().remove("required-field");
                             radiobtn14CntY.setSelected(true); // Contact Active Status
                             radiobtn14CntN.setSelected(false); // Contact Active Status
                             radiobtn11CntY.setSelected(false); // Contact Primary
@@ -1085,6 +1160,10 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                                 return;
                             }
                             /*Address*/
+                            /*Clear Red Color for required fileds*/
+                            txtField03Addr.getStyleClass().remove("required-field");
+                            txtField05Addr.getStyleClass().remove("required-field");
+                            txtField06Addr.getStyleClass().remove("required-field");
                             txtField03Addr.clear(); //House No
                             txtField04Addr.clear(); //Street / Address
                             txtField05Addr.clear(); // Town
@@ -1116,6 +1195,8 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                             comboBox05Cont.setValue(null); // Contact Ownership
                             comboBox04Cont.setValue(null); // Mobile Type
                             txtField03Cont.clear();  //Mobile Number
+                            /*Clear Red Color for required fileds*/
+                            txtField03Cont.getStyleClass().remove("required-field");
                             radiobtn14CntY.setSelected(true); // Contact Active Status
                             radiobtn14CntN.setSelected(false); // Contact Active Status
                             radiobtn11CntY.setSelected(false); // Contact Primary
@@ -1171,6 +1252,10 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                             oTransAddress.removeAddress(pnRow);
                             pnRow = 0;
                             loadAddress();
+                            /*Clear Red Color for required fileds*/
+                            txtField03Addr.getStyleClass().remove("required-field");
+                            txtField05Addr.getStyleClass().remove("required-field");
+                            txtField06Addr.getStyleClass().remove("required-field");
                             /*Address*/
                             txtField03Addr.clear(); //House No
                             txtField04Addr.clear(); //Street / Address
@@ -1197,6 +1282,8 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                             comboBox05Cont.setValue(null); // Contact Ownership
                             comboBox04Cont.setValue(null); // Mobile Type
                             txtField03Cont.clear();  //Mobile Number
+                            /*Clear Red Color for required fileds*/
+                            txtField03Cont.getStyleClass().remove("required-field");
                             radiobtn14CntY.setSelected(true); // Contact Active Status
                             radiobtn14CntN.setSelected(false); // Contact Active Status
                             radiobtn11CntY.setSelected(false); // Contact Primary
@@ -3212,6 +3299,11 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                     comboBox08.getSelectionModel().select(Integer.parseInt((String) oTrans.getMaster(8)));
                     comboBox09.getSelectionModel().select(Integer.parseInt((String) oTrans.getMaster(9)));
                     txtField25.clear(); // Spouse
+                    
+                    /*Clear Red Color for required fileds*/
+                    txtField02.getStyleClass().remove("required-field");
+                    txtField03.getStyleClass().remove("required-field");
+                    
                 } else if (comboBox18.getSelectionModel().getSelectedIndex() == 2) {
 
                 } else {
@@ -3219,6 +3311,8 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                     //txtField16.setDisable(true); //company name
                     //txtField29.setDisable(true); // Business Style
                     txtField16.clear(); //company name
+                    /*Clear Red Color for required fileds*/
+                    txtField16.getStyleClass().remove("required-field");
                 }
 
                 cmdCLIENTType(true);
@@ -3322,6 +3416,12 @@ public class CustomerFormController implements Initializable, ScreenInterface {
         if (fnValue == EditMode.UPDATE || fnValue == EditMode.READY) {
             comboBox18.setDisable(true); //CLIENT type *Do not allow user to change client type in Edit Mode
             //Clear Contact details fields
+            /*Clear Red Color for required fileds*/
+            txtField03Addr.getStyleClass().remove("required-field");
+            txtField05Addr.getStyleClass().remove("required-field");
+            txtField06Addr.getStyleClass().remove("required-field");
+            txtField03Cont.getStyleClass().remove("required-field");
+            
             /*Address*/
             txtField03Addr.clear(); //House No
             txtField04Addr.clear(); //Street / Address
@@ -3460,6 +3560,12 @@ public class CustomerFormController implements Initializable, ScreenInterface {
         radiobtn05SocN.setSelected(false); // SocMed Active status
         txtField03Socm.clear(); // SocMed Account
         comboBox04Socm.setValue(null); // SocMed Type
+        
+        /*Clear Red Color for required fileds*/
+        txtField03Addr.getStyleClass().remove("required-field");
+        txtField05Addr.getStyleClass().remove("required-field");
+        txtField06Addr.getStyleClass().remove("required-field");
+        txtField03Cont.getStyleClass().remove("required-field");
     }
 
     /*Clear Fields*/
@@ -3470,6 +3576,15 @@ public class CustomerFormController implements Initializable, ScreenInterface {
         mobiledata.clear();
         emaildata.clear();
         socialmediadata.clear();
+        
+        /*Clear Red Color for required fileds*/
+        txtField16.getStyleClass().remove("required-field");
+        txtField02.getStyleClass().remove("required-field");
+        txtField03.getStyleClass().remove("required-field");
+        txtField03Addr.getStyleClass().remove("required-field");
+        txtField05Addr.getStyleClass().remove("required-field");
+        txtField06Addr.getStyleClass().remove("required-field");
+        txtField03Cont.getStyleClass().remove("required-field");
 
         /*CLIENT Master*/
         txtField02.clear(); //last name
@@ -3622,6 +3737,18 @@ public class CustomerFormController implements Initializable, ScreenInterface {
         txtField31V.clear();
         txtField32V.clear();
         textArea34V.clear();
+        
+        /*Clear Red Color for required fileds*/
+        txtField24V.getStyleClass().remove("required-field");
+        txtField26V.getStyleClass().remove("required-field");
+        txtField28V.getStyleClass().remove("required-field");
+        txtField31V.getStyleClass().remove("required-field");
+        txtField30V.getStyleClass().remove("required-field");
+        txtField32V.getStyleClass().remove("required-field");
+        txtField20V.getStyleClass().remove("required-field");
+        txtField08V.getStyleClass().remove("required-field");
+        txtField03V.getStyleClass().remove("required-field");
+        txtField04V.getStyleClass().remove("required-field");
     }
 
 }

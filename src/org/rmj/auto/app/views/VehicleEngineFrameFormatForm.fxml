@@ -19,7 +19,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane id="AnchorPane" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" >
    <children>
       <StackPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -94,7 +94,10 @@
                                                    <tooltip>
                                                       <Tooltip text="Please Fill in the Manufacturing" />
                                                    </tooltip></TextField>
-                                                <TextField fx:id="txtField02" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                                                <TextField fx:id="txtField02" GridPane.columnIndex="2" GridPane.rowIndex="3">
+                                                   <tooltip>
+                                                      <Tooltip text="Please Fill in the Code" />
+                                                   </tooltip></TextField>
                                                 <TextField fx:id="txtField03" GridPane.columnIndex="5" GridPane.rowIndex="3">
                                                    <tooltip>
                                                       <Tooltip text="Please Fill in the Length" />
@@ -112,32 +115,32 @@
                                                    <tooltip>
                                                       <Tooltip text="Please Fill in the Code" />
                                                    </tooltip></TextField>
-                                                <Label alignment="BOTTOM_RIGHT" prefHeight="17.0" prefWidth="36.0" text="*" textFill="#fb0000" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                                <Label fx:id="label01" alignment="BOTTOM_RIGHT" prefHeight="17.0" prefWidth="36.0" text="*" textFill="#fb0000" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                                    <font>
                                                       <Font name="Arial" size="12.0" />
                                                    </font>
                                                 </Label>
-                                                <Label alignment="BOTTOM_RIGHT" layoutX="20.0" layoutY="54.0" prefHeight="17.0" prefWidth="42.0" text="*" textFill="#fb0000" GridPane.columnIndex="4" GridPane.rowIndex="1">
+                                                <Label fx:id="label02" alignment="BOTTOM_RIGHT" layoutX="20.0" layoutY="54.0" prefHeight="17.0" prefWidth="42.0" text="*" textFill="#fb0000" GridPane.columnIndex="4" GridPane.rowIndex="1">
                                                    <font>
                                                       <Font name="Arial" size="12.0" />
                                                    </font>
                                                 </Label>
-                                                <Label alignment="BOTTOM_RIGHT" layoutX="20.0" layoutY="54.0" prefHeight="17.0" prefWidth="63.0" text="*" textFill="#fb0000" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                                <Label fx:id="label03" alignment="BOTTOM_RIGHT" layoutX="20.0" layoutY="54.0" prefHeight="17.0" prefWidth="63.0" text="*" textFill="#fb0000" GridPane.columnIndex="1" GridPane.rowIndex="2">
                                                    <font>
                                                       <Font name="Arial" size="12.0" />
                                                    </font>
                                                 </Label>
-                                                <Label alignment="BOTTOM_RIGHT" layoutX="20.0" layoutY="84.0" prefHeight="17.0" prefWidth="73.0" text="*" textFill="#fb0000" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                                                <Label fx:id="label05" alignment="BOTTOM_RIGHT" layoutX="20.0" layoutY="84.0" prefHeight="17.0" prefWidth="73.0" text="*" textFill="#fb0000" GridPane.columnIndex="1" GridPane.rowIndex="3">
                                                    <font>
                                                       <Font name="Arial" size="12.0" />
                                                    </font>
                                                 </Label>
-                                                <Label alignment="BOTTOM_RIGHT" layoutX="20.0" layoutY="114.0" prefHeight="17.0" prefWidth="117.0" text="*" textFill="#fb0000" GridPane.columnIndex="4" GridPane.rowIndex="2">
+                                                <Label fx:id="label04" alignment="BOTTOM_RIGHT" layoutX="20.0" layoutY="114.0" prefHeight="17.0" prefWidth="117.0" text="*" textFill="#fb0000" GridPane.columnIndex="4" GridPane.rowIndex="2">
                                                    <font>
                                                       <Font name="Arial" size="12.0" />
                                                    </font>
                                                 </Label>
-                                                <Label alignment="BOTTOM_RIGHT" layoutX="285.0" layoutY="84.0" prefHeight="17.0" prefWidth="99.0" text="*" textFill="#fb0000" GridPane.columnIndex="4" GridPane.rowIndex="3">
+                                                <Label fx:id="label06" alignment="BOTTOM_RIGHT" layoutX="285.0" layoutY="84.0" prefHeight="17.0" prefWidth="99.0" text="*" textFill="#fb0000" GridPane.columnIndex="4" GridPane.rowIndex="3">
                                                    <font>
                                                       <Font name="Arial" size="12.0" />
                                                    </font>

@@ -784,6 +784,7 @@ public class ActivityFormController implements Initializable, ScreenInterface {
                 public void handle(MouseEvent event) {
                     stage.setX(event.getScreenX() - xOffset);
                     stage.setY(event.getScreenY() - yOffset);
+
                 }
             });
 

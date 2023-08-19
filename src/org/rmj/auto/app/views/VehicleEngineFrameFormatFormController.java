@@ -271,8 +271,8 @@ public class VehicleEngineFrameFormatFormController implements Initializable, Sc
                 label01.setVisible(true); //Make
                 label02.setVisible(false); //Model
                 label03.setVisible(true); //Code Type
-                label05.setVisible(true); //Manufacturing
-                label04.setVisible(false); //Code
+                label04.setVisible(true); //Manufacturing
+                label05.setVisible(false); //code
                 label06.setVisible(false); //Length
                 break;
             case 1:
@@ -292,8 +292,8 @@ public class VehicleEngineFrameFormatFormController implements Initializable, Sc
                 label01.setVisible(true); //Make
                 label02.setVisible(true); //Model
                 label03.setVisible(true); //Code Type
-                label05.setVisible(false); //Manufacturing
-                label04.setVisible(true); //Code
+                label04.setVisible(false); //Manufacturing
+                label05.setVisible(true); //code
                 label06.setVisible(true); //Length
                 
                 break;
@@ -314,8 +314,8 @@ public class VehicleEngineFrameFormatFormController implements Initializable, Sc
                 label01.setVisible(true); //Make
                 label02.setVisible(true); //Model
                 label03.setVisible(true); //Code Type
-                label05.setVisible(false); //Manufacturing
-                label04.setVisible(true); //Code
+                label04.setVisible(false); //Manufacturing
+                label05.setVisible(true); //code
                 label06.setVisible(true); //Length
                 break;
         }

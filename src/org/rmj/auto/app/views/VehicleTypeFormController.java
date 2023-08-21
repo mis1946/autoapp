@@ -103,6 +103,8 @@ public class VehicleTypeFormController implements Initializable, ScreenInterface
     private TextField txtField12;
     @FXML
     private Label lblTitle;
+    @FXML
+    private Label lable01;
     
      private Stage getStage(){
          return (Stage) txtField02.getScene().getWindow();
@@ -724,9 +726,11 @@ public class VehicleTypeFormController implements Initializable, ScreenInterface
         if (lbShow){
             lblTitle.setVisible(true);
             txtField12.setVisible(true);
+            lable01.setVisible(true);
         } else {
             lblTitle.setVisible(false);
             txtField12.setVisible(false);
+            lable01.setVisible(false);
         }
         
         btnAdd.setVisible(!lbShow);

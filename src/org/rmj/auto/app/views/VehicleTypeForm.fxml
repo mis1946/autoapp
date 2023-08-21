@@ -104,7 +104,7 @@
                                           <Font name="Arial Bold" size="12.0" />
                                        </font>
                                     </Label>
-                                    <Label alignment="BOTTOM_RIGHT" prefHeight="17.0" prefWidth="68.0" text="*" textFill="#fb0000" GridPane.columnIndex="5" GridPane.rowIndex="1">
+                                    <Label fx:id="lable01" alignment="BOTTOM_RIGHT" prefHeight="17.0" prefWidth="68.0" text="*" textFill="#fb0000" GridPane.columnIndex="5" GridPane.rowIndex="1">
                                        <font>
                                           <Font name="Arial" size="12.0" />
                                        </font>

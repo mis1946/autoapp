@@ -470,13 +470,19 @@ public class CustomerFormController implements Initializable, ScreenInterface {
         addRequiredFieldListener(txtField03V);
         addRequiredFieldListener(txtField04V);
         
-        if (!txtField20V.getText().isEmpty()){
-            txtField08V.getStyleClass().remove("required-field");
-        } 
-        
-        if (!txtField08V.getText().isEmpty()){
-            txtField20V.getStyleClass().remove("required-field");
-        } 
+        // Add a listener to the textProperty of the TextField
+        //Plate number
+        txtField20V.textProperty().addListener((observable, oldValue, newValue) -> {            
+            if (!txtField20V.getText().isEmpty() ){
+                txtField08V.getStyleClass().remove("required-field");
+            }
+        });
+        //CS Number
+        txtField08V.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!txtField08V.getText().isEmpty()){
+                txtField20V.getStyleClass().remove("required-field");
+            } 
+        });
         
         /*Set Focus to set Value to Class*/
         txtField01.focusedProperty().addListener(txtField_Focus);
@@ -1351,6 +1357,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                     if (oTransVehicle.searchAvailableVhcl()) {
                         clearVehicleInfoFields();
                         loadClientVehicleInfo();
+                        oTransVehicle.setMaster("sClientID",oTrans.getMaster("sClientID").toString());
                         bBtnVhclAvl = true;
                         pnVEditMode = oTransVehicle.getEditMode();
                     } else {
@@ -2442,7 +2449,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
             return;
         }
         getSelectedItem();
-
+        bBtnVhclAvl = false;
         tblViewVhclInfo.setOnKeyReleased((KeyEvent t) -> {
             KeyCode key = t.getCode();
             switch (key) {
@@ -2575,9 +2582,19 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                 } else if (selectedIndex == 1) {
                     switch (lnIndex) {
                         case 8:
+                            if (!txtField20V.getText().isEmpty() ){
+                                txtField08V.getStyleClass().remove("required-field");
+                            }
+                            oTransVehicle.setMaster(lnIndex, lsValue);
+                            break;
+                        case 20:
+                            if (!txtField08V.getText().isEmpty() ){
+                                txtField20V.getStyleClass().remove("required-field");
+                            }
+                            oTransVehicle.setMaster(lnIndex, lsValue);
+                            break;
                         case 9:
                         case 11:
-                        case 20:
                         case 22:
                         case 24:
                         case 26:

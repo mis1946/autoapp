@@ -69,15 +69,19 @@
                                         <Label id="LabelDesc" text="Measurement Description" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                         <TextField fx:id="txtField01" style="-fx-font-weight: bold;" GridPane.columnIndex="2" GridPane.columnSpan="2" />
                                         <TextField fx:id="txtField02" GridPane.columnIndex="2" GridPane.columnSpan="5" GridPane.rowIndex="1">
-                                 <tooltip>
-                                    <Tooltip text="Please fill in the Measurement Description." />
-                                 </tooltip></TextField>
+                                            <tooltip>
+                                                <Tooltip text="Please fill in the Measurement Description." />
+                                            </tooltip>
+                                        </TextField>
                                         <TextField fx:id="txtField03" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="2">
-                                 <tooltip>
-                                    <Tooltip text="Please fill in the Measurement Abbrev." />
-                                 </tooltip></TextField>
+                                            <tooltip>
+                                                <Tooltip text="Please fill in the Measurement Abbrev." />
+                                            </tooltip>
+                                        </TextField>
                                         <CheckBox id="LabelDesc" fx:id="cboxActivate" mnemonicParsing="false" text="Active" GridPane.columnIndex="2" GridPane.rowIndex="3" />
                                         <Label id="LabelDesc" text="Measurement Abbrev" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                        <Label alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="140.0" text="*" textFill="#fb0000" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                        <Label alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="119.0" text="*" textFill="#fb0000" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                                     </children>
                                     <opaqueInsets>
                                         <Insets />

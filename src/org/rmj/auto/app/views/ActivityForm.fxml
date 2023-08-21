@@ -15,6 +15,7 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.effect.Blend?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
@@ -26,7 +27,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" fx:id="AnchorMain" prefHeight="669.0" prefWidth="1322.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane id="AnchorPane" fx:id="AnchorMain" prefHeight="669.0" prefWidth="1322.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" >
     <children>
         <StackPane prefHeight="651.0" prefWidth="917.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
@@ -227,19 +228,34 @@
                                                                                 <Label id="LabelDesc" prefHeight="66.0" prefWidth="133.0" text="No. of Target Clients" GridPane.columnIndex="11" GridPane.columnSpan="2" GridPane.rowIndex="6" />
                                                                                 <Label id="LabelDesc" prefHeight="77.0" prefWidth="130.0" text="Branch" GridPane.columnIndex="11" GridPane.rowIndex="5" />
                                                                                 <Label id="LabelDesc" prefHeight="124.0" prefWidth="139.0" text="Total Event Budget " GridPane.columnIndex="11" GridPane.rowIndex="7" />
-                                                                                <DatePicker fx:id="dateFrom06" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="1" />
+                                                                                <DatePicker fx:id="dateFrom06" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="1">
+                                                                                    <tooltip>
+                                                                                        <Tooltip text="Please pick Date From." />
+                                                                                    </tooltip>
+                                                                                </DatePicker>
                                                                                 <DatePicker fx:id="dateTo07" GridPane.columnIndex="5" GridPane.columnSpan="2" GridPane.rowIndex="1">
                                                                                     <GridPane.margin>
                                                                                         <Insets right="5.0" />
                                                                                     </GridPane.margin>
+                                                                                    <tooltip>
+                                                                                        <Tooltip text="Please pick Date To." />
+                                                                                    </tooltip>
                                                                                 </DatePicker>
                                                                                 <Label id="LabelDesc" prefHeight="41.0" prefWidth="59.0" text="To" GridPane.columnIndex="4" GridPane.rowIndex="1">
                                                                                     <GridPane.margin>
                                                                                         <Insets left="5.0" />
                                                                                     </GridPane.margin>
                                                                                 </Label>
-                                                                                <ComboBox fx:id="comboBox29" prefWidth="150.0" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="2" />
-                                                                                <TextField fx:id="txtField05" promptText="Search: F3" GridPane.columnIndex="5" GridPane.columnSpan="3" GridPane.rowIndex="2" />
+                                                                                <ComboBox fx:id="comboBox29" prefWidth="150.0" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="2">
+                                                                                    <tooltip>
+                                                                                        <Tooltip text="Please choose Activity Type." />
+                                                                                    </tooltip>
+                                                                                </ComboBox>
+                                                                                <TextField fx:id="txtField05" promptText="Search: F3" GridPane.columnIndex="5" GridPane.columnSpan="3" GridPane.rowIndex="2">
+                                                                                    <tooltip>
+                                                                                        <Tooltip text="Please fill in the Acitivity Source." />
+                                                                                    </tooltip>
+                                                                                </TextField>
                                                                                 <Button fx:id="btnAddSource" alignment="TOP_LEFT" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="22.0" prefWidth="26.0" GridPane.columnIndex="8" GridPane.rowIndex="2">
                                                                                     <graphic>
                                                                                         <FontAwesomeIconView glyphName="PLUS" text="" />
@@ -256,35 +272,65 @@
                                                                                     <GridPane.margin>
                                                                                         <Insets />
                                                                                     </GridPane.margin>
+                                                                                    <tooltip>
+                                                                                        <Tooltip text="Please fill in the Activity Title." />
+                                                                                    </tooltip>
                                                                                 </TextArea>
                                                                                 <TextArea fx:id="textArea03" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="7" GridPane.rowIndex="5" GridPane.rowSpan="2">
                                                                                     <GridPane.margin>
                                                                                         <Insets bottom="5.0" />
                                                                                     </GridPane.margin>
+                                                                                    <tooltip>
+                                                                                        <Tooltip text="Please fill in the Description." />
+                                                                                    </tooltip>
                                                                                 </TextArea>
                                                                                 <TextArea fx:id="textArea15" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="7" GridPane.rowIndex="7">
                                                                                     <GridPane.margin>
                                                                                         <Insets bottom="5.0" />
                                                                                     </GridPane.margin>
+                                                                                    <tooltip>
+                                                                                        <Tooltip text="Please fill in the Logistic Remarks." />
+                                                                                    </tooltip>
                                                                                 </TextArea>
                                                                                 <TextArea fx:id="textArea16" prefHeight="55.0" prefWidth="134.0" GridPane.columnIndex="13" GridPane.columnSpan="4" GridPane.rowSpan="2">
                                                                                     <GridPane.margin>
                                                                                         <Insets />
                                                                                     </GridPane.margin>
+                                                                                    <tooltip>
+                                                                                        <Tooltip text="Please fill in the Activity Remarks." />
+                                                                                    </tooltip>
                                                                                 </TextArea>
                                                                                 <TextField fx:id="txtField24" promptText="Search: F3" GridPane.columnIndex="13" GridPane.columnSpan="4" GridPane.rowIndex="2">
                                                                                     <GridPane.margin>
                                                                                         <Insets />
                                                                                     </GridPane.margin>
+                                                                                    <tooltip>
+                                                                                        <Tooltip text="Please fill in the Department in charge." />
+                                                                                    </tooltip>
                                                                                 </TextField>
                                                                                 <TextField fx:id="txtField25" promptText="Search: F3" GridPane.columnIndex="13" GridPane.columnSpan="4" GridPane.rowIndex="3">
                                                                                     <GridPane.margin>
                                                                                         <Insets />
                                                                                     </GridPane.margin>
+                                                                                    <tooltip>
+                                                                                        <Tooltip text="Please fill in the Person in charge." />
+                                                                                    </tooltip>
                                                                                 </TextField>
-                                                                                <TextField fx:id="txtField26" prefHeight="22.0" prefWidth="86.0" promptText="Search: F3" GridPane.columnIndex="13" GridPane.columnSpan="4" GridPane.rowIndex="4" />
-                                                                                <TextField fx:id="txtField32" GridPane.columnIndex="13" GridPane.rowIndex="5" />
-                                                                                <TextField fx:id="txtField12" GridPane.columnIndex="13" GridPane.rowIndex="6" />
+                                                                                <TextField fx:id="txtField26" prefHeight="22.0" prefWidth="86.0" promptText="Search: F3" GridPane.columnIndex="13" GridPane.columnSpan="4" GridPane.rowIndex="4">
+                                                                                    <tooltip>
+                                                                                        <Tooltip text="Please fill in the Branch in charge." />
+                                                                                    </tooltip>
+                                                                                </TextField>
+                                                                                <TextField fx:id="txtField32" GridPane.columnIndex="13" GridPane.rowIndex="5">
+                                                                                    <tooltip>
+                                                                                        <Tooltip text="Please fill in the Branch." />
+                                                                                    </tooltip>
+                                                                                </TextField>
+                                                                                <TextField fx:id="txtField12" GridPane.columnIndex="13" GridPane.rowIndex="6">
+                                                                                    <tooltip>
+                                                                                        <Tooltip text="Please fill in the No. of Target Clients." />
+                                                                                    </tooltip>
+                                                                                </TextField>
                                                                                 <TextField fx:id="txtField11" alignment="CENTER_RIGHT" GridPane.columnIndex="13" GridPane.rowIndex="7" />
                                                                                 <Label id="LabelDesc" prefHeight="54.0" prefWidth="84.0" text="From" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                                                                     <GridPane.margin>
@@ -297,6 +343,41 @@
                                                                                     </GridPane.margin>
                                                                                 </Label>
                                                                                 <TextField fx:id="txtField01" editable="false" GridPane.columnIndex="1" GridPane.columnSpan="3" />
+                                                                                <Label alignment="CENTER_RIGHT" prefHeight="14.0" prefWidth="73.0" text="*" textFill="#fb0000" GridPane.rowIndex="2">
+                                                                                    <font>
+                                                                                        <Font name="Arial Bold" size="11.5" />
+                                                                                    </font>
+                                                                                </Label>
+                                                                                <Label alignment="CENTER_RIGHT" prefHeight="14.0" prefWidth="69.0" text="*" textFill="#fb0000" GridPane.rowIndex="3">
+                                                                                    <font>
+                                                                                        <Font name="Arial Bold" size="11.5" />
+                                                                                    </font>
+                                                                                </Label>
+                                                                                <Label alignment="CENTER_RIGHT" prefHeight="14.0" prefWidth="71.0" text="*" textFill="#fb0000" GridPane.columnIndex="4" GridPane.rowIndex="2">
+                                                                                    <font>
+                                                                                        <Font name="Arial Bold" size="11.5" />
+                                                                                    </font>
+                                                                                </Label>
+                                                                                <Label alignment="CENTER_RIGHT" prefHeight="14.0" prefWidth="67.0" text="*" textFill="#fb0000" GridPane.rowIndex="5">
+                                                                                    <font>
+                                                                                        <Font name="Arial Bold" size="11.5" />
+                                                                                    </font>
+                                                                                </Label>
+                                                                                <Label alignment="CENTER_RIGHT" prefHeight="14.0" prefWidth="129.0" text="*" textFill="#fb0000" GridPane.columnIndex="11" GridPane.columnSpan="2" GridPane.rowIndex="2">
+                                                                                    <font>
+                                                                                        <Font name="Arial Bold" size="11.5" />
+                                                                                    </font>
+                                                                                </Label>
+                                                                                <Label alignment="CENTER_RIGHT" prefHeight="14.0" prefWidth="96.0" text="*" textFill="#fb0000" GridPane.columnIndex="11" GridPane.rowIndex="3">
+                                                                                    <font>
+                                                                                        <Font name="Arial Bold" size="11.5" />
+                                                                                    </font>
+                                                                                </Label>
+                                                                                <Label alignment="CENTER_RIGHT" prefHeight="14.0" prefWidth="95.0" text="*" textFill="#fb0000" GridPane.columnIndex="11" GridPane.rowIndex="4">
+                                                                                    <font>
+                                                                                        <Font name="Arial Bold" size="11.5" />
+                                                                                    </font>
+                                                                                </Label>
                                                                             </children>
                                                                             <VBox.margin>
                                                                                 <Insets left="20.0" right="20.0" top="10.0" />
@@ -342,6 +423,9 @@
                                                                                     <GridPane.margin>
                                                                                         <Insets />
                                                                                     </GridPane.margin>
+                                                                                    <tooltip>
+                                                                                        <Tooltip text="Please fill in the Province." />
+                                                                                    </tooltip>
                                                                                 </TextField>
                                                                                 <HBox prefHeight="30.0" prefWidth="158.0" spacing="2.0" GridPane.columnIndex="8">
                                                                                     <children>
@@ -355,6 +439,9 @@
                                                                                             <HBox.margin>
                                                                                                 <Insets left="5.0" top="5.0" />
                                                                                             </HBox.margin>
+                                                                                            <tooltip>
+                                                                                                <Tooltip text="Click to search town." />
+                                                                                            </tooltip>
                                                                                         </Button>
                                                                                         <Button fx:id="btnCityRemove" alignment="TOP_LEFT" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="22.0" prefWidth="76.0" text="Remove">
                                                                                             <graphic>
@@ -366,15 +453,25 @@
                                                                                             <HBox.margin>
                                                                                                 <Insets left="5.0" top="5.0" />
                                                                                             </HBox.margin>
+                                                                                            <tooltip>
+                                                                                                <Tooltip text="Select town to remove." />
+                                                                                            </tooltip>
                                                                                         </Button>
                                                                                     </children>
                                                                                 </HBox>
-                                                                                <TextArea fx:id="textArea08" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="1" GridPane.rowSpan="2" />
+                                                                                <TextArea fx:id="textArea08" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="1" GridPane.rowSpan="2">
+                                                                                    <tooltip>
+                                                                                        <Tooltip text="Please select 1 town to fill in the Street." />
+                                                                                    </tooltip>
+                                                                                </TextArea>
                                                                                 <Label id="LabelDesc" prefHeight="49.0" prefWidth="113.0" text="Establishment" GridPane.rowIndex="3" />
                                                                                 <TextArea fx:id="textArea09" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="3" GridPane.rowSpan="3">
                                                                                     <GridPane.margin>
                                                                                         <Insets />
                                                                                     </GridPane.margin>
+                                                                                    <tooltip>
+                                                                                        <Tooltip text="Please fill in the Establishment." />
+                                                                                    </tooltip>
                                                                                 </TextArea>
                                                                                 <VBox prefHeight="200.0" prefWidth="100.0" spacing="3.0" GridPane.columnIndex="6" GridPane.rowIndex="3" GridPane.rowSpan="2">
                                                                                     <GridPane.margin>
@@ -395,6 +492,11 @@
                                                                                 <Label text="Municipality" GridPane.columnIndex="6">
                                                                                     <font>
                                                                                         <Font name="System Bold" size="12.0" />
+                                                                                    </font>
+                                                                                </Label>
+                                                                                <Label alignment="CENTER_RIGHT" prefHeight="14.0" prefWidth="55.0" text="*" textFill="#fb0000">
+                                                                                    <font>
+                                                                                        <Font name="Arial Bold" size="11.5" />
                                                                                     </font>
                                                                                 </Label>
                                                                             </children>
@@ -426,13 +528,21 @@
                                                                                 <Font name="Arial Bold" size="12.0" />
                                                                             </font>
                                                                         </Label>
-                                                                        <TextField fx:id="textSeek01" promptText="Search: F3" GridPane.columnIndex="2" />
+                                                                        <TextField fx:id="textSeek01" promptText="Search: F3" GridPane.columnIndex="2">
+                                                                            <tooltip>
+                                                                                <Tooltip text="Enter your search activity no here." />
+                                                                            </tooltip>
+                                                                        </TextField>
                                                                         <Label text="ACTIVITY TITLE" GridPane.columnIndex="4">
                                                                             <font>
                                                                                 <Font name="Arial Bold" size="12.0" />
                                                                             </font>
                                                                         </Label>
-                                                                        <TextField fx:id="textSeek02" prefHeight="22.0" prefWidth="301.0" promptText="Search: F3" GridPane.columnIndex="6" />
+                                                                        <TextField fx:id="textSeek02" prefHeight="22.0" prefWidth="301.0" promptText="Search: F3" GridPane.columnIndex="6">
+                                                                            <tooltip>
+                                                                                <Tooltip text="Enter your search activity title here." />
+                                                                            </tooltip>
+                                                                        </TextField>
                                                                     </children>
                                                                 </GridPane>
                                                             </children>
@@ -465,6 +575,9 @@
                                                                                             <effect>
                                                                                                 <Blend />
                                                                                             </effect>
+                                                                                            <tooltip>
+                                                                                                <Tooltip text="Click to search activity members." />
+                                                                                            </tooltip>
                                                                                         </Button>
                                                                                         <Button fx:id="btnActivityMemRemove" alignment="TOP_LEFT" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="22.0" prefWidth="80.0" text="Remove">
                                                                                             <graphic>
@@ -473,6 +586,9 @@
                                                                                             <effect>
                                                                                                 <Blend />
                                                                                             </effect>
+                                                                                            <tooltip>
+                                                                                                <Tooltip text="Select members to remove." />
+                                                                                            </tooltip>
                                                                                         </Button>
                                                                                     </children>
                                                                                 </HBox>
@@ -512,6 +628,9 @@
                                                                                             <effect>
                                                                                                 <Blend />
                                                                                             </effect>
+                                                                                            <tooltip>
+                                                                                                <Tooltip text="Click to search vehicle models." />
+                                                                                            </tooltip>
                                                                                         </Button>
                                                                                         <Button fx:id="btnVhlModelRemove" alignment="TOP_LEFT" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="22.0" prefWidth="80.0" text="Remove">
                                                                                             <graphic>
@@ -520,6 +639,9 @@
                                                                                             <effect>
                                                                                                 <Blend />
                                                                                             </effect>
+                                                                                            <tooltip>
+                                                                                                <Tooltip text="Select vehicle models to remove." />
+                                                                                            </tooltip>
                                                                                         </Button>
                                                                                     </children>
                                                                                 </HBox>

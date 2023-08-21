@@ -137,6 +137,11 @@ public class MeasurementEntryParamController implements Initializable, ScreenInt
                             txtField02.requestFocus();
                             return;
                         }
+                        if (txtField03.getText().trim().equals("")) {
+                            ShowMessageFX.Warning(getStage(), "Please enter a value for measure abbrev", "Warning", null);
+                            txtField03.requestFocus();
+                            return;
+                        }
                         if (oTrans.SaveRecord()) {
                             if (pnEditMode == EditMode.ADDNEW) {
                                 ShowMessageFX.Information(null, pxeModuleName, "New Measurment added sucessfully.");

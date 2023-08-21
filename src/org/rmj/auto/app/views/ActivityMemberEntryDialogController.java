@@ -42,7 +42,7 @@ public class ActivityMemberEntryDialogController implements Initializable, Scree
     private ObservableList<ActivityMemberTable> Employeedata = FXCollections.observableArrayList();
     private ObservableList<ActivityMemberTable> Departdata = FXCollections.observableArrayList();
     unloadForm unload = new unloadForm(); //Used in Close Button
-    private final String pxeModuleName = "ActivityMemberEntryDialogController"; //Form Title
+    private final String pxeModuleName = "Activity Member Entry"; //Form Title
     @FXML
     private AnchorPane AnchorMain;
     @FXML

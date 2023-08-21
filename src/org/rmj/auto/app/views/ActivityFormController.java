@@ -1,3 +1,4 @@
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/javafx/FXMLController.java to edit this template
@@ -14,6 +15,9 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.beans.property.ReadOnlyBooleanPropertyBase;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
@@ -49,6 +53,7 @@ import static javafx.scene.input.KeyCode.TAB;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.StageStyle;
 import javafx.util.Callback;
+import javafx.util.Duration;
 import org.rmj.appdriver.GRider;
 import org.rmj.appdriver.SQLUtil;
 import org.rmj.appdriver.agentfx.CommonUtils;
@@ -72,9 +77,8 @@ public class ActivityFormController implements Initializable, ScreenInterface {
     private ObservableList<ActivityVchlEntryTable> actVhclModelData = FXCollections.observableArrayList();
     unloadForm unload = new unloadForm(); //Used in Close Button
     CancelForm cancelform = new CancelForm(); //Object for closing form
-    private final String pxeModuleName = "Activity"; //Form Title
+    private final String pxeModuleName = "Activity Entry"; //Form Title
     private int pnEditMode;//Modifying fields
-    private int pnRow;
     @FXML
     private Button btnAdd;
     @FXML
@@ -279,6 +283,12 @@ public class ActivityFormController implements Initializable, ScreenInterface {
         txtField12.setOnKeyPressed(this::txtField_KeyPressed); //nTrgtClnt
         txtField25.setOnKeyPressed(this::txtField_KeyPressed); //sCompyNm
 
+        addRequiredFieldListener(txtField05);
+        addRequiredFieldListener(txtField24);
+        addRequiredFieldListener(txtField25);
+        addRequiredFieldListener(txtField26);
+        addRequiredFieldListener(txtField28);
+
         /* TextArea KeyPressed */
         //textArea08.setOnKeyPressed(this::txtArea_KeyPressed);
         textArea15.setOnKeyPressed(this::txtArea_KeyPressed);
@@ -362,6 +372,42 @@ public class ActivityFormController implements Initializable, ScreenInterface {
             setDisable(empty || item.isBefore(minDate));
         }
     };
+//Animation
+
+    private void shakeTextField(TextField textField) {
+        Timeline timeline = new Timeline();
+        double originalX = textField.getTranslateX();
+
+        // Add keyframes for the animation
+        KeyFrame keyFrame1 = new KeyFrame(Duration.millis(0), new KeyValue(textField.translateXProperty(), 0));
+        KeyFrame keyFrame2 = new KeyFrame(Duration.millis(100), new KeyValue(textField.translateXProperty(), -5));
+        KeyFrame keyFrame3 = new KeyFrame(Duration.millis(200), new KeyValue(textField.translateXProperty(), 5));
+        KeyFrame keyFrame4 = new KeyFrame(Duration.millis(300), new KeyValue(textField.translateXProperty(), -5));
+        KeyFrame keyFrame5 = new KeyFrame(Duration.millis(400), new KeyValue(textField.translateXProperty(), 5));
+        KeyFrame keyFrame6 = new KeyFrame(Duration.millis(500), new KeyValue(textField.translateXProperty(), -5));
+        KeyFrame keyFrame7 = new KeyFrame(Duration.millis(600), new KeyValue(textField.translateXProperty(), 5));
+        KeyFrame keyFrame8 = new KeyFrame(Duration.millis(700), new KeyValue(textField.translateXProperty(), originalX));
+
+        // Add keyframes to the timeline
+        timeline.getKeyFrames().addAll(
+                keyFrame1, keyFrame2, keyFrame3, keyFrame4, keyFrame5, keyFrame6, keyFrame7, keyFrame8
+        );
+
+        // Play the animation
+        timeline.play();
+    }
+
+//Validation
+    private void addRequiredFieldListener(TextField textField) {
+        textField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue && textField.getText().isEmpty()) {
+                shakeTextField(textField);
+                textField.getStyleClass().add("required-field");
+            } else {
+                textField.getStyleClass().remove("required-field");
+            }
+        });
+    }
 
     /*Set Date Value to Master Class*/
     public void getDateFrom(ActionEvent event) {
@@ -612,7 +658,9 @@ public class ActivityFormController implements Initializable, ScreenInterface {
                     break;
                 case "btnCancel":
                     if (ShowMessageFX.OkayCancel(getStage(), "Are you sure you want to cancel?", pxeModuleName, null) == true) {
+                        removeRequired();
                         clearFields();
+                        txtField05.getStyleClass().remove("required-field");
                         actVhclModelData.clear();
                         actMembersData.clear();
                         townCitydata.clear();
@@ -622,12 +670,14 @@ public class ActivityFormController implements Initializable, ScreenInterface {
                 case "btnBrowse":
                     if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
                         if (ShowMessageFX.OkayCancel(null, "Confirmation", "You have unsaved data. Are you sure you want to browse a new record?")) {
+                            txtField05.getStyleClass().remove("required-field");
                         } else {
                             return;
                         }
                     }
                     try {
                         if (oTrans.SearchRecord(textSeek01.getText(), false)) {
+                            removeRequired();
                             loadActivityField();
                             loadActivityVehicleTable();
                             loadActMembersTable();
@@ -660,7 +710,6 @@ public class ActivityFormController implements Initializable, ScreenInterface {
                                 loadActMembersTable();
                                 loadTownTable();
                                 pnEditMode = EditMode.READY;
-
                             } else {
                                 ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
                                 actVhclModelData.clear();
@@ -733,6 +782,7 @@ public class ActivityFormController implements Initializable, ScreenInterface {
                 public void handle(MouseEvent event) {
                     stage.setX(event.getScreenX() - xOffset);
                     stage.setY(event.getScreenY() - yOffset);
+
                 }
             });
 
@@ -781,11 +831,12 @@ public class ActivityFormController implements Initializable, ScreenInterface {
                                 }
                             }
                             if (oTrans.SearchRecord(textSeek01.getText(), false)) {
+                                removeRequired();
                                 loadActivityField();
                                 loadActivityVehicleTable();
                                 loadActMembersTable();
                                 loadTownTable();
-                                pnEditMode = EditMode.READY;
+                                pnEditMode = oTrans.getEditMode();
                             } else {
                                 ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
                                 textSeek02.clear();
@@ -804,6 +855,7 @@ public class ActivityFormController implements Initializable, ScreenInterface {
                                 }
                             }
                             if (oTrans.SearchRecord(textSeek02.getText(), false)) {
+                                removeRequired();
                                 loadActivityField();
                                 loadActivityVehicleTable();
                                 loadActMembersTable();
@@ -821,42 +873,46 @@ public class ActivityFormController implements Initializable, ScreenInterface {
                             break;
                         case "txtField05":
                             String selectedType = comboBox29.getValue();
-                            switch (selectedType) {
-                                case "EVENT":
-                                    selectedType = "eve";
-                                    break;
-                                case "SALES CALL":
-                                    selectedType = "sal";
-                                    break;
-                                case "PROMO":
-                                    selectedType = "pro";
-                                    break;
-                                default:
-                                    break;
-                            }
-                            if (oTrans.searchEventType(selectedType)) {
-                                loadActivityField();
+                            if (selectedType == null) {
+                                ShowMessageFX.Warning(getStage(), "Please choose Activity Type first to proceed.", "Warning", null);
                             } else {
-                                ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                                switch (selectedType) {
+                                    case "EVENT":
+                                        selectedType = "eve";
+                                        break;
+                                    case "SALES CALL":
+                                        selectedType = "sal";
+                                        break;
+                                    case "PROMO":
+                                        selectedType = "pro";
+                                        break;
+                                    default:
+                                        break;
+                                }
+                                if (oTrans.searchEventType(selectedType)) {
+                                    loadActivityField();
+                                } else {
+                                    ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                                }
                             }
                             break;
                         case "txtField24":
                             if (oTrans.searchDepartment(txtField.getText())) {
-                                loadActivityField();
+                                txtField24.setText((String) oTrans.getMaster(24));
                             } else {
                                 ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
                             }
                             break;
                         case "txtField25":
                             if (oTrans.searchEmployee(txtField.getText())) {
-                                loadActivityField();
+                                txtField25.setText((String) oTrans.getMaster(25));
                             } else {
                                 ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
                             }
                             break;
                         case "txtField26":
                             if (oTrans.searchBranch(txtField.getText())) {
-                                loadActivityField();
+                                txtField26.setText((String) oTrans.getMaster(26));
                             } else {
                                 ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
                             }
@@ -1380,8 +1436,6 @@ public class ActivityFormController implements Initializable, ScreenInterface {
     }
 
     private void initButton(int fnValue) {
-        pnRow = 0;
-
         boolean lbShow = (fnValue == EditMode.ADDNEW || fnValue == EditMode.UPDATE);
 
         // Fields
@@ -1463,8 +1517,16 @@ public class ActivityFormController implements Initializable, ScreenInterface {
 
     }
 
+    public void removeRequired() {
+        txtField05.getStyleClass().remove("required-field");
+        txtField24.getStyleClass().remove("required-field");
+        txtField25.getStyleClass().remove("required-field");
+        txtField26.getStyleClass().remove("required-field");
+        txtField28.getStyleClass().remove("required-field");
+    }
+
     public void clearFields() {
-        pnRow = 0;
+        removeRequired();
         townCitydata.clear();
         txtField01.setText("");//sActvtyID
         dateFrom06.setValue(strToDate(CommonUtils.xsDateShort((Date) oApp.getServerDate())));

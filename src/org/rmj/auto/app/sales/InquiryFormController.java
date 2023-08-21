@@ -16,6 +16,9 @@ import java.util.Date;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanPropertyBase;
 import javafx.beans.value.ChangeListener;
@@ -60,6 +63,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Callback;
+import javafx.util.Duration;
 import org.rmj.appdriver.GRider;
 import org.rmj.appdriver.SQLUtil;
 import org.rmj.appdriver.agentfx.CommonUtils;
@@ -484,6 +488,10 @@ public class InquiryFormController implements Initializable, ScreenInterface {
         //Approval and Payments
         setCapsLockBehavior(txtField21); //Approved By
         setCapsLockBehavior(txtPymtc01); //CAR No
+        
+        //Shake 
+        addRequiredFieldListener(txtField07);
+        addRequiredFieldListener(txtField04);
 
         txtField04.focusedProperty().addListener(txtField_Focus);  // Sales Executive
         txtField07.focusedProperty().addListener(txtField_Focus);  //Customer ID 
@@ -641,6 +649,42 @@ public class InquiryFormController implements Initializable, ScreenInterface {
     @Override
     public void setGRider(GRider foValue) {
         oApp = foValue;
+    }
+    
+    //Animation    
+    private void shakeTextField(TextField textField) {
+        Timeline timeline = new Timeline();
+        double originalX = textField.getTranslateX();
+
+        // Add keyframes for the animation
+        KeyFrame keyFrame1 = new KeyFrame(Duration.millis(0), new KeyValue(textField.translateXProperty(), 0));
+        KeyFrame keyFrame2 = new KeyFrame(Duration.millis(100), new KeyValue(textField.translateXProperty(), -5));
+        KeyFrame keyFrame3 = new KeyFrame(Duration.millis(200), new KeyValue(textField.translateXProperty(), 5));
+        KeyFrame keyFrame4 = new KeyFrame(Duration.millis(300), new KeyValue(textField.translateXProperty(), -5));
+        KeyFrame keyFrame5 = new KeyFrame(Duration.millis(400), new KeyValue(textField.translateXProperty(), 5));
+        KeyFrame keyFrame6 = new KeyFrame(Duration.millis(500), new KeyValue(textField.translateXProperty(), -5));
+        KeyFrame keyFrame7 = new KeyFrame(Duration.millis(600), new KeyValue(textField.translateXProperty(), 5));
+        KeyFrame keyFrame8 = new KeyFrame(Duration.millis(700), new KeyValue(textField.translateXProperty(), originalX));
+
+        // Add keyframes to the timeline
+        timeline.getKeyFrames().addAll(
+                keyFrame1, keyFrame2, keyFrame3, keyFrame4, keyFrame5, keyFrame6, keyFrame7, keyFrame8
+        );
+
+        // Play the animation
+        timeline.play();
+    }
+
+    //Validation
+    private void addRequiredFieldListener(TextField textField) {
+        textField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue && textField.getText().isEmpty()) {
+                shakeTextField(textField);
+                textField.getStyleClass().add("required-field");
+            } else {
+                textField.getStyleClass().remove("required-field");
+            }
+        });
     }
 
     //Method/Function for general buttons
@@ -1750,6 +1794,7 @@ public class InquiryFormController implements Initializable, ScreenInterface {
     //Populate Text Field Based on selected transaction in table
     private void getSelectedItem(String TransNo) {
         try {
+            clearFields();
             oldTransNo = TransNo;
             if (oTrans.OpenRecord(TransNo)) {
                 pnEditMode = oTrans.getEditMode(); //inqlistdata
@@ -2714,7 +2759,7 @@ public class InquiryFormController implements Initializable, ScreenInterface {
         textArea08.setDisable(!lbShow); //Remarks
         cmbType012.setDisable(!lbShow); //Inquiry Type
         txtField14.setDisable(!lbShow); //Test Model
-        textArea33.setDisable(!lbShow); //Client Address
+        textArea33.setDisable(true); //Client Address
         txtField10.setDisable(!lbShow); //Target Delivery
         //Radio Button Toggle Group
         rdbtnHtA11.setDisable(!lbShow);
@@ -3033,13 +3078,21 @@ public class InquiryFormController implements Initializable, ScreenInterface {
         } catch (SQLException ex) {
             Logger.getLogger(InquiryFormController.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        /*Clear Red Color for required fileds*/
+        txtField04.getStyleClass().remove("required-field");
+        txtField07.getStyleClass().remove("required-field");
     }
 
     //Method for clearing Fields
     public void clearFields() {
         pnRow = 0;
         selectedTblRowIndex = 0;
-
+        
+        /*Clear Red Color for required fileds*/
+        txtField04.getStyleClass().remove("required-field");
+        txtField07.getStyleClass().remove("required-field");
+        
         /*Inquiry*/
         txtField02.clear(); //Branch Code 
         txtField03.clear();//Inqiury Date

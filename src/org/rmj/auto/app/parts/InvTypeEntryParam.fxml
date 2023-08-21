@@ -70,6 +70,7 @@
                                         </TextField>
                                         <CheckBox id="LabelDesc" fx:id="cboxActivate" mnemonicParsing="false" text="Active" GridPane.columnIndex="2" GridPane.rowIndex="2" />
                                         <Label id="LabelDesc" text="Inventory Type  Description" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                        <Label alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="148.0" text="*" textFill="#fb0000" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                     </children>
                                     <opaqueInsets>
                                         <Insets />

@@ -286,10 +286,8 @@ public class ActivityFormController implements Initializable, ScreenInterface {
         addRequiredFieldListener(txtField05);
         addRequiredFieldListener(txtField24);
         addRequiredFieldListener(txtField25);
-        addRequiredFieldListener(txtField05);
         addRequiredFieldListener(txtField26);
         addRequiredFieldListener(txtField28);
-
 
         /* TextArea KeyPressed */
         //textArea08.setOnKeyPressed(this::txtArea_KeyPressed);
@@ -838,13 +836,12 @@ public class ActivityFormController implements Initializable, ScreenInterface {
                                 loadActivityVehicleTable();
                                 loadActMembersTable();
                                 loadTownTable();
-                                pnEditMode = EditMode.READY;
+                                pnEditMode = oTrans.getEditMode();
                             } else {
                                 ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
                                 textSeek02.clear();
                                 actVhclModelData.clear();
                                 actMembersData.clear();
-                                removeRequired();
                                 clearFields();
                                 pnEditMode = EditMode.UNKNOWN;
                             }
@@ -876,23 +873,27 @@ public class ActivityFormController implements Initializable, ScreenInterface {
                             break;
                         case "txtField05":
                             String selectedType = comboBox29.getValue();
-                            switch (selectedType) {
-                                case "EVENT":
-                                    selectedType = "eve";
-                                    break;
-                                case "SALES CALL":
-                                    selectedType = "sal";
-                                    break;
-                                case "PROMO":
-                                    selectedType = "pro";
-                                    break;
-                                default:
-                                    break;
-                            }
-                            if (oTrans.searchEventType(selectedType)) {
-                                loadActivityField();
+                            if (selectedType == null) {
+                                ShowMessageFX.Warning(getStage(), "Please choose Activity Type first to proceed.", "Warning", null);
                             } else {
-                                ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                                switch (selectedType) {
+                                    case "EVENT":
+                                        selectedType = "eve";
+                                        break;
+                                    case "SALES CALL":
+                                        selectedType = "sal";
+                                        break;
+                                    case "PROMO":
+                                        selectedType = "pro";
+                                        break;
+                                    default:
+                                        break;
+                                }
+                                if (oTrans.searchEventType(selectedType)) {
+                                    loadActivityField();
+                                } else {
+                                    ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                                }
                             }
                             break;
                         case "txtField24":

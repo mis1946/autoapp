@@ -26,7 +26,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" fx:id="AnchorMain" prefHeight="647.0" prefWidth="1349.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.rmj.auto.app.cashiering.InvoiceFormController">
+<AnchorPane id="AnchorPane" fx:id="AnchorMain" prefHeight="647.0" prefWidth="1349.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" >
     <children>
         <StackPane prefHeight="150.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
@@ -39,7 +39,7 @@
                             <children>
                                 <AnchorPane prefHeight="25.0" style="-fx-background-radius: 5; -fx-background-color: #515151;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                     <children>
-                                        <Label alignment="CENTER" layoutY="2.0" prefWidth="1256.0" text="SALES INVOICE" textAlignment="CENTER" textFill="WHITE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                        <Label fx:id="lblInvoiceTitle" alignment="CENTER" layoutY="2.0" prefWidth="1256.0" text="SALES INVOICE" textAlignment="CENTER" textFill="WHITE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                             <font>
                                                 <Font name="Arial Bold" size="13.0" />
                                             </font>
@@ -115,7 +115,7 @@
                                                                                                             </font>
                                                                                                         </Label>
                                                                                                         <RadioButton mnemonicParsing="false" text="Cash" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                                                                                                        <RadioButton mnemonicParsing="false" text="Po" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+                                                                                                        <RadioButton mnemonicParsing="false" text="PO" GridPane.columnIndex="3" GridPane.rowIndex="3" />
                                                                                                         <Label id="LabelDesc" text="PD Number" GridPane.rowIndex="4">
                                                                                                             <font>
                                                                                                                 <Font name="Arial Bold" size="12.0" />
@@ -174,13 +174,12 @@
                                                                                                                 <Font name="Arial Bold" size="12.0" />
                                                                                                             </font>
                                                                                                         </Label>
-                                                                                                        <TextField promptText="Search: F3" style="-fx-border-radius: 4;" GridPane.columnIndex="1" GridPane.columnSpan="9" />
                                                                                                         <Label id="LabelDesc" prefHeight="14.0" prefWidth="117.0" text="Customer Name" GridPane.rowIndex="1">
                                                                                                             <font>
                                                                                                                 <Font name="Arial Bold" size="12.0" />
                                                                                                             </font>
                                                                                                         </Label>
-                                                                                                        <TextField style="-fx-border-radius: 4;" GridPane.columnIndex="1" GridPane.columnSpan="9" GridPane.rowIndex="1" />
+                                                                                                        <TextField promptText="Search: F3" style="-fx-border-radius: 4;" GridPane.columnIndex="1" GridPane.columnSpan="9" GridPane.rowIndex="1" />
                                                                                                         <Label id="LabelDesc" prefHeight="14.0" prefWidth="117.0" text="Address" GridPane.rowIndex="2">
                                                                                                             <font>
                                                                                                                 <Font name="Arial Bold" size="12.0" />
@@ -223,6 +222,7 @@
                                                                                                             </font>
                                                                                                         </Label>
                                                                                                         <TextField promptText="Search: F3" style="-fx-border-radius: 4;" GridPane.columnIndex="7" GridPane.columnSpan="3" GridPane.rowIndex="4" />
+                                                                              <ComboBox prefWidth="150.0" GridPane.columnIndex="1" GridPane.columnSpan="2" />
                                                                                                     </children>
                                                                                                 </GridPane>
                                                                                             </children>
@@ -236,11 +236,11 @@
                                                                                     <children>
                                                                                         <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                                                             <tabs>
-                                                                                                <Tab text="Transaction Detail">
+                                                                                                <Tab style="-fx-font-weight: bold; -fx-font-family: arial;" text="Transaction Detail">
                                                                                                     <content>
                                                                                                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                                                                                             <children>
-                                                                                                                <VBox layoutX="281.0" layoutY="1.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                                                                                <VBox layoutX="281.0" layoutY="1.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="0.0">
                                                                                                                     <children>
                                                                                                                         <GridPane prefHeight="47.0" prefWidth="1303.0">
                                                                                                                             <columnConstraints>
@@ -281,13 +281,13 @@
                                                                                                         </AnchorPane>
                                                                                                     </content>
                                                                                                 </Tab>
-                                                                                                <Tab text="Check Details">
+                                                                                                <Tab style="-fx-font-weight: bold; -fx-font-family: arial;" text="Check Details">
                                                                                                     <content>
                                                                                                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                                                                                             <children>
                                                                                                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                                                                                     <children>
-                                                                                                                        <VBox layoutX="281.0" layoutY="1.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                                                                                        <VBox layoutX="281.0" layoutY="1.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="0.0">
                                                                                                                             <children>
                                                                                                                                 <GridPane prefHeight="47.0" prefWidth="1303.0">
                                                                                                                                     <columnConstraints>
@@ -337,7 +337,8 @@
                                                                                             <children>
                                                                                                 <GridPane layoutX="11.0" layoutY="3.0" vgap="2.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="11.0" AnchorPane.rightAnchor="11.0" AnchorPane.topAnchor="10.0">
                                                                                                     <columnConstraints>
-                                                                                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="-Infinity" prefWidth="30.0" />
+                                                                                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="50.0" />
+                                                                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="5.0" />
                                                                                                         <ColumnConstraints hgrow="SOMETIMES" minWidth="-Infinity" prefWidth="100.0" />
                                                                                                         <ColumnConstraints hgrow="SOMETIMES" minWidth="-Infinity" prefWidth="30.0" />
                                                                                                         <ColumnConstraints hgrow="SOMETIMES" minWidth="-Infinity" prefWidth="5.0" />
@@ -364,30 +365,30 @@
                                                                                                         <RowConstraints maxHeight="31.0" minHeight="10.0" prefHeight="31.0" vgrow="SOMETIMES" />
                                                                                                     </rowConstraints>
                                                                                                     <children>
-                                                                                                        <TextArea prefHeight="200.0" prefWidth="272.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="4" />
-                                                                                                        <CheckBox id="LabelDesc" mnemonicParsing="false" text="Apply Cost Price +" GridPane.columnIndex="4" GridPane.rowIndex="4" />
-                                                                                                        <TextField style="-fx-border-radius: 4;" GridPane.columnIndex="5" GridPane.rowIndex="4" />
-                                                                                                        <Label id="LabelDesc" prefHeight="14.0" prefWidth="117.0" text="Sales" GridPane.columnIndex="7" GridPane.rowIndex="4" GridPane.rowSpan="2">
+                                                                                                        <TextArea prefHeight="200.0" prefWidth="272.0" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="3" GridPane.rowSpan="3" />
+                                                                                                        <CheckBox id="LabelDesc" mnemonicParsing="false" text="Apply Cost Price +" GridPane.columnIndex="5" GridPane.rowIndex="4" />
+                                                                                                        <TextField style="-fx-border-radius: 4;" GridPane.columnIndex="6" GridPane.rowIndex="4" />
+                                                                                                        <Label id="LabelDesc" prefHeight="14.0" prefWidth="117.0" text="Sales" GridPane.columnIndex="8" GridPane.rowIndex="4" GridPane.rowSpan="2">
                                                                                                             <font>
                                                                                                                 <Font name="Arial Bold" size="12.0" />
                                                                                                             </font>
                                                                                                         </Label>
                                                                                                         <Label id="LabelDesc" text="Remarks" GridPane.rowIndex="3" GridPane.rowSpan="2" />
-                                                                                                        <Separator orientation="VERTICAL" prefHeight="17.0" prefWidth="37.0" GridPane.columnIndex="3" GridPane.rowIndex="3" GridPane.rowSpan="3" />
-                                                                                                        <TextField GridPane.columnIndex="7" GridPane.rowIndex="3" />
-                                                                                                        <TextField GridPane.columnIndex="9" GridPane.rowIndex="3" />
-                                                                                                        <TextField GridPane.columnIndex="11" GridPane.rowIndex="3" />
-                                                                                                        <TextField GridPane.columnIndex="13" GridPane.rowIndex="3" />
-                                                                                                        <TextField GridPane.columnIndex="15" GridPane.columnSpan="2" GridPane.rowIndex="3" />
-                                                                                                        <Label text="Total Amount" GridPane.columnIndex="15" GridPane.rowIndex="4" GridPane.rowSpan="2">
+                                                                                                        <Separator orientation="VERTICAL" prefHeight="17.0" prefWidth="37.0" GridPane.columnIndex="4" GridPane.rowIndex="3" GridPane.rowSpan="3" />
+                                                                                                        <TextField GridPane.columnIndex="8" GridPane.rowIndex="3" />
+                                                                                                        <TextField GridPane.columnIndex="10" GridPane.rowIndex="3" />
+                                                                                                        <TextField GridPane.columnIndex="12" GridPane.rowIndex="3" />
+                                                                                                        <TextField GridPane.columnIndex="14" GridPane.rowIndex="3" />
+                                                                                                        <TextField GridPane.columnIndex="16" GridPane.columnSpan="2" GridPane.rowIndex="3" />
+                                                                                                        <Label text="Total Amount" GridPane.columnIndex="16" GridPane.rowIndex="4" GridPane.rowSpan="2">
                                                                                                             <font>
-                                                                                                                <Font name="System Bold" size="12.0" />
+                                                                                                                <Font name="Arial Bold" size="12.0" />
                                                                                                             </font>
                                                                                                         </Label>
-                                                                                                        <Label id="LabelDesc" text="Total Sales Vat Incl" GridPane.columnIndex="13" GridPane.rowIndex="4" GridPane.rowSpan="2" />
-                                                                                                        <Label id="LabelDesc" text="Vat Amount" GridPane.columnIndex="11" GridPane.rowIndex="4" GridPane.rowSpan="2" />
-                                                                                                        <Label id="LabelDesc" text="Vat [%]" GridPane.columnIndex="9" GridPane.rowIndex="4" GridPane.rowSpan="2" />
-                                                                                                        <Separator orientation="VERTICAL" prefHeight="20.0" prefWidth="42.0" GridPane.columnIndex="14" GridPane.rowIndex="3" GridPane.rowSpan="3" />
+                                                                                                        <Label id="LabelDesc" text="Total Sales Vat Incl" GridPane.columnIndex="14" GridPane.rowIndex="4" GridPane.rowSpan="2" />
+                                                                                                        <Label id="LabelDesc" text="Vat Amount" GridPane.columnIndex="12" GridPane.rowIndex="4" GridPane.rowSpan="2" />
+                                                                                                        <Label id="LabelDesc" text="Vat [%]" GridPane.columnIndex="10" GridPane.rowIndex="4" GridPane.rowSpan="2" />
+                                                                                                        <Separator orientation="VERTICAL" prefHeight="20.0" prefWidth="42.0" GridPane.columnIndex="15" GridPane.rowIndex="3" GridPane.rowSpan="3" />
                                                                                                     </children>
                                                                                                 </GridPane>
                                                                                             </children>

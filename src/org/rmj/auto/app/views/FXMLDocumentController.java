@@ -52,6 +52,7 @@ import org.rmj.appdriver.agentfx.CommonUtils;
 import org.rmj.appdriver.agentfx.ShowMessageFX;
 import org.rmj.appdriver.agentfx.callback.IFXML;
 import org.rmj.auto.app.bank.BankEntryFormController;
+import org.rmj.auto.app.cashiering.InvoiceFormController;
 import org.rmj.auto.app.parts.BinEntryParamController;
 import org.rmj.auto.app.parts.BrandEntryParamController;
 import org.rmj.auto.app.parts.CategoryEntryParamController;
@@ -78,6 +79,7 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
     private GRider oApp;
     private int targetTabIndex = -1;
     private double tabsize;
+    private String sSalesInvoiceType = "";
 
     // Variables to track the window movement
     private double xOffset = 0;
@@ -154,6 +156,16 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
     private MenuItem mnuInvTypeEntry;
     @FXML
     private MenuItem mnuUnitDeliveryReceipt;
+    @FXML
+    private MenuItem mnuAckReceipt;
+    @FXML
+    private MenuItem mnuBillingStmt;
+    @FXML
+    private MenuItem mnuColReceipt;
+    @FXML
+    private MenuItem mnuOfcReceipt;
+    @FXML
+    private MenuItem mnuPartsSalesInv;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -402,6 +414,8 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
                 return new MeasurementEntryParamController();
             case "BrandEntryParam.fxml":
                 return new BrandEntryParamController();
+            case "InvoiceForm.fxml":
+                return new InvoiceFormController();
             default:
                 ShowMessageFX.Warning(null, "Warning", "Notify System Admin to Configure Screen Interface for " + fsValue);
                 return null;
@@ -438,6 +452,13 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
             /*ACCOUNTING*/
             case "BankEntryForm.fxml":
                 return "Bank";
+            /*CASHIERING*/
+            case "InvoiceForm.fxml":
+                if (sSalesInvoiceType.isEmpty()){
+                    ShowMessageFX.Warning(null, "Warning", "Notify System Admin to Configure Tab Title for " + menuaction);
+                    return null;
+                }
+                return sSalesInvoiceType;
             /*PARTS*/
             case "ItemEntryForm.fxml":
                 return "Item Entry";
@@ -611,6 +632,58 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
     @FXML
     private void mnuBankClick(ActionEvent event) {
         String sformname = "BankEntryForm.fxml";
+        //check tab
+        if (checktabs(SetTabTitle(sformname)) == 1) {
+            setScene2(loadAnimate(sformname));
+        }
+    }
+    
+    /*CASHIERING*/
+    @FXML
+    private void mnuAckReceiptClick(ActionEvent event) {
+        sSalesInvoiceType = "Acknowledgement Receipt";
+        String sformname = "InvoiceForm.fxml";
+        //check tab
+        if (checktabs(SetTabTitle(sformname)) == 1) {
+            setScene2(loadAnimate(sformname));
+        }
+        
+    }
+    
+    @FXML
+    private void mnuBillingStmtClick(ActionEvent event) {
+        sSalesInvoiceType = "Billing Statement";
+        String sformname = "InvoiceForm.fxml";
+        //check tab
+        if (checktabs(SetTabTitle(sformname)) == 1) {
+            setScene2(loadAnimate(sformname));
+        }
+    }
+
+    @FXML
+    private void mnuColReceiptClick(ActionEvent event) {
+        sSalesInvoiceType = "Collection Receipt";
+        String sformname = "InvoiceForm.fxml";
+        //check tab
+        if (checktabs(SetTabTitle(sformname)) == 1) {
+            setScene2(loadAnimate(sformname));
+        }
+    }
+
+    @FXML
+    private void mnuOfcReceiptClick(ActionEvent event) {
+        sSalesInvoiceType = "Official Receipt";
+        String sformname = "InvoiceForm.fxml";
+        //check tab
+        if (checktabs(SetTabTitle(sformname)) == 1) {
+            setScene2(loadAnimate(sformname));
+        }
+    }
+
+    @FXML
+    private void mnuPartsSalesInvClick(ActionEvent event) {
+        sSalesInvoiceType = "Parts Sales Invoice";
+        String sformname = "InvoiceForm.fxml";
         //check tab
         if (checktabs(SetTabTitle(sformname)) == 1) {
             setScene2(loadAnimate(sformname));

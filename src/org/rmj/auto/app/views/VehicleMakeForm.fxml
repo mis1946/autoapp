@@ -77,6 +77,7 @@
                                                                     </tooltip>
                                                                 </TextField>
                                                                 <Label id="LabelDesc" text="Make" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                                                                <Label alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="37.0" text="*" textFill="#fb0000" GridPane.columnIndex="2" GridPane.rowIndex="3" />
                                                             </children>
                                                         </GridPane>
                                                         <GridPane>

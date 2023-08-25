@@ -60,7 +60,7 @@ public class BankEntryFormController implements Initializable, ScreenInterface {
     private GRider oApp;
     private BankInformation oTrans;
     unloadForm unload = new unloadForm(); //Object for closing form
-    private final String pxeModuleName = "Bank Entry Form"; //Form Title
+    private final String pxeModuleName = "Bank"; //Form Title
     private MasterCallback oListener;
 
     private int pnEditMode;//Modifying fields
@@ -361,15 +361,12 @@ public class BankEntryFormController implements Initializable, ScreenInterface {
                 }
                 break;
             case "btnClose":
-                if (ShowMessageFX.OkayCancel(null, "Close Tab", "Are you sure you want to close the tab?")) {
+                if (ShowMessageFX.OkayCancel(null, "Close Tab", "Are you sure you want to close this Tab?")) {
                     if (unload != null) {
                         unload.unloadForm(AnchorMain, oApp, pxeModuleName);
                     } else {
-                        ShowMessageFX.Warning(null, "Warning", "Notify the System Admin to configure a null value for the close button.");
+                        ShowMessageFX.Warning(null, "Warning", "Please notify the system administrator to configure the null value at the close button.");
                     }
-                    break;
-                } else {
-                    return;
                 }
         }
         initButton(pnEditMode);

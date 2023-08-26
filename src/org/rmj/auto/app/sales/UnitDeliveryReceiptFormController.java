@@ -7,13 +7,15 @@ package org.rmj.auto.app.sales;
 import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.beans.property.ReadOnlyBooleanPropertyBase;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
@@ -28,7 +30,6 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TextFormatter;
 import javafx.scene.control.ToggleGroup;
 import static javafx.scene.input.KeyCode.DOWN;
 import static javafx.scene.input.KeyCode.ENTER;
@@ -39,7 +40,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.util.Callback;
-import javafx.util.converter.IntegerStringConverter;
+import javafx.util.Duration;
 import org.rmj.appdriver.GRider;
 import org.rmj.appdriver.SQLUtil;
 import org.rmj.appdriver.agentfx.CommonUtils;
@@ -139,10 +140,12 @@ public class UnitDeliveryReceiptFormController implements Initializable, ScreenI
         pattern = Pattern.compile("[0-9]*");
         txtField03.setTextFormatter(new InputTextFormatter(pattern));
         CommonUtils.addTextLimiter(txtField03, 12);
-
         txtField29.setOnKeyPressed(this::txtField_KeyPressed);
 
         textArea06.focusedProperty().addListener(txtArea_Focus);
+
+        addRequiredFieldListener(txtField03);
+        addRequiredFieldListener(txtField29);
 
         txtField03.focusedProperty().addListener(txtField_Focus);
         txtField29.focusedProperty().addListener(txtField_Focus);
@@ -160,6 +163,42 @@ public class UnitDeliveryReceiptFormController implements Initializable, ScreenI
         oApp = foValue;
     }
 
+    //Animation
+    private void shakeTextField(TextField textField) {
+        Timeline timeline = new Timeline();
+        double originalX = textField.getTranslateX();
+
+        // Add keyframes for the animation
+        KeyFrame keyFrame1 = new KeyFrame(Duration.millis(0), new KeyValue(textField.translateXProperty(), 0));
+        KeyFrame keyFrame2 = new KeyFrame(Duration.millis(100), new KeyValue(textField.translateXProperty(), -5));
+        KeyFrame keyFrame3 = new KeyFrame(Duration.millis(200), new KeyValue(textField.translateXProperty(), 5));
+        KeyFrame keyFrame4 = new KeyFrame(Duration.millis(300), new KeyValue(textField.translateXProperty(), -5));
+        KeyFrame keyFrame5 = new KeyFrame(Duration.millis(400), new KeyValue(textField.translateXProperty(), 5));
+        KeyFrame keyFrame6 = new KeyFrame(Duration.millis(500), new KeyValue(textField.translateXProperty(), -5));
+        KeyFrame keyFrame7 = new KeyFrame(Duration.millis(600), new KeyValue(textField.translateXProperty(), 5));
+        KeyFrame keyFrame8 = new KeyFrame(Duration.millis(700), new KeyValue(textField.translateXProperty(), originalX));
+
+        // Add keyframes to the timeline
+        timeline.getKeyFrames().addAll(
+                keyFrame1, keyFrame2, keyFrame3, keyFrame4, keyFrame5, keyFrame6, keyFrame7, keyFrame8
+        );
+
+        // Play the animation
+        timeline.play();
+    }
+
+    //Validation
+    private void addRequiredFieldListener(TextField textField) {
+        textField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue && textField.getText().isEmpty()) {
+                shakeTextField(textField);
+                textField.getStyleClass().add("required-field");
+            } else {
+                textField.getStyleClass().remove("required-field");
+            }
+        });
+    }
+
     private void cmdButton_Click(ActionEvent event) {
         try {
             String lsButton = ((Button) event.getSource()).getId();
@@ -173,7 +212,6 @@ public class UnitDeliveryReceiptFormController implements Initializable, ScreenI
                 case "btnSave":
                     saveRecord();
                     break;
-
                 case "btnCancel":
                     cancelRecord();
                     break;
@@ -228,6 +266,8 @@ public class UnitDeliveryReceiptFormController implements Initializable, ScreenI
                 txtField29.requestFocus();
                 return;
             }
+
+            //Proceed to saving record
             if (oTrans.SaveRecord()) {
                 ShowMessageFX.Information(getStage(), "Transaction save successfully.", pxeModuleName, null);
                 loadCustomerField();
@@ -259,16 +299,18 @@ public class UnitDeliveryReceiptFormController implements Initializable, ScreenI
 
     private void browseRecord() {
         try {
+            String fxTitle = "Confirmation";
+            String fxHeader = "You have unsaved data. Are you sure you want to browse a new record?";
             if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
-                if (ShowMessageFX.OkayCancel(null, "Confirmation", "You have unsaved data. Are you sure you want to browse a new record?")) {
+                if (ShowMessageFX.OkayCancel(null, fxTitle, fxHeader)) {
                 } else {
                     return;
                 }
             }
             if (oTrans.searchRecord("")) {
+                removeRequiredField();
                 loadCustomerField();
                 pnEditMode = EditMode.READY;
-
             } else {
                 ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
                 clearFields();
@@ -316,9 +358,9 @@ public class UnitDeliveryReceiptFormController implements Initializable, ScreenI
     }
 
     public void getDate(ActionEvent event) {
-
         try {
-            oTrans.setMaster(2, SQLUtil.toDate(date02.getValue().toString(), SQLUtil.FORMAT_SHORT_DATE));
+            Date setDate = SQLUtil.toDate(date02.getValue().toString(), SQLUtil.FORMAT_SHORT_DATE);
+            oTrans.setMaster(2, setDate);
         } catch (SQLException ex) {
             Logger.getLogger(UnitDeliveryReceiptFormController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -330,6 +372,7 @@ public class UnitDeliveryReceiptFormController implements Initializable, ScreenI
         LocalDate localDate = LocalDate.parse(val, date_formatter);
         return localDate;
     }
+
     private Callback<DatePicker, DateCell> disableDate = (final DatePicker param) -> {
         return new DateCell() {
             @Override
@@ -442,7 +485,6 @@ public class UnitDeliveryReceiptFormController implements Initializable, ScreenI
     }
 
     private void initButton(int fnValue) {
-
         boolean lbShow = (fnValue == EditMode.ADDNEW || fnValue == EditMode.UPDATE);
         btnAdd.setVisible(!lbShow);
         btnAdd.setManaged(!lbShow);
@@ -458,6 +500,7 @@ public class UnitDeliveryReceiptFormController implements Initializable, ScreenI
         txtField03.setDisable(!lbShow);
         textArea06.setDisable(!lbShow);
         txtField14.setDisable(!lbShow);
+        txtField15.setDisable(true);
         txtField22.setDisable(true);
         txtField23.setDisable(true);
         txtField24.setDisable(true);
@@ -466,6 +509,7 @@ public class UnitDeliveryReceiptFormController implements Initializable, ScreenI
         txtField27.setDisable(true);
         txtField28.setDisable(true);
         txtField29.setDisable(!lbShow);
+        comboBox30.setDisable(!lbShow);
 
         radioBrandNew.setDisable(true);
         radioPreOwned.setDisable(true);
@@ -479,10 +523,18 @@ public class UnitDeliveryReceiptFormController implements Initializable, ScreenI
         if (fnValue == EditMode.UPDATE) {
             txtField29.setDisable(true);
             txtField14.setDisable(true);
+            txtField15.setDisable(true);
+            comboBox30.setDisable(true);
         }
     }
 
+    private void removeRequiredField() {
+        txtField03.getStyleClass().remove("required-field");
+        txtField29.getStyleClass().remove("required-field");
+    }
+
     private void clearFields() {
+        removeRequiredField();
         date02.setValue(strToDate(CommonUtils.xsDateShort((Date) oApp.getServerDate())));
         carCategory.selectToggle(null);
         txtField03.setText("");

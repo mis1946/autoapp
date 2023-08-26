@@ -16,6 +16,7 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.effect.Blend?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -372,8 +373,11 @@
                                                                                                                                     <Label id="LabelDesc" stylesheets="@../css/FrameStyle.css" text="ZIP Code" GridPane.columnIndex="9" GridPane.rowIndex="3" />
                                                                                                                                     <TextField fx:id="txtField07Addr" GridPane.columnIndex="10" GridPane.rowIndex="3" />
                                                                                                                                     <Label id="LabelDesc" stylesheets="@../css/FrameStyle.css" text="Active" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                                                                                                                                    <RadioButton fx:id="radiobtn18AddY" mnemonicParsing="false" text="Yes" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="4" />
-                                                                                                                                    <RadioButton fx:id="radiobtn18AddN" mnemonicParsing="false" text="No" GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.rowIndex="4" />
+                                                                                                                                    <RadioButton fx:id="radiobtn18AddY" mnemonicParsing="false" text="Yes" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="4">
+                                                                                                                                       <toggleGroup>
+                                                                                                                                          <ToggleGroup fx:id="add_active" />
+                                                                                                                                       </toggleGroup></RadioButton>
+                                                                                                                                    <RadioButton fx:id="radiobtn18AddN" mnemonicParsing="false" text="No" toggleGroup="$add_active" GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.rowIndex="4" />
                                                                                                                                     <Label id="LabelDesc" layoutX="18.0" layoutY="23.0" stylesheets="@../css/FrameStyle.css" text="Street Name" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                                                                                                                     <Label alignment="BOTTOM_RIGHT" prefHeight="16.0" prefWidth="62.0" text="*" textFill="#fb0000" GridPane.columnIndex="1">
                                                                                                                                        <font>
@@ -495,10 +499,16 @@
                                                                                                                               <Label id="LabelDesc" stylesheets="@../css/FrameStyle.css" text="Contact No" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                                                                                                                               <Label id="LabelDesc" stylesheets="@../css/FrameStyle.css" text="Active" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                                                                                                                               <Label id="LabelDesc" stylesheets="@../css/FrameStyle.css" text="Primary" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                                                                                                                              <RadioButton fx:id="radiobtn14CntY" mnemonicParsing="false" text="Yes" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-                                                                                                                              <RadioButton fx:id="radiobtn14CntN" mnemonicParsing="false" text="No" GridPane.columnIndex="3" GridPane.rowIndex="3" />
-                                                                                                                              <RadioButton fx:id="radiobtn11CntY" mnemonicParsing="false" text="Yes" GridPane.columnIndex="2" GridPane.rowIndex="4" />
-                                                                                                                              <RadioButton fx:id="radiobtn11CntN" mnemonicParsing="false" text="No" GridPane.columnIndex="3" GridPane.rowIndex="4" />
+                                                                                                                              <RadioButton fx:id="radiobtn14CntY" mnemonicParsing="false" text="Yes" GridPane.columnIndex="2" GridPane.rowIndex="3">
+                                                                                                                                 <toggleGroup>
+                                                                                                                                    <ToggleGroup fx:id="con_active" />
+                                                                                                                                 </toggleGroup></RadioButton>
+                                                                                                                              <RadioButton fx:id="radiobtn14CntN" mnemonicParsing="false" text="No" toggleGroup="$con_active" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+                                                                                                                              <RadioButton fx:id="radiobtn11CntY" mnemonicParsing="false" text="Yes" GridPane.columnIndex="2" GridPane.rowIndex="4">
+                                                                                                                                 <toggleGroup>
+                                                                                                                                    <ToggleGroup fx:id="con_prim" />
+                                                                                                                                 </toggleGroup></RadioButton>
+                                                                                                                              <RadioButton fx:id="radiobtn11CntN" mnemonicParsing="false" text="No" toggleGroup="$con_prim" GridPane.columnIndex="3" GridPane.rowIndex="4" />
                                                                                                                               <Label id="LabelDesc" stylesheets="@../css/FrameStyle.css" text="Ownership" GridPane.columnIndex="1" />
                                                                                                                               <Label id="LabelDesc" stylesheets="@../css/FrameStyle.css" text="Remarks" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                                                                                                                               <TextArea fx:id="textArea13Cont" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.columnSpan="4" GridPane.rowIndex="5" GridPane.rowSpan="2" />
@@ -576,10 +586,16 @@
                                                                                                                               <Label id="LabelDesc" stylesheets="@../css/FrameStyle.css" text="Active" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                                                                                                                               <Label id="LabelDesc" stylesheets="@../css/FrameStyle.css" text="Primary" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                                                                                                                               <ComboBox fx:id="comboBox04EmAd" prefWidth="156.0" GridPane.columnIndex="2" GridPane.columnSpan="3" />
-                                                                                                                              <RadioButton fx:id="radiobtn06EmaY" mnemonicParsing="false" text="Yes" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-                                                                                                                              <RadioButton fx:id="radiobtn06EmaN" mnemonicParsing="false" text="No" GridPane.columnIndex="3" GridPane.rowIndex="2" />
-                                                                                                                              <RadioButton fx:id="radiobtn05EmaY" mnemonicParsing="false" text="Yes" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-                                                                                                                              <RadioButton fx:id="radiobtn05EmaN" mnemonicParsing="false" text="No" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+                                                                                                                              <RadioButton fx:id="radiobtn06EmaY" mnemonicParsing="false" text="Yes" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                                                                                                                                 <toggleGroup>
+                                                                                                                                    <ToggleGroup fx:id="eml_active" />
+                                                                                                                                 </toggleGroup></RadioButton>
+                                                                                                                              <RadioButton fx:id="radiobtn06EmaN" mnemonicParsing="false" text="No" toggleGroup="$eml_active" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                                                                                                                              <RadioButton fx:id="radiobtn05EmaY" mnemonicParsing="false" text="Yes" GridPane.columnIndex="2" GridPane.rowIndex="3">
+                                                                                                                                 <toggleGroup>
+                                                                                                                                    <ToggleGroup fx:id="eml_prim" />
+                                                                                                                                 </toggleGroup></RadioButton>
+                                                                                                                              <RadioButton fx:id="radiobtn05EmaN" mnemonicParsing="false" text="No" toggleGroup="$eml_prim" GridPane.columnIndex="3" GridPane.rowIndex="3" />
                                                                                                                               <Label id="LabelDesc" stylesheets="@../css/FrameStyle.css" text="Email Address" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                                                                                                               <TextField fx:id="txtField03EmAd" GridPane.columnIndex="2" GridPane.columnSpan="4" GridPane.rowIndex="1" />
                                                                                                                            </children>
@@ -638,12 +654,15 @@
                                                                                                                            </rowConstraints>
                                                                                                                            <children>
                                                                                                                               <Label id="LabelDesc" stylesheets="@../css/FrameStyle.css" text="Active" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                                                                                                                              <RadioButton fx:id="radiobtn05SocN" mnemonicParsing="false" text="No" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                                                                                                                              <RadioButton fx:id="radiobtn05SocN" mnemonicParsing="false" text="No" GridPane.columnIndex="3" GridPane.rowIndex="2">
+                                                                                                                                 <toggleGroup>
+                                                                                                                                    <ToggleGroup fx:id="soc_active" />
+                                                                                                                                 </toggleGroup></RadioButton>
                                                                                                                               <Label id="LabelDesc" stylesheets="@../css/FrameStyle.css" text="Account" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                                                                                                               <TextField fx:id="txtField03Socm" GridPane.columnIndex="2" GridPane.columnSpan="4" GridPane.rowIndex="1" />
                                                                                                                               <Label id="LabelDesc" layoutX="33.0" layoutY="71.0" stylesheets="@../css/FrameStyle.css" text="Social Type" GridPane.columnIndex="1" />
                                                                                                                               <ComboBox fx:id="comboBox04Socm" prefWidth="156.0" GridPane.columnIndex="2" GridPane.columnSpan="3" />
-                                                                                                                              <RadioButton fx:id="radiobtn05SocY" mnemonicParsing="false" text="Yes" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                                                                                                                              <RadioButton fx:id="radiobtn05SocY" mnemonicParsing="false" text="Yes" toggleGroup="$soc_active" GridPane.columnIndex="2" GridPane.rowIndex="2" />
                                                                                                                            </children>
                                                                                                                         </GridPane>
                                                                                                                      </children>

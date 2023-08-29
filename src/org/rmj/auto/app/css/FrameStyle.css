@@ -223,6 +223,7 @@ and open the template in the editor.
     -fx-border-color: #000000;
     -fx-border-width: 1px 1px 1px 1px;
 }
+
 .required-field {
     -fx-border-color: #fb0000;
     -fx-text-fill: red;
@@ -234,4 +235,9 @@ and open the template in the editor.
 .tooltip {
     -fx-background-color: white;
     -fx-text-fill: black;
+}
+
+/* Unity Delivery Receipt*/
+.unity-container{
+    -fx-effect: dropshadow(gaussian, #c5c5c5, 0, 0, 0, 2);
 }

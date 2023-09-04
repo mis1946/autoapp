@@ -48,6 +48,7 @@ import org.rmj.appdriver.agentfx.ShowMessageFX;
 import org.rmj.appdriver.callback.MasterCallback;
 import org.rmj.appdriver.constants.EditMode;
 import org.rmj.auto.app.views.CustomerFormController;
+import org.rmj.auto.app.views.DateCellDisabler;
 import org.rmj.auto.app.views.InputTextFormatter;
 import org.rmj.auto.app.views.ScreenInterface;
 import org.rmj.auto.app.views.unloadForm;
@@ -151,7 +152,8 @@ public class UnitDeliveryReceiptFormController implements Initializable, ScreenI
         txtField29.focusedProperty().addListener(txtField_Focus);
 
         date02.setOnAction(this::getDate);
-        date02.setDayCellFactory(disableDate);
+        int daysToDisable = 30;
+        date02.setDayCellFactory(DateCellDisabler.createDisableDateCallback(daysToDisable));
 
         comboBox30.setItems(cFormItems);
         pnEditMode = EditMode.UNKNOWN;
@@ -372,28 +374,29 @@ public class UnitDeliveryReceiptFormController implements Initializable, ScreenI
         LocalDate localDate = LocalDate.parse(val, date_formatter);
         return localDate;
     }
-
-    private Callback<DatePicker, DateCell> disableDate = (final DatePicker param) -> {
-        return new DateCell() {
-            @Override
-            public void updateItem(LocalDate item, boolean empty) {
-                super.updateItem(item, empty);
-                if (item == null || empty) {
-                    setDisable(true);
-                    return;
-                }
-                Date serverDate = oApp.getServerDate();
-
-                LocalDate minDate = strToDate(CommonUtils.xsDateShort(serverDate));
-                LocalDate maxDate = strToDate(CommonUtils.xsDateShort(serverDate));
-
-                maxDate = maxDate.plusDays(30);
-
-                setDisable(item.isBefore(minDate) || item.isAfter(maxDate));
-
-            }
-        };
-    };
+    //Moved to own class just call DateCellDisabler -jahn 08292023
+    
+//    private Callback<DatePicker, DateCell> disableDate = (final DatePicker param) -> {
+//        return new DateCell() {
+//            @Override
+//            public void updateItem(LocalDate item, boolean empty) {
+//                super.updateItem(item, empty);
+//                if (item == null || empty) {
+//                    setDisable(true);
+//                    return;
+//                }
+//                Date serverDate = oApp.getServerDate();
+//
+//                LocalDate minDate = strToDate(CommonUtils.xsDateShort(serverDate));
+//                LocalDate maxDate = strToDate(CommonUtils.xsDateShort(serverDate));
+//
+//                maxDate = maxDate.plusDays(30);
+//
+//                setDisable(item.isBefore(minDate) || item.isAfter(maxDate));
+//
+//            }
+//        };
+//    };
     final ChangeListener<? super Boolean> txtField_Focus = (o, ov, nv) -> {
         try {
             TextField txtField = (TextField) ((ReadOnlyBooleanPropertyBase) o).getBean();

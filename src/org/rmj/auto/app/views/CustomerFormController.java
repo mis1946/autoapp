@@ -49,6 +49,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import static javafx.scene.input.KeyCode.DOWN;
@@ -397,6 +398,18 @@ public class CustomerFormController implements Initializable, ScreenInterface {
     private Label lbl_LName21;
     @FXML
     private Label lbl_LName22;
+    @FXML
+    private ToggleGroup add_active;
+    @FXML
+    private ToggleGroup con_active;
+    @FXML
+    private ToggleGroup con_prim;
+    @FXML
+    private ToggleGroup eml_active;
+    @FXML
+    private ToggleGroup eml_prim;
+    @FXML
+    private ToggleGroup soc_active;
 
     private Stage getStage() {
         return (Stage) txtField01.getScene().getWindow();
@@ -571,24 +584,24 @@ public class CustomerFormController implements Initializable, ScreenInterface {
 
         /*Radio Button Click Event Y / N*/
  /*client_address*/
-        radiobtn18AddY.setOnAction(this::cmdRadioButton_Click);
-        radiobtn18AddN.setOnAction(this::cmdRadioButton_Click);
-        /*client_mobile*/
-        radiobtn14CntY.setOnAction(this::cmdRadioButton_Click);
-        radiobtn14CntN.setOnAction(this::cmdRadioButton_Click);
-        radiobtn11CntY.setOnAction(this::cmdRadioButton_Click);
-        radiobtn11CntN.setOnAction(this::cmdRadioButton_Click);
-        /*client_email_address*/
-        radiobtn05EmaY.setOnAction(this::cmdRadioButton_Click);
-        radiobtn05EmaN.setOnAction(this::cmdRadioButton_Click);
-        radiobtn06EmaY.setOnAction(this::cmdRadioButton_Click);
-        radiobtn06EmaN.setOnAction(this::cmdRadioButton_Click);
-        /*client_social_media*/
-        radiobtn05SocY.setOnAction(this::cmdRadioButton_Click);
-        radiobtn05SocN.setOnAction(this::cmdRadioButton_Click);
+//        radiobtn18AddY.setOnAction(this::cmdRadioButton_Click);
+//        radiobtn18AddN.setOnAction(this::cmdRadioButton_Click);
+//        /*client_mobile*/
+//        radiobtn14CntY.setOnAction(this::cmdRadioButton_Click);
+//        radiobtn14CntN.setOnAction(this::cmdRadioButton_Click);
+//        radiobtn11CntY.setOnAction(this::cmdRadioButton_Click);
+//        radiobtn11CntN.setOnAction(this::cmdRadioButton_Click);
+//        /*client_email_address*/
+//        radiobtn05EmaY.setOnAction(this::cmdRadioButton_Click);
+//        radiobtn05EmaN.setOnAction(this::cmdRadioButton_Click);
+//        radiobtn06EmaY.setOnAction(this::cmdRadioButton_Click);
+//        radiobtn06EmaN.setOnAction(this::cmdRadioButton_Click);
+//        /*client_social_media*/
+//        radiobtn05SocY.setOnAction(this::cmdRadioButton_Click);
+//        radiobtn05SocN.setOnAction(this::cmdRadioButton_Click);
 
         /*Check box Clicked Event*/
- /*client_address*/
+        /*client_address*/
         checkBox14Addr.setOnAction(this::cmdCheckBox_Click);
         checkBox17Addr.setOnAction(this::cmdCheckBox_Click);
         checkBox12Addr.setOnAction(this::cmdCheckBox_Click);
@@ -645,7 +658,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
         });
 
         /*Clear Fields*/
-        clearFields();
+        clearFields();  
         pnEditMode = EditMode.UNKNOWN;
         initButton(pnEditMode);
 
@@ -3225,69 +3238,69 @@ public class CustomerFormController implements Initializable, ScreenInterface {
     }
     //Set Radiobuttons Action
 
-    private void cmdRadioButton_Click(ActionEvent event) {
-        String srdbSel = ((RadioButton) event.getSource()).getId();
-        switch (srdbSel) {
-            /*client_social_media*/
-            case "radiobtn05SocY":
-                cmdRadioButton(radiobtn05SocY, radiobtn05SocN);
-                break;
-            case "radiobtn05SocN":
-                cmdRadioButton(radiobtn05SocN, radiobtn05SocY);
-                break;
-            /*client_email_address*/
-            case "radiobtn06EmaY":
-                cmdRadioButton(radiobtn06EmaY, radiobtn06EmaN);
-                radiobtn05EmaY.setDisable(false);
-                break;
-            case "radiobtn06EmaN":
-                cmdRadioButton(radiobtn06EmaN, radiobtn06EmaY);
-                radiobtn05EmaY.setSelected(false);
-                radiobtn05EmaN.setSelected(true);
-                radiobtn05EmaY.setDisable(true);
-                break;
-            case "radiobtn05EmaY":
-                cmdRadioButton(radiobtn05EmaY, radiobtn05EmaN);
-                break;
-            case "radiobtn05EmaN":
-                cmdRadioButton(radiobtn05EmaN, radiobtn05EmaY);
-                break;
-            /*client_mobile*/
-            case "radiobtn11CntY":
-                cmdRadioButton(radiobtn11CntY, radiobtn11CntN);
-                break;
-            case "radiobtn11CntN":
-                cmdRadioButton(radiobtn11CntN, radiobtn11CntY);
-                break;
-            case "radiobtn14CntY":
-                cmdRadioButton(radiobtn14CntY, radiobtn14CntN);
-                radiobtn11CntY.setDisable(false);
-                break;
-            case "radiobtn14CntN":
-                cmdRadioButton(radiobtn14CntN, radiobtn14CntY);
-                radiobtn11CntY.setSelected(false);
-                radiobtn11CntN.setSelected(true);
-                radiobtn11CntY.setDisable(true);
-                break;
-            /*client_address*/
-            case "radiobtn18AddY":
-                cmdRadioButton(radiobtn18AddY, radiobtn18AddN);
-                checkBox14Addr.setDisable(false);
-                break;
-            case "radiobtn18AddN":
-                cmdRadioButton(radiobtn18AddN, radiobtn18AddY);
-                checkBox14Addr.setSelected(false);
-                checkBox14Addr.setDisable(true);
-                break;
-        }
-    }
-    //Select and Unselect Radio Button
-
-    private void cmdRadioButton(RadioButton rdbsel, RadioButton rdbUnsel) {
-        if (rdbsel.isSelected() && rdbUnsel.isSelected()) {
-            rdbUnsel.setSelected(false);
-        }
-    }
+//    private void cmdRadioButton_Click(ActionEvent event) {
+//        String srdbSel = ((RadioButton) event.getSource()).getId();
+//        switch (srdbSel) {
+//            /*client_social_media*/
+//            case "radiobtn05SocY":
+//                cmdRadioButton(radiobtn05SocY, radiobtn05SocN);
+//                break;
+//            case "radiobtn05SocN":
+//                cmdRadioButton(radiobtn05SocN, radiobtn05SocY);
+//                break;
+//            /*client_email_address*/
+//            case "radiobtn06EmaY":
+//                cmdRadioButton(radiobtn06EmaY, radiobtn06EmaN);
+//                radiobtn05EmaY.setDisable(false);
+//                break;
+//            case "radiobtn06EmaN":
+//                cmdRadioButton(radiobtn06EmaN, radiobtn06EmaY);
+//                radiobtn05EmaY.setSelected(false);
+//                radiobtn05EmaN.setSelected(true);
+//                radiobtn05EmaY.setDisable(true);
+//                break;
+//            case "radiobtn05EmaY":
+//                cmdRadioButton(radiobtn05EmaY, radiobtn05EmaN);
+//                break;
+//            case "radiobtn05EmaN":
+//                cmdRadioButton(radiobtn05EmaN, radiobtn05EmaY);
+//                break;
+//            /*client_mobile*/
+//            case "radiobtn11CntY":
+//                cmdRadioButton(radiobtn11CntY, radiobtn11CntN);
+//                break;
+//            case "radiobtn11CntN":
+//                cmdRadioButton(radiobtn11CntN, radiobtn11CntY);
+//                break;
+//            case "radiobtn14CntY":
+//                cmdRadioButton(radiobtn14CntY, radiobtn14CntN);
+//                radiobtn11CntY.setDisable(false);
+//                break;
+//            case "radiobtn14CntN":
+//                cmdRadioButton(radiobtn14CntN, radiobtn14CntY);
+//                radiobtn11CntY.setSelected(false);
+//                radiobtn11CntN.setSelected(true);
+//                radiobtn11CntY.setDisable(true);
+//                break;
+//            /*client_address*/
+//            case "radiobtn18AddY":
+//                cmdRadioButton(radiobtn18AddY, radiobtn18AddN);
+//                checkBox14Addr.setDisable(false);
+//                break;
+//            case "radiobtn18AddN":
+//                cmdRadioButton(radiobtn18AddN, radiobtn18AddY);
+//                checkBox14Addr.setSelected(false);
+//                checkBox14Addr.setDisable(true);
+//                break;
+//        }
+//    }
+//    //Select and Unselect Radio Button
+//
+//    private void cmdRadioButton(RadioButton rdbsel, RadioButton rdbUnsel) {
+//        if (rdbsel.isSelected() && rdbUnsel.isSelected()) {
+//            rdbUnsel.setSelected(false);
+//        }
+//    }
 
     public void comboChange() {
         try {

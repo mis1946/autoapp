@@ -119,6 +119,8 @@ public class UnitDeliveryReceiptFormController implements Initializable, ScreenI
     @FXML
     private TextField txtField15;
 
+    private int daysToDisable = 30;
+
     /**
      * Initializes the controller class.
      */
@@ -152,7 +154,6 @@ public class UnitDeliveryReceiptFormController implements Initializable, ScreenI
         txtField29.focusedProperty().addListener(txtField_Focus);
 
         date02.setOnAction(this::getDate);
-        int daysToDisable = 30;
         date02.setDayCellFactory(DateCellDisabler.createDisableDateCallback(daysToDisable));
 
         comboBox30.setItems(cFormItems);
@@ -375,7 +376,7 @@ public class UnitDeliveryReceiptFormController implements Initializable, ScreenI
         return localDate;
     }
     //Moved to own class just call DateCellDisabler -jahn 08292023
-    
+
 //    private Callback<DatePicker, DateCell> disableDate = (final DatePicker param) -> {
 //        return new DateCell() {
 //            @Override

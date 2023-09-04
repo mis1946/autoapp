@@ -101,7 +101,7 @@
                                                                                                         <RowConstraints minHeight="-Infinity" prefHeight="20.0" vgrow="SOMETIMES" />
                                                                                                     </rowConstraints>
                                                                                                     <children>
-                                                                                                        <DatePicker GridPane.columnSpan="2">
+                                                                                                        <DatePicker fx:id="date02" GridPane.columnSpan="2">
                                                                                                             <tooltip>
                                                                                                                 <Tooltip text="Please pick/enter date." />
                                                                                                             </tooltip>
@@ -111,13 +111,13 @@
                                                                                                                 <Font name="Arial Bold" size="12.0" />
                                                                                                             </font>
                                                                                                         </Label>
-                                                                                                        <TextField style="-fx-border-radius: 4;" GridPane.columnSpan="3" GridPane.rowIndex="2" />
+                                                                                                        <TextField fx:id="txtField03" style="-fx-border-radius: 4;" GridPane.columnSpan="3" GridPane.rowIndex="2" />
                                                                                                         <Label id="LabelDesc" prefHeight="15.0" prefWidth="143.0" text="Delivery Receipt No." GridPane.columnSpan="3" GridPane.rowIndex="3">
                                                                                                             <font>
                                                                                                                 <Font name="Arial Bold" size="12.0" />
                                                                                                             </font>
                                                                                                         </Label>
-                                                                                                        <ComboBox prefHeight="24.0" prefWidth="288.0" style="-fx-border-radius: 4;" GridPane.columnSpan="3" GridPane.rowIndex="4">
+                                                                                                        <ComboBox fx:id="comboBox30" prefHeight="24.0" prefWidth="288.0" style="-fx-border-radius: 4;" GridPane.columnSpan="3" GridPane.rowIndex="4">
                                                                                                             <tooltip>
                                                                                                                 <Tooltip text="Please choose Customer/Form Type." />
                                                                                                             </tooltip>
@@ -127,7 +127,7 @@
                                                                                                                 <Font name="Arial Bold" size="12.0" />
                                                                                                             </font>
                                                                                                         </Label>
-                                                                                                        <TextField promptText="Search: F3" style="-fx-border-radius: 4;" GridPane.columnSpan="3" GridPane.rowIndex="6">
+                                                                                                        <TextField fx:id="txtField29" promptText="Search: F3" style="-fx-border-radius: 4;" GridPane.columnSpan="3" GridPane.rowIndex="6">
                                                                                                             <tooltip>
                                                                                                                 <Tooltip text="Please enter Vsp No./Search F3." />
                                                                                                             </tooltip>
@@ -181,7 +181,7 @@
                                                                                                         <RowConstraints minHeight="-Infinity" prefHeight="20.0" vgrow="SOMETIMES" />
                                                                                                     </rowConstraints>
                                                                                                     <children>
-                                                                                                        <TextField style="-fx-border-radius: 4;" GridPane.columnSpan="5" />
+                                                                                                        <TextField fx:id="txtField22" style="-fx-border-radius: 4;" GridPane.columnSpan="5" />
                                                                                                         <Label id="LabelDesc" prefHeight="14.0" prefWidth="117.0" text="Customer Name" GridPane.rowIndex="1">
                                                                                                             <font>
                                                                                                                 <Font name="Arial Bold" size="12.0" />
@@ -192,7 +192,7 @@
                                                                                                                 <Font name="Arial Bold" size="12.0" />
                                                                                                             </font>
                                                                                                         </Label>
-                                                                                                        <TextField style="-fx-border-radius: 4;" GridPane.columnSpan="5" GridPane.rowIndex="2" />
+                                                                                                        <TextField fx:id="txtField23" style="-fx-border-radius: 4;" GridPane.columnSpan="5" GridPane.rowIndex="2" />
                                                                                                         <Label id="LabelDesc" text="Address" GridPane.rowIndex="3">
                                                                                                             <font>
                                                                                                                 <Font name="Arial Bold" size="12.0" />
@@ -243,22 +243,22 @@
                                                                                                                 <Font name="Arial Bold" size="12.0" />
                                                                                                             </font>
                                                                                                         </Label>
-                                                                                                        <TextField style="-fx-border-radius: 4;" GridPane.columnSpan="5" GridPane.rowIndex="2" />
-                                                                                                        <RadioButton mnemonicParsing="false" text="Brand New" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                                                                                        <TextField fx:id="txtField24" style="-fx-border-radius: 4;" GridPane.columnSpan="5" GridPane.rowIndex="2" />
+                                                                                                        <RadioButton fx:id="radioBrandNew" mnemonicParsing="false" text="Brand New" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                                                                                             <toggleGroup>
                                                                                                                 <ToggleGroup fx:id="carCategory" />
                                                                                                             </toggleGroup>
                                                                                                         </RadioButton>
-                                                                                                        <RadioButton mnemonicParsing="false" text="Pre-Owned" toggleGroup="$carCategory" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                                                                                        <RadioButton fx:id="radioPreOwned" mnemonicParsing="false" text="Pre-Owned" toggleGroup="$carCategory" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                                                                                                         <Label id="LabelDesc" text="Unit Description" GridPane.rowIndex="3">
                                                                                                             <font>
                                                                                                                 <Font name="Arial Bold" size="12.0" />
                                                                                                             </font>
                                                                                                         </Label>
-                                                                                                        <TextField style="-fx-border-radius: 4;" GridPane.rowIndex="4" />
-                                                                                                        <TextField style="-fx-border-radius: 4;" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                                                                                                        <TextField style="-fx-border-radius: 4;" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="4" />
-                                                                                                        <TextField style="-fx-border-radius: 4;" GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.rowIndex="4" />
+                                                                                                        <TextField fx:id="txtField25" style="-fx-border-radius: 4;" GridPane.rowIndex="4" />
+                                                                                                        <TextField fx:id="txtField26" style="-fx-border-radius: 4;" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                                                                                                        <TextField fx:id="txtField28" style="-fx-border-radius: 4;" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="4" />
+                                                                                                        <TextField fx:id="txtField27" style="-fx-border-radius: 4;" GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.rowIndex="4" />
                                                                                                         <Label id="LabelDesc" text="Cs No." GridPane.rowIndex="5">
                                                                                                             <font>
                                                                                                                 <Font name="Arial Bold" size="12.0" />
@@ -324,7 +324,7 @@
                                                                                                                 <Font name="Arial Bold" size="12.0" />
                                                                                                             </font>
                                                                                                         </Label>
-                                                                                                        <TextField style="-fx-border-radius: 4;" GridPane.columnIndex="1" GridPane.columnSpan="3" />
+                                                                                                        <TextField fx:id="txtField14" style="-fx-border-radius: 4;" GridPane.columnIndex="1" GridPane.columnSpan="3" />
                                                                                                         <Label id="LabelDesc" prefHeight="14.0" prefWidth="129.0" text="Approved By" GridPane.rowIndex="1">
                                                                                                             <font>
                                                                                                                 <Font name="Arial Bold" size="12.0" />
@@ -335,7 +335,7 @@
                                                                                                                 <Font name="Arial Bold" size="12.0" />
                                                                                                             </font>
                                                                                                         </Label>
-                                                                                                        <TextField style="-fx-border-radius: 4;" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="1" />
+                                                                                                        <TextField fx:id="txtField15" style="-fx-border-radius: 4;" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="1" />
                                                                                                         <Label prefHeight="14.0" prefWidth="129.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                                                                                                             <font>
                                                                                                                 <Font name="Arial Bold" size="12.0" />
@@ -346,7 +346,7 @@
                                                                                                                 <Font name="Arial Bold" size="12.0" />
                                                                                                             </font>
                                                                                                         </Label>
-                                                                                                        <TextArea prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="6" GridPane.columnSpan="3" GridPane.rowSpan="2">
+                                                                                                        <TextArea fx:id="textArea06" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="6" GridPane.columnSpan="3" GridPane.rowSpan="2">
                                                                                                             <GridPane.margin>
                                                                                                                 <Insets />
                                                                                                             </GridPane.margin>

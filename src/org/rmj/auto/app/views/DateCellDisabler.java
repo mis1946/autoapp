@@ -17,7 +17,7 @@ import org.rmj.appdriver.agentfx.CommonUtils;
 
 /**
  *
- * @author MIS
+ * @author Jahn 08/31/2023
  */
 public class DateCellDisabler {
     public static GRider oApp;

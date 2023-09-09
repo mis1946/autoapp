@@ -582,24 +582,6 @@ public class CustomerFormController implements Initializable, ScreenInterface {
         //CLIENT Social Media
         txtField03Socm.setOnKeyPressed(this::txtField_KeyPressed); // SocMed Account
 
-        /*Radio Button Click Event Y / N*/
- /*client_address*/
-//        radiobtn18AddY.setOnAction(this::cmdRadioButton_Click);
-//        radiobtn18AddN.setOnAction(this::cmdRadioButton_Click);
-//        /*client_mobile*/
-//        radiobtn14CntY.setOnAction(this::cmdRadioButton_Click);
-//        radiobtn14CntN.setOnAction(this::cmdRadioButton_Click);
-//        radiobtn11CntY.setOnAction(this::cmdRadioButton_Click);
-//        radiobtn11CntN.setOnAction(this::cmdRadioButton_Click);
-//        /*client_email_address*/
-//        radiobtn05EmaY.setOnAction(this::cmdRadioButton_Click);
-//        radiobtn05EmaN.setOnAction(this::cmdRadioButton_Click);
-//        radiobtn06EmaY.setOnAction(this::cmdRadioButton_Click);
-//        radiobtn06EmaN.setOnAction(this::cmdRadioButton_Click);
-//        /*client_social_media*/
-//        radiobtn05SocY.setOnAction(this::cmdRadioButton_Click);
-//        radiobtn05SocN.setOnAction(this::cmdRadioButton_Click);
-
         /*Check box Clicked Event*/
         /*client_address*/
         checkBox14Addr.setOnAction(this::cmdCheckBox_Click);
@@ -745,7 +727,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
 
         clearVehicleInfoFields();
         pnVEditMode = EditMode.UNKNOWN;
-        initVhclInfoButton(pnEditMode);
+        initVhclInfoButton(pnVEditMode);
     }
     
     //Animation    
@@ -812,84 +794,6 @@ public class CustomerFormController implements Initializable, ScreenInterface {
         iTabIndex = tabPCustCont.getSelectionModel().getSelectedIndex();
         try {
             switch (lsButton) {
-                case "btnBrowse":
-                    if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
-                        if (ShowMessageFX.OkayCancel(null, "Confirmation", "You have unsaved data. Are you sure you want to browse a new record?") == true) {
-                            oTransAddress.removeAddress(oTransAddress.getItemCount());
-                            oTransMobile.removeMobile(oTransMobile.getItemCount());
-                            oTransEmail.removeEmail(oTransEmail.getItemCount());
-                            oTransSocMed.removeSocMed(oTransSocMed.getItemCount());
-                        } else {
-                            return;
-                        }
-                    }
-
-                    if (!txtField26.getText().isEmpty() && !txtField26.getText().trim().equals("")) {
-
-                        if (oTrans.SearchRecord(txtField26.getText(), false)) {
-                            if (oTransAddress.OpenRecord(oTrans.getMaster("sClientID").toString(), false)
-                                    && oTransMobile.OpenRecord(oTrans.getMaster("sClientID").toString(), false)
-                                    && oTransEmail.OpenRecord(oTrans.getMaster("sClientID").toString(), false)
-                                    && oTransSocMed.OpenRecord(oTrans.getMaster("sClientID").toString(), false)) {
-                                loadClientMaster();
-                                loadAddress();
-                                loadContact();
-                                loadEmail();
-                                loadSocialMedia();
-                                loadVehicleInfoTable();
-                                loadVehicleHtryTable();
-                                pnEditMode = EditMode.READY;
-                            } else {
-                                ShowMessageFX.Warning(getStage(), "There was an error while loading Contact Information Details.", "Warning", null);
-                                txtField26.clear(); // CLIENT Search
-                                txtField01.clear(); // CLIENT ID
-                                clearFields();
-                                pnEditMode = EditMode.UNKNOWN;
-
-                            }
-                        } else {
-                            ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
-                            //if (pnEditMode == EditMode.ADDNEW ){
-                            txtField26.clear(); // CLIENT Search
-                            txtField01.clear(); // CLIENT ID
-                            clearFields();
-                            //}
-                            pnEditMode = EditMode.UNKNOWN;
-                        }
-
-                    } else {
-                        if (oTrans.SearchRecord(txtField01.getText(), true)) {
-                            if (oTransAddress.OpenRecord(oTrans.getMaster("sClientID").toString(), false)
-                                    && oTransMobile.OpenRecord(oTrans.getMaster("sClientID").toString(), false)
-                                    && oTransEmail.OpenRecord(oTrans.getMaster("sClientID").toString(), false)
-                                    && oTransSocMed.OpenRecord(oTrans.getMaster("sClientID").toString(), false)) {
-                                loadClientMaster();
-                                loadAddress();
-                                loadContact();
-                                loadEmail();
-                                loadSocialMedia();
-                                loadVehicleInfoTable();
-                                loadVehicleHtryTable();
-                                pnEditMode = EditMode.READY;
-                            } else {
-                                ShowMessageFX.Warning(getStage(), "There was an error while loading Contact Information Details.", "Warning", null);
-                                txtField26.clear(); // CLIENT Search
-                                txtField01.clear(); // CLIENT ID
-                                clearFields();
-                                pnEditMode = EditMode.UNKNOWN;
-                            }
-                        } else {
-                            ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
-                            //if (pnEditMode == EditMode.ADDNEW ){
-                            txtField26.clear(); // CLIENT Search
-                            txtField01.clear(); // CLIENT ID
-                            clearFields();
-                            //}
-                            pnEditMode = EditMode.UNKNOWN;
-                        }
-                    }
-
-                    break;
                 case "btnAdd": //create new client
                     clearFields();
                     clearVehicleInfoFields();
@@ -1363,6 +1267,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                 case "btnVhclAvl":
                     if (pnVEditMode == EditMode.ADDNEW || pnVEditMode == EditMode.UPDATE) {
                         if (ShowMessageFX.OkayCancel(null, "Confirmation", "You have unsaved data. Are you sure you want to create a new record?") == true) {
+                            clearVehicleInfoFields();
                         } else {
                             return;
                         }
@@ -1375,13 +1280,13 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                         pnVEditMode = oTransVehicle.getEditMode();
                     } else {
                         ShowMessageFX.Warning(getStage(), oTransVehicle.getMessage(), "Warning", null);
-                        return;
                     }
 
                     break;
                 case "btnVhclMnl":
                     if (pnVEditMode == EditMode.ADDNEW || pnVEditMode == EditMode.UPDATE) {
                         if (ShowMessageFX.OkayCancel(null, "Confirmation", "You have unsaved data. Are you sure you want to create a new record?") == true) {
+                            clearVehicleInfoFields();
                         } else {
                             return;
                         }
@@ -1393,7 +1298,6 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                         pnVEditMode = oTransVehicle.getEditMode();
                     } else {
                         ShowMessageFX.Warning(getStage(), oTransVehicle.getMessage(), "Warning", null);
-                        return;
                     }
                     break;
                 case "btnVSave":
@@ -1416,8 +1320,68 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                 case "btnTransfer":
                     loadTransferOwnershipWindow();
                     break;
+                    
+                case "btnBrowse":
+                    if ((pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) ||
+                          (pnVEditMode == EditMode.ADDNEW || pnVEditMode == EditMode.UPDATE)) {
+                        if (ShowMessageFX.OkayCancel(null, "Confirmation", "You have unsaved data. Are you sure you want to browse a new record?") == true) {
+                            oTransAddress.removeAddress(oTransAddress.getItemCount());
+                            oTransMobile.removeMobile(oTransMobile.getItemCount());
+                            oTransEmail.removeEmail(oTransEmail.getItemCount());
+                            oTransSocMed.removeSocMed(oTransSocMed.getItemCount());
+                            clearFields();
+                            clearVehicleInfoFields();
+                        } else {
+                            return;
+                        }
+                    }
+                    
+                    boolean byClientID = true;
+                    String txtValue = "";
+                    if (!txtField26.getText().isEmpty() && !txtField26.getText().trim().equals("")) {
+                        byClientID = false;
+                        txtValue = txtField26.getText();
+                    } else {
+                        byClientID = true;
+                        txtValue = txtField01.getText();
+                    }
+                    
+                    if (oTrans.SearchRecord(txtValue, byClientID)) {
+                        if (oTransAddress.OpenRecord(oTrans.getMaster("sClientID").toString(), false)
+                                && oTransMobile.OpenRecord(oTrans.getMaster("sClientID").toString(), false)
+                                && oTransEmail.OpenRecord(oTrans.getMaster("sClientID").toString(), false)
+                                && oTransSocMed.OpenRecord(oTrans.getMaster("sClientID").toString(), false)) {
+                            loadClientMaster();
+                            loadAddress();
+                            loadContact();
+                            loadEmail();
+                            loadSocialMedia();
+                            loadVehicleInfoTable();
+                            loadVehicleHtryTable();
+                            pnEditMode = EditMode.READY;
+                            pnVEditMode = EditMode.UNKNOWN;
+                        } else {
+                            ShowMessageFX.Warning(getStage(), "There was an error while loading Contact Information Details.", "Warning", null);
+                            txtField26.clear(); // CLIENT Search
+                            txtField01.clear(); // CLIENT ID
+                            pnEditMode = EditMode.UNKNOWN;
+                            pnVEditMode = EditMode.UNKNOWN;
+                            clearFields();
+                            clearVehicleInfoFields();
+                        }
+                    } else {
+                        ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                        txtField26.clear(); // CLIENT Search
+                        txtField01.clear(); // CLIENT ID
+                        pnEditMode = EditMode.UNKNOWN;
+                        pnVEditMode = EditMode.UNKNOWN;
+                        clearFields();
+                        clearVehicleInfoFields();
+                    }
 
+                    break;
             }
+            
             if (selectedIndex == 0) {
                 initButton(pnEditMode);
             } else if (selectedIndex == 1) {
@@ -2503,10 +2467,10 @@ public class CustomerFormController implements Initializable, ScreenInterface {
         try {
             /*CLIENT INFORMATION*/
             if (selectedIndex == 0) {
-                oTrans.setMaster(11, SQLUtil.toDate(txtField11.getValue().toString(), SQLUtil.FORMAT_SHORT_DATE));
+                oTrans.setMaster(11, SQLUtil.toDate(String.valueOf(txtField11.getValue()), SQLUtil.FORMAT_SHORT_DATE));
                 /*CLIENT VEHICLE INFORMATION*/
             } else if (selectedIndex == 1) {
-                oTransVehicle.setMaster(21, SQLUtil.toDate(txtField21V.getValue().toString(), SQLUtil.FORMAT_SHORT_DATE));
+                oTransVehicle.setMaster(21, SQLUtil.toDate(String.valueOf(txtField21V.getValue()), SQLUtil.FORMAT_SHORT_DATE));
             }
         } catch (SQLException ex) {
             Logger.getLogger(CustomerFormController.class.getName()).log(Level.SEVERE, null, ex);
@@ -2792,20 +2756,32 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                 case ENTER:
                     switch (txtFieldID) {
                         case "txtField01":  //Search by CLIENT ID
-                            if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
+                        case "txtField26": //Search by Name
+                            boolean byClientID = true;
+                            String txtValue = "";
+                            if (txtFieldID.equals("txtField26")){ //Search by Name
+                                byClientID = false;
+                                txtValue = txtField26.getText();
+                            } else {
+                                byClientID = true;
+                                txtValue = txtField01.getText();
+                            }
+                            
+                            if ((pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) ||
+                                (pnVEditMode == EditMode.ADDNEW || pnVEditMode == EditMode.UPDATE)) {
                                 if (ShowMessageFX.OkayCancel(null, "Confirmation", "You have unsaved data. Are you sure you want to browse a new record?") == true) {
                                     oTransAddress.removeAddress(oTransAddress.getItemCount());
                                     oTransMobile.removeMobile(oTransMobile.getItemCount());
                                     oTransEmail.removeEmail(oTransEmail.getItemCount());
                                     oTransSocMed.removeSocMed(oTransSocMed.getItemCount());
-
+                                    clearFields();
+                                    clearVehicleInfoFields();
                                 } else {
                                     return;
                                 }
                             }
-                            //                            txtField26.clear(); // CLIENT Search
-                            //                            clearFields();
-                            if (oTrans.SearchRecord(txtField01.getText(), true)) {
+                            
+                            if (oTrans.SearchRecord(txtValue, byClientID)) {
                                 if (oTransAddress.OpenRecord(oTrans.getMaster("sClientID").toString(), false)
                                         && oTransMobile.OpenRecord(oTrans.getMaster("sClientID").toString(), false)
                                         && oTransEmail.OpenRecord(oTrans.getMaster("sClientID").toString(), false)
@@ -2818,75 +2794,26 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                                     loadVehicleInfoTable();
                                     loadVehicleHtryTable();
                                     pnEditMode = EditMode.READY;
+                                    pnVEditMode = EditMode.UNKNOWN;
                                 } else {
                                     ShowMessageFX.Warning(getStage(), "There was an error while loading Contact Information Details.", "Warning", null);
                                     txtField26.clear(); // CLIENT Search
-                                    //txtField01.clear(); // CLIENT ID
-                                    clearFields();
-                                    pnEditMode = EditMode.UNKNOWN;
-                                }
-                            } else {
-                                ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
-                                //if (pnEditMode == EditMode.ADDNEW ){
-                                txtField26.clear(); // CLIENT Search
-                                //txtField01.clear(); // CLIENT ID
-                                clearFields();
-                                // }
-                                pnEditMode = EditMode.UNKNOWN;
-                            }
-
-                            if (selectedIndex == 0) {
-                                initButton(pnEditMode);
-                            } else if (selectedIndex == 1) {
-                                initVhclInfoButton(pnVEditMode);
-                                if (bBtnVhclAvl){
-                                    disableFields();
-                                }
-                            }
-                            break;
-                        case "txtField26": //Search by Name
-                            if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
-                                if (ShowMessageFX.OkayCancel(null, "Confirmation", "You have unsaved data. Are you sure you want to browse a new record?") == true) {
-                                    oTransAddress.removeAddress(oTransAddress.getItemCount());
-                                    oTransMobile.removeMobile(oTransMobile.getItemCount());
-                                    oTransEmail.removeEmail(oTransEmail.getItemCount());
-                                    oTransSocMed.removeSocMed(oTransSocMed.getItemCount());
-
-                                } else {
-                                    return;
-                                }
-                            }
-                            //                                   txtField01.clear(); // CLIENT ID
-                            //                                   clearFields();
-                            if (oTrans.SearchRecord(txtField26.getText(), false)) {
-                                if (oTransAddress.OpenRecord(oTrans.getMaster("sClientID").toString(), false)
-                                        && oTransMobile.OpenRecord(oTrans.getMaster("sClientID").toString(), false)
-                                        && oTransEmail.OpenRecord(oTrans.getMaster("sClientID").toString(), false)
-                                        && oTransSocMed.OpenRecord(oTrans.getMaster("sClientID").toString(), false)) {
-                                    loadClientMaster();
-                                    loadAddress();
-                                    loadContact();
-                                    loadEmail();
-                                    loadSocialMedia();
-                                    loadVehicleInfoTable();
-                                    loadVehicleHtryTable();
-                                    pnEditMode = EditMode.READY;
-                                } else {
-                                    ShowMessageFX.Warning(getStage(), "There was an error while loading Contact Information Details.", "Warning", null);
                                     txtField01.clear(); // CLIENT ID
-                                    clearFields();
                                     pnEditMode = EditMode.UNKNOWN;
+                                    pnVEditMode = EditMode.UNKNOWN;
+                                    clearFields();
+                                    clearVehicleInfoFields();
                                 }
                             } else {
                                 ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
-                                //if (pnEditMode == EditMode.ADDNEW ){
-                                //txtField26.clear(); // CLIENT Search
+                                txtField26.clear(); // CLIENT Search
                                 txtField01.clear(); // CLIENT ID
-                                clearFields();
-                                //}
                                 pnEditMode = EditMode.UNKNOWN;
+                                pnVEditMode = EditMode.UNKNOWN;
+                                clearFields();
+                                clearVehicleInfoFields();
                             }
-                            
+
                             if (selectedIndex == 0) {
                                 initButton(pnEditMode);
                             } else if (selectedIndex == 1) {
@@ -3752,6 +3679,11 @@ public class CustomerFormController implements Initializable, ScreenInterface {
     }
 
     private void clearVehicleInfoFields() {
+        if (pnEditMode == EditMode.UNKNOWN) {
+            vhclinfodata.clear();
+            vhclhtrydata.clear();
+        }
+        
         txtField03V.clear();
         txtField04V.clear();
         txtField08V.clear();

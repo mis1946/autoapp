@@ -44,7 +44,6 @@ import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.control.DateCell;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.TextFormatter;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import static javafx.scene.input.KeyCode.DOWN;
@@ -540,7 +539,9 @@ public class ActivityFormController implements Initializable, ScreenInterface {
                             return;
                         }
                         //Proceed Saving
+//                        System.out.println(oTrans.getActTownCount());
                         if (oTrans.SaveRecord()) {
+
                             ShowMessageFX.Information(getStage(), "Transaction save successfully.", pxeModuleName, null);
                             loadActivityField();
                             pnEditMode = EditMode.READY;

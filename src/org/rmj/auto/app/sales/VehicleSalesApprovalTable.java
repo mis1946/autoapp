@@ -19,7 +19,7 @@ import javafx.scene.control.CheckBox;
  * @author John Dave
  */
 public class VehicleSalesApprovalTable {
-    
+
     private SimpleStringProperty tblRow;
 //    private SimpleBooleanProperty tblselected;
     private SimpleStringProperty tblindex13; //sTransNox
@@ -31,7 +31,7 @@ public class VehicleSalesApprovalTable {
     private SimpleStringProperty tblindex20; // sCompnyNm
     private SimpleStringProperty tblindex23; // sDescript
     private SimpleStringProperty tblindex05; // nAmountxx
-    private SimpleStringProperty tblindex24; // sSeNamexx 
+    private SimpleStringProperty tblindex24; // sSeNamexx
     private SimpleStringProperty tblbranch; // Branch/
 
     public VehicleSalesApprovalTable(String tblRow, String tblindex13, String tblindex01, String tblindex03, String tblindex12, String tblindex02, String tblindex20, String tblindex23, String tblindex05, String tblindex24, String tblbranch) {
@@ -43,11 +43,19 @@ public class VehicleSalesApprovalTable {
         this.tblindex03 = new SimpleStringProperty(tblindex03);
         this.tblindex12 = new SimpleStringProperty(tblindex12);
         this.tblindex02 = new SimpleStringProperty(tblindex02);
-        this.tblindex20= new SimpleStringProperty(tblindex20);
+        this.tblindex20 = new SimpleStringProperty(tblindex20);
         this.tblindex23 = new SimpleStringProperty(tblindex23);
         this.tblindex05 = new SimpleStringProperty(tblindex05);
         this.tblindex24 = new SimpleStringProperty(tblindex24);
         this.tblbranch = new SimpleStringProperty(tblbranch);
+    }
+
+    public String getTblRow() {
+        return tblRow.get();
+    }
+
+    public void setTblRow(String tblRow) {
+        this.tblRow.set(tblRow);
     }
 
     public String getTblindex13() {
@@ -57,7 +65,7 @@ public class VehicleSalesApprovalTable {
     public void setTblindex13(String tblindex13) {
         this.tblindex13.set(tblindex13);
     }
-    
+
     public String getTblindex01() {
         return tblindex01.get();
     }
@@ -65,15 +73,7 @@ public class VehicleSalesApprovalTable {
     public void setTblindex01(String tblindex01) {
         this.tblindex01.set(tblindex01);
     }
-   
-    public String getTblRow() {
-        return tblRow.get();
-    }
 
-    public void setTblRow(String tblRow) {
-       this.tblRow.set(tblRow);
-    }
-   
     public CheckBox getSelect() {
         return select;
     }
@@ -82,10 +82,10 @@ public class VehicleSalesApprovalTable {
 //         return tblselected.get();
 //     }
 //    public void setTblselected(boolean tblselected)
-//     { 
+//     {
 //         this.tblselected.set(tblselected);
 //     }
-//    public BooleanProperty selectedProperty() 
+//    public BooleanProperty selectedProperty()
 //    {
 //        return tblselected;
 //    }
@@ -101,20 +101,20 @@ public class VehicleSalesApprovalTable {
         return tblindex03.get();
     }
 
-    public void setTblindex03(String  tblindex03) {
-        this. tblindex03.set(tblindex03);
+    public void setTblindex03(String tblindex03) {
+        this.tblindex03.set(tblindex03);
     }
 
     public String getTblindex12() {
-        return  tblindex12.get();
+        return tblindex12.get();
     }
 
     public void setTblindex12(String tblindex12) {
-        this. tblindex12.set(tblindex12);
+        this.tblindex12.set(tblindex12);
     }
 
     public String getTblindex02() {
-        return  tblindex02.get();
+        return tblindex02.get();
     }
 
     public void setTblindex02(String tblindex02) {
@@ -161,5 +161,4 @@ public class VehicleSalesApprovalTable {
         this.tblbranch.set(tblbranch);
     }
 
-   
 }

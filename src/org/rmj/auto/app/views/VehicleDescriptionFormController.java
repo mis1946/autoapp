@@ -606,8 +606,8 @@ public class VehicleDescriptionFormController implements Initializable, ScreenIn
     /*Populate Text Field Based on selected address in table*/
     private void getSelectedItem(String TransNo) {
         oldTransNo = TransNo;
+        clearFields();
         if (oTrans.OpenRecord(TransNo)) {
-            clearFields();
             loadVehicleDescField();
         }
         oldPnRow = pagecounter;

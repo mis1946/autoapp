@@ -327,7 +327,7 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
 
         //Add new tab;
         Tab newTab = new Tab(SetTabTitle(fsFormName));
-        newTab.setStyle("-fx-font-weight: bold; -fx-pref-width: 180; -fx-font-size: 11px;");
+        newTab.setStyle("-fx-font-weight: bold; -fx-pref-width: 180; -fx-font-size: 10.5px; -fx-font-family: arial;");
 
         try {
             Node content = fxmlLoader.load();

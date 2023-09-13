@@ -367,7 +367,7 @@
                                                                                                         <Font name="Arial Bold" size="11.5" />
                                                                                                     </font>
                                                                                                 </Label>
-                                                                                                <Label alignment="CENTER_RIGHT" prefHeight="14.0" prefWidth="129.0" text="*" textFill="#fb0000" GridPane.columnIndex="11" GridPane.columnSpan="2" GridPane.rowIndex="2">
+                                                                                                <Label alignment="CENTER_RIGHT" prefHeight="14.0" prefWidth="121.0" text="*" textFill="#fb0000" GridPane.columnIndex="11" GridPane.columnSpan="2" GridPane.rowIndex="2">
                                                                                                     <font>
                                                                                                         <Font name="Arial Bold" size="11.5" />
                                                                                                     </font>

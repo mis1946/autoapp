@@ -61,7 +61,7 @@ public class InquiryBankApplicationFormController implements Initializable {
 
     private final String pxeModuleName = "Inquiry Bank Application";
     
-    ObservableList<String> cBankPaymode = FXCollections.observableArrayList( "PURCHASE ORDER", "FINANCING"); //Mode of Payment Values
+    ObservableList<String> cBankPaymode = FXCollections.observableArrayList( "BANK PURCHASE ORDER", "BANK FINANCING", "COMPANY PURCHASE ORDER", "COMPANY FINANCING"); //Mode of Payment Values
     ObservableList<String> cBankStatus = FXCollections.observableArrayList("ON-GOING", "DECLINE", "APPROVED" ); //Bank Application Status Values
 
     @FXML
@@ -386,16 +386,23 @@ public class InquiryBankApplicationFormController implements Initializable {
                 ShowMessageFX.Warning("No `Payment Mode` selected.", pxeModuleName, "Please select `Payment Mode` value.");
                 comboBox04.requestFocus();
                 return false;
-            }else 
-                oTransBankApp.setBankApp(4,comboBox04.getSelectionModel().getSelectedIndex());
-            
+            }else {
+                if (comboBox04.getSelectionModel().getSelectedIndex() != pnInqPayMode){
+                    if ((pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) && (comboBox09.getSelectionModel().getSelectedIndex() != 1)){
+                        ShowMessageFX.Warning("Invalid `Payment Mode` selected.", pxeModuleName, "Payment Mode selected is not the same with Inquiry Payment Mode.");
+                        return false;
+                    }
+                }
+                
+                oTransBankApp.setBankApp(4,comboBox04.getSelectionModel().getSelectedIndex());  
+            }
             if (comboBox09.getSelectionModel().getSelectedIndex() < 0){
                 ShowMessageFX.Warning("No `Application Status` selected.", pxeModuleName, "Please select `Application Status` value.");
                 comboBox09.requestFocus();
                 return false;
-            }else 
+            }else {
                 oTransBankApp.setBankApp(9,comboBox09.getSelectionModel().getSelectedIndex());
-
+            }
         } catch (SQLException ex) {
              ShowMessageFX.Warning(getStage(),ex.getMessage(), "Warning", null);
         }

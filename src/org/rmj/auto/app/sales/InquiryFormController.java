@@ -214,7 +214,7 @@ public class InquiryFormController implements Initializable, ScreenInterface {
 
     /*Customer Inquiry Main */
     @FXML
-    private TextField txtField02; //Branch Code 
+    private TextField txtField02; //Branch Name 
     @FXML
     private TextField txtField03;//Inqiury Date
     @FXML
@@ -272,7 +272,8 @@ public class InquiryFormController implements Initializable, ScreenInterface {
     private ObservableList<InquiryTableVehicleSalesAdvances> inqvsadata = FXCollections.observableArrayList();
 
     //Combo Box Value  
-    ObservableList<String> cModeOfPayment = FXCollections.observableArrayList("CASH", "PURCHASE ORDER", "FINANCING"); //Mode of Payment Values
+    //ObservableList<String> cModeOfPayment = FXCollections.observableArrayList("CASH", "PURCHASE ORDER", "FINANCING"); //Mode of Payment Values
+    ObservableList<String> cModeOfPayment = FXCollections.observableArrayList("CASH", "BANK PURCHASE ORDER", "BANK FINANCING","COMPANY PURCHASE ORDER", "COMPANY FINANCING"); //Mode of Payment Values
     ObservableList<String> cCustomerType = FXCollections.observableArrayList("BUSINESS", "EMPLOYED", "OFW", "SEAMAN", "ANY"); // Customer Type Values
     @FXML
     private ComboBox cmbInqpr01;
@@ -428,7 +429,7 @@ public class InquiryFormController implements Initializable, ScreenInterface {
         pagination.setPageFactory(this::createPage);
 
         /*CUSTOMER INQUIRY*/
- /*populate combobox*/
+        /*populate combobox*/
         comboBox24.setItems(cInqStatus); //Inquiry Status
         cmbType012.setItems(cInquiryType); //Inquiry Type
         //cmbOnstr13.setItems(cOnlineStore); //Web Inquiry
@@ -463,7 +464,7 @@ public class InquiryFormController implements Initializable, ScreenInterface {
         });
 
         setCapsLockBehavior(textSeek01);
-        setCapsLockBehavior(txtField02); //Branch Code 
+        setCapsLockBehavior(txtField02); //Branch Name 
         setCapsLockBehavior(txtField03);//Inqiury Date
         setCapsLockBehavior(txtField04); // Sales Executive
         setCapsLockBehavior(txtField07); //Customer ID 
@@ -503,6 +504,7 @@ public class InquiryFormController implements Initializable, ScreenInterface {
         txtField14.focusedProperty().addListener(txtField_Focus);  //Test Model  
         txtField10.setOnAction(this::getDate);
 
+        txtField02.setOnKeyPressed(this::txtField_KeyPressed);  //Branch Name
         txtField04.setOnKeyPressed(this::txtField_KeyPressed);  // Sales Executive
         txtField07.setOnKeyPressed(this::txtField_KeyPressed);  //Customer ID 
         txtField29.setOnKeyPressed(this::txtField_KeyPressed);  //Company ID 
@@ -544,10 +546,12 @@ public class InquiryFormController implements Initializable, ScreenInterface {
             switch (cmbInqpr01.getSelectionModel().getSelectedIndex()) {
                 case 0:
                 case 1:
+                case 3:
                     cmbInqpr02.getSelectionModel().select(4); //Set to Any
                     cmbInqpr02.setDisable(true);
                     break;
                 case 2:
+                case 4:
                     ObservableList<String> cCustType = FXCollections.observableArrayList("BUSINESS", "EMPLOYED", "OFW", "SEAMAN"); // Customer Type Values
                     cmbInqpr02.setItems(cCustType);
                     cmbInqpr02.setDisable(false);
@@ -790,10 +794,13 @@ public class InquiryFormController implements Initializable, ScreenInterface {
                 /*CUSTOMER INQUIRY: GENERAL BUTTON*/
                 case "btnAdd":
                     //pnEditMode  = EditMode.ADDNEW; 
+                    
+                    /*Clear Fields*/
                     if (oTrans.NewRecord()) {
-                        /*Clear Fields*/
                         clearFields();
                         clearClassFields();
+                        
+                        oTrans.searchBranch(oApp.getBranchCode(),true);
                         loadCustomerInquiry();
                         loadTargetVehicle();
                         loadPromosOfferred();
@@ -1490,6 +1497,13 @@ public class InquiryFormController implements Initializable, ScreenInterface {
                 case TAB:
                 case ENTER:
                     switch (lnIndex) {
+                        case 2: //Branch Name
+                            if (oTrans.searchBranch(txtField02.getText(),false)){
+                                loadCustomerInquiry();
+                            } else {
+                                ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                            }
+                            break;
                         case 7: //Customer
                             if (oTrans.searchCustomer(txtField07.getText(), false)) {
                                 loadCustomerInquiry();
@@ -1855,7 +1869,7 @@ public class InquiryFormController implements Initializable, ScreenInterface {
 
     //Load Customer Inquiry Data
     public void loadCustomerInquiry() {
-        try {
+        try {            
             txtField03.setText(CommonUtils.xsDateMedium((Date) oTrans.getMaster(3)));  //Inquiry Date               
             txtField07.setText((String) oTrans.getMaster(29)); //Custmer Name ***
             txtField29.setText((String) oTrans.getMaster(29)); //Company Name
@@ -1870,7 +1884,7 @@ public class InquiryFormController implements Initializable, ScreenInterface {
             txtField10.setValue(strToDate(CommonUtils.xsDateShort((Date) oTrans.getMaster(10)))); //Target Release Date
             txtField09.setText((String) oTrans.getMaster(35)); //Agent ID
             txtField15.setText((String) oTrans.getMaster(37)); //Activity ID
-            txtField02.setText((String) oTrans.getMaster(2)); //Branch Code
+            txtField02.setText((String) oTrans.getMaster(38)); //Branch Name
             comboBox24.getSelectionModel().select(Integer.parseInt(oTrans.getMaster(24).toString())); //Inquiry Status
             switch (oTrans.getMaster(5).toString()) {
                 case "0":
@@ -2387,10 +2401,16 @@ public class InquiryFormController implements Initializable, ScreenInterface {
                 String sPayMode, sBankAppStat;
                 switch ((String) oTransBankApp.getBankAppDet(lnCtr, 4)) {
                     case "0":
-                        sPayMode = "PURCHASE ORDER";
+                        sPayMode = "BANK PURCHASE ORDER";
                         break;
                     case "1":
-                        sPayMode = "FINANCING";
+                        sPayMode = "BANK FINANCING";
+                        break;
+                    case "2":
+                        sPayMode = "COMPANY PURCHASE ORDER";
+                        break;
+                    case "3":
+                        sPayMode = "COMPANY FINANCING";
                         break;
                     default:
                         sPayMode = "";
@@ -2715,6 +2735,20 @@ public class InquiryFormController implements Initializable, ScreenInterface {
 
         /*Inquiry Entry*/
         txtField04.setDisable(!lbShow); // Sales Executive
+        if (fnValue == EditMode.ADDNEW){
+            /*Enable / Disable Selecting Branch
+            * if branch == main office >> Enable selecting Branch
+            * else not main office >> Disable selecting Branch
+            */
+            if (oApp.isMainOffice()){
+                txtField02.setDisable(false); // Branch Name
+            } else {
+                txtField02.setDisable(true); // Branch Name
+            }
+        } else {
+            txtField02.setDisable(true); // Branch Name
+        }
+        
         txtField07.setDisable(true); //Customer ID 
         txtField29.setDisable(true); //Company ID 
         textArea08.setDisable(!lbShow); //Remarks
@@ -2887,11 +2921,22 @@ public class InquiryFormController implements Initializable, ScreenInterface {
         /*INQUIRY PROCESS*/
         //Requirements
         cmbInqpr01.setDisable(!lbShow);
-        if (cmbInqpr01.getSelectionModel().getSelectedIndex() == 1){
-            cmbInqpr02.setDisable(true);
-        } else {
-            cmbInqpr02.setDisable(!lbShow);
+        switch (cmbInqpr01.getSelectionModel().getSelectedIndex()){
+            case 0: //CASH
+            case 1: // Bank Purchase order
+            case 3: // Company Purchase Order
+                cmbInqpr02.setDisable(true);
+                break;
+            case 2: //Bank Financing
+            case 4: //Company Financing
+                cmbInqpr02.setDisable(!lbShow);
+               break;
         }
+//        if (cmbInqpr01.getSelectionModel().getSelectedIndex() == 1){
+//            cmbInqpr02.setDisable(true);
+//        } else {
+//            cmbInqpr02.setDisable(!lbShow);
+//        }
         //Approved by
         txtField21.setDisable(!lbShow);
         //Reservation
@@ -3017,6 +3062,12 @@ public class InquiryFormController implements Initializable, ScreenInterface {
                     case 15: 
                         oTrans.setMaster(37, ""); //Handle Encoded Value
                         break;
+                    case 38: 
+                        oTrans.setMaster(38, ""); //Handle Encoded Value
+                        break;
+//                    case 39:
+//                        oTrans.setMaster(39, ""); //Handle Encoded Value
+//                        break;
                     case 11:
                         oTrans.setMaster(lnCtr, "a"); //Handle Encoded Value
                         break;

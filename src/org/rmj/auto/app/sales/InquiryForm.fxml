@@ -30,7 +30,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" fx:id="AnchorMain" prefHeight="1182.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" >
+<AnchorPane id="AnchorPane" fx:id="AnchorMain" prefHeight="1182.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <StackPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -311,9 +311,7 @@
                                                                                           <Separator style="-fx-background-color: orange;" GridPane.columnSpan="11" GridPane.rowIndex="4" />
                                                                                           <TextField fx:id="txtField15" layoutX="516.0" layoutY="20.0" prefWidth="275.0" promptText="Search: F3" GridPane.columnIndex="7" GridPane.columnSpan="2" GridPane.rowIndex="2" />
                                                                                           <Label id="LabelDesc" text="Branch" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                                                                                          <TextField fx:id="txtField02" disable="true" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-                                                                                          <Label id="LabelDesc" layoutX="20.0" layoutY="146.0" text="Sub Company" GridPane.columnIndex="6" GridPane.rowIndex="3" />
-                                                                                          <TextField disable="true" GridPane.columnIndex="7" GridPane.columnSpan="2" GridPane.rowIndex="3" />
+                                                                                          <TextField fx:id="txtField02" disable="true" promptText="Search: F3" GridPane.columnIndex="2" GridPane.columnSpan="3" GridPane.rowIndex="3" />
                                                                                           <TextField fx:id="txtField13" promptText="Search: F3" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="2" />
                                                                                           <Label alignment="BOTTOM_RIGHT" prefHeight="17.0" prefWidth="73.0" text="*" textFill="#fb0000" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                                                                              <font>
@@ -633,11 +631,11 @@
                                                                                             <columnConstraints>
                                                                                               <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="5.0" prefWidth="10.0" />
                                                                                               <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="100.0" />
-                                                                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="170.0" />
+                                                                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="220.0" />
                                                                                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="10.0" />
                                                                                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="100.0" />
                                                                                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="150.0" />
-                                                                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="165.0" />
+                                                                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="115.0" />
                                                                                                 <ColumnConstraints hgrow="SOMETIMES" minWidth="5.0" prefWidth="10.0" />
                                                                                             </columnConstraints>
                                                                                             <rowConstraints>
@@ -655,7 +653,7 @@
                                                                                                       <Insets />
                                                                                                    </GridPane.margin>
                                                                                                 </Label>
-                                                                                                <ComboBox fx:id="cmbInqpr01" prefWidth="170.0" GridPane.columnIndex="2">
+                                                                                                <ComboBox fx:id="cmbInqpr01" prefWidth="220.0" GridPane.columnIndex="2">
                                                                                                    <tooltip>
                                                                                                       <Tooltip text="Please select Mode of Payment" />
                                                                                                    </tooltip></ComboBox>
@@ -971,10 +969,10 @@
                                                                                                       <TableColumn fx:id="bankCheck01" prefWidth="28.0" sortable="false" />
                                                                                                       <TableColumn fx:id="bankIndex01" editable="false" prefWidth="29.0" sortable="false" text="Row" />
                                                                                                       <TableColumn fx:id="bankIndex02" editable="false" prefWidth="270.0" sortable="false" text="Bank Name" />
-                                                                                                      <TableColumn fx:id="bankIndex03" editable="false" prefWidth="200.0" sortable="false" text="Bank Branch" />
-                                                                                                      <TableColumn fx:id="bankIndex04" editable="false" prefWidth="110.0" sortable="false" text="Payment Mode" />
-                                                                                                      <TableColumn fx:id="bankIndex05" editable="false" prefWidth="110.0" sortable="false" text="Status" />
-                                                                                                      <TableColumn fx:id="bankIndex07" editable="false" prefWidth="106.0" sortable="false" text="Cancelled date" />
+                                                                                                      <TableColumn fx:id="bankIndex03" editable="false" prefWidth="178.0" sortable="false" text="Bank Branch" />
+                                                                                                      <TableColumn fx:id="bankIndex04" editable="false" prefWidth="218.0" sortable="false" text="Payment Mode" />
+                                                                                                      <TableColumn fx:id="bankIndex05" editable="false" prefWidth="76.0" sortable="false" text="Status" />
+                                                                                                      <TableColumn fx:id="bankIndex07" editable="false" prefWidth="115.0" sortable="false" text="Cancelled date" />
                                                                                                    </columns>
                                                                                                 </TableView>
                                                                                              </children>

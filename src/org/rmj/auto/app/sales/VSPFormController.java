@@ -29,6 +29,7 @@ import org.rmj.appdriver.callback.MasterCallback;
 import org.rmj.appdriver.constants.EditMode;
 import org.rmj.auto.app.views.ScreenInterface;
 import org.rmj.auto.app.views.unloadForm;
+import org.rmj.auto.sales.base.VehicleSalesProposalMaster;
 
 /**
  * FXML Controller class
@@ -38,6 +39,7 @@ import org.rmj.auto.app.views.unloadForm;
 public class VSPFormController implements Initializable, ScreenInterface {
 
     private GRider oApp;
+    private VehicleSalesProposalMaster oTrans;
     private MasterCallback oListener;
 
     unloadForm unload = new unloadForm(); //Used in Close Button
@@ -181,7 +183,13 @@ public class VSPFormController implements Initializable, ScreenInterface {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        oListener = (int fnIndex, Object foValue) -> {
+            System.out.println("Set Class Value " + fnIndex + "-->" + foValue);
+        };
 
+        oTrans = new VehicleSalesProposalMaster(oApp, oApp.getBranchCode(), true); //Initialize VehicleSalesProposalMaster
+        oTrans.setCallback(oListener);
+        oTrans.setWithUI(true);
         //Button Click Event
         btnAdd.setOnAction(this::cmdButton_Click);
         btnEdit.setOnAction(this::cmdButton_Click);

@@ -141,6 +141,7 @@
                                                                 </Menu>
                                                                 <MenuItem fx:id="mnuVhclEntry" mnemonicParsing="false" onAction="#mnuVhclEntryClick" text="Vehicle Entry" />
                                                                 <MenuItem fx:id="mnuVhclRsrvApp" mnemonicParsing="false" onAction="#mnuVhclRsrvAppClick" text="Vehicle Reservation Approval" />
+                                                <MenuItem fx:id="mnuVSPEntry" mnemonicParsing="false" onAction="#mnuVSPEntryClick" text="Vehicle Sales Proposal Entry" />
                                                                 <MenuItem fx:id="mnuUnitDeliveryReceipt" mnemonicParsing="false" onAction="#mnuUnitDeliveryReceiptClick" text="Unit Delivery Receipt" />
                                                                 <MenuItem fx:id="mnuUnitRecv" mnemonicParsing="false" onAction="#mnuUnitRecvClick" text="Unit Receiving" />
                                                             </items>

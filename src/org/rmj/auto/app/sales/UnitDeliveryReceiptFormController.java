@@ -25,7 +25,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextArea;
@@ -39,7 +38,6 @@ import static javafx.scene.input.KeyCode.UP;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 import javafx.util.Duration;
 import org.rmj.appdriver.GRider;
 import org.rmj.appdriver.SQLUtil;
@@ -47,7 +45,6 @@ import org.rmj.appdriver.agentfx.CommonUtils;
 import org.rmj.appdriver.agentfx.ShowMessageFX;
 import org.rmj.appdriver.callback.MasterCallback;
 import org.rmj.appdriver.constants.EditMode;
-import org.rmj.auto.app.views.CustomerFormController;
 import org.rmj.auto.app.views.DateCellDisabler;
 import org.rmj.auto.app.views.InputTextFormatter;
 import org.rmj.auto.app.views.ScreenInterface;
@@ -375,29 +372,7 @@ public class UnitDeliveryReceiptFormController implements Initializable, ScreenI
         LocalDate localDate = LocalDate.parse(val, date_formatter);
         return localDate;
     }
-    //Moved to own class just call DateCellDisabler -jahn 08292023
 
-//    private Callback<DatePicker, DateCell> disableDate = (final DatePicker param) -> {
-//        return new DateCell() {
-//            @Override
-//            public void updateItem(LocalDate item, boolean empty) {
-//                super.updateItem(item, empty);
-//                if (item == null || empty) {
-//                    setDisable(true);
-//                    return;
-//                }
-//                Date serverDate = oApp.getServerDate();
-//
-//                LocalDate minDate = strToDate(CommonUtils.xsDateShort(serverDate));
-//                LocalDate maxDate = strToDate(CommonUtils.xsDateShort(serverDate));
-//
-//                maxDate = maxDate.plusDays(30);
-//
-//                setDisable(item.isBefore(minDate) || item.isAfter(maxDate));
-//
-//            }
-//        };
-//    };
     final ChangeListener<? super Boolean> txtField_Focus = (o, ov, nv) -> {
         try {
             TextField txtField = (TextField) ((ReadOnlyBooleanPropertyBase) o).getBean();
@@ -424,7 +399,7 @@ public class UnitDeliveryReceiptFormController implements Initializable, ScreenI
 
             }
         } catch (SQLException ex) {
-            Logger.getLogger(CustomerFormController.class
+            Logger.getLogger(UnitDeliveryReceiptFormController.class
                     .getName()).log(Level.SEVERE, null, ex);
         }
     };

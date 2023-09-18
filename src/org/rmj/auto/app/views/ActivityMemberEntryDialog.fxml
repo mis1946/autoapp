@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" fx:id="AnchorMain" prefHeight="312.0" prefWidth="508.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane id="AnchorPane" fx:id="AnchorMain" prefHeight="312.0" prefWidth="568.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <StackPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
@@ -72,7 +72,7 @@
                                                 <Insets right="5.0" />
                                             </HBox.margin>
                                         </TableView>
-                                        <TableView fx:id="tblViewEmployee" prefHeight="217.0" prefWidth="288.0">
+                                        <TableView fx:id="tblViewEmployee" prefHeight="217.0" prefWidth="356.0">
                                             <columns>
                                                 <TableColumn fx:id="tblindexRow" prefWidth="44.0" text="Row" />
                                                 <TableColumn fx:id="tblselect" prefWidth="32.0">
@@ -80,7 +80,7 @@
                                                         <CheckBox fx:id="selectAllEmployee" mnemonicParsing="false" />
                                                     </graphic>
                                                 </TableColumn>
-                                                <TableColumn fx:id="tblindex25" prefWidth="251.0" text="Employee Name" />
+                                                <TableColumn fx:id="tblindex25" prefWidth="269.0" text="Employee Name" />
                                             </columns>
                                         </TableView>
                                     </children>

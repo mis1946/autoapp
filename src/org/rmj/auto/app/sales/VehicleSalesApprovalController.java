@@ -1,4 +1,5 @@
 package org.rmj.auto.app.sales;
+
 import java.net.URL;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
@@ -34,26 +35,28 @@ import org.rmj.appdriver.callback.MasterCallback;
 import org.rmj.auto.app.views.ScreenInterface;
 import org.rmj.auto.app.views.unloadForm;
 import org.rmj.auto.sales.base.InquiryProcess;
+
 /**
  * Vehicle Sales Approval Controller class
  *
  * @author John Dave
  */
-public class VehicleSalesApprovalController implements Initializable,ScreenInterface {
+public class VehicleSalesApprovalController implements Initializable, ScreenInterface {
+
     private GRider oApp;
     private InquiryProcess oTrans;
     private MasterCallback oListener;
     private int lnCtr = 0;
     private final String pxeModuleName = "Vehicle Reservation Approval"; //Form Title
-    
+
     unloadForm unload = new unloadForm(); //Used in Close Button
-    
+
     @FXML
     private AnchorPane AnchorMain;
     ObservableList<String> cFilter = FXCollections.observableArrayList("Advance Slip Date", "Advances Slip No.", "Advances Type",
-                                                                       "Customer Name","Employee Name","Unit Description");
-        
-    ObservableList<String> cType = FXCollections.observableArrayList("RESERVATION","DEPOSIT","SAFEGUARD DUTY");
+            "Customer Name", "Employee Name", "Unit Description");
+
+    ObservableList<String> cType = FXCollections.observableArrayList("RESERVATION", "DEPOSIT", "SAFEGUARD DUTY");
     private ObservableList<VehicleSalesApprovalTable> vhlApprovalData = FXCollections.observableArrayList();
     @FXML
     private Button btnApproved;
@@ -82,7 +85,7 @@ public class VehicleSalesApprovalController implements Initializable,ScreenInter
     @FXML
     private TableView<VehicleSalesApprovalTable> tblVhclApproval;
     @FXML
-    private TableColumn <VehicleSalesApprovalTable, String>tblRow;
+    private TableColumn<VehicleSalesApprovalTable, String> tblRow;
     @FXML
     private TableColumn<VehicleSalesApprovalTable, Boolean> tblselected;
     @FXML
@@ -98,7 +101,7 @@ public class VehicleSalesApprovalController implements Initializable,ScreenInter
     @FXML
     private TableColumn<VehicleSalesApprovalTable, String> tblindex05; //nAmountxx
     @FXML
-    private TableColumn<VehicleSalesApprovalTable, String> tblindex24; //sSeNamexx 
+    private TableColumn<VehicleSalesApprovalTable, String> tblindex24; //sSeNamexx
     @FXML
     private TableColumn<VehicleSalesApprovalTable, String> tblbranch;
     @FXML
@@ -115,9 +118,9 @@ public class VehicleSalesApprovalController implements Initializable,ScreenInter
     private Button btnFilterUnit;
     @FXML
     private Button btnFilterEmployee;
-    
+
     @Override
-    public void initialize(URL url, ResourceBundle rb) { 
+    public void initialize(URL url, ResourceBundle rb) {
         oTrans = new InquiryProcess(oApp, oApp.getBranchCode(), true); //Initialize ClientMaster
         oTrans.setCallback(oListener);
         oTrans.setWithUI(true);
@@ -145,13 +148,15 @@ public class VehicleSalesApprovalController implements Initializable,ScreenInter
         btnApproved.setOnAction(this::cmdButton_Click);
         btnRefresh.setOnAction(this::cmdButton_Click);
     }
+
     //Date Formatter
-     private LocalDate strToDate(String val){
-          DateTimeFormatter date_formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-          LocalDate localDate = LocalDate.parse(val, date_formatter);
-          return localDate;
-     }
-     private void initOtherUtils(){
+    private LocalDate strToDate(String val) {
+        DateTimeFormatter date_formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate localDate = LocalDate.parse(val, date_formatter);
+        return localDate;
+    }
+
+    private void initOtherUtils() {
         btnFilterDate.setVisible(false);
         btnFilterDate.setManaged(false);
         btnFilterSlip.setVisible(false);
@@ -174,17 +179,18 @@ public class VehicleSalesApprovalController implements Initializable,ScreenInter
         lTo.setVisible(false);
         lTo.setManaged(false);
         toDate.setVisible(false);
-        toDate.setValue(strToDate(CommonUtils.xsDateShort((Date)oApp.getServerDate())));
+        toDate.setValue(strToDate(CommonUtils.xsDateShort((Date) oApp.getServerDate())));
         toDate.setManaged(false);
         comboType.setVisible(false);
         comboType.setManaged(false);
         comboFilter.setItems(cFilter);
         comboType.setItems(cType);
-     }
-       public void initCombo(){
+    }
+
+    public void initCombo() {
         comboFilter.setOnAction(e -> {
             String selectedFilter = comboFilter.getSelectionModel().getSelectedItem();
-            // Hide all controls first  
+            // Hide all controls first
             txtFieldSearch.setVisible(false);
             txtFieldSearch.setManaged(false);
             btnFilterDate.setVisible(false);
@@ -211,7 +217,7 @@ public class VehicleSalesApprovalController implements Initializable,ScreenInter
             toDate.setManaged(false);
             comboType.setVisible(false);
             comboType.setManaged(false);
-            
+
             // Show relevant controls based on selected filter
             switch (selectedFilter) {
                 case "Advances Slip No.":
@@ -221,21 +227,21 @@ public class VehicleSalesApprovalController implements Initializable,ScreenInter
                     btnFilterSlip.setVisible(true);
                     btnFilterSlip.setManaged(true);
                     tblVhclApproval.setItems(vhlApprovalData);
-                    
+
                     break;
                 case "Advance Slip Date":
                     btnFilterDate.setVisible(true);
                     btnFilterDate.setManaged(true);
                     lFrom.setVisible(true);
                     lFrom.setManaged(true);
-                   
+
                     fromDate.setVisible(true);
                     fromDate.setManaged(true);
                     lTo.setVisible(true);
                     lTo.setManaged(true);
                     toDate.setVisible(true);
                     toDate.setManaged(true);
-                    tblVhclApproval.setItems(vhlApprovalData); 
+                    tblVhclApproval.setItems(vhlApprovalData);
                     break;
                 case "Advances Type":
                     comboType.setVisible(true);
@@ -251,7 +257,7 @@ public class VehicleSalesApprovalController implements Initializable,ScreenInter
                     btnFilterCustomer.setVisible(true);
                     btnFilterCustomer.setManaged(true);
                     tblVhclApproval.setItems(vhlApprovalData);
-       
+
                     break;
                 case "Employee Name":
                     txtFieldSearch.setText("");
@@ -260,7 +266,7 @@ public class VehicleSalesApprovalController implements Initializable,ScreenInter
                     btnFilterEmployee.setVisible(true);
                     btnFilterEmployee.setManaged(true);
                     tblVhclApproval.setItems(vhlApprovalData);
-              
+
                     break;
                 case "Unit Description":
                     txtFieldSearch.setText("");
@@ -273,41 +279,42 @@ public class VehicleSalesApprovalController implements Initializable,ScreenInter
             }
         });
     }
+
     //populate data from table
-    private void loadVhlApprovalTable(){
-    try {  
+    private void loadVhlApprovalTable() {
+        try {
             vhlApprovalData.clear();
-            if (oTrans.loadRsvForApproval()){
-                 for (lnCtr = 1; lnCtr <= oTrans.getReserveCount(); lnCtr++){
-                       // Iterate over the data and count the approved item
-                        String amountString = oTrans.getInqRsv(lnCtr,"nAmountxx").toString();
-                        // Convert the amount to a decimal value
-                        double amount = Double.parseDouble(amountString);
-                        // Format the decimal value with decimal separators
-                        DecimalFormat decimalFormat = new DecimalFormat("#,##0.00");
-                        String formattedAmount = decimalFormat.format(amount);
-                        String res = oTrans.getInqRsv(lnCtr, "cResrvTyp").toString();
-                                if (res.equals("0")) {
-                                   res = "Reservation";
-                                }
-                                if(res.equals("1")){
-                                   res = "Deposit";
-                                }
-                                 if(res.equals("2")){
-                                   res = "Safeguard Duty";
-                                }
-                            vhlApprovalData.add(new VehicleSalesApprovalTable(
+            if (oTrans.loadRsvForApproval()) {
+                for (lnCtr = 1; lnCtr <= oTrans.getReserveCount(); lnCtr++) {
+                    // Iterate over the data and count the approved item
+                    String amountString = oTrans.getInqRsv(lnCtr, "nAmountxx").toString();
+                    // Convert the amount to a decimal value
+                    double amount = Double.parseDouble(amountString);
+                    // Format the decimal value with decimal separators
+                    DecimalFormat decimalFormat = new DecimalFormat("#,##0.00");
+                    String formattedAmount = decimalFormat.format(amount);
+                    String res = oTrans.getInqRsv(lnCtr, "cResrvTyp").toString();
+                    if (res.equals("0")) {
+                        res = "Reservation";
+                    }
+                    if (res.equals("1")) {
+                        res = "Deposit";
+                    }
+                    if (res.equals("2")) {
+                        res = "Safeguard Duty";
+                    }
+                    vhlApprovalData.add(new VehicleSalesApprovalTable(
                             String.valueOf(lnCtr),
-                            oTrans.getInqRsv(lnCtr,"cTranStat").toString(),
-                            oTrans.getInqRsv(lnCtr,"sTransNox").toString(),
-                            oTrans.getInqRsv(lnCtr,"sReferNox").toString().toUpperCase(),
+                            oTrans.getInqRsv(lnCtr, "cTranStat").toString(),
+                            oTrans.getInqRsv(lnCtr, "sTransNox").toString(),
+                            oTrans.getInqRsv(lnCtr, "sReferNox").toString().toUpperCase(),
                             res.toUpperCase(),
-                            CommonUtils.xsDateShort((Date)oTrans.getInqRsv(lnCtr,"dTransact")),
-                            oTrans.getInqRsv(lnCtr,"sCompnyNm").toString().toUpperCase(),
-                            oTrans.getInqRsv(lnCtr,"sDescript").toString().toUpperCase(),
+                            CommonUtils.xsDateShort((Date) oTrans.getInqRsv(lnCtr, "dTransact")),
+                            oTrans.getInqRsv(lnCtr, "sCompnyNm").toString().toUpperCase(),
+                            oTrans.getInqRsv(lnCtr, "sDescript").toString().toUpperCase(),
                             formattedAmount,
-                            oTrans.getInqRsv(lnCtr,"sSeNamexx").toString().toUpperCase(),
-                            "".toUpperCase()
+                            oTrans.getInqRsv(lnCtr, "sSeNamexx").toString().toUpperCase(),
+                            oTrans.getInqRsv(lnCtr, "sBranchNm").toString().toUpperCase()
                     ));
                 }
                 tblVhclApproval.setItems(vhlApprovalData);
@@ -317,174 +324,177 @@ public class VehicleSalesApprovalController implements Initializable,ScreenInter
             Logger.getLogger(VehicleSalesApprovalController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
     private void cmdButton_Click(ActionEvent event) {
-    String lsButton = ((Button)event.getSource()).getId();
-    switch(lsButton){
-        case "btnClose": //close tab
-            if(ShowMessageFX.OkayCancel(null, "Close Tab", "Are you sure, do you want to close tab?") == true){
-                if (unload != null) {
-                    unload.unloadForm(AnchorMain, oApp, pxeModuleName);
-                }else {
-                    ShowMessageFX.Warning(null, "Warning", "Notify System Admin to Configure Null value at close button.");    
+        String lsButton = ((Button) event.getSource()).getId();
+        switch (lsButton) {
+            case "btnClose": //close tab
+                if (ShowMessageFX.OkayCancel(null, "Close Tab", "Are you sure, do you want to close tab?") == true) {
+                    if (unload != null) {
+                        unload.unloadForm(AnchorMain, oApp, pxeModuleName);
+                    } else {
+                        ShowMessageFX.Warning(null, "Warning", "Notify System Admin to Configure Null value at close button.");
+                    }
+                } else {
+                    return;
                 }
-            } else {
-                return;
-            }
-        break;
-        case "btnFilterSlip": //btn filter for Slip No
+                break;
+            case "btnFilterSlip": //btn filter for Slip No
                 String filterSlip = txtFieldSearch.getText().trim().toLowerCase();
-                 // Initialize the filteredData variable
+                // Initialize the filteredData variable
                 FilteredList<VehicleSalesApprovalTable> filteredTxtFieldSlip = new FilteredList<>(vhlApprovalData);
-                     // Apply the filter predicate based on the entered text
-                     filteredTxtFieldSlip.setPredicate(clients -> {
-                         if (filterSlip.isEmpty()) {
-                             // No filter text entered, show all data
-                             return true;
-                         } else {
-                             // Filter based on Slip No, Customer Name, Unit Description, and SE Name
-                             String slipNo = clients.getTblindex03().toLowerCase();
-                             return slipNo.contains(filterSlip);
-                         }
-                     });
+                // Apply the filter predicate based on the entered text
+                filteredTxtFieldSlip.setPredicate(clients -> {
+                    if (filterSlip.isEmpty()) {
+                        // No filter text entered, show all data
+                        return true;
+                    } else {
+                        // Filter based on Slip No, Customer Name, Unit Description, and SE Name
+                        String slipNo = clients.getTblindex03().toLowerCase();
+                        return slipNo.contains(filterSlip);
+                    }
+                });
                 tblVhclApproval.setItems(filteredTxtFieldSlip);
                 if (filteredTxtFieldSlip.isEmpty()) {
-                     ShowMessageFX.Information(null, pxeModuleName, "No record found!");
+                    ShowMessageFX.Information(null, pxeModuleName, "No record found!");
                 }
-        break;
-        case "btnFilterCustomer": //btn filter for Customer Name
-                String filterCustomer  = txtFieldSearch.getText().trim().toLowerCase();
-                 // Initialize the filteredData variable
+                break;
+            case "btnFilterCustomer": //btn filter for Customer Name
+                String filterCustomer = txtFieldSearch.getText().trim().toLowerCase();
+                // Initialize the filteredData variable
                 FilteredList<VehicleSalesApprovalTable> filteredTxtFieldCustomer = new FilteredList<>(vhlApprovalData);
-                     // Apply the filter predicate based on the entered text
-                     filteredTxtFieldCustomer.setPredicate(clients -> {
-                         if (filterCustomer.isEmpty()) {
-                             // No filter text entered, show all data
-                             return true;
-                         } else {
-                             String customerName = clients.getTblindex20().toLowerCase();
-                             return customerName.contains(filterCustomer);
-                         }
-                     });
-                tblVhclApproval.setItems(filteredTxtFieldCustomer); 
+                // Apply the filter predicate based on the entered text
+                filteredTxtFieldCustomer.setPredicate(clients -> {
+                    if (filterCustomer.isEmpty()) {
+                        // No filter text entered, show all data
+                        return true;
+                    } else {
+                        String customerName = clients.getTblindex20().toLowerCase();
+                        return customerName.contains(filterCustomer);
+                    }
+                });
+                tblVhclApproval.setItems(filteredTxtFieldCustomer);
                 if (filteredTxtFieldCustomer.isEmpty()) {
-                     ShowMessageFX.Information(null, pxeModuleName, "No record found!");
+                    ShowMessageFX.Information(null, pxeModuleName, "No record found!");
                 }
-        break;
-        case "btnFilterUnit": //btn filter for Unit Description
-                String filterUnit  = txtFieldSearch.getText().trim().toLowerCase();
-                 // Initialize the filteredData variable
+                break;
+            case "btnFilterUnit": //btn filter for Unit Description
+                String filterUnit = txtFieldSearch.getText().trim().toLowerCase();
+                // Initialize the filteredData variable
                 FilteredList<VehicleSalesApprovalTable> filteredTxtFieldUnit = new FilteredList<>(vhlApprovalData);
-                     // Apply the filter predicate based on the entered text
-                    filteredTxtFieldUnit.setPredicate(clients -> {
-                         if (filterUnit.isEmpty()) {
-                             // No filter text entered, show all data
-                             return true;
-                         } else {
-                             String unitDescription = clients.getTblindex23().toLowerCase();
-                             return unitDescription.contains(filterUnit);
-                         }
-                     });
+                // Apply the filter predicate based on the entered text
+                filteredTxtFieldUnit.setPredicate(clients -> {
+                    if (filterUnit.isEmpty()) {
+                        // No filter text entered, show all data
+                        return true;
+                    } else {
+                        String unitDescription = clients.getTblindex23().toLowerCase();
+                        return unitDescription.contains(filterUnit);
+                    }
+                });
                 tblVhclApproval.setItems(filteredTxtFieldUnit);
                 if (filteredTxtFieldUnit.isEmpty()) {
-                    ShowMessageFX.Information(null, pxeModuleName,"No record found!");
+                    ShowMessageFX.Information(null, pxeModuleName, "No record found!");
                 }
-        break;
-        case "btnFilterEmployee": //btn filter for Employee Name
-                String filterEmployee  = txtFieldSearch.getText().trim().toLowerCase();
-                 // Initialize the filteredData variable
+                break;
+            case "btnFilterEmployee": //btn filter for Employee Name
+                String filterEmployee = txtFieldSearch.getText().trim().toLowerCase();
+                // Initialize the filteredData variable
                 FilteredList<VehicleSalesApprovalTable> filteredTxtFieldEmployee = new FilteredList<>(vhlApprovalData);
-                     // Apply the filter predicate based on the entered text
-                      filteredTxtFieldEmployee.setPredicate(clients -> {
-                         if (filterEmployee.isEmpty()) {
-                             // No filter text entered, show all data
-                             return true;
-                         } else {
-                             String seName = clients.getTblindex24().toLowerCase();
-                             return seName.contains(filterEmployee);
-                         }
-                     });
+                // Apply the filter predicate based on the entered text
+                filteredTxtFieldEmployee.setPredicate(clients -> {
+                    if (filterEmployee.isEmpty()) {
+                        // No filter text entered, show all data
+                        return true;
+                    } else {
+                        String seName = clients.getTblindex24().toLowerCase();
+                        return seName.contains(filterEmployee);
+                    }
+                });
                 tblVhclApproval.setItems(filteredTxtFieldEmployee);
                 if (filteredTxtFieldEmployee.isEmpty()) {
-                     ShowMessageFX.Information(null, pxeModuleName, "No record found!");
+                    ShowMessageFX.Information(null, pxeModuleName, "No record found!");
                 }
-        break;
-        case "btnFilterType": //btn filter for comboBox
+                break;
+            case "btnFilterType": //btn filter for comboBox
                 String selectedType = comboType.getValue();
-                    if (selectedType == null) {
-                        // No type selected, show all data
-                        tblVhclApproval.setItems(vhlApprovalData);
-                    } else {
-                        // Filter data based on selected type
-                        ObservableList<VehicleSalesApprovalTable> filteredCombo = FXCollections.observableArrayList();
-                        for (VehicleSalesApprovalTable slipData : vhlApprovalData) {
-                            if (slipData.getTblindex12().equals(selectedType)) {
-                                filteredCombo.add(slipData);
-                            }
+                if (selectedType == null) {
+                    // No type selected, show all data
+                    tblVhclApproval.setItems(vhlApprovalData);
+                } else {
+                    // Filter data based on selected type
+                    ObservableList<VehicleSalesApprovalTable> filteredCombo = FXCollections.observableArrayList();
+                    for (VehicleSalesApprovalTable slipData : vhlApprovalData) {
+                        if (slipData.getTblindex12().equals(selectedType)) {
+                            filteredCombo.add(slipData);
                         }
-                     tblVhclApproval.setItems(filteredCombo);
-                     if (filteredCombo.isEmpty()) {
-                        ShowMessageFX.Information(null, pxeModuleName,"No record found!");
+                    }
+                    tblVhclApproval.setItems(filteredCombo);
+                    if (filteredCombo.isEmpty()) {
+                        ShowMessageFX.Information(null, pxeModuleName, "No record found!");
                     }
                 }
-        break;
-        case "btnFilterDate": //btn filter for Slip Date
+                break;
+            case "btnFilterDate": //btn filter for Slip Date
                 LocalDate filterFromDate = fromDate.getValue();
                 LocalDate filterToDate = toDate.getValue();
 
                 ObservableList<VehicleSalesApprovalTable> filteredDate = FXCollections.observableArrayList();
-                    for (VehicleSalesApprovalTable slipData : vhlApprovalData) {
-                        LocalDate slipDate = LocalDate.parse(slipData.getTblindex02());
+                for (VehicleSalesApprovalTable slipData : vhlApprovalData) {
+                    LocalDate slipDate = LocalDate.parse(slipData.getTblindex02());
 
-                            if (filterFromDate == null || slipDate.isAfter(filterFromDate.minusDays(1))) {
-                                if (filterToDate == null || slipDate.isBefore(filterToDate.plusDays(1))) {
-                                    filteredDate.add(slipData);
-                                }
-                            }
+                    if (filterFromDate == null || slipDate.isAfter(filterFromDate.minusDays(1))) {
+                        if (filterToDate == null || slipDate.isBefore(filterToDate.plusDays(1))) {
+                            filteredDate.add(slipData);
                         }
+                    }
+                }
 
                 tblVhclApproval.setItems(filteredDate);
-                    if (filteredDate.isEmpty()) {
-                        ShowMessageFX.Information(null, pxeModuleName, "No record found!");
-                    }
-        break;   
-        case "btnApproved": //btn for approval
-            ObservableList<VehicleSalesApprovalTable> selectedItems = FXCollections.observableArrayList();
-            for (VehicleSalesApprovalTable item : tblVhclApproval.getItems()) {
-                if (item.getSelect().isSelected()) {
-                    selectedItems.add(item);
+                if (filteredDate.isEmpty()) {
+                    ShowMessageFX.Information(null, pxeModuleName, "No record found!");
                 }
-              }
-            if (selectedItems.isEmpty()) {
-                ShowMessageFX.Information(null, pxeModuleName, "No items selected to approve.");
-            } else {
-                int i = 0;
-                if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure you want to approve?")) {
-                    // Call the ApproveReservation() method here
-                    for (VehicleSalesApprovalTable item : selectedItems) {
-                        String fsTransNox = item.getTblindex01(); // Assuming there is a method to retrieve the transaction number
-                        try {
-                            boolean approved = oTrans.ApproveReservation(fsTransNox);
-                            if(approved) {
-                                    i  = i + 1 ;
+                break;
+            case "btnApproved": //btn for approval
+                ObservableList<VehicleSalesApprovalTable> selectedItems = FXCollections.observableArrayList();
+                for (VehicleSalesApprovalTable item : tblVhclApproval.getItems()) {
+                    if (item.getSelect().isSelected()) {
+                        selectedItems.add(item);
+                    }
+                }
+                if (selectedItems.isEmpty()) {
+                    ShowMessageFX.Information(null, pxeModuleName, "No items selected to approve.");
+                } else {
+                    int i = 0;
+                    if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure you want to approve?")) {
+                        // Call the ApproveReservation() method here
+                        for (VehicleSalesApprovalTable item : selectedItems) {
+                            String fsTransNox = item.getTblindex01();
+                            String fsRow = item.getTblRow();
+                            int fsRowInt = Integer.parseInt(fsRow);// Assuming there is a method to retrieve the transaction number
+                            try {
+                                boolean approved = oTrans.ApproveReservation(fsTransNox, fsRowInt);
+                                if (approved) {
+                                    i = i + 1;
                                     ApprovedCount.setText("" + i);
-                            } else {
-                                // Handle approval failure
-                                ShowMessageFX.Error(null, pxeModuleName, "Failed to approve reservation.");
+                                } else {
+                                    // Handle approval failure
+                                    ShowMessageFX.Error(null, pxeModuleName, "Failed to approve reservation.");
+                                }
+                            } catch (SQLException e) {
+                                // Handle SQL exception
+                                ShowMessageFX.Error(null, pxeModuleName, "An error occurred while approving reservation: " + e.getMessage());
                             }
-                        } catch (SQLException e) {
-                            // Handle SQL exception
-                            ShowMessageFX.Error(null, pxeModuleName, "An error occurred while approving reservation: " + e.getMessage());
                         }
+                        SelectedCount.setText("0");
+                        loadVhlApprovalTable();
+                        ShowMessageFX.Information(null, pxeModuleName, "Reservation approved successfully.");
+                        tblVhclApproval.getItems().removeAll(selectedItems);
+                        tblVhclApproval.refresh();
                     }
-                    SelectedCount.setText("0");
-                    loadVhlApprovalTable();
-                    ShowMessageFX.Information(null, pxeModuleName, "Reservation approved successfully.");
-                    tblVhclApproval.getItems().removeAll(selectedItems);
-                    tblVhclApproval.refresh();
                 }
-            }
-        break;
-        case "btnRefresh": //btn for refresh
+                break;
+            case "btnRefresh": //btn for refresh
                 // Clear the combo box selection
                 comboType.getSelectionModel().clearSelection();
                 // Clear the text field
@@ -497,48 +507,52 @@ public class VehicleSalesApprovalController implements Initializable,ScreenInter
                 SelectedCount.setText("0");
                 ApprovedCount.setText("0");
                 selectAllCheckBox.setSelected(false);
-            break;       
+                break;
         }
     }
-    private Stage getStage(){
-            return (Stage) txtFieldSearch.getScene().getWindow();
+
+    private Stage getStage() {
+        return (Stage) txtFieldSearch.getScene().getWindow();
     }
+
     @Override
     public void setGRider(GRider foValue) {
-            oApp = foValue;
-     }    
-    private void updateSelectedCount() {
-            ObservableList<VehicleSalesApprovalTable> selectedItems = tblVhclApproval.getItems().filtered(items -> items.getSelect().isSelected());
-            int count = selectedItems.size();
-            SelectedCount.setText("" + count);
+        oApp = foValue;
     }
+
+    private void updateSelectedCount() {
+        ObservableList<VehicleSalesApprovalTable> selectedItems = tblVhclApproval.getItems().filtered(items -> items.getSelect().isSelected());
+        int count = selectedItems.size();
+        SelectedCount.setText("" + count);
+    }
+
     private void initVhlApprovalTable() {
-            tblRow.setCellValueFactory(new PropertyValueFactory<>("tblRow"));  //Row
-            // Set up listener for "Select All" checkbox
-            tblselected.setCellValueFactory(new PropertyValueFactory<>("select"));
-            tblVhclApproval.getItems().forEach(item -> {
-                CheckBox selectCheckBox = item.getSelect();
-                selectCheckBox.setOnAction(event -> {
-                    updateSelectedCount();
-                    if (tblVhclApproval.getItems().stream().allMatch(tableItem -> tableItem.getSelect().isSelected())) {
-                        selectAllCheckBox.setSelected(true);
-                    } else {
-                        selectAllCheckBox.setSelected(false);
-                    }
-                });
+        tblRow.setCellValueFactory(new PropertyValueFactory<>("tblRow"));  //Row
+        // Set up listener for "Select All" checkbox
+        tblselected.setCellValueFactory(new PropertyValueFactory<>("select"));
+        tblVhclApproval.getItems().forEach(item -> {
+            CheckBox selectCheckBox = item.getSelect();
+            selectCheckBox.setOnAction(event -> {
+                updateSelectedCount();
+                if (tblVhclApproval.getItems().stream().allMatch(tableItem -> tableItem.getSelect().isSelected())) {
+                    selectAllCheckBox.setSelected(true);
+                } else {
+                    selectAllCheckBox.setSelected(false);
+                }
             });
+        });
         selectAllCheckBox.setOnAction(event -> {
             boolean newValue = selectAllCheckBox.isSelected();
             tblVhclApproval.getItems().forEach(item -> item.getSelect().setSelected(newValue));
             updateSelectedCount();
         });
-          tblindex03.setCellValueFactory(new PropertyValueFactory<>("tblindex03")); 
-          tblindex12.setCellValueFactory(new PropertyValueFactory<>("tblindex12")); 
-          tblindex02.setCellValueFactory(new PropertyValueFactory<>("tblindex02"));
-          tblindex20.setCellValueFactory(new PropertyValueFactory<>("tblindex20")); 
-          tblindex23.setCellValueFactory(new PropertyValueFactory<>("tblindex23")); 
-          tblindex05.setCellValueFactory(new PropertyValueFactory<>("tblindex05")); 
-          tblindex24.setCellValueFactory(new PropertyValueFactory<>("tblindex24")); 
-          tblbranch.setCellValueFactory(new PropertyValueFactory<>("tblbranch"));  
-      }
+        tblindex03.setCellValueFactory(new PropertyValueFactory<>("tblindex03"));
+        tblindex12.setCellValueFactory(new PropertyValueFactory<>("tblindex12"));
+        tblindex02.setCellValueFactory(new PropertyValueFactory<>("tblindex02"));
+        tblindex20.setCellValueFactory(new PropertyValueFactory<>("tblindex20"));
+        tblindex23.setCellValueFactory(new PropertyValueFactory<>("tblindex23"));
+        tblindex05.setCellValueFactory(new PropertyValueFactory<>("tblindex05"));
+        tblindex24.setCellValueFactory(new PropertyValueFactory<>("tblindex24"));
+        tblbranch.setCellValueFactory(new PropertyValueFactory<>("tblbranch"));
+    }
 }

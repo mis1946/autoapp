@@ -20,7 +20,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" >
+<AnchorPane id="AnchorPane" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <StackPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -76,6 +76,7 @@
                                                       <Tooltip text="Please Fill in the Color" />
                                                    </tooltip></TextField>
                                                 <Label id="LabelDesc" text="Color" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                                                <Label alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="36.0" text="*" textFill="#fb0000" GridPane.columnIndex="2" GridPane.rowIndex="3" />
                                              </children>
                                           </GridPane>
                                           <GridPane>

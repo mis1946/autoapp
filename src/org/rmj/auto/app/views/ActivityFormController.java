@@ -44,7 +44,6 @@ import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.control.DateCell;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.TextFormatter;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import static javafx.scene.input.KeyCode.DOWN;
@@ -331,20 +330,7 @@ public class ActivityFormController implements Initializable, ScreenInterface {
         }
         );
         Pattern pattern = Pattern.compile("[\\d\\p{Punct}]*");
-        TextFormatter<String> formatter = new TextFormatter<>(change -> {
-            if (!change.getControlNewText().matches(pattern.pattern())) {
-                return null;
-            }
-            return change;
-        });
-
         Pattern trgPattern = Pattern.compile("\\p{ASCII}{0,4}");
-        TextFormatter<String> trgformatter = new TextFormatter<>(change -> {
-            if (!change.getControlNewText().matches(pattern.pattern())) {
-                return null;
-            }
-            return change;
-        });
 
         txtField12.setTextFormatter(new InputTextFormatter(trgPattern));  //nTrgtClnt
         txtField11.setTextFormatter(new InputTextFormatter(pattern));  //nRcvdBdgt
@@ -412,7 +398,6 @@ public class ActivityFormController implements Initializable, ScreenInterface {
     /*Set Date Value to Master Class*/
     public void getDateFrom(ActionEvent event) {
         try {
-            System.out.println(dateFrom06.getValue().toString());
             oTrans.setMaster(6, SQLUtil.toDate(dateFrom06.getValue().toString(), SQLUtil.FORMAT_SHORT_DATE));
         } catch (SQLException ex) {
             Logger.getLogger(CustomerFormController.class.getName()).log(Level.SEVERE, null, ex);
@@ -421,7 +406,6 @@ public class ActivityFormController implements Initializable, ScreenInterface {
 
     public void getDateTo(ActionEvent event) {
         try {
-            System.out.println(dateTo07.getValue().toString());
             oTrans.setMaster(7, SQLUtil.toDate(dateTo07.getValue().toString(), SQLUtil.FORMAT_SHORT_DATE));
         } catch (SQLException ex) {
             Logger.getLogger(CustomerFormController.class.getName()).log(Level.SEVERE, null, ex);
@@ -555,7 +539,9 @@ public class ActivityFormController implements Initializable, ScreenInterface {
                             return;
                         }
                         //Proceed Saving
+//                        System.out.println(oTrans.getActTownCount());
                         if (oTrans.SaveRecord()) {
+
                             ShowMessageFX.Information(getStage(), "Transaction save successfully.", pxeModuleName, null);
                             loadActivityField();
                             pnEditMode = EditMode.READY;
@@ -734,9 +720,9 @@ public class ActivityFormController implements Initializable, ScreenInterface {
                 case "btnClose": //close tab
                     if (ShowMessageFX.OkayCancel(null, "Close Tab", "Are you sure you want to close this Tab?") == true) {
                         if (unload != null) {
-                            unload.unloadForm(AnchorMain, oApp, pxeModuleName);
+                            unload.unloadForm(AnchorMain, oApp, "Activity");
                         } else {
-                            ShowMessageFX.Warning(null, "Warning", "Please notify the system administrator to configure the null value at the close button.");
+                            ShowMessageFX.Warning(getStage(), "Please notify the system administrator to configure the null value at the close button.", "Warning", pxeModuleName);
                         }
                         break;
                     } else {
@@ -813,10 +799,7 @@ public class ActivityFormController implements Initializable, ScreenInterface {
 
     private void txtField_KeyPressed(KeyEvent event) {
         TextField txtField = (TextField) event.getSource();
-        int lnIndex = Integer.parseInt(((TextField) event.getSource()).getId().substring(8, 10));
         String txtFieldID = ((TextField) event.getSource()).getId();
-        String lsValue = txtField.getText();
-
         try {
             switch (event.getCode()) {
                 case F3:

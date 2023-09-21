@@ -413,7 +413,7 @@
                                                                                 </AnchorPane>
                                                                             </content>
                                                                         </Tab>
-                                                                        <Tab style="-fx-font-weight: bold; -fx-font-family: arial; -fx-pref-width: 100;" text="Details">
+                                                                        <Tab fx:id="tabDetails" style="-fx-font-weight: bold; -fx-font-family: arial; -fx-pref-width: 100;" text="Details">
                                                                             <content>
                                                                                 <AnchorPane>
                                                                                     <children>
@@ -493,11 +493,11 @@
                                                                                                                                 <TextField fx:id="txtField38" alignment="CENTER_RIGHT" promptText="0.00" GridPane.columnIndex="3" GridPane.columnSpan="3" GridPane.rowIndex="3" />
                                                                                                                                 <TextField fx:id="txtField14_Finance" alignment="CENTER_RIGHT" promptText="0.00" GridPane.columnIndex="3" GridPane.columnSpan="3" GridPane.rowIndex="4" />
                                                                                                                                 <TextField fx:id="txtField04_Finance" promptText="Search F3" GridPane.columnIndex="8" GridPane.columnSpan="3" GridPane.rowIndex="1" />
-                                                                                                                                <TextField alignment="CENTER_RIGHT" disable="true" editable="false" promptText="0.00" GridPane.columnIndex="10" GridPane.rowIndex="2" />
-                                                                                                                                <TextField fx:id="txtField13_Finance" alignment="CENTER_RIGHT" disable="true" editable="false" promptText="0.00" GridPane.columnIndex="10" GridPane.rowIndex="3" />
+                                                                                                                                <TextField fx:id="txtField082_Finance" alignment="CENTER_RIGHT" disable="true" editable="false" promptText="0.00" GridPane.columnIndex="10" GridPane.rowIndex="2" />
+                                                                                                                                <TextField fx:id="txtField13_Finance" alignment="CENTER_RIGHT" promptText="0.00" GridPane.columnIndex="10" GridPane.rowIndex="3" />
                                                                                                                                 <TextField fx:id="txtField05_Finance" alignment="CENTER_RIGHT" disable="true" editable="false" promptText="0.00" GridPane.columnIndex="10" GridPane.rowIndex="4" />
                                                                                                                                 <TextField fx:id="txtField09_Finance" alignment="CENTER_RIGHT" disable="true" editable="false" promptText="0.00" GridPane.columnIndex="10" GridPane.rowIndex="5" />
-                                                                                                                                <TextField fx:id="txtField08_Finance" alignment="CENTER_RIGHT" disable="true" editable="false" promptText="0.00" GridPane.columnIndex="10" GridPane.rowIndex="6" />
+                                                                                                                                <TextField fx:id="txtField08_Finance" alignment="CENTER_RIGHT" promptText="0.00" GridPane.columnIndex="10" GridPane.rowIndex="6" />
                                                                                                                                 <TextField fx:id="txtField12_Finance" alignment="CENTER_RIGHT" disable="true" editable="false" promptText="0.00" GridPane.columnIndex="10" GridPane.rowIndex="7" />
                                                                                                                                 <TextField fx:id="txtField10_Finance" alignment="CENTER_RIGHT" disable="true" editable="false" promptText="0.00" GridPane.columnIndex="10" GridPane.rowIndex="8" />
                                                                                                                                 <TextField promptText="Search F3" GridPane.columnIndex="2" GridPane.columnSpan="4" GridPane.rowIndex="6" />
@@ -712,7 +712,7 @@
                                                                                 </AnchorPane>
                                                                             </content>
                                                                         </Tab>
-                                                                        <Tab style="-fx-font-weight: bold; -fx-font-family: arial; -fx-pref-width: 100;" text="Add-Ons">
+                                                                        <Tab fx:id="tabAddOns" style="-fx-font-weight: bold; -fx-font-family: arial; -fx-pref-width: 100;" text="Add-Ons">
                                                                             <content>
                                                                                 <AnchorPane>
                                                                                     <children>

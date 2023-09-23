@@ -360,69 +360,43 @@ public class VSPFormController implements Initializable, ScreenInterface {
     private void initSetComboBoxtoVSPMaster() {
 
         /* SET TO MASTER */
-        handleComboBoxSelectionMaster(comboBox21, 21);
-        handleComboBoxSelectionMaster(comboBox22, 22);
-        handleComboBoxSelectionMaster(comboBox22, 24);
-        handleComboBoxSelectionMaster(comboBox25, 23);
-        handleComboBoxSelectionMaster(comboBox25, 20);
+        handleComboBoxSelectionVSPMaster(comboBox21, 21);
+        handleComboBoxSelectionVSPMaster(comboBox22, 22);
+        handleComboBoxSelectionVSPMaster(comboBox22, 24);
+        handleComboBoxSelectionVSPMaster(comboBox25, 23);
+        handleComboBoxSelectionVSPMaster(comboBox25, 20);
         /* SET TO VSP FINANCE */
         handleComboBoxSelectionVSPFinance(comboBox02_Finance, 2);
     }
 
-    private void handleComboBoxSelectionMaster(ComboBox<String> comboBox, int fieldNumber) {
-        comboBox.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent e) {
-                String selectedType = comboBox.getValue(); // Retrieve the selected type
-                // Set the type ID in the text field
-                try {
-                    oTrans.setMaster(fieldNumber, selectedType); // Pass the selected type to setMaster method
-                } catch (SQLException ex) {
-                    Logger.getLogger(VSPFormController.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        });
-    }
-
-//    private void handleComboBoxSelectionVSPFinance(ComboBox<String> comboBox, int fieldNumber) {
-//        comboBox.setOnAction(new EventHandler<ActionEvent>() {
-//            @Override
-//            public void handle(ActionEvent e) {
-//                String selectedType = comboBox.getValue(); // Retrieve the selected type
-//                // Set the type ID in the text field
-//                try {
-//                    oTrans.setVSPFinance(fieldNumber, selectedType); // Pass the selected type to setMaster method
-//                } catch (SQLException ex) {
-//                    Logger.getLogger(VSPFormController.class.getName()).log(Level.SEVERE, null, ex);
-//                }
-//            }
-//        });
-//    }
-    private void handleComboBoxSelectionVSPFinance(ComboBox<String> comboBox, int fieldNumber) {
+    private void handleComboBoxSelectionVSPMaster(ComboBox<String> comboBox, int fieldNumber) {
         comboBox.setOnAction(e -> {
-            String selectedType = comboBox.getValue(); // Retrieve the selected type
-
-            // Set the type ID based on the selected type
-            int typeID = 0;
-            switch (selectedType) {
-                case "NONE":
-                    typeID = 0;
-                    break;
-                case "ALL-IN IN HOUSE":
-                    typeID = 1;
-                    break;
-                case "ALL-IN PROMO":
-                    typeID = 2;
-                    break;
-            }
-
-            String stringTypeId = String.valueOf(typeID);
             try {
-                oTrans.setVSPFinance(fieldNumber, stringTypeId); // Pass the selected type to setMaster method
+                int selectedType = comboBox.getSelectionModel().getSelectedIndex(); // Retrieve the selected type
+                if (selectedType >= 0) {
+                    oTrans.setMaster(fieldNumber, String.valueOf(selectedType));
+                    // Pass the selected type to setMaster method
+                }
             } catch (SQLException ex) {
                 Logger.getLogger(VSPFormController.class.getName()).log(Level.SEVERE, null, ex);
             }
-        });
+        }
+        );
+    }
+
+    private void handleComboBoxSelectionVSPFinance(ComboBox<String> comboBox, int fieldNumber) {
+        comboBox.setOnAction(e -> {
+            try {
+                int selectedType = comboBox.getSelectionModel().getSelectedIndex(); // Retrieve the selected type
+                if (selectedType >= 0) {
+                    oTrans.setVSPFinance(fieldNumber, String.valueOf(selectedType));
+                    // Pass the selected type to setMaster method
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(VSPFormController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        );
     }
 
     private void initComboItems() {
@@ -444,9 +418,9 @@ public class VSPFormController implements Initializable, ScreenInterface {
         txtField77.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
             if (newValue.isEmpty()) {
                 clearFields();
-                clearClassMasterFields();
+//                clearClassVSPMasterFields();
                 txtField68.setDisable(true);
-                textArea69.setDisable(true);
+//                textArea69.setDisable(true);
                 txtField71.setDisable(true);
                 txtField72.setDisable(true);
                 textArea70.setDisable(true);
@@ -488,69 +462,46 @@ public class VSPFormController implements Initializable, ScreenInterface {
             }
         });
 
-//        comboBox02_Finance.setOnAction(e -> {
-//            String selectedType = comboBox02_Finance.getValue();// Retrieve the type ID for the selected type
-//            // Set the type ID in the text field
-//            int typeID;
-//            if ("NONE".equals(selectedType)) {
-//                typeID = 0;
-//            } else if ("ALL-IN IN HOUSE".equals(selectedType)) {
-//                typeID = 1;
-//            } else if ("ALL-IN PROMO".equals(selectedType)) {
-//                typeID = 2;
-//            } else {
-//                // Handle other cases or set a default value if needed
-//                typeID = -1; // Default to -1 for unknown values
-//            }
-//
-//            String stringTypeId = String.valueOf(typeID);
-//            try {
-//                oTrans.setVSPFinance(2, stringTypeId);
-//                System.out.println("comboFinance 02: " + oTrans.getVSPFinance(2).toString());// Pass the selected type to the setMaster method
-//            } catch (SQLException ex) {
-//                Logger.getLogger(VSPFormController.class.getName()).log(Level.SEVERE, null, ex);
-//            }
-//        });
-        //        txtField29.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
-        //            if (newValue.isEmpty() || newValue == "0.00" || newValue == "0" || newValue == "0.0") {
-        //                chckBoxSTD1.setSelected(false);
-        //                txtField42.setText("0.00");
-        //                chckBoxSTD2.setSelected(false);
-        //                txtField43.setText("0.00");
-        //                chckBoxSTD1.setDisable(true);
-        //                txtField42.setDisable(true);
-        //                chckBoxSTD2.setDisable(true);
-        //                txtField43.setDisable(true);
-        //
-        //            }
-        //        });
-        //        txtField30.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
-        //            if (newValue.isEmpty() || newValue == "0.00" || newValue == "0" || newValue == "0.0") {
-        //                chckBoxSPL1.setSelected(false);
-        //                txtField44.setText("0.00");
-        //                chckBoxSPL2.setSelected(false);
-        //                txtField45.setText("0.00");
-        //                chckBoxSPL1.setDisable(true);
-        //                txtField44.setDisable(true);
-        //                chckBoxSPL2.setDisable(true);
-        //                txtField45.setDisable(true);
-        //
-        //            }
-        //        });
-        //        txtField28.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
-        //            if (newValue.isEmpty() || newValue == "0.00" || newValue == "0" || newValue == "0.0") {
-        //
-        //                chckBoxPromo1.setSelected(false);
-        //                txtField46.setText("0.00");
-        //                chckBoxPromo2.setSelected(false);
-        //                txtField47.setText("0.00");
-        //                chckBoxPromo1.setDisable(true);
-        //                txtField46.setDisable(true);
-        //                chckBoxPromo2.setDisable(true);
-        //                txtField47.setDisable(true);
-        //
-        //            }
-        //        });
+        txtField29.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+            if (newValue.isEmpty()) {
+                chckBoxSTD1.setSelected(false);
+                txtField42.setText("0.00");
+                chckBoxSTD2.setSelected(false);
+                txtField43.setText("0.00");
+                chckBoxSTD1.setDisable(true);
+                txtField42.setDisable(true);
+                chckBoxSTD2.setDisable(true);
+                txtField43.setDisable(true);
+
+            }
+        });
+        txtField30.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+            if (newValue.isEmpty()) {
+                chckBoxSPL1.setSelected(false);
+                txtField44.setText("0.00");
+                chckBoxSPL2.setSelected(false);
+                txtField45.setText("0.00");
+                chckBoxSPL1.setDisable(true);
+                txtField44.setDisable(true);
+                chckBoxSPL2.setDisable(true);
+                txtField45.setDisable(true);
+
+            }
+        });
+        txtField28.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+            if (newValue.isEmpty()) {
+
+                chckBoxPromo1.setSelected(false);
+                txtField46.setText("0.00");
+                chckBoxPromo2.setSelected(false);
+                txtField47.setText("0.00");
+                chckBoxPromo1.setDisable(true);
+                txtField46.setDisable(true);
+                chckBoxPromo2.setDisable(true);
+                txtField47.setDisable(true);
+
+            }
+        });
     }
 
     /* Initialize CmdButton */
@@ -590,8 +541,10 @@ public class VSPFormController implements Initializable, ScreenInterface {
                     break;
             }
             initButton(pnEditMode);
+
         } catch (SQLException ex) {
-            Logger.getLogger(UnitDeliveryReceiptFormController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(UnitDeliveryReceiptFormController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
 
     }
@@ -671,10 +624,12 @@ public class VSPFormController implements Initializable, ScreenInterface {
             String fxHeader = "You have unsaved data. Are you sure you want to browse a new record?";
             if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
                 if (ShowMessageFX.OkayCancel(null, fxTitle, fxHeader)) {
+                    clearFields();
                 } else {
                     return;
                 }
             }
+
             if (oTrans.searchRecord()) {
 //                removeRequiredField();
                 loadVSPField();
@@ -716,6 +671,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
                         case "txtSeek03":  //Search by VSP NO
                             if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
                                 if (ShowMessageFX.OkayCancel(null, "Confirmation", "You have unsaved data. Are you sure you want to browse a new record?") == true) {
+                                    clearFields();
                                 } else {
                                     return;
                                 }
@@ -723,8 +679,6 @@ public class VSPFormController implements Initializable, ScreenInterface {
                             if (oTrans.searchRecord()) {
 //                                removeRequired();
                                 loadVSPField();
-                                tabAddOns.setDisable(false);
-                                tabDetails.setDisable(false);
                                 pnEditMode = oTrans.getEditMode();
                             } else {
                                 ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
@@ -736,7 +690,6 @@ public class VSPFormController implements Initializable, ScreenInterface {
                         case "txtField77":
                             if (oTrans.searchInquiry(txtField.getText())) {
                                 clearFields();
-
                                 txtField68.setDisable(false);
                                 textArea69.setDisable(false);
                                 txtField71.setDisable(false);
@@ -745,22 +698,6 @@ public class VSPFormController implements Initializable, ScreenInterface {
                                 txtField48.setDisable(false);
                                 tabDetails.setDisable(false);
                                 tabAddOns.setDisable(false);
-                                txtField68.clear();
-                                textArea69.clear();
-                                tgUnitCategory.selectToggle(null);
-                                txtField78.clear();
-                                txtField84.clear();
-                                comboBox80.setValue(null);
-                                comboBox34.setValue(null);
-                                txtField08.setText("0.00");
-                                txtField38.setText("0.00");
-                                txtField71.clear();
-                                txtField72.clear();
-                                textArea70.clear();
-                                txtField48.clear();
-                                txtField83.clear();
-                                txtField73.clear();
-                                txtField74.clear();
                                 loadVSPField();
                                 initButton(pnEditMode);
                             } else {
@@ -850,6 +787,9 @@ public class VSPFormController implements Initializable, ScreenInterface {
         txtField28.focusedProperty().addListener(txtField_Focus);
         txtField46.focusedProperty().addListener(txtField_Focus);
         txtField47.focusedProperty().addListener(txtField_Focus);
+        txtField48.focusedProperty().addListener(txtField_Focus);
+
+        textArea09.focusedProperty().addListener(txtArea_Focus);
 
         txtField14_Finance.focusedProperty().addListener(txtFieldFinance_Focus);
         txtField06_Finance.focusedProperty().addListener(txtFieldFinance_Focus);
@@ -985,6 +925,31 @@ public class VSPFormController implements Initializable, ScreenInterface {
                     .getName()).log(Level.SEVERE, null, ex);
         }
     };
+    final ChangeListener<? super Boolean> txtArea_Focus = (o, ov, nv) -> {
+
+        TextArea textArea = (TextArea) ((ReadOnlyBooleanPropertyBase) o).getBean();
+        int lnIndex = Integer.parseInt(textArea.getId().substring(8, 10));
+        String lsValue = textArea.getText();
+
+        if (lsValue == null) {
+            return;
+        }
+        try {
+            if (!nv) {
+                /*Lost Focus*/
+                switch (lnIndex) {
+                    case 9:        //sRemarkx
+                        oTrans.setMaster(lnIndex, lsValue);
+                        break;
+                }
+            } else {
+                textArea.selectAll();
+            }
+        } catch (SQLException e) {
+            ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
+            System.exit(1);
+        }
+    };
 
     private void initNumberFormatterFields() {
         Pattern pattern = Pattern.compile("[\\d\\p{Punct}]*");
@@ -1050,7 +1015,15 @@ public class VSPFormController implements Initializable, ScreenInterface {
             txtField03.setText((String) oTrans.getMaster(3));
             txtField02.setText(CommonUtils.xsDateMedium((Date) oTrans.getMaster(2)));
             txtField77.setText((String) oTrans.getMaster(77));
-            txtField78.setText((String) oTrans.getMaster(78));
+            String originalText = (String) oTrans.getMaster(78);
+            int indexOfSpace = originalText.lastIndexOf(' '); // Find the last space character
+            if (indexOfSpace >= 0) {
+                String textWithoutTimestamp = originalText.substring(0, indexOfSpace); // Extract the text before the last space
+                txtField78.setText(textWithoutTimestamp);
+            } else {
+                txtField78.setText(originalText); // If there's no space, use the original text as is
+            }
+
             date04.setValue(strToDate(CommonUtils.xsDateShort((Date) oTrans.getMaster(4))));
             txtField84.setText((String) oTrans.getMaster(84));
             txtField75.setText((String) oTrans.getMaster(75));
@@ -1349,14 +1322,14 @@ public class VSPFormController implements Initializable, ScreenInterface {
         comboBox34.setDisable(true);
         txtField77.setDisable(!lbShow);
         txtField68.setDisable(!(lbShow && !txtField77.getText().isEmpty()));
-        textArea69.setDisable(!(lbShow && !txtField77.getText().isEmpty()));
+        textArea69.setDisable(true);
         txtField71.setDisable(!(lbShow && !txtField77.getText().isEmpty()));
         txtField72.setDisable(!(lbShow && !txtField77.getText().isEmpty()));
-        textArea70.setDisable(!(lbShow && !txtField77.getText().isEmpty()));
+        textArea70.setDisable(true);
         txtField48.setDisable(!(lbShow && !txtField77.getText().isEmpty()));
-        txtField73.setDisable(!(lbShow && !txtField77.getText().isEmpty()));
-        txtField74.setDisable(!(lbShow && !txtField77.getText().isEmpty()));
-        txtField83.setDisable(!(lbShow && !txtField77.getText().isEmpty()));
+        txtField73.setDisable(true);
+        txtField74.setDisable(true);
+        txtField83.setDisable(true);
         tabDetails.setDisable(!(lbShow && !txtField77.getText().isEmpty()));
         tabAddOns.setDisable(!(lbShow && !txtField77.getText().isEmpty()));
 
@@ -1425,7 +1398,6 @@ public class VSPFormController implements Initializable, ScreenInterface {
         txtField26.setDisable(true);
         txtField17.setDisable(true);
         txtField27.setDisable(true);
-        txtField28.setDisable(true);
         txtField362.setDisable(true);
         txtField372.setDisable(true);
         txtField392.setDisable(true);
@@ -1445,6 +1417,13 @@ public class VSPFormController implements Initializable, ScreenInterface {
                 txtField07_Finance.setDisable(true);
                 txtField082_Finance.setDisable(true);
                 txtField14_Finance.setDisable(true);
+
+                txtField28.setDisable(false); // promo
+                chckBoxPromo1.setDisable(false);
+                txtField46.setDisable(false);
+                chckBoxPromo2.setDisable(false);
+                txtField47.setDisable(false);
+                txtField31.setDisable(true); // bundle
                 break;
             case 1: //BANK PURCHASE ORDER
             case 2: //BANK FINANCING
@@ -1466,7 +1445,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
                 txtField31.setDisable(true); // bundle
                 break;
             case 2: //ALL-IN PROMO
-                txtField28.setDisable(true); // promo
+                txtField28.setDisable(false); // promo
                 chckBoxPromo1.setDisable(false);
                 txtField46.setDisable(false);
                 chckBoxPromo2.setDisable(false);
@@ -1483,9 +1462,17 @@ public class VSPFormController implements Initializable, ScreenInterface {
             tabDetails.setDisable(false);
         }
         if (fnValue == EditMode.UPDATE) {
-            txtField71.setDisable(true);
-            txtField72.setDisable(true);
-            txtField77.setDisable(true);
+
+            try {
+                if (!oTrans.getMaster(79).toString().isEmpty()) {
+                    txtField71.setDisable(true);
+                    txtField72.setDisable(true);
+                }
+
+                txtField77.setDisable(true);
+            } catch (SQLException ex) {
+                Logger.getLogger(VSPFormController.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 
@@ -1592,14 +1579,18 @@ public class VSPFormController implements Initializable, ScreenInterface {
 
     }
 
-    private void clearClassMasterFields() {
+    private void clearClassVSPFinanceFields() {
+
+    }
+
+    private void clearClassVSPMasterFields() {
         try {
             //Class Master
             for (lnCtr = 1; lnCtr <= 84; lnCtr++) {
                 switch (lnCtr) {
-                    case 5: // sInqryIDx
-                    case 6: // sClientID
-                    case 7: // sSerialID
+//                    case 5: // sInqryIDx
+//                    case 6: // sClientID
+//                    case 7: // sSerialID
                     case 9: // sRemarksx
                     case 20: // sChmoStat
                     case 21: // sTPLStatx
@@ -1608,12 +1599,9 @@ public class VSPFormController implements Initializable, ScreenInterface {
                     case 24: // sInsurTyp
                     case 26: // sInsTplCd
                     case 27: // sInsCodex
-                    case 35: // sBnkAppCD
                     case 48: // sEndPlate
-                    case 49: // sBranchCD
                     case 56: // sDcStatCd
                     case 59: // sLockedBy
-                    case 62: // sCancelld
                     case 68: // sCompnyNm
                     case 69: // sAddressx
                     case 70: // sDescript
@@ -1648,7 +1636,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
                     case 46: // nPrmD2Sup
                     case 47: // nPrmD2Dlr
                     case 50: // nDealrRte
-                        oTrans.setMaster(lnCtr, Integer.valueOf("0"));
+                        oTrans.setMaster(lnCtr, Double.valueOf("0.00"));
                         break;
                     case 8:  // nUnitPrce
                     case 10: // nAdvDwPmt
@@ -1678,11 +1666,13 @@ public class VSPFormController implements Initializable, ScreenInterface {
                     case 53: // nSlsInAmt
                         oTrans.setMaster(lnCtr, Double.valueOf("0.00"));
                         break;
+
                 }
             }
 
         } catch (SQLException ex) {
-            Logger.getLogger(InquiryFormController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(InquiryFormController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
 
     }

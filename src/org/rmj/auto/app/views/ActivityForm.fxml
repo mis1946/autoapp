@@ -170,7 +170,7 @@
                                             <children>
                                                 <TabPane fx:id="tabPane" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                     <tabs>
-                                                        <Tab text="Activity Info">
+                                                        <Tab style="-fx-font-weight: bold; -fx-font-family: arial; -fx-pref-width: 100;" text="Activity Info">
                                                             <content>
                                                                 <BorderPane maxWidth="1.7976931348623157E308" prefHeight="608.0" prefWidth="1201.0" style="-fx-border-radius: 5;">
                                                                     <center>
@@ -325,7 +325,7 @@
                                                                                                         <Tooltip text="Please fill in the Branch in charge." />
                                                                                                     </tooltip>
                                                                                                 </TextField>
-                                                                                                <TextField fx:id="txtField32" GridPane.columnIndex="13" GridPane.rowIndex="5">
+                                                                                                <TextField fx:id="txtField32" disable="true" GridPane.columnIndex="13" GridPane.rowIndex="5">
                                                                                                     <tooltip>
                                                                                                         <Tooltip text="Please fill in the Branch." />
                                                                                                     </tooltip>
@@ -628,7 +628,7 @@
                                                                 </BorderPane>
                                                             </content>
                                                         </Tab>
-                                                        <Tab text="Details">
+                                                        <Tab style="-fx-font-weight: bold; -fx-font-family: arial; -fx-pref-width: 100;" text="Details">
                                                             <content>
                                                                 <BorderPane prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: orange; -fx-border-radius: 5;">
                                                                     <center>

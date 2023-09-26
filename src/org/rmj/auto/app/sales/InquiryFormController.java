@@ -8,6 +8,7 @@ import com.sun.javafx.scene.control.skin.TableHeaderRow;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
@@ -125,7 +126,7 @@ public class InquiryFormController implements Initializable, ScreenInterface {
     //Combo Box Value
     ObservableList<String> cInquiryType = FXCollections.observableArrayList("WALK-IN", "WEB INQUIRY", "PHONE-IN", "REFERRAL", "SALES CALL", "EVENT", "SERVICE", "OFFICE ACCOUNT", "CAREMITTANCE", "DATABASE", "UIO"); //Inquiry Type values
     //ObservableList<String> cOnlineStore = FXCollections.observableArrayList("Facebook", "WhatsUp", "Instagram", "Tiktok", "Twitter");
-    ObservableList<String> cInqStatus = FXCollections.observableArrayList("FOR FOLLOW-UP", "ON PROCESS", "LOST SALE", "VSP", "SOLD", "RETIRED", "CANCELLED"); //Inquiry Type Values
+    ObservableList<String> cInqStatus = FXCollections.observableArrayList("FOR FOLLOW-UP", "ON PROCESS", "LOST SALE", "WITH VSP", "SOLD", "RETIRED", "CANCELLED"); //Inquiry Type Values
 
     //AnchorPane
     @FXML
@@ -503,6 +504,8 @@ public class InquiryFormController implements Initializable, ScreenInterface {
         txtField15.focusedProperty().addListener(txtField_Focus);  //Activity ID
         txtField14.focusedProperty().addListener(txtField_Focus);  //Test Model  
         txtField10.setOnAction(this::getDate);
+        txtField10.setDayCellFactory(callB);
+        
 
         txtField02.setOnKeyPressed(this::txtField_KeyPressed);  //Branch Name
         txtField04.setOnKeyPressed(this::txtField_KeyPressed);  // Sales Executive
@@ -799,7 +802,6 @@ public class InquiryFormController implements Initializable, ScreenInterface {
                     if (oTrans.NewRecord()) {
                         clearFields();
                         clearClassFields();
-                        
                         oTrans.searchBranch(oApp.getBranchCode(),true);
                         loadCustomerInquiry();
                         loadTargetVehicle();
@@ -1172,6 +1174,62 @@ public class InquiryFormController implements Initializable, ScreenInterface {
         }
 
     }
+    
+    /*OPEN WINDOW FOR VEHICLE DESCRIPTION ENTRY*/
+    private void loadVSPWindow() {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            fxmlLoader.setLocation(getClass().getResource("VSPForm.fxml"));
+            VSPFormController loControl = new VSPFormController();
+            loControl.setGRider(oApp);
+            fxmlLoader.setController(loControl);
+            Parent parent = fxmlLoader.load();
+            //TODO
+            //AnchorPane otherAnchorPane = loControl.AnchorMain;
+
+            // Get the parent of the TabContent node
+            Node tabContent = AnchorMain.getParent();
+            Parent tabContentParent = tabContent.getParent();
+
+            // If the parent is a TabPane, you can work with it directly
+            if (tabContentParent instanceof TabPane) {
+                TabPane tabpane = (TabPane) tabContentParent;
+
+                for (Tab tab : tabpane.getTabs()) {
+                    if (tab.getText().equals("Vehicle Sales Proposal")) {
+                        tabpane.getSelectionModel().select(tab);
+                        return;
+                    }
+                }
+
+                Tab newTab = new Tab("Vehicle Sales Proposal", parent);
+                //newTab.setStyle("-fx-font-weight: bold; -fx-pref-width: 180; -fx-font-size: 11px;");
+                newTab.setStyle("-fx-font-weight: bold; -fx-pref-width: 180; -fx-font-size: 10.5px; -fx-font-family: arial;");
+
+                tabpane.getTabs().add(newTab);
+                tabpane.getSelectionModel().select(newTab);
+                newTab.setOnCloseRequest(event -> {
+                    if (ShowMessageFX.YesNo(null, "Close Tab", "Are you sure, do you want to close tab?") == true) {
+                        if (unload != null) {
+                            //TODO
+//                            unload.unloadForm(otherAnchorPane, oApp, "Vehicle Sales Proposal");
+                        } else {
+                            ShowMessageFX.Warning(getStage(), "Please notify the system administrator to configure the null value at the close button.", "Warning", pxeModuleName);
+                        }
+                    } else {
+                        // Cancel the close request
+                        event.consume();
+                    }
+
+                });
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
+            System.exit(1);
+        }
+    }
+    
     
     /*INQUIRY PRINT REFUND*/
     private void loadPrintRefund(String fsValue) throws SQLException {
@@ -1614,7 +1672,7 @@ public class InquiryFormController implements Initializable, ScreenInterface {
                             sInqStat = "LOST SALE";
                             break;
                         case "3":
-                            sInqStat = "VSP";
+                            sInqStat = "WITH VSP";
                             break;
                         case "4":
                             sInqStat = "SOLD";
@@ -2289,7 +2347,9 @@ public class InquiryFormController implements Initializable, ScreenInterface {
         try {
             /*Populate table*/
             inqvsadata.clear();
-            String sVsaType, sVsaStat;
+            
+            double amount = 0.00;
+            String sVsaType, sVsaStat, formattedAmount;
             for (lnCtr = 1; lnCtr <= oTransProcess.getReserveCount(); lnCtr++) {
                 switch (oTransProcess.getInqRsv(lnCtr, 12).toString()) {
                     case "0":
@@ -2320,6 +2380,13 @@ public class InquiryFormController implements Initializable, ScreenInterface {
                         sVsaStat = "";
                         break;
                 }
+                
+                
+                
+                amount= Double.parseDouble(String.format("%.2f", oTransProcess.getInqRsv(lnCtr, 5)));
+                // Format the decimal value with decimal separators
+                DecimalFormat decimalFormat = new DecimalFormat("#,##0.00");
+                formattedAmount = decimalFormat.format(amount);
 
                 inqvsadata.add(new InquiryTableVehicleSalesAdvances(
                           false
@@ -2327,7 +2394,7 @@ public class InquiryFormController implements Initializable, ScreenInterface {
                         , CommonUtils.xsDateShort((Date) oTransProcess.getInqRsv(lnCtr, 2)) //Date
                         , sVsaType //Type
                         ,(String) oTransProcess.getInqRsv(lnCtr, 3) //VSA No
-                        ,String.format("%.2f", oTransProcess.getInqRsv(lnCtr, 5)) //Amount
+                        , formattedAmount //Amount
                         ,sVsaStat //Status
                         ,(String) oTransProcess.getInqRsv(lnCtr, 6) // Remarks
                         ,(String) oTransProcess.getInqRsv(lnCtr, 13) // Approved By
@@ -3032,7 +3099,7 @@ public class InquiryFormController implements Initializable, ScreenInterface {
     private void clearClassFields() {
         try {
             //Class Master
-            for (lnCtr = 1; lnCtr <= 37; lnCtr++) {
+            for (lnCtr = 1; lnCtr <= 38; lnCtr++) {
                 switch (lnCtr) {
                     case 2: //
                     //case 4: //
@@ -3073,7 +3140,8 @@ public class InquiryFormController implements Initializable, ScreenInterface {
                         break;
                     case 10:
                         //oTrans.setMaster(10,SQLUtil.toDate("1/1/1900", SQLUtil.FORMAT_SHORT_DATE));
-                        oTrans.setMaster(lnCtr, LocalDate.of(1900, Month.JANUARY, 1));
+                        //oTrans.setMaster(lnCtr, LocalDate.of(1900, Month.JANUARY, 1));
+                        oTrans.setMaster(lnCtr,oApp.getServerDate());
                         break;
                     case 5:
                     case 12:

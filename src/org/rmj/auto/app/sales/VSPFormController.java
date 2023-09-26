@@ -28,6 +28,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Tab;
@@ -42,6 +43,7 @@ import static javafx.scene.input.KeyCode.UP;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import org.rmj.appdriver.GRider;
 import org.rmj.appdriver.SQLUtil;
 import org.rmj.appdriver.agentfx.CommonUtils;
@@ -316,6 +318,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
         initNumberFormatterFields();
 
         date04.setOnAction(this::getDate);
+        date04.setDayCellFactory(DateFormatCell);
 
         pnEditMode = EditMode.UNKNOWN;
         initButton(pnEditMode);
@@ -465,6 +468,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
 
         txtField28.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
             if (newValue == null || newValue.trim().isEmpty() || newValue.equals("0.00")) {
+
                 txtField46.setText("0.00");
                 txtField47.setText("0.00");
 
@@ -483,7 +487,9 @@ public class VSPFormController implements Initializable, ScreenInterface {
                 chckBoxPromo1.setVisible(true);
                 chckBoxPromo2.setVisible(true);
             }
-        });
+        }
+        );
+
     }
 
     /* Initialize CmdButton */
@@ -501,15 +507,28 @@ public class VSPFormController implements Initializable, ScreenInterface {
             if (chckBoxPromo1.isSelected()) {
                 txtField46.setDisable(false);
             } else {
+                try {
+                    oTrans.setMaster(46, Double.valueOf("0.00"));
+                } catch (SQLException ex) {
+                    Logger.getLogger(VSPFormController.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 txtField46.setDisable(true);
             }
+            loadVSPField();
         });
         chckBoxPromo2.setOnAction(event -> {
             if (chckBoxPromo2.isSelected()) {
                 txtField47.setDisable(false);
             } else {
+                try {
+                    oTrans.setMaster(47, Double.valueOf("0.00"));
+                } catch (SQLException ex) {
+                    Logger.getLogger(VSPFormController.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 txtField47.setDisable(true);
+
             }
+            loadVSPField();
         });
 
     }
@@ -1002,6 +1021,14 @@ public class VSPFormController implements Initializable, ScreenInterface {
         txtField46.setTextFormatter(new InputTextFormatter(pattern));
         txtField47.setTextFormatter(new InputTextFormatter(pattern));
     }
+    private Callback<DatePicker, DateCell> DateFormatCell = (final DatePicker param) -> new DateCell() {
+        @Override
+        public void updateItem(LocalDate item, boolean empty) {
+            super.updateItem(item, empty);
+            LocalDate minDate = strToDate(CommonUtils.xsDateShort((Date) oApp.getServerDate())).minusDays(0);
+            setDisable(empty || item.isBefore(minDate));
+        }
+    };
 
     private void loadVSPField() {
         try {
@@ -1139,7 +1166,16 @@ public class VSPFormController implements Initializable, ScreenInterface {
             txtField43.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f", oTrans.getMaster(43)))));
             txtField44.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f", oTrans.getMaster(44)))));
             txtField45.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f", oTrans.getMaster(45)))));
+
+            if (Double.valueOf(oTrans.getMaster(46).toString()) > 0.00) {
+                chckBoxPromo1.setSelected(true);
+            }
+
             txtField46.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f", oTrans.getMaster(46)))));
+
+            if (Double.valueOf(oTrans.getMaster(47).toString()) > 0.00) {
+                chckBoxPromo2.setSelected(true);
+            }
             txtField47.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f", oTrans.getMaster(47)))));
 
             txtField10.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f", oTrans.getMaster(10)))));
@@ -1324,7 +1360,8 @@ public class VSPFormController implements Initializable, ScreenInterface {
             oTrans.setMaster(4, SQLUtil.toDate(date04.getValue().toString(), SQLUtil.FORMAT_SHORT_DATE));
 
         } catch (SQLException ex) {
-            Logger.getLogger(VSPFormController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(VSPFormController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -1368,11 +1405,9 @@ public class VSPFormController implements Initializable, ScreenInterface {
 
         comboBox21.setDisable(!lbShow);
         comboBox22.setDisable(!lbShow);
-        comboBox24.setDisable(true);
-        comboBox25.setDisable(true);
-        txtField18.setDisable(!lbShow);
+        comboBox24.setDisable(!lbShow);
+        comboBox25.setDisable(!lbShow);
         comboBox23.setDisable(!lbShow);
-        txtField19.setDisable(!lbShow);
         comboBox20.setDisable(!lbShow);
         txtField13.setDisable(!lbShow);
         txtField14.setDisable(!lbShow);
@@ -1391,10 +1426,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
         chckBoxPromo1.setDisable(!(lbShow && !txtField28.getText().isEmpty()));
         chckBoxPromo2.setDisable(!(lbShow && !txtField28.getText().isEmpty()));
         txtField28.setDisable(!lbShow); // promo
-//        chckBoxPromo1.setDisable(!lbShow);
-//        txtField46.setDisable(!lbShow);
-//        chckBoxPromo2.setDisable(!lbShow);
-//        txtField47.setDisable(!lbShow);
+
         chckBoxSTD1.setDisable(true);
         txtField42.setDisable(true);
         chckBoxSTD2.setDisable(true);
@@ -1415,10 +1447,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
         txtField36.setDisable(true);
         txtField37.setDisable(true);
         txtField39.setDisable(true);
-        txtField16.setDisable(true);
-        txtField26.setDisable(true);
-        txtField17.setDisable(true);
-        txtField27.setDisable(true);
+
         txtField362.setDisable(true);
         txtField372.setDisable(true);
         txtField392.setDisable(true);
@@ -1460,6 +1489,33 @@ public class VSPFormController implements Initializable, ScreenInterface {
                 txtField31.setDisable(!lbShow); // bundle
                 break;
         }
+        switch (comboBox21.getSelectionModel().getSelectedIndex()) {
+            case 0: //NONE
+            case 1: //FOC
+                txtField16.setDisable(lbShow);
+                txtField26.setDisable(lbShow);
+                break;
+        }
+
+        switch (comboBox22.getSelectionModel().getSelectedIndex()) {
+            case 0: //NONE
+            case 1: //FOC
+                txtField17.setDisable(lbShow);
+                txtField27.setDisable(lbShow);
+                break;
+        }
+        switch (comboBox23.getSelectionModel().getSelectedIndex()) {
+            case 0: //NONE
+            case 1: //FOC
+                txtField18.setDisable(lbShow);
+                break;
+        }
+        switch (comboBox20.getSelectionModel().getSelectedIndex()) {
+            case 0: //NONE
+            case 1: //FOC
+                txtField19.setDisable(lbShow);
+                break;
+        }
         if (fnValue == EditMode.READY) {
             btnEdit.setVisible(true);
             btnEdit.setManaged(true);
@@ -1477,8 +1533,10 @@ public class VSPFormController implements Initializable, ScreenInterface {
                 }
 
                 txtField77.setDisable(true);
+
             } catch (SQLException ex) {
-                Logger.getLogger(VSPFormController.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(VSPFormController.class
+                        .getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
@@ -1597,9 +1655,11 @@ public class VSPFormController implements Initializable, ScreenInterface {
                                 break;
                         }
                         break;
+
                 }
             } catch (SQLException ex) {
-                Logger.getLogger(VSPFormController.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(VSPFormController.class
+                        .getName()).log(Level.SEVERE, null, ex);
             }
         }
     }

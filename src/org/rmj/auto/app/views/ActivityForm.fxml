@@ -170,7 +170,7 @@
                                             <children>
                                                 <TabPane fx:id="tabPane" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                     <tabs>
-                                                        <Tab text="Activity Info">
+                                                        <Tab style="-fx-font-weight: bold; -fx-font-family: arial; -fx-pref-width: 100;" text="Activity Info">
                                                             <content>
                                                                 <BorderPane maxWidth="1.7976931348623157E308" prefHeight="608.0" prefWidth="1201.0" style="-fx-border-radius: 5;">
                                                                     <center>
@@ -272,7 +272,7 @@
                                                                                                     </GridPane.margin>
                                                                                                 </Button>
                                                                                                 <Label id="LabelDesc" prefHeight="45.0" prefWidth="116.0" text="Activity Title" GridPane.rowIndex="3" />
-                                                                                                <TextArea fx:id="textArea02" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="7" GridPane.rowIndex="3" GridPane.rowSpan="2">
+                                                                                                <TextArea fx:id="textArea02" prefHeight="200.0" prefWidth="200.0" wrapText="true" GridPane.columnIndex="1" GridPane.columnSpan="7" GridPane.rowIndex="3" GridPane.rowSpan="2">
                                                                                                     <GridPane.margin>
                                                                                                         <Insets />
                                                                                                     </GridPane.margin>
@@ -280,7 +280,7 @@
                                                                                                         <Tooltip text="Please fill in the Activity Title." />
                                                                                                     </tooltip>
                                                                                                 </TextArea>
-                                                                                                <TextArea fx:id="textArea03" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="7" GridPane.rowIndex="5" GridPane.rowSpan="2">
+                                                                                                <TextArea fx:id="textArea03" prefHeight="200.0" prefWidth="200.0" wrapText="true" GridPane.columnIndex="1" GridPane.columnSpan="7" GridPane.rowIndex="5" GridPane.rowSpan="2">
                                                                                                     <GridPane.margin>
                                                                                                         <Insets bottom="5.0" />
                                                                                                     </GridPane.margin>
@@ -288,7 +288,7 @@
                                                                                                         <Tooltip text="Please fill in the Description." />
                                                                                                     </tooltip>
                                                                                                 </TextArea>
-                                                                                                <TextArea fx:id="textArea15" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="7" GridPane.rowIndex="7">
+                                                                                                <TextArea fx:id="textArea15" prefHeight="200.0" prefWidth="200.0" wrapText="true" GridPane.columnIndex="1" GridPane.columnSpan="7" GridPane.rowIndex="7">
                                                                                                     <GridPane.margin>
                                                                                                         <Insets bottom="5.0" />
                                                                                                     </GridPane.margin>
@@ -296,7 +296,7 @@
                                                                                                         <Tooltip text="Please fill in the Logistic Remarks." />
                                                                                                     </tooltip>
                                                                                                 </TextArea>
-                                                                                                <TextArea fx:id="textArea16" prefHeight="55.0" prefWidth="134.0" GridPane.columnIndex="13" GridPane.columnSpan="4" GridPane.rowSpan="2">
+                                                                                                <TextArea fx:id="textArea16" prefHeight="55.0" prefWidth="134.0" wrapText="true" GridPane.columnIndex="13" GridPane.columnSpan="4" GridPane.rowSpan="2">
                                                                                                     <GridPane.margin>
                                                                                                         <Insets />
                                                                                                     </GridPane.margin>
@@ -325,7 +325,7 @@
                                                                                                         <Tooltip text="Please fill in the Branch in charge." />
                                                                                                     </tooltip>
                                                                                                 </TextField>
-                                                                                                <TextField fx:id="txtField32" GridPane.columnIndex="13" GridPane.rowIndex="5">
+                                                                                                <TextField fx:id="txtField32" disable="true" GridPane.columnIndex="13" GridPane.rowIndex="5">
                                                                                                     <tooltip>
                                                                                                         <Tooltip text="Please fill in the Branch." />
                                                                                                     </tooltip>
@@ -463,13 +463,13 @@
                                                                                                         </Button>
                                                                                                     </children>
                                                                                                 </HBox>
-                                                                                                <TextArea fx:id="textArea08" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="1" GridPane.rowSpan="2">
+                                                                                                <TextArea fx:id="textArea08" prefHeight="200.0" prefWidth="200.0" wrapText="true" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="1" GridPane.rowSpan="2">
                                                                                                     <tooltip>
                                                                                                         <Tooltip text="Please select 1 town to fill in the Street." />
                                                                                                     </tooltip>
                                                                                                 </TextArea>
                                                                                                 <Label id="LabelDesc" prefHeight="49.0" prefWidth="113.0" text="Establishment" GridPane.rowIndex="3" />
-                                                                                                <TextArea fx:id="textArea09" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="3" GridPane.rowSpan="3">
+                                                                                                <TextArea fx:id="textArea09" prefHeight="200.0" prefWidth="200.0" wrapText="true" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="3" GridPane.rowSpan="3">
                                                                                                     <GridPane.margin>
                                                                                                         <Insets />
                                                                                                     </GridPane.margin>
@@ -628,7 +628,7 @@
                                                                 </BorderPane>
                                                             </content>
                                                         </Tab>
-                                                        <Tab text="Details">
+                                                        <Tab style="-fx-font-weight: bold; -fx-font-family: arial; -fx-pref-width: 100;" text="Details">
                                                             <content>
                                                                 <BorderPane prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: orange; -fx-border-radius: 5;">
                                                                     <center>

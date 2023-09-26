@@ -300,7 +300,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
         /*Monitoring Inquiry Type TextField*/
         initMonitoringProperty();
 
-        /* Set Number Format*/
+        /* Set check boxex */
         initcheckBoxes();
 
         /*Set Button Click Event*/
@@ -449,7 +449,6 @@ public class VSPFormController implements Initializable, ScreenInterface {
         //Bank Name
         txtField04_Finance.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
             if (newValue.isEmpty()) {
-
                 comboBox02_Finance.setDisable(true);
                 txtField13_Finance.setDisable(true);
                 txtField05_Finance.setDisable(true);
@@ -466,20 +465,23 @@ public class VSPFormController implements Initializable, ScreenInterface {
 
         txtField28.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
             if (newValue == null || newValue.trim().isEmpty() || newValue.equals("0.00")) {
-                txtField28.setText("0.00");
-                chckBoxPromo1.setSelected(false);
                 txtField46.setText("0.00");
-                chckBoxPromo2.setSelected(false);
-                chckBoxPromo1.setDisable(true);
+                txtField47.setText("0.00");
+
                 txtField46.setDisable(true);
-                chckBoxPromo2.setDisable(true);
                 txtField47.setDisable(true);
+
+                chckBoxPromo1.setSelected(false);
+                chckBoxPromo1.setVisible(false);
+                chckBoxPromo1.setDisable(true);
+
+                chckBoxPromo2.setDisable(true);
+                chckBoxPromo2.setVisible(false);
+                chckBoxPromo2.setSelected(false);
+
             } else {
-                // Enable the fields and checkboxes if the text is not empty or "0.00"
-                chckBoxPromo1.setDisable(false);
-                txtField46.setDisable(false);
-                chckBoxPromo2.setDisable(false);
-                txtField47.setDisable(false);
+                chckBoxPromo1.setVisible(true);
+                chckBoxPromo2.setVisible(true);
             }
         });
     }
@@ -691,7 +693,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
                                 textArea69.setDisable(false);
                                 txtField71.setDisable(false);
                                 txtField72.setDisable(false);
-                                textArea70.setDisable(false);
+
                                 txtField48.setDisable(false);
                                 tabDetails.setDisable(false);
                                 tabAddOns.setDisable(false);
@@ -838,6 +840,9 @@ public class VSPFormController implements Initializable, ScreenInterface {
                         case 28: //Promo Discount
                         case 46:
                         case 47:
+                            if (lsValue.isEmpty()) {
+                                lsValue = "0.00";
+                            }
                             oTrans.setMaster(lnIndex, Double.valueOf(lsValue.replace(",", "")));
                             loadVSPField();
                             break;
@@ -998,15 +1003,6 @@ public class VSPFormController implements Initializable, ScreenInterface {
         txtField47.setTextFormatter(new InputTextFormatter(pattern));
     }
 
-//    public static void setDoubleText(TextField textField, Double value) {
-//        if (value != null) {
-//            String stringValue = Double.toString(value);
-//            textField.setText(stringValue);
-//        } else {
-//            // Handle the case where the value is null
-//            textField.setText("0.00"); // Or set a default value or handle it as needed
-//        }
-//    }
     private void loadVSPField() {
         try {
             oTrans.computeAmount();
@@ -1370,13 +1366,6 @@ public class VSPFormController implements Initializable, ScreenInterface {
         txtField29.setDisable(true);
         txtField30.setDisable(true);
 
-        txtField42.setDisable(!lbShow);
-        txtField43.setDisable(!lbShow);
-        txtField44.setDisable(!lbShow);
-        txtField45.setDisable(!lbShow);
-        txtField46.setDisable(!lbShow);
-        txtField47.setDisable(!lbShow);
-
         comboBox21.setDisable(!lbShow);
         comboBox22.setDisable(!lbShow);
         comboBox24.setDisable(true);
@@ -1399,6 +1388,13 @@ public class VSPFormController implements Initializable, ScreenInterface {
         btnCancel.setVisible(lbShow);
         btnCancel.setManaged(lbShow);
 
+        chckBoxPromo1.setDisable(!(lbShow && !txtField28.getText().isEmpty()));
+        chckBoxPromo2.setDisable(!(lbShow && !txtField28.getText().isEmpty()));
+        txtField28.setDisable(!lbShow); // promo
+//        chckBoxPromo1.setDisable(!lbShow);
+//        txtField46.setDisable(!lbShow);
+//        chckBoxPromo2.setDisable(!lbShow);
+//        txtField47.setDisable(!lbShow);
         chckBoxSTD1.setDisable(true);
         txtField42.setDisable(true);
         chckBoxSTD2.setDisable(true);
@@ -1442,12 +1438,6 @@ public class VSPFormController implements Initializable, ScreenInterface {
                 txtField082_Finance.setDisable(lbShow);
                 txtField14_Finance.setDisable(lbShow);
 
-                txtField28.setDisable(!lbShow); // promo
-                chckBoxPromo1.setDisable(!lbShow);
-                txtField46.setDisable(!lbShow);
-                chckBoxPromo2.setDisable(!lbShow);
-                txtField47.setDisable(!lbShow);
-                txtField31.setDisable(!lbShow); // bundle
                 txtField10.setDisable(lbShow);
                 break;
             case 1: //BANK PURCHASE ORDER
@@ -1464,19 +1454,9 @@ public class VSPFormController implements Initializable, ScreenInterface {
         switch (comboBox02_Finance.getSelectionModel().getSelectedIndex()) {
             case 0: //NONE
             case 1: //ALL-IN HOUSE
-                txtField28.setDisable(!lbShow); // promo
-                chckBoxPromo1.setDisable(!lbShow);
-                txtField46.setDisable(!lbShow);
-                chckBoxPromo2.setDisable(!lbShow);
-                txtField47.setDisable(!lbShow);
                 txtField31.setDisable(lbShow); // bundle
                 break;
             case 2: //ALL-IN PROMO
-                txtField28.setDisable(!lbShow); // promo
-                chckBoxPromo1.setDisable(!lbShow);
-                txtField46.setDisable(!lbShow);
-                chckBoxPromo2.setDisable(!lbShow);
-                txtField47.setDisable(!lbShow);
                 txtField31.setDisable(!lbShow); // bundle
                 break;
         }
@@ -1545,13 +1525,13 @@ public class VSPFormController implements Initializable, ScreenInterface {
         txtField28.setText("0.00");
         txtField31.setText("0.00");
 
-        txtField42.setText("");
-        txtField43.setText("");
-        txtField44.setText("");
-        txtField45.setText("");
+        txtField42.setText("0.00");
+        txtField43.setText("0.00");
+        txtField44.setText("0.00");
+        txtField45.setText("0.00");
 
-        txtField46.setText("");
-        txtField47.setText("");
+        txtField46.setText("0.00");
+        txtField47.setText("0.00");
 
         txtField10.setText("0.00");
         txtField16.setText("0.00");

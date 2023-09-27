@@ -48,7 +48,9 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import static javafx.scene.input.KeyCode.DOWN;
 import static javafx.scene.input.KeyCode.ENTER;
+import static javafx.scene.input.KeyCode.F3;
 import static javafx.scene.input.KeyCode.TAB;
+import static javafx.scene.input.KeyCode.UP;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.StageStyle;
 import javafx.util.Callback;
@@ -212,6 +214,15 @@ public class ActivityFormController implements Initializable, ScreenInterface {
      * Initializes the controller class.
      */
     @Override
+    public void setGRider(GRider foValue) {
+        oApp = foValue;
+    }
+
+    private Stage getStage() {
+        return (Stage) textSeek01.getScene().getWindow();
+    }
+
+    @Override
     public void initialize(URL url, ResourceBundle rb) {
         oListener = (int fnIndex, Object foValue) -> {
             System.out.println("Set Class Value " + fnIndex + "-->" + foValue);
@@ -220,7 +231,39 @@ public class ActivityFormController implements Initializable, ScreenInterface {
         oTrans.setCallback(oListener);
         oTrans.setWithUI(true);
 
-        txtField32.setDisable(true);
+
+        /*Set Capitalization Fields*/
+        initCapitalizationFields();
+
+        /*Set Button Click Event*/
+        initCmdButton();
+
+        /*Set TextField Focus*/
+        initTextFieldFocus();
+
+        /*Set TextField Key-Pressed*/
+        initTextKeyPressed();
+
+        /*Set TextField Required*/
+        initAddRequiredField();
+
+        /*Monitoring TextField Property*/
+        initMonitoringProperty();
+
+        dateFrom06.setOnAction(this::getDateFrom);
+        dateTo07.setOnAction(this::getDateTo);
+
+        dateFrom06.setDayCellFactory(DateFrom);
+        comboBox29.setItems(cType);
+
+        /* Set TextField Format*/
+        initFormatterFields();
+
+        pnEditMode = EditMode.UNKNOWN;
+        initButton(pnEditMode);
+    }
+
+    private void initCapitalizationFields() {
         setCapsLockBehavior(txtField25); //sCompyNm
         setCapsLockBehavior(txtField05); //sActTypDs
         setCapsLockBehavior(txtField26); //sBranchNm
@@ -237,179 +280,6 @@ public class ActivityFormController implements Initializable, ScreenInterface {
         setCapsLockBehavior(textArea15); //sLogRemrk
         setCapsLockBehavior(textArea16); //sRemarksx
         setCapsLockBehavior(textArea08); //sAddressx
-
-        btnBrowse.setOnAction(this::cmdButton_Click);
-        btnCityRemove.setOnAction(this::cmdButton_Click);
-        btnCitySearch.setOnAction(this::cmdButton_Click);
-
-        btnActivityMembersSearch.setOnAction(this::cmdButton_Click);
-        btnActivityMemRemove.setOnAction(this::cmdButton_Click);
-        btnVhclModelsSearch.setOnAction(this::cmdButton_Click);
-        btnVhlModelRemove.setOnAction(this::cmdButton_Click);
-        btnClose.setOnAction(this::cmdButton_Click);
-        btnAdd.setOnAction(this::cmdButton_Click);
-        btnSave.setOnAction(this::cmdButton_Click);
-        btnEdit.setOnAction(this::cmdButton_Click);
-        btnAddSource.setOnAction(this::cmdButton_Click);
-        btnCancel.setOnAction(this::cmdButton_Click);
-        btnPrint.setOnAction(this::cmdButton_Click);
-        btnActCancel.setOnAction(this::cmdButton_Click);
-
-        /*Set Focus to set Value to Class*/
-        txtField05.focusedProperty().addListener(txtField_Focus); //sActTypDs
-        txtField26.focusedProperty().addListener(txtField_Focus); //sBranchNm
-        txtField12.focusedProperty().addListener(txtField_Focus); //nTrgtClnt
-        txtField28.focusedProperty().addListener(txtField_Focus); //sProvName
-        txtField24.focusedProperty().addListener(txtField_Focus); //sDeptName
-        txtField11.focusedProperty().addListener(txtField_Focus); //nRcvdBdgt
-//        txtField32.focusedProperty().addListener(txtField_Focus); //Branch
-        txtField12.focusedProperty().addListener(txtField_Focus); //nTrgtClnt
-
-        textArea08.focusedProperty().addListener(txtArea_Focus); //sAddressx
-        textArea15.focusedProperty().addListener(txtArea_Focus); //sLogRemrk
-        textArea16.focusedProperty().addListener(txtArea_Focus); //sRemarksx
-        textArea09.focusedProperty().addListener(txtArea_Focus);  //sCompnynx
-        textArea03.focusedProperty().addListener(txtArea_Focus);   //sActDescx
-        textArea02.focusedProperty().addListener(txtArea_Focus);  //sActTitle
-        /* TxtField KeyPressed */
-        txtField05.setOnKeyPressed(this::txtField_KeyPressed); //sActTypDs
-        txtField26.setOnKeyPressed(this::txtField_KeyPressed); //sBranchNm
-        txtField12.setOnKeyPressed(this::txtField_KeyPressed); //nTrgtClnt
-        txtField28.setOnKeyPressed(this::txtField_KeyPressed);//sProvName
-        txtField24.setOnKeyPressed(this::txtField_KeyPressed); //sDeptName
-        txtField11.setOnKeyPressed(this::txtField_KeyPressed); //nRcvdBdgt
-//        txtField32.setOnKeyPressed(this::txtField_KeyPressed); //Branch
-        txtField12.setOnKeyPressed(this::txtField_KeyPressed); //nTrgtClnt
-        txtField25.setOnKeyPressed(this::txtField_KeyPressed); //sCompyNm
-
-        addRequiredFieldListener(txtField05);
-        addRequiredFieldListener(txtField24);
-        addRequiredFieldListener(txtField25);
-        addRequiredFieldListener(txtField26);
-        addRequiredFieldListener(txtField28);
-
-        /* TextArea KeyPressed */
-        //textArea08.setOnKeyPressed(this::txtArea_KeyPressed);
-        textArea15.setOnKeyPressed(this::txtArea_KeyPressed);
-        textArea16.setOnKeyPressed(this::txtArea_KeyPressed);
-        textArea09.setOnKeyPressed(this::txtArea_KeyPressed);
-        textArea03.setOnKeyPressed(this::txtArea_KeyPressed);
-        textArea02.setOnKeyPressed(this::txtArea_KeyPressed);
-        textSeek01.setOnKeyPressed(this::txtField_KeyPressed); //Activity No Search
-        textSeek02.setOnKeyPressed(this::txtField_KeyPressed); //Activity Title Search
-
-        txtField28.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue.isEmpty()) {
-                btnCitySearch.setDisable(true);
-                btnCityRemove.setDisable(true);
-                textArea08.setDisable(true);
-
-            }
-        });
-        dateFrom06.valueProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                dateTo07.setDayCellFactory(DateTo);
-                dateTo07.setValue(newValue.plusDays(1));
-
-            }
-        });
-
-        dateFrom06.setOnAction(this::getDateFrom);
-        dateTo07.setOnAction(this::getDateTo);
-        dateFrom06.setDayCellFactory(DateFrom);
-        comboBox29.setItems(cType);
-        comboBox29.setOnAction(e -> {
-            String selectedType = comboBox29.getValue();// Retrieve the type ID for the selected type
-            // Set the type ID in the text field
-            try {
-                oTrans.setMaster(29, selectedType); // Pass the selected type to the setMaster method
-            } catch (SQLException ex) {
-                Logger.getLogger(ActivityFormController.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
-        }
-        );
-        Pattern pattern = Pattern.compile("[\\d\\p{Punct}]*");
-        Pattern trgPattern = Pattern.compile("\\p{ASCII}{0,4}");
-
-        txtField12.setTextFormatter(new InputTextFormatter(trgPattern));  //nTrgtClnt
-        txtField11.setTextFormatter(new InputTextFormatter(pattern));  //nRcvdBdgt
-        pnEditMode = EditMode.UNKNOWN;
-        initButton(pnEditMode);
-    }
-    private Callback<DatePicker, DateCell> DateFrom = (final DatePicker param) -> new DateCell() {
-        @Override
-        public void updateItem(LocalDate item, boolean empty) {
-            super.updateItem(item, empty);
-            LocalDate minDate = strToDate(CommonUtils.xsDateShort((Date) oApp.getServerDate())).minusDays(7);
-            setDisable(empty || item.isBefore(minDate));
-        }
-    };
-    /**
-     * Callback for customizing the behavior and appearance of the date cells in
-     * the 'DateTo' DatePicker. The callback disables dates before the selected
-     * 'dateFrom' value.
-     */
-    private Callback<DatePicker, DateCell> DateTo = (final DatePicker param) -> new DateCell() {
-        @Override
-        public void updateItem(LocalDate item, boolean empty) {
-            super.updateItem(item, empty);
-            LocalDate minDate = dateFrom06.getValue();
-            setDisable(empty || item.isBefore(minDate));
-        }
-    };
-//Animation
-
-    private void shakeTextField(TextField textField) {
-        Timeline timeline = new Timeline();
-        double originalX = textField.getTranslateX();
-
-        // Add keyframes for the animation
-        KeyFrame keyFrame1 = new KeyFrame(Duration.millis(0), new KeyValue(textField.translateXProperty(), 0));
-        KeyFrame keyFrame2 = new KeyFrame(Duration.millis(100), new KeyValue(textField.translateXProperty(), -5));
-        KeyFrame keyFrame3 = new KeyFrame(Duration.millis(200), new KeyValue(textField.translateXProperty(), 5));
-        KeyFrame keyFrame4 = new KeyFrame(Duration.millis(300), new KeyValue(textField.translateXProperty(), -5));
-        KeyFrame keyFrame5 = new KeyFrame(Duration.millis(400), new KeyValue(textField.translateXProperty(), 5));
-        KeyFrame keyFrame6 = new KeyFrame(Duration.millis(500), new KeyValue(textField.translateXProperty(), -5));
-        KeyFrame keyFrame7 = new KeyFrame(Duration.millis(600), new KeyValue(textField.translateXProperty(), 5));
-        KeyFrame keyFrame8 = new KeyFrame(Duration.millis(700), new KeyValue(textField.translateXProperty(), originalX));
-
-        // Add keyframes to the timeline
-        timeline.getKeyFrames().addAll(
-                keyFrame1, keyFrame2, keyFrame3, keyFrame4, keyFrame5, keyFrame6, keyFrame7, keyFrame8
-        );
-
-        // Play the animation
-        timeline.play();
-    }
-
-//Validation
-    private void addRequiredFieldListener(TextField textField) {
-        textField.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue && textField.getText().isEmpty()) {
-                shakeTextField(textField);
-                textField.getStyleClass().add("required-field");
-            } else {
-                textField.getStyleClass().remove("required-field");
-            }
-        });
-    }
-
-    /*Set Date Value to Master Class*/
-    public void getDateFrom(ActionEvent event) {
-        try {
-            oTrans.setMaster(6, SQLUtil.toDate(dateFrom06.getValue().toString(), SQLUtil.FORMAT_SHORT_DATE));
-        } catch (SQLException ex) {
-            Logger.getLogger(CustomerFormController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    public void getDateTo(ActionEvent event) {
-        try {
-            oTrans.setMaster(7, SQLUtil.toDate(dateTo07.getValue().toString(), SQLUtil.FORMAT_SHORT_DATE));
-        } catch (SQLException ex) {
-            Logger.getLogger(CustomerFormController.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
 
     private static void setCapsLockBehavior(TextField textField) {
@@ -429,9 +299,23 @@ public class ActivityFormController implements Initializable, ScreenInterface {
 
     }
 
-    @Override
-    public void setGRider(GRider foValue) {
-        oApp = foValue;
+    private void initCmdButton() {
+        btnBrowse.setOnAction(this::cmdButton_Click);
+        btnCityRemove.setOnAction(this::cmdButton_Click);
+        btnCitySearch.setOnAction(this::cmdButton_Click);
+
+        btnActivityMembersSearch.setOnAction(this::cmdButton_Click);
+        btnActivityMemRemove.setOnAction(this::cmdButton_Click);
+        btnVhclModelsSearch.setOnAction(this::cmdButton_Click);
+        btnVhlModelRemove.setOnAction(this::cmdButton_Click);
+        btnClose.setOnAction(this::cmdButton_Click);
+        btnAdd.setOnAction(this::cmdButton_Click);
+        btnSave.setOnAction(this::cmdButton_Click);
+        btnEdit.setOnAction(this::cmdButton_Click);
+        btnAddSource.setOnAction(this::cmdButton_Click);
+        btnCancel.setOnAction(this::cmdButton_Click);
+        btnPrint.setOnAction(this::cmdButton_Click);
+        btnActCancel.setOnAction(this::cmdButton_Click);
     }
 
     private void cmdButton_Click(ActionEvent event) {
@@ -740,50 +624,116 @@ public class ActivityFormController implements Initializable, ScreenInterface {
         }
     }
 
-    private void loadActivityPrint(String sTransno) throws SQLException {
+    private void initTextFieldFocus() {
+        /*Set Focus to set Value to Class*/
+        txtField05.focusedProperty().addListener(txtField_Focus); //sActTypDs
+        txtField26.focusedProperty().addListener(txtField_Focus); //sBranchNm
+        txtField12.focusedProperty().addListener(txtField_Focus); //nTrgtClnt
+        txtField28.focusedProperty().addListener(txtField_Focus); //sProvName
+        txtField24.focusedProperty().addListener(txtField_Focus); //sDeptName
+        txtField11.focusedProperty().addListener(txtField_Focus); //nRcvdBdgt
+//        txtField32.focusedProperty().addListener(txtField_Focus); //Branch
+        txtField12.focusedProperty().addListener(txtField_Focus); //nTrgtClnt
+
+        textArea08.focusedProperty().addListener(txtArea_Focus); //sAddressx
+        textArea15.focusedProperty().addListener(txtArea_Focus); //sLogRemrk
+        textArea16.focusedProperty().addListener(txtArea_Focus); //sRemarksx
+        textArea09.focusedProperty().addListener(txtArea_Focus);  //sCompnynx
+        textArea03.focusedProperty().addListener(txtArea_Focus);   //sActDescx
+        textArea02.focusedProperty().addListener(txtArea_Focus);  //sActTitle
+    }
+    final ChangeListener<? super Boolean> txtField_Focus = (o, ov, nv) -> {
         try {
-            Stage stage = new Stage();
+            TextField txtField = (TextField) ((ReadOnlyBooleanPropertyBase) o).getBean();
+            int lnIndex = Integer.parseInt(txtField.getId().substring(8, 10));
+            String lsValue = txtField.getText();
 
-            FXMLLoader fxmlLoader = new FXMLLoader();
-            fxmlLoader.setLocation(getClass().getResource("ActivityPrint.fxml"));
+            if (lsValue == null) {
+                return;
+            }
 
-            ActivityPrintController loControl = new ActivityPrintController();
-            loControl.setGRider(oApp);
-            loControl.setTransNox(sTransno);
-
-            fxmlLoader.setController(loControl);
-            //load the main interface
-            Parent parent = fxmlLoader.load();
-
-            parent.setOnMousePressed(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent event) {
-                    xOffset = event.getSceneX();
-                    yOffset = event.getSceneY();
+            if (!nv) {
+                /* Lost Focus */
+                switch (lnIndex) {
+                    case 5:  //sActTypDs
+                    case 24: //sDeptName
+                    case 25: //sCompnyNm
+                    case 26: //sBranchNm
+                    case 28: //sProvName
+                        oTrans.setMaster(lnIndex, lsValue); // Handle Encoded Value
+                        break;
+                    case 12: // nTrgtClnt
+                        int targetClients = Integer.parseInt(lsValue);
+                        oTrans.setMaster(lnIndex, targetClients);
+                        break;
                 }
-            });
 
-            parent.setOnMouseDragged(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent event) {
-                    stage.setX(event.getScreenX() - xOffset);
-                    stage.setY(event.getScreenY() - yOffset);
+            } else {
+                txtField.selectAll();
 
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(CustomerFormController.class
+                    .getName()).log(Level.SEVERE, null, ex);
+        }
+    };
+
+    /*Set TextArea to Master Class*/
+    final ChangeListener<? super Boolean> txtArea_Focus = (o, ov, nv) -> {
+
+        TextArea textArea = (TextArea) ((ReadOnlyBooleanPropertyBase) o).getBean();
+        int lnIndex = Integer.parseInt(textArea.getId().substring(8, 10));
+        String lsValue = textArea.getText();
+
+        if (lsValue == null) {
+            return;
+        }
+        try {
+            if (!nv) {
+                /*Lost Focus*/
+                switch (lnIndex) {
+                    case 2:        //sActTitle
+                    case 15:       //sLogRemrk
+                    case 3:        //sActDesc
+                    case 16:       //sRemarksx
+                    case 9:        //sCompnynx
+                        oTrans.setMaster(lnIndex, lsValue);
+                        break;
+                    case 8: //sAddressx
+                        oTrans.setActTown(1, 3, lsValue);
+                        break;
                 }
-            });
-
-            //set the main interface as the scene
-            Scene scene = new Scene(parent);
-            stage.setScene(scene);
-            stage.initStyle(StageStyle.TRANSPARENT);
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.setTitle("");
-            stage.showAndWait();
-        } catch (IOException e) {
-            e.printStackTrace();
+            } else {
+                textArea.selectAll();
+            }
+        } catch (SQLException e) {
             ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
             System.exit(1);
         }
+    };
+
+    private void initTextKeyPressed() {
+        /* TxtField KeyPressed */
+        txtField05.setOnKeyPressed(this::txtField_KeyPressed); //sActTypDs
+        txtField26.setOnKeyPressed(this::txtField_KeyPressed); //sBranchNm
+        txtField12.setOnKeyPressed(this::txtField_KeyPressed); //nTrgtClnt
+        txtField28.setOnKeyPressed(this::txtField_KeyPressed);//sProvName
+        txtField24.setOnKeyPressed(this::txtField_KeyPressed); //sDeptName
+        txtField11.setOnKeyPressed(this::txtField_KeyPressed); //nRcvdBdgt
+//        txtField32.setOnKeyPressed(this::txtField_KeyPressed); //Branch
+        txtField12.setOnKeyPressed(this::txtField_KeyPressed); //nTrgtClnt
+        txtField25.setOnKeyPressed(this::txtField_KeyPressed); //sCompyNm
+
+        /* TextArea KeyPressed */
+        //textArea08.setOnKeyPressed(this::txtArea_KeyPressed);
+        textArea15.setOnKeyPressed(this::txtArea_KeyPressed);
+        textArea16.setOnKeyPressed(this::txtArea_KeyPressed);
+        textArea09.setOnKeyPressed(this::txtArea_KeyPressed);
+        textArea03.setOnKeyPressed(this::txtArea_KeyPressed);
+        textArea02.setOnKeyPressed(this::txtArea_KeyPressed);
+        textSeek01.setOnKeyPressed(this::txtField_KeyPressed); //Activity No Search
+        textSeek02.setOnKeyPressed(this::txtField_KeyPressed); //Activity Title Search
+
     }
 
     /*TRIGGER FOCUS*/
@@ -941,75 +891,171 @@ public class ActivityFormController implements Initializable, ScreenInterface {
         }
 
     }
-    final ChangeListener<? super Boolean> txtField_Focus = (o, ov, nv) -> {
-        try {
-            TextField txtField = (TextField) ((ReadOnlyBooleanPropertyBase) o).getBean();
-            int lnIndex = Integer.parseInt(txtField.getId().substring(8, 10));
-            String lsValue = txtField.getText();
 
-            if (lsValue == null) {
-                return;
-            }
+    private void initAddRequiredField() {
+        addRequiredFieldListener(txtField05);
+        addRequiredFieldListener(txtField24);
+        addRequiredFieldListener(txtField25);
+        addRequiredFieldListener(txtField26);
+        addRequiredFieldListener(txtField28);
+    }
 
-            if (!nv) {
-                /* Lost Focus */
-                switch (lnIndex) {
-                    case 5:  //sActTypDs
-                    case 24: //sDeptName
-                    case 25: //sCompnyNm
-                    case 26: //sBranchNm
-                    case 28: //sProvName
-                        oTrans.setMaster(lnIndex, lsValue); // Handle Encoded Value
-                        break;
-                    case 12: // nTrgtClnt
-                        int targetClients = Integer.parseInt(lsValue);
-                        oTrans.setMaster(lnIndex, targetClients);
-                        break;
-                }
-
+    //Validation
+    private void addRequiredFieldListener(TextField textField) {
+        textField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue && textField.getText().isEmpty()) {
+                shakeTextField(textField);
+                textField.getStyleClass().add("required-field");
             } else {
-                txtField.selectAll();
+                textField.getStyleClass().remove("required-field");
+            }
+        });
+    }
+
+    //Animation
+    private void shakeTextField(TextField textField) {
+        Timeline timeline = new Timeline();
+        double originalX = textField.getTranslateX();
+
+        // Add keyframes for the animation
+        KeyFrame keyFrame1 = new KeyFrame(Duration.millis(0), new KeyValue(textField.translateXProperty(), 0));
+        KeyFrame keyFrame2 = new KeyFrame(Duration.millis(100), new KeyValue(textField.translateXProperty(), -5));
+        KeyFrame keyFrame3 = new KeyFrame(Duration.millis(200), new KeyValue(textField.translateXProperty(), 5));
+        KeyFrame keyFrame4 = new KeyFrame(Duration.millis(300), new KeyValue(textField.translateXProperty(), -5));
+        KeyFrame keyFrame5 = new KeyFrame(Duration.millis(400), new KeyValue(textField.translateXProperty(), 5));
+        KeyFrame keyFrame6 = new KeyFrame(Duration.millis(500), new KeyValue(textField.translateXProperty(), -5));
+        KeyFrame keyFrame7 = new KeyFrame(Duration.millis(600), new KeyValue(textField.translateXProperty(), 5));
+        KeyFrame keyFrame8 = new KeyFrame(Duration.millis(700), new KeyValue(textField.translateXProperty(), originalX));
+
+        // Add keyframes to the timeline
+        timeline.getKeyFrames().addAll(
+                keyFrame1, keyFrame2, keyFrame3, keyFrame4, keyFrame5, keyFrame6, keyFrame7, keyFrame8
+        );
+
+        // Play the animation
+        timeline.play();
+    }
+
+    private void initMonitoringProperty() {
+
+        txtField28.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.isEmpty()) {
+                btnCitySearch.setDisable(true);
+                btnCityRemove.setDisable(true);
+                textArea08.setDisable(true);
 
             }
-        } catch (SQLException ex) {
-            Logger.getLogger(CustomerFormController.class
-                    .getName()).log(Level.SEVERE, null, ex);
+        });
+        dateFrom06.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                dateTo07.setDayCellFactory(DateTo);
+                dateTo07.setValue(newValue.plusDays(1));
+
+            }
+        });
+        comboBox29.setOnAction(e -> {
+            String selectedType = comboBox29.getValue();// Retrieve the type ID for the selected type
+            // Set the type ID in the text field
+            try {
+                oTrans.setMaster(29, selectedType); // Pass the selected type to the setMaster method
+            } catch (SQLException ex) {
+                Logger.getLogger(ActivityFormController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+        });
+    }
+    private Callback<DatePicker, DateCell> DateFrom = (final DatePicker param) -> new DateCell() {
+        @Override
+        public void updateItem(LocalDate item, boolean empty) {
+            super.updateItem(item, empty);
+            LocalDate minDate = strToDate(CommonUtils.xsDateShort((Date) oApp.getServerDate())).minusDays(7);
+            setDisable(empty || item.isBefore(minDate));
+        }
+    };
+    /**
+     * Callback for customizing the behavior and appearance of the date cells in
+     * the 'DateTo' DatePicker. The callback disables dates before the selected
+     * 'dateFrom' value.
+     */
+    private Callback<DatePicker, DateCell> DateTo = (final DatePicker param) -> new DateCell() {
+        @Override
+        public void updateItem(LocalDate item, boolean empty) {
+            super.updateItem(item, empty);
+            LocalDate minDate = dateFrom06.getValue();
+            setDisable(empty || item.isBefore(minDate));
         }
     };
 
-    /*Set TextArea to Master Class*/
-    final ChangeListener<? super Boolean> txtArea_Focus = (o, ov, nv) -> {
-
-        TextArea textArea = (TextArea) ((ReadOnlyBooleanPropertyBase) o).getBean();
-        int lnIndex = Integer.parseInt(textArea.getId().substring(8, 10));
-        String lsValue = textArea.getText();
-
-        if (lsValue == null) {
-            return;
-        }
+    /*Set Date Value to Master Class*/
+    public void getDateFrom(ActionEvent event) {
         try {
-            if (!nv) {
-                /*Lost Focus*/
-                switch (lnIndex) {
-                    case 2:        //sActTitle
-                    case 15:       //sLogRemrk
-                    case 3:        //sActDesc
-                    case 16:       //sRemarksx
-                    case 9:        //sCompnynx
-                        oTrans.setMaster(lnIndex, lsValue);
-                        break;
-                    case 8: //sAddressx
-                        oTrans.setActTown(1, 3, lsValue);
-                        break;
+            oTrans.setMaster(6, SQLUtil.toDate(dateFrom06.getValue().toString(), SQLUtil.FORMAT_SHORT_DATE));
+        } catch (SQLException ex) {
+            Logger.getLogger(CustomerFormController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void getDateTo(ActionEvent event) {
+        try {
+            oTrans.setMaster(7, SQLUtil.toDate(dateTo07.getValue().toString(), SQLUtil.FORMAT_SHORT_DATE));
+        } catch (SQLException ex) {
+            Logger.getLogger(CustomerFormController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void initFormatterFields() {
+        Pattern pattern = Pattern.compile("[\\d\\p{Punct}]*");
+        Pattern trgPattern = Pattern.compile("\\p{ASCII}{0,4}");
+
+        txtField12.setTextFormatter(new InputTextFormatter(trgPattern));  //nTrgtClnt
+        txtField11.setTextFormatter(new InputTextFormatter(pattern));  //nRcvdBdgt
+    }
+
+    private void loadActivityPrint(String sTransno) throws SQLException {
+        try {
+            Stage stage = new Stage();
+
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            fxmlLoader.setLocation(getClass().getResource("ActivityPrint.fxml"));
+
+            ActivityPrintController loControl = new ActivityPrintController();
+            loControl.setGRider(oApp);
+            loControl.setTransNox(sTransno);
+
+            fxmlLoader.setController(loControl);
+            //load the main interface
+            Parent parent = fxmlLoader.load();
+
+            parent.setOnMousePressed(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    xOffset = event.getSceneX();
+                    yOffset = event.getSceneY();
                 }
-            } else {
-                textArea.selectAll();
-            }
-        } catch (SQLException e) {
+            });
+
+            parent.setOnMouseDragged(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    stage.setX(event.getScreenX() - xOffset);
+                    stage.setY(event.getScreenY() - yOffset);
+
+                }
+            });
+
+            //set the main interface as the scene
+            Scene scene = new Scene(parent);
+            stage.setScene(scene);
+            stage.initStyle(StageStyle.TRANSPARENT);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle("");
+            stage.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
             ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
             System.exit(1);
         }
-    };
+    }
 
     private void loadActivityField() {
         try {
@@ -1065,6 +1111,13 @@ public class ActivityFormController implements Initializable, ScreenInterface {
         } catch (SQLException e) {
             ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
         }
+    }
+
+    /*Convert Date to String*/
+    private LocalDate strToDate(String val) {
+        DateTimeFormatter date_formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate localDate = LocalDate.parse(val, date_formatter);
+        return localDate;
     }
 
 //Act Type Add Source Dialog
@@ -1269,17 +1322,6 @@ public class ActivityFormController implements Initializable, ScreenInterface {
             ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
             System.exit(1);
         }
-    }
-
-    private Stage getStage() {
-        return (Stage) textSeek01.getScene().getWindow();
-    }
-
-    /*Convert Date to String*/
-    private LocalDate strToDate(String val) {
-        DateTimeFormatter date_formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate localDate = LocalDate.parse(val, date_formatter);
-        return localDate;
     }
 
     private void loadTownTable() {
@@ -1500,14 +1542,6 @@ public class ActivityFormController implements Initializable, ScreenInterface {
 
     }
 
-    public void removeRequired() {
-        txtField05.getStyleClass().remove("required-field");
-        txtField24.getStyleClass().remove("required-field");
-        txtField25.getStyleClass().remove("required-field");
-        txtField26.getStyleClass().remove("required-field");
-        txtField28.getStyleClass().remove("required-field");
-    }
-
     public void clearFields() {
         removeRequired();
         townCitydata.clear();
@@ -1535,4 +1569,11 @@ public class ActivityFormController implements Initializable, ScreenInterface {
         textArea09.setText(""); //sCompnynx
     }
 
+    public void removeRequired() {
+        txtField05.getStyleClass().remove("required-field");
+        txtField24.getStyleClass().remove("required-field");
+        txtField25.getStyleClass().remove("required-field");
+        txtField26.getStyleClass().remove("required-field");
+        txtField28.getStyleClass().remove("required-field");
+    }
 }

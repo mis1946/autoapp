@@ -53,6 +53,7 @@ import org.rmj.appdriver.agentfx.ShowMessageFX;
 import org.rmj.appdriver.agentfx.callback.IFXML;
 import org.rmj.auto.app.bank.BankEntryFormController;
 import org.rmj.auto.app.cashiering.InvoiceFormController;
+import org.rmj.auto.app.cashiering.VehicleSalesInvoiceFormController;
 import org.rmj.auto.app.parts.BinEntryParamController;
 import org.rmj.auto.app.parts.BrandEntryParamController;
 import org.rmj.auto.app.parts.CategoryEntryParamController;
@@ -169,6 +170,8 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
     private MenuItem mnuPartsSalesInv;
     @FXML
     private MenuItem mnuVSPEntry;
+    @FXML
+    private MenuItem mnuVhclSalesInv;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -421,6 +424,8 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
                 return new BrandEntryParamController();
             case "InvoiceForm.fxml":
                 return new InvoiceFormController();
+            case "VehicleSalesInvoiceForm.fxml":
+                return new VehicleSalesInvoiceFormController();
             default:
                 ShowMessageFX.Warning(null, "Warning", "Notify System Admin to Configure Screen Interface for " + fsValue);
                 return null;
@@ -466,6 +471,8 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
                     return null;
                 }
                 return sSalesInvoiceType;
+            case "VehicleSalesInvoiceForm.fxml":
+                return "Vehicle Sales Invoice";
             /*PARTS*/
             case "ItemEntryForm.fxml":
                 return "Item Entry";
@@ -705,6 +712,15 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
             setScene2(loadAnimate(sformname));
         }
     }
+    
+    @FXML
+    private void mnuVhclSalesInvClick(ActionEvent event) {
+        String sformname = "VehicleSalesInvoiceForm.fxml";
+        //check tab
+        if (checktabs(SetTabTitle(sformname)) == 1) {
+            setScene2(loadAnimate(sformname));
+        }
+    }
 
     /*ACTIVITY*/
     @FXML
@@ -846,6 +862,8 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
     private void initMenu() {
 
     }
+
+    
 
     
 

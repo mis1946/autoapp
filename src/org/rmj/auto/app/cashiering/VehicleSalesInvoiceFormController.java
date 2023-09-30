@@ -12,6 +12,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.ResourceBundle;
+import java.util.function.UnaryOperator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -28,11 +29,14 @@ import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.Duration;
+import javafx.util.StringConverter;
+import javafx.util.converter.DoubleStringConverter;
 import org.rmj.appdriver.GRider;
 import org.rmj.appdriver.SQLUtil;
 import org.rmj.appdriver.agentfx.CommonUtils;
@@ -136,22 +140,22 @@ public class VehicleSalesInvoiceFormController implements Initializable, ScreenI
         //Set fields to caps lock
         setFieldsCapsLock();
         
-        txtField06.focusedProperty().addListener(txtField_Focus);  // sSourceNo
-        txtField05.focusedProperty().addListener(txtField_Focus);  // nVatRatex
-        txtField11.focusedProperty().addListener(txtField_Focus);  // nVatRatex
-        txtField12.focusedProperty().addListener(txtField_Focus);  // nVatAmtxx
+//        txtField06.focusedProperty().addListener(txtField_Focus);  // sSourceNo
+//        txtField05.focusedProperty().addListener(txtField_Focus);  // nVatRatex
+//        txtField11.focusedProperty().addListener(txtField_Focus);  // nVatRatex
+//        txtField12.focusedProperty().addListener(txtField_Focus);  // nVatAmtxx
         txtField10.focusedProperty().addListener(txtField_Focus);  // nDiscount
         txtField03.setOnAction(this::getDate); //dTransact
         txtField03.setDayCellFactory(callB);
         
-        txtField06.setOnKeyPressed(this::txtField_KeyPressed);  // sSourceNo
-        txtField05.setOnKeyPressed(this::txtField_KeyPressed);  // sReferNox
-        txtField11.setOnKeyPressed(this::txtField_KeyPressed);  // nVatRatex
-        txtField12.setOnKeyPressed(this::txtField_KeyPressed);  // nVatAmtxx
+//        txtField06.setOnKeyPressed(this::txtField_KeyPressed);  // sSourceNo
+//        txtField05.setOnKeyPressed(this::txtField_KeyPressed);  // sReferNox
+//        txtField11.setOnKeyPressed(this::txtField_KeyPressed);  // nVatRatex
+//        txtField12.setOnKeyPressed(this::txtField_KeyPressed);  // nVatAmtxx
         txtField10.setOnKeyPressed(this::txtField_KeyPressed);  // nDiscount
         
         Pattern pattern;
-        pattern = Pattern.compile("[[0-9][.]]*");
+        pattern = Pattern.compile("[[0-9][.][,]]*");
         txtField10.setTextFormatter(new InputTextFormatter(pattern)); //nDiscount
         pattern = Pattern.compile("[0-9]*");
         txtField05.setTextFormatter(new InputTextFormatter(pattern)); //sReferNox
@@ -327,7 +331,15 @@ public class VehicleSalesInvoiceFormController implements Initializable, ScreenI
 //                            case 11:
 //                            case 12:
                             case 10:
-                                oTrans.setMaster(lnIndex, Double.valueOf(lsValue));
+                                if (lsValue.isEmpty()) lsValue = "0.00";
+                                
+                                if (Double.valueOf(lsValue.replace(",", "")) > ((Double) oTrans.getMaster(29))){
+                                    lsValue = "0.00";
+                                    ShowMessageFX.Warning(getStage(), "Invalid Amount", "Warning", null);
+                                    txtField10.requestFocus();
+                                }
+                                
+                                oTrans.setMaster(lnIndex, Double.valueOf(lsValue.replace(",", "")));
                                 oTrans.computeAmount();
                                 loadFields();
                                 break;
@@ -368,18 +380,16 @@ public class VehicleSalesInvoiceFormController implements Initializable, ScreenI
             textArea18.setText((String) oTrans.getMaster(18)); //sDescript
             txtField23.setText((String) oTrans.getMaster(23)); //sColorDsc
             
-//            // Format the decimal value with decimal separators
-//            amount= Double.parseDouble(String.format("%.2f", oTransProcess.getInqRsv(lnCtr, 5)));
-//                
-//            DecimalFormat decimalFormat = new DecimalFormat("#,##0.00");
-//            formattedAmount = decimalFormat.format(amount);
+            // Format the decimal value with decimal separators
+            DecimalFormat decimalFormat = new DecimalFormat("#,##0.00");
             
-            txtField29.setText(String.format("%.2f",(Double) oTrans.getMaster(29))); //nUnitPrce
-            txtField29_2.setText(String.format("%.2f",(Double) oTrans.getMaster(29))); //nUnitPrce
-            txtField11.setText(String.format("%.2f",(Double) oTrans.getMaster(11))); //nVatRatex
-            txtField12.setText(String.format("%.2f",(Double)oTrans.getMaster(12))); //nVatAmtxx
-            txtField10.setText(String.format("%.2f",(Double) oTrans.getMaster(10))); //nDiscount
-            txtField09.setText(String.format("%.2f",(Double) oTrans.getMaster(9))); //nTranTotl
+            txtField29.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f",(Double) oTrans.getMaster(29))))); //nUnitPrce
+            txtField29_2.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f",(Double) oTrans.getMaster(29))))); //nUnitPrce
+            txtField11.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f",(Double) oTrans.getMaster(11))))); //nVatRatex
+            txtField12.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f",(Double)oTrans.getMaster(12))))); //nVatAmtxx
+            System.out.println("Discount >> " + decimalFormat.format(Double.parseDouble(String.format("%.2f",(Double) oTrans.getMaster(10)))));
+            txtField10.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f",(Double) oTrans.getMaster(10))))); //nDiscount
+            txtField09.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f",(Double) oTrans.getMaster(9))))); //nTranTotl
             
         } catch (SQLException ex) {
             Logger.getLogger(VehicleSalesInvoiceFormController.class.getName()).log(Level.SEVERE, null, ex);

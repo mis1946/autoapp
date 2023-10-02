@@ -808,24 +808,24 @@
                                                                                                                         <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="10.0" vgrow="SOMETIMES" />
                                                                                                                     </rowConstraints>
                                                                                                                     <children>
-                                                                                                                        <TextField alignment="CENTER_RIGHT" promptText="0.00" GridPane.columnIndex="4" GridPane.rowIndex="1" />
-                                                                                                                        <TextField alignment="CENTER_RIGHT" promptText="0.00" GridPane.columnIndex="4" GridPane.rowIndex="2" />
-                                                                                                                        <TextField alignment="CENTER_RIGHT" promptText="0.00" GridPane.columnIndex="4" GridPane.rowIndex="3" />
-                                                                                                                        <TextField alignment="CENTER_RIGHT" promptText="0.00" GridPane.columnIndex="4" GridPane.rowIndex="4" />
+                                                                                                                        <TextField fx:id="txtField04_LaborRust" alignment="CENTER_RIGHT" promptText="0.00" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                                                                                                                        <TextField fx:id="txtField04_LaborPerma" alignment="CENTER_RIGHT" promptText="0.00" GridPane.columnIndex="4" GridPane.rowIndex="2" />
+                                                                                                                        <TextField fx:id="txtField04_LaborUnder" alignment="CENTER_RIGHT" promptText="0.00" GridPane.columnIndex="4" GridPane.rowIndex="3" />
+                                                                                                                        <TextField fx:id="txtField04_LaborTint" alignment="CENTER_RIGHT" promptText="0.00" GridPane.columnIndex="4" GridPane.rowIndex="4" />
                                                                                                                         <Label id="LabelDesc" alignment="CENTER_RIGHT" prefWidth="70.0" text="Rust Proof" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                                                                                                                         <Label id="LabelDesc" alignment="CENTER_RIGHT" prefWidth="70.0" text="PermaShine" GridPane.columnIndex="2" GridPane.rowIndex="2" />
                                                                                                                         <Label id="LabelDesc" alignment="CENTER_RIGHT" prefWidth="70.0" text="Undercoat" GridPane.columnIndex="2" GridPane.rowIndex="3" />
                                                                                                                         <Label id="LabelDesc" alignment="CENTER_RIGHT" prefWidth="70.0" text="Tint" GridPane.columnIndex="2" GridPane.rowIndex="4" />
-                                                                                                                        <TableView GridPane.columnIndex="6" GridPane.columnSpan="3" GridPane.rowIndex="1" GridPane.rowSpan="5">
+                                                                                                                        <TableView fx:id="tblViewLabor" GridPane.columnIndex="6" GridPane.columnSpan="3" GridPane.rowIndex="1" GridPane.rowSpan="5">
                                                                                                                             <columns>
-                                                                                                                                <TableColumn fx:id="tblLaborRow" prefWidth="34.999969482421875" text="Row" />
-                                                                                                                                <TableColumn fx:id="tblindex08_Labor" prefWidth="450.0" text="Labor Description" />
-                                                                                                                                <TableColumn fx:id="tblindex05_Labor" prefWidth="126.6666259765625" text="Purchase Type" />
-                                                                                                                                <TableColumn fx:id="tblindex06_Labor" prefWidth="179.3333740234375" text="Charge To" />
-                                                                                                                                <TableColumn fx:id="tblindex04_Labor" prefWidth="160.3333740234375" text="Amount" />
+                                                                                                                                <TableColumn fx:id="tblLaborRow" prefWidth="34.999969482421875" sortable="false" text="Row" />
+                                                                                                                                <TableColumn fx:id="tblindex08_Labor" prefWidth="371.33331298828125" sortable="false" text="Labor Description" />
+                                                                                                                                <TableColumn fx:id="tblindex05_Labor" prefWidth="205.66668701171875" sortable="false" text="Purchase Type" />
+                                                                                                                                <TableColumn fx:id="tblindex06_Labor" prefWidth="179.3333740234375" sortable="false" text="Charge To" />
+                                                                                                                                <TableColumn fx:id="tblindex04_Labor" prefWidth="160.3333740234375" sortable="false" text="Amount" />
                                                                                                                             </columns>
                                                                                                                         </TableView>
-                                                                                                                        <Button mnemonicParsing="false" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                                                                                                                        <Button fx:id="btnAdditionalLabor" mnemonicParsing="false" GridPane.columnIndex="1" GridPane.rowIndex="5">
                                                                                                                             <graphic>
                                                                                                                                 <FontAwesomeIconView glyphName="PLUS" />
                                                                                                                             </graphic>
@@ -835,10 +835,10 @@
                                                                                                                                 <Font name="Arial Bold" size="12.0" />
                                                                                                                             </font>
                                                                                                                         </Label>
-                                                                                                                        <CheckBox mnemonicParsing="false" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                                                                                                        <CheckBox mnemonicParsing="false" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                                                                                                                        <CheckBox mnemonicParsing="false" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                                                                                                                        <CheckBox mnemonicParsing="false" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                                                                                                                        <CheckBox fx:id="chckBoxRustProof" mnemonicParsing="false" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                                                                                                        <CheckBox fx:id="chckBoxPermaShine" mnemonicParsing="false" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                                                                                                        <CheckBox fx:id="chckBoxUndercoat" mnemonicParsing="false" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                                                                                                        <CheckBox fx:id="chckBoxTint" mnemonicParsing="false" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                                                                                                                     </children>
                                                                                                                 </GridPane>
                                                                                                             </children>

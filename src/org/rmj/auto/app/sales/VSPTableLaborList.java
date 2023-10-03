@@ -5,9 +5,8 @@
 package org.rmj.auto.app.sales;
 
 import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.TextField;
 
 /**
  *
@@ -18,10 +17,12 @@ public class VSPTableLaborList {
     private SimpleStringProperty tblLaborRow;
     private ComboBox<String> comboBoxPurchaseType;
     private SimpleStringProperty tblindex03_Labor;
+    private TextField txtField08_labor;
     private SimpleStringProperty tblindex08_Labor;
     private SimpleStringProperty tblindex05_Labor;
     private ComboBox<String> comboBoxChargesTo;
     private SimpleStringProperty tblindex06_Labor;
+    private TextField txtField04_labor;
     private SimpleStringProperty tblindex04_Labor;
 
     VSPTableLaborList(String tblLaborRow,
@@ -36,8 +37,8 @@ public class VSPTableLaborList {
         this.comboBoxPurchaseType.getItems().add("CHARGE");
         this.comboBoxPurchaseType.setValue(tblindex05_Labor);
         this.tblindex03_Labor = new SimpleStringProperty(tblindex03_Labor);
+        this.txtField08_labor = new TextField();
         this.tblindex08_Labor = new SimpleStringProperty(tblindex08_Labor);
-
         this.comboBoxChargesTo = new ComboBox();
         this.comboBoxChargesTo.getItems().add("C/O CLIENT");
         this.comboBoxChargesTo.getItems().add("C/O BANK");
@@ -45,6 +46,7 @@ public class VSPTableLaborList {
 
         this.tblindex05_Labor = new SimpleStringProperty(tblindex05_Labor);
         this.tblindex06_Labor = new SimpleStringProperty(tblindex06_Labor);
+        this.txtField04_labor = new TextField();
         this.tblindex04_Labor = new SimpleStringProperty(tblindex04_Labor);
     }
 
@@ -62,6 +64,26 @@ public class VSPTableLaborList {
 
     public void setComboBoxChargesTo(ComboBox<String> comboBoxChargesTo) {
         this.comboBoxChargesTo = comboBoxChargesTo;
+    }
+
+    // Setter for txtField04
+    public void setTxtField04_Labor(TextField txtField04_labor) {
+        this.txtField04_labor = txtField04_labor;
+    }
+
+    // Getter for txtField04
+    public TextField getTxtField04_Labor() {
+        return txtField04_labor;
+    }
+    // Setter for txtField04
+
+    public void setTxtField08_Labor(TextField txtField08_labor) {
+        this.txtField08_labor = txtField08_labor;
+    }
+
+    // Getter for txtField04
+    public TextField getTxtField08_Labor() {
+        return txtField08_labor;
     }
 
     public String getTblLaborRow() {

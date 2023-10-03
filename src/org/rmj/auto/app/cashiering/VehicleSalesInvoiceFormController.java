@@ -21,10 +21,13 @@ import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.beans.property.ReadOnlyBooleanPropertyBase;
 import javafx.beans.value.ChangeListener;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextArea;
@@ -109,7 +112,7 @@ public class VehicleSalesInvoiceFormController implements Initializable, ScreenI
     @FXML
     private TextField txtField29; //nUnitPrce
     @FXML
-    private TextField txtField29_2; //nUnitPrce
+    private TextField txtField09_2; //nUnitPrce
     @FXML
     private TextField txtField11; //nVatRatex
     @FXML
@@ -120,6 +123,10 @@ public class VehicleSalesInvoiceFormController implements Initializable, ScreenI
     private TextField txtField09; //nTranTotl
     @FXML
     private TextField textSeek01;
+    @FXML
+    private ComboBox cmbType032;
+    ObservableList<String> cCustomerType = FXCollections.observableArrayList("SUPPLIER", "CUSTOMER"); // Customer Type Values
+    
     
     private Stage getStage() {
         return (Stage) btnSave.getScene().getWindow();
@@ -139,6 +146,13 @@ public class VehicleSalesInvoiceFormController implements Initializable, ScreenI
         
         //Set fields to caps lock
         setFieldsCapsLock();
+        cmbType032.setItems(cCustomerType); //Customer Type
+        //Mode of Payment
+        cmbType032.setOnAction(event -> {
+            if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE){
+                txtField06.setDisable(false);
+            }
+        });
         
 //        txtField06.focusedProperty().addListener(txtField_Focus);  // sSourceNo
 //        txtField05.focusedProperty().addListener(txtField_Focus);  // nVatRatex
@@ -148,7 +162,7 @@ public class VehicleSalesInvoiceFormController implements Initializable, ScreenI
         txtField03.setOnAction(this::getDate); //dTransact
         txtField03.setDayCellFactory(callB);
         
-//        txtField06.setOnKeyPressed(this::txtField_KeyPressed);  // sSourceNo
+        txtField06.setOnKeyPressed(this::txtField_KeyPressed);  // sSourceNo
 //        txtField05.setOnKeyPressed(this::txtField_KeyPressed);  // sReferNox
 //        txtField11.setOnKeyPressed(this::txtField_KeyPressed);  // nVatRatex
 //        txtField12.setOnKeyPressed(this::txtField_KeyPressed);  // nVatAmtxx
@@ -257,6 +271,8 @@ public class VehicleSalesInvoiceFormController implements Initializable, ScreenI
                         clearFields();
                     }
                     break;
+                case "btnCancelSI":
+                    break;
                 case "btnPrint":
                     break;
                 case "btnCancel":
@@ -291,7 +307,7 @@ public class VehicleSalesInvoiceFormController implements Initializable, ScreenI
                     case ENTER:
                         switch (lnIndex){
                             case 6:
-                                if (oTrans.searchUDR(txtField06.getText(), "1")){
+                                if (oTrans.searchUDR(txtField06.getText(), String.valueOf(cmbType032.getSelectionModel().getSelectedIndex()))){
                                     oTrans.computeAmount();
                                     loadFields();
                                 } else {
@@ -379,15 +395,16 @@ public class VehicleSalesInvoiceFormController implements Initializable, ScreenI
             txtField22.setText((String) oTrans.getMaster(22)); //sEngineNo
             textArea18.setText((String) oTrans.getMaster(18)); //sDescript
             txtField23.setText((String) oTrans.getMaster(23)); //sColorDsc
+            cmbType032.getSelectionModel().select(Integer.parseInt(oTrans.getMaster(32).toString())); //Customer Type
             
             // Format the decimal value with decimal separators
             DecimalFormat decimalFormat = new DecimalFormat("#,##0.00");
             
             txtField29.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f",(Double) oTrans.getMaster(29))))); //nUnitPrce
-            txtField29_2.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f",(Double) oTrans.getMaster(29))))); //nUnitPrce
+            txtField09_2.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f",(Double) oTrans.getMaster(9))))); //nTranTotl
             txtField11.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f",(Double) oTrans.getMaster(11))))); //nVatRatex
             txtField12.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f",(Double)oTrans.getMaster(12))))); //nVatAmtxx
-            System.out.println("Discount >> " + decimalFormat.format(Double.parseDouble(String.format("%.2f",(Double) oTrans.getMaster(10)))));
+            //System.out.println("Discount >> " + decimalFormat.format(Double.parseDouble(String.format("%.2f",(Double) oTrans.getMaster(10)))));
             txtField10.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f",(Double) oTrans.getMaster(10))))); //nDiscount
             txtField09.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f",(Double) oTrans.getMaster(9))))); //nTranTotl
             
@@ -419,6 +436,9 @@ public class VehicleSalesInvoiceFormController implements Initializable, ScreenI
                     case 23: //sColorDsc
                         oTrans.setMaster(lnCtr, ""); 
                         break;
+                    case 32: //customerType
+                        oTrans.setMaster(lnCtr, "0"); 
+                        break;
                     case 29: //nUnitPrce
                     case 11: //nVatRatex
                     case 12: //nVatAmtxx
@@ -440,6 +460,7 @@ public class VehicleSalesInvoiceFormController implements Initializable, ScreenI
         txtField05.getStyleClass().remove("required-field");
         txtField06.getStyleClass().remove("required-field");
         
+        cmbType032.setValue("");
         txtField05.clear(); //sReferNox
         txtField06.clear(); //sSourceNo
         txtField30.clear(); //sCompnyNm
@@ -452,7 +473,7 @@ public class VehicleSalesInvoiceFormController implements Initializable, ScreenI
         textArea18.clear(); //sDescript
         txtField23.clear(); //sColorDsc
         txtField29.clear(); //nUnitPrce
-        txtField29_2.clear(); //nUnitPrce
+        txtField09_2.clear(); //nUnitPrce
         txtField11.clear(); //nVatRatex
         txtField12.clear(); //nVatAmtxx
         txtField10.clear(); //nDiscount
@@ -490,14 +511,15 @@ public class VehicleSalesInvoiceFormController implements Initializable, ScreenI
             btnCancelSI.setVisible(true);
             btnCancelSI.setManaged(true);
         }
-        
         txtField03.setDisable(!lbShow); //dTransact
         txtField10.setDisable(!lbShow); //nDiscount
         txtField05.setDisable(true);//sReferNox
         txtField06.setDisable(true); //sSourceNo
+        cmbType032.setDisable(true); //Customer type
         if (fnValue == EditMode.ADDNEW){
             txtField05.setDisable(false);//sReferNox
-            txtField06.setDisable(false); //sSourceNo
+            cmbType032.setDisable(false); //Customer type
+            //txtField06.setDisable(false); //sSourceNo
         }
         
         //txtField30.setDisable(!lbShow); //sCompnyNm
@@ -510,7 +532,7 @@ public class VehicleSalesInvoiceFormController implements Initializable, ScreenI
         //textArea18.setDisable(!lbShow); //sDescript
         //txtField23.setDisable(!lbShow); //sColorDsc
         //txtField29.setDisable(!lbShow); //nUnitPrce
-        //txtField29_2.setDisable(!lbShow); //nUnitPrce
+        //txtField09_2.setDisable(!lbShow); //nUnitPrce
         //txtField11.setDisable(!lbShow); //nVatRatex
         //txtField12.setDisable(!lbShow); //nVatAmtxx
         //txtField09.setDisable(!lbShow); //nTranTotl
@@ -530,7 +552,7 @@ public class VehicleSalesInvoiceFormController implements Initializable, ScreenI
         setCapsLockBehavior(textArea18); //sDescript
         setCapsLockBehavior(txtField23); //sColorDsc
 //        setCapsLockBehavior(txtField29); //nUnitPrce
-//        setCapsLockBehavior(txtField29_2); //nUnitPrce
+//        setCapsLockBehavior(txtField09_2); //nUnitPrce
 //        setCapsLockBehavior(txtField11); //nVatRatex
 //        setCapsLockBehavior(txtField12); //nVatAmtxx
 //        setCapsLockBehavior(txtField10); //nDiscount

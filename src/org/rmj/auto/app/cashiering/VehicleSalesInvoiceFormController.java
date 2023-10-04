@@ -167,6 +167,7 @@ public class VehicleSalesInvoiceFormController implements Initializable, ScreenI
 //        txtField11.setOnKeyPressed(this::txtField_KeyPressed);  // nVatRatex
 //        txtField12.setOnKeyPressed(this::txtField_KeyPressed);  // nVatAmtxx
         txtField10.setOnKeyPressed(this::txtField_KeyPressed);  // nDiscount
+        textSeek01.setOnKeyPressed(this::txtField_KeyPressed);  // search
         
         Pattern pattern;
         pattern = Pattern.compile("[[0-9][.][,]]*");
@@ -306,6 +307,26 @@ public class VehicleSalesInvoiceFormController implements Initializable, ScreenI
                     case TAB:
                     case ENTER:
                         switch (lnIndex){
+                            case 1:
+                                if ((pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE)) {
+                                    if (ShowMessageFX.OkayCancel(null, "Confirmation", "You have unsaved data. Are you sure you want to browse a new record?") == true) {
+                                        clearFields();
+                                    } else {
+                                        return;
+                                    }
+                                }
+
+                                if (oTrans.SearchRecord()){
+                                    loadFields();
+                                    pnEditMode = oTrans.getEditMode();
+                                } else {
+                                    ShowMessageFX.Warning(getStage(), "There was an error while loading information.", "Warning", null);
+                                    pnEditMode = EditMode.UNKNOWN;
+                                    clearFields();
+                                }
+                                
+                                initButton(pnEditMode);
+                                break;
                             case 6:
                                 if (oTrans.searchUDR(txtField06.getText(), String.valueOf(cmbType032.getSelectionModel().getSelectedIndex()))){
                                     oTrans.computeAmount();
@@ -395,7 +416,7 @@ public class VehicleSalesInvoiceFormController implements Initializable, ScreenI
             txtField22.setText((String) oTrans.getMaster(22)); //sEngineNo
             textArea18.setText((String) oTrans.getMaster(18)); //sDescript
             txtField23.setText((String) oTrans.getMaster(23)); //sColorDsc
-            cmbType032.getSelectionModel().select(Integer.parseInt(oTrans.getMaster(32).toString())); //Customer Type
+            //cmbType032.getSelectionModel().select(Integer.parseInt(oTrans.getMaster(32).toString())); //Customer Type
             
             // Format the decimal value with decimal separators
             DecimalFormat decimalFormat = new DecimalFormat("#,##0.00");
@@ -437,7 +458,7 @@ public class VehicleSalesInvoiceFormController implements Initializable, ScreenI
                         oTrans.setMaster(lnCtr, ""); 
                         break;
                     case 32: //customerType
-                        oTrans.setMaster(lnCtr, "0"); 
+                        //oTrans.setMaster(lnCtr, "0"); 
                         break;
                     case 29: //nUnitPrce
                     case 11: //nVatRatex

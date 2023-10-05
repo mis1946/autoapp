@@ -30,6 +30,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
@@ -126,6 +127,12 @@ public class VehicleSalesInvoiceFormController implements Initializable, ScreenI
     @FXML
     private ComboBox cmbType032;
     ObservableList<String> cCustomerType = FXCollections.observableArrayList("SUPPLIER", "CUSTOMER"); // Customer Type Values
+    @FXML
+    private Label lblStatus15;
+    @FXML
+    private TextField txtField33;
+    @FXML
+    private TextArea textArea34;
     
     
     private Stage getStage() {
@@ -147,25 +154,12 @@ public class VehicleSalesInvoiceFormController implements Initializable, ScreenI
         //Set fields to caps lock
         setFieldsCapsLock();
         cmbType032.setItems(cCustomerType); //Customer Type
-        //Mode of Payment
-        cmbType032.setOnAction(event -> {
-            if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE){
-                txtField06.setDisable(false);
-            }
-        });
-        
-//        txtField06.focusedProperty().addListener(txtField_Focus);  // sSourceNo
-//        txtField05.focusedProperty().addListener(txtField_Focus);  // nVatRatex
-//        txtField11.focusedProperty().addListener(txtField_Focus);  // nVatRatex
-//        txtField12.focusedProperty().addListener(txtField_Focus);  // nVatAmtxx
+        txtField05.focusedProperty().addListener(txtField_Focus);  // si number
         txtField10.focusedProperty().addListener(txtField_Focus);  // nDiscount
         txtField03.setOnAction(this::getDate); //dTransact
         txtField03.setDayCellFactory(callB);
         
         txtField06.setOnKeyPressed(this::txtField_KeyPressed);  // sSourceNo
-//        txtField05.setOnKeyPressed(this::txtField_KeyPressed);  // sReferNox
-//        txtField11.setOnKeyPressed(this::txtField_KeyPressed);  // nVatRatex
-//        txtField12.setOnKeyPressed(this::txtField_KeyPressed);  // nVatAmtxx
         txtField10.setOnKeyPressed(this::txtField_KeyPressed);  // nDiscount
         textSeek01.setOnKeyPressed(this::txtField_KeyPressed);  // search
         
@@ -177,8 +171,9 @@ public class VehicleSalesInvoiceFormController implements Initializable, ScreenI
         
         txtField06.textProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue.isEmpty()) {
-                clearFields();
+                //clearFields();
                 clearClassFields();
+                loadFields();
             }
         });
         
@@ -217,7 +212,6 @@ public class VehicleSalesInvoiceFormController implements Initializable, ScreenI
                     if (oTrans.NewRecord()) {
                     clearFields();
                     //clearClassFields();
-                    oTrans.setMaster(2,oApp.getBranchCode());
                     loadFields();
                     pnEditMode = oTrans.getEditMode();
                     } else {
@@ -273,6 +267,22 @@ public class VehicleSalesInvoiceFormController implements Initializable, ScreenI
                     }
                     break;
                 case "btnCancelSI":
+                    if (ShowMessageFX.OkayCancel(null, "Confirmation", "Are you sure you want to cancel this record?") == true) {
+                    } else {
+                        return;
+                    }
+                    
+                    if (oTrans.CancelInvoice((String) oTrans.getMaster(1))){
+                        if (!oTrans.OpenRecord((String) oTrans.getMaster(1))){
+                            ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", "");
+                        }
+                        loadFields();
+                        ShowMessageFX.Information(getStage(), "Invoice Successfully Cancelled.", "Success", "");
+                        pnEditMode = EditMode.UNKNOWN;
+                    } else {
+                        ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", "Error while cancelling " + pxeModuleName);
+                        return;
+                    }
                     break;
                 case "btnPrint":
                     break;
@@ -416,7 +426,17 @@ public class VehicleSalesInvoiceFormController implements Initializable, ScreenI
             txtField22.setText((String) oTrans.getMaster(22)); //sEngineNo
             textArea18.setText((String) oTrans.getMaster(18)); //sDescript
             txtField23.setText((String) oTrans.getMaster(23)); //sColorDsc
-            //cmbType032.getSelectionModel().select(Integer.parseInt(oTrans.getMaster(32).toString())); //Customer Type
+            System.out.println(Integer.parseInt(oTrans.getMaster(32).toString()));
+            cmbType032.getSelectionModel().select(Integer.parseInt(oTrans.getMaster(32).toString())); //Customer Type
+            
+            textArea34.setText((String) oTrans.getMaster(34)); //Remarks
+            txtField33.setText((String) oTrans.getMaster(33)); //Tin
+            
+            if (((String) oTrans.getMaster(15)).equals("1")){
+                lblStatus15.setText("Active");
+            } else {
+                lblStatus15.setText("Cancelled");
+            }
             
             // Format the decimal value with decimal separators
             DecimalFormat decimalFormat = new DecimalFormat("#,##0.00");
@@ -438,7 +458,7 @@ public class VehicleSalesInvoiceFormController implements Initializable, ScreenI
     public void clearClassFields(){
         try {
             //Class Master
-            for (lnCtr = 1; lnCtr <= 31; lnCtr++) {
+            for (lnCtr = 1; lnCtr <= 34; lnCtr++) {
                 switch (lnCtr) {
                     case 3:
                         oTrans.setMaster(lnCtr, oApp.getServerDate()); 
@@ -448,6 +468,8 @@ public class VehicleSalesInvoiceFormController implements Initializable, ScreenI
                     case 7: //sSourceCd
                     case 30: //sCompnyNm
                     case 31: //sAddressx
+                    case 33: //tin
+                    case 34: //remarks
                     case 24: //sSalesExe
                     case 19: //sCSNoxxxx
                     case 20: //sPlateNox
@@ -457,9 +479,9 @@ public class VehicleSalesInvoiceFormController implements Initializable, ScreenI
                     case 23: //sColorDsc
                         oTrans.setMaster(lnCtr, ""); 
                         break;
-                    case 32: //customerType
-                        //oTrans.setMaster(lnCtr, "0"); 
-                        break;
+//                    case 32: //customerType
+//                        oTrans.setMaster(lnCtr, "0"); 
+//                        break;
                     case 29: //nUnitPrce
                     case 11: //nVatRatex
                     case 12: //nVatAmtxx
@@ -482,6 +504,7 @@ public class VehicleSalesInvoiceFormController implements Initializable, ScreenI
         txtField06.getStyleClass().remove("required-field");
         
         cmbType032.setValue("");
+        lblStatus15.setText("");
         txtField05.clear(); //sReferNox
         txtField06.clear(); //sSourceNo
         txtField30.clear(); //sCompnyNm
@@ -520,6 +543,8 @@ public class VehicleSalesInvoiceFormController implements Initializable, ScreenI
         btnCancel.setManaged(false);
         btnCancelSI.setVisible(false);
         btnCancelSI.setManaged(false);
+        btnPrint.setVisible(false);
+        btnPrint.setManaged(false);
         
         if (fnValue == EditMode.ADDNEW){
             btnCancel.setVisible(true);
@@ -531,16 +556,20 @@ public class VehicleSalesInvoiceFormController implements Initializable, ScreenI
             btnEdit.setManaged(true);
             btnCancelSI.setVisible(true);
             btnCancelSI.setManaged(true);
+            btnPrint.setVisible(true);
+            btnPrint.setManaged(true);
         }
         txtField03.setDisable(!lbShow); //dTransact
         txtField10.setDisable(!lbShow); //nDiscount
         txtField05.setDisable(true);//sReferNox
         txtField06.setDisable(true); //sSourceNo
         cmbType032.setDisable(true); //Customer type
+        textArea34.setDisable(!lbShow); //Remarks
+        textArea18.setDisable(!lbShow); //vehicle description
         if (fnValue == EditMode.ADDNEW){
             txtField05.setDisable(false);//sReferNox
             cmbType032.setDisable(false); //Customer type
-            //txtField06.setDisable(false); //sSourceNo
+            txtField06.setDisable(false); //sSourceNo
         }
         
         //txtField30.setDisable(!lbShow); //sCompnyNm

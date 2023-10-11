@@ -17,6 +17,9 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.beans.property.ReadOnlyBooleanPropertyBase;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -50,6 +53,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import javafx.util.Duration;
 import org.rmj.appdriver.GRider;
 import org.rmj.appdriver.SQLUtil;
 import org.rmj.appdriver.agentfx.CommonUtils;
@@ -373,6 +377,9 @@ public class VSPFormController implements Initializable, ScreenInterface {
 
         /* Set Table KeyPressed */
         initTableKeyPressed();
+
+        /*Set TextField Required*/
+        initAddRequiredField();
 
         date04.setOnAction(this::getDate);
         date04.setDayCellFactory(DateFormatCell);
@@ -960,7 +967,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
 
             if (oTrans.searchRecord()) {
                 switchToTab(tabMain, ImTabPane);
-//                removeRequiredField();
+                removeRequired();
                 loadVSPField();
                 loadTableLabor();
                 loadTableParts();
@@ -974,8 +981,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
 
             }
         } catch (SQLException ex) {
-            Logger.getLogger(VSPFormController.class
-                    .getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(VSPFormController.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }
@@ -1045,7 +1051,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
                             }
                         }
                         if (oTrans.searchRecord()) {
-//                                removeRequired();
+                            removeRequired();
                             switchToTab(tabMain, ImTabPane);
                             loadVSPField();
                             loadTableLabor();
@@ -2628,6 +2634,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
 
     /*Clear Fields*/
     public void clearFields() {
+        removeRequired();
         laborData.clear();
         partData.clear();
         txtField03.setText("");
@@ -2739,9 +2746,56 @@ public class VSPFormController implements Initializable, ScreenInterface {
 
                 }
             } catch (SQLException ex) {
-                Logger.getLogger(VSPFormController.class
-                        .getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(VSPFormController.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+    }
+
+    private void initAddRequiredField() {
+        addRequiredFieldListener(txtField77);
+        addRequiredFieldListener(txtField68);
+        addRequiredFieldListener(txtField08);
+    }
+
+    //Validation
+    private void addRequiredFieldListener(TextField textField) {
+        textField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue && textField.getText().isEmpty() || !newValue && textField.getText().equals(Double.valueOf("0.00"))) {
+                shakeTextField(textField);
+                textField.getStyleClass().add("required-field");
+            } else {
+                textField.getStyleClass().remove("required-field");
+            }
+        });
+    }
+
+    //Animation
+    private void shakeTextField(TextField textField) {
+        Timeline timeline = new Timeline();
+        double originalX = textField.getTranslateX();
+
+        // Add keyframes for the animation
+        KeyFrame keyFrame1 = new KeyFrame(Duration.millis(0), new KeyValue(textField.translateXProperty(), 0));
+        KeyFrame keyFrame2 = new KeyFrame(Duration.millis(100), new KeyValue(textField.translateXProperty(), -5));
+        KeyFrame keyFrame3 = new KeyFrame(Duration.millis(200), new KeyValue(textField.translateXProperty(), 5));
+        KeyFrame keyFrame4 = new KeyFrame(Duration.millis(300), new KeyValue(textField.translateXProperty(), -5));
+        KeyFrame keyFrame5 = new KeyFrame(Duration.millis(400), new KeyValue(textField.translateXProperty(), 5));
+        KeyFrame keyFrame6 = new KeyFrame(Duration.millis(500), new KeyValue(textField.translateXProperty(), -5));
+        KeyFrame keyFrame7 = new KeyFrame(Duration.millis(600), new KeyValue(textField.translateXProperty(), 5));
+        KeyFrame keyFrame8 = new KeyFrame(Duration.millis(700), new KeyValue(textField.translateXProperty(), originalX));
+
+        // Add keyframes to the timeline
+        timeline.getKeyFrames().addAll(
+                keyFrame1, keyFrame2, keyFrame3, keyFrame4, keyFrame5, keyFrame6, keyFrame7, keyFrame8
+        );
+
+        // Play the animation
+        timeline.play();
+    }
+
+    public void removeRequired() {
+        txtField77.getStyleClass().remove("required-field");
+        txtField68.getStyleClass().remove("required-field");
+        txtField08.getStyleClass().remove("required-field");
     }
 }

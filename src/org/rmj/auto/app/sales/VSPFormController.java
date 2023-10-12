@@ -1816,6 +1816,11 @@ public class VSPFormController implements Initializable, ScreenInterface {
             txtField372.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f", oTrans.getMaster(37)))));
             txtField392.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f", oTrans.getMaster(39)))));
 
+            if (((String) oTrans.getMaster(61)).equals("0")) {
+                lblVSPStatus.setText("Cancelled");
+            } else {
+                lblVSPStatus.setText("Active");
+            }
         } catch (SQLException e) {
             ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
 
@@ -2411,7 +2416,10 @@ public class VSPFormController implements Initializable, ScreenInterface {
         btnSave.setManaged(lbShow);
         btnCancel.setVisible(lbShow);
         btnCancel.setManaged(lbShow);
-
+        btnPrint.setVisible(false);
+        btnPrint.setManaged(false);
+        btnCancelVSP.setManaged(false);
+        btnCancelVSP.setVisible(false);
         chckBoxSpecialAccount.setDisable(!lbShow);
 
         txtField42.setDisable(true);
@@ -2697,12 +2705,25 @@ public class VSPFormController implements Initializable, ScreenInterface {
 //
 //        tblViewLabor.setDisable(!lbShow);
         if (fnValue == EditMode.READY) {
-            btnEdit.setVisible(true);
-            btnEdit.setManaged(true);
-            btnPrint.setVisible(true);
-            btnPrint.setManaged(true);
-            tabAddOns.setDisable(false);
-            tabDetails.setDisable(false);
+            if (lblVSPStatus.getText().equals("Cancelled")) {
+                btnCancelVSP.setVisible(false);
+                btnCancelVSP.setManaged(false);
+                btnEdit.setVisible(false);
+                btnEdit.setManaged(false);
+                tabAddOns.setDisable(false);
+                tabDetails.setDisable(false);
+                btnPrint.setVisible(false);
+                btnPrint.setManaged(false);
+            } else {
+                btnCancelVSP.setVisible(true);
+                btnCancelVSP.setManaged(true);
+                btnEdit.setVisible(true);
+                btnEdit.setManaged(true);
+                btnPrint.setVisible(true);
+                btnPrint.setManaged(true);
+                tabAddOns.setDisable(false);
+                tabDetails.setDisable(false);
+            }
         }
         if (fnValue == EditMode.UPDATE) {
 

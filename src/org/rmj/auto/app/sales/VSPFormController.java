@@ -62,6 +62,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Callback;
 import javafx.util.Duration;
+import javafx.util.StringConverter;
 import org.rmj.appdriver.GRider;
 import org.rmj.appdriver.SQLUtil;
 import org.rmj.appdriver.agentfx.CommonUtils;
@@ -87,13 +88,13 @@ public class VSPFormController implements Initializable, ScreenInterface {
 
     unloadForm unload = new unloadForm(); //Used in Close Button
     private final String pxeModuleName = "Vehicle Sales Proposal"; //Form Title
-    private int pnEditMode;//Modifying fields
+    public int pnEditMode;//Modifying fields
     private int lnCtr = 0;
 
     private String TransNo = "";
 
     @FXML
-    private AnchorPane AnchorMain;
+    public AnchorPane AnchorMain;
     @FXML
     private Button btnAdd;
     @FXML
@@ -342,6 +343,27 @@ public class VSPFormController implements Initializable, ScreenInterface {
     @Override
     public void setGRider(GRider foValue) {
         oApp = foValue;
+    }
+
+    public void setAddMode(String fsValue) {
+        btnAdd.fire();
+
+        try {
+            if (oTrans.searchInquiry(fsValue, true)) {
+                txtField77.setText((String) oTrans.getMaster(77));
+                clearClassMasterField();
+                loadVSPField();
+                initButton(pnEditMode);
+            } else {
+                clearFields();
+                clearClassMasterField();
+                txtField77.clear();
+                txtField77.requestFocus();
+                ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(VSPFormController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     private double xOffset = 0;
     private double yOffset = 0;
@@ -1093,7 +1115,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
                         initButton(pnEditMode);
                         break;
                     case "txtField77":
-                        if (oTrans.searchInquiry(txtField.getText())) {
+                        if (oTrans.searchInquiry(txtField.getText(), false)) {
                             txtField77.setText((String) oTrans.getMaster(77));
                             clearClassMasterField();
                             loadVSPField();
@@ -1911,6 +1933,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
         tblindex08_Labor.setCellValueFactory(new PropertyValueFactory<>("tblindex08_Labor"));
         tblindex08_Labor.setCellValueFactory(new PropertyValueFactory<>("tblindex08_Labor"));
         tblindex08_Labor.setCellValueFactory(new PropertyValueFactory<>("tblindex08_Labor"));
+
         tblindex08_Labor.setCellFactory(col -> new TextFieldTableCell<VSPTableLaborList, String>() {
             @Override
             public void updateItem(String item, boolean empty) {
@@ -1944,13 +1967,13 @@ public class VSPFormController implements Initializable, ScreenInterface {
             if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
                 TablePosition<VSPTableLaborList, String> focusedCell = tblViewLabor.getFocusModel().getFocusedCell();
                 if (focusedCell != null && focusedCell.getTableColumn() != null && focusedCell.getTableColumn().getId() != null) {
-                    int lnIndex = Integer.parseInt(focusedCell.getTableColumn().getId().substring(9, 10));
                     switch (event.getCode()) {
                         case F3:
                         case ENTER:
                     try {
                             // Check if the focused cell is editable
                             if (focusedCell.getTableColumn().isEditable()) {
+                                int lnIndex = Integer.parseInt(focusedCell.getTableColumn().getId().substring(9, 10));
                                 switch (lnIndex) {
                                     case 8:
                                         if (oTrans.searchLabor("", tblViewLabor.getSelectionModel().getSelectedIndex() + 1, true)) {

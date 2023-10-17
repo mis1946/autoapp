@@ -164,6 +164,25 @@ public class VSPFormPrintController implements Initializable {
         psTransNox = fsValue;
     }
 
+    public static String formatName(String fullName) {
+        String[] nameParts = fullName.split(" ");
+        String firstNameInitial = nameParts[0].substring(0, 1);
+        String lastName = nameParts[nameParts.length - 1];
+        return firstNameInitial + ". " + lastName;
+    }
+
+    public static String formatAmount(String amountString) {
+        DecimalFormat numFormat = new DecimalFormat("#,##0.00");
+        String formattedAmount = "";
+        if (amountString.contains("0.00")) {
+            formattedAmount = "";
+        } else {
+            double amount = Double.parseDouble(amountString);
+            formattedAmount = numFormat.format(amount);
+        }
+        return formattedAmount;
+    }
+
     private boolean loadReport() throws SQLException {
         //Create the parameter
         int lnCtr = 1;
@@ -179,6 +198,140 @@ public class VSPFormPrintController implements Initializable {
             } else {
                 deliveryDate = CommonUtils.xsDateShort((Date) oTrans.getMaster("dDelvryDt"));
             }
+            String salesExe = oTrans.getMaster("sSalesExe").toString();
+            String salesExeFullName = formatName(salesExe);
+            String ownerHomeAddress = "";
+            String ownerOfficeAddress = "";
+            if (oTrans.getMaster("cOfficexx").toString().equals("1")) {
+                ownerOfficeAddress = oTrans.getMaster("sAddressx").toString().toUpperCase();
+            } else {
+                ownerOfficeAddress = "";
+            }
+            if (oTrans.getMaster("cOfficexx").toString().equals("0")) {
+                ownerHomeAddress = oTrans.getMaster("sAddressx").toString().toUpperCase();
+            } else {
+                ownerHomeAddress = "";
+            }
+            String notOfficeNumber = "";
+            String officeNumber = "";
+            if (oTrans.getMaster("cOwnerxxx").toString().equals("0")) {
+                notOfficeNumber = oTrans.getMaster("sMobileNo").toString();
+            } else {
+                notOfficeNumber = "";
+            }
+            if (oTrans.getMaster("cOwnerxxx").toString().equals("1")) {
+                officeNumber = oTrans.getMaster("sMobileNo").toString();
+            } else {
+                officeNumber = "";
+            }
+            String platOrCsNo = "";
+            if (oTrans.getMaster("sPlateNox").toString().isEmpty()) {
+                platOrCsNo = oTrans.getMaster("sCSNoxxxx").toString();
+            } else if (!oTrans.getMaster("sPlateNox").toString().isEmpty()) {
+                platOrCsNo = oTrans.getMaster("sPlateNox").toString();
+            } else {
+                platOrCsNo = "";
+            }
+            String paymentMethodDisplay = "";
+            String paymentMethod = oTrans.getMaster("cPayModex").toString();
+            switch (paymentMethod) {
+                case "0":
+                    paymentMethodDisplay = "CASH";
+                    break;
+                case "1":
+                    paymentMethodDisplay = "BANK PURCHASE ORDER";
+                    break;
+                case "2":
+                    paymentMethodDisplay = "BANK FINANCING";
+                    break;
+                case "3":
+                    paymentMethodDisplay = "COMPANY PURCHASE ORDER";
+                    break;
+                case "4":
+                    paymentMethodDisplay = "COMPANY FINANCING";
+                    break;
+                default:
+                    paymentMethodDisplay = "";
+                    break;
+            }
+
+            String unitPrice = "";
+            String nUPrice = decimalFormat.format(Double.parseDouble(oTrans.getMaster("nUnitPrce").toString()));
+            String dPayment = decimalFormat.format(Double.parseDouble(oTrans.getMaster("nDownPaym").toString()));
+            if (oTrans.getMaster("nUnitPrce").toString().contains("0.00")) {
+                unitPrice = "0.00";
+            } else {
+                unitPrice = nUPrice + " / Downpayment:" + dPayment;
+            }
+
+            String LtoAmount = "0.00";
+            switch (oTrans.getMaster("sLTOStatx").toString()) {
+                case "0":
+                    LtoAmount = "";
+                    break;
+                case "1":
+                    LtoAmount = "FREE";
+                    break;
+                case "2":
+                    LtoAmount = formatAmount(oTrans.getMaster("nLTOAmtxx").toString());
+                    break;
+            }
+            String chmoDocStamps = "";
+            switch (oTrans.getMaster("sChmoStat").toString()) {
+                case "0":
+                    LtoAmount = "";
+                    break;
+                case "1":
+                    LtoAmount = "FREE";
+                    break;
+                case "2":
+                case "3":
+                    chmoDocStamps = formatAmount(oTrans.getMaster("nChmoAmtx").toString());
+                    break;
+            }
+            String totalAmount = formatAmount(oTrans.getMaster("nTranTotl").toString());
+            String reservationAmount = formatAmount(oTrans.getMaster("nResrvFee").toString());
+//            String dwnPayment = formatAmount(oTrans.getMaster("nTranTotl").toString(), decimalFormat);
+            String netAmountDue = formatAmount(oTrans.getMaster("nNetTTotl").toString());
+            String inqTypDisplay = "";
+            switch (oTrans.getMaster("sInqTypex").toString()) {
+                case "0":
+                    inqTypDisplay = "WALK-IN";
+                    break;
+                case "1":
+                    inqTypDisplay = "WEB INQUIRY";
+                    break;
+                case "2":
+                    inqTypDisplay = "PHONE-IN";
+                    break;
+                case "3":
+                    inqTypDisplay = "REFERRAL";
+                    break;
+                case "4":
+                    inqTypDisplay = "SALES CALL";
+                    break;
+                case "5":
+                    inqTypDisplay = "EVENT";
+                    break;
+                case "6":
+                    inqTypDisplay = "SERVICE";
+                    break;
+                case "7":
+                    inqTypDisplay = "OFFICE ACCOUNT";
+                    break;
+                case "8":
+                    inqTypDisplay = "CAREMITTANCE";
+                    break;
+                case "9":
+                    inqTypDisplay = "DATABASE";
+                    break;
+                case "10":
+                    inqTypDisplay = "UIO";
+                    break;
+                default:
+                    inqTypDisplay = "";
+                    break;
+            }
 
             vspMasterData.add(new VSPTableMasterList(
                     "",
@@ -189,7 +342,7 @@ public class VSPFormPrintController implements Initializable {
                     oTrans.getMaster("sInqryIDx").toString(),
                     oTrans.getMaster("sClientID").toString(),
                     oTrans.getMaster("sSerialID").toString(),
-                    oTrans.getMaster("nUnitPrce").toString(),
+                    unitPrice,
                     oTrans.getMaster("sRemarksx").toString(),
                     oTrans.getMaster("nAdvDwPmt").toString(),
                     oTrans.getMaster("sOthrDesc").toString(),
@@ -199,12 +352,10 @@ public class VSPFormPrintController implements Initializable {
                     oTrans.getMaster("nInsurAmt").toString(),
                     oTrans.getMaster("nTPLAmtxx").toString(),
                     oTrans.getMaster("nCompAmtx").toString(),
-                    oTrans.getMaster("nLTOAmtxx").toString(),
-                    oTrans.getMaster("nChmoAmtx").toString(),
-                    oTrans.getMaster("sChmoStat").toString(),
+                    LtoAmount,
+                    chmoDocStamps,
                     oTrans.getMaster("sTPLStatx").toString(),
                     oTrans.getMaster("sCompStat").toString(),
-                    oTrans.getMaster("sLTOStatx").toString(),
                     oTrans.getMaster("sInsurTyp").toString(),
                     oTrans.getMaster("nInsurYrx").toString(),
                     oTrans.getMaster("sInsTplCd").toString(),
@@ -215,12 +366,11 @@ public class VSPFormPrintController implements Initializable {
                     oTrans.getMaster("nBndleDsc").toString(),
                     oTrans.getMaster("nAddlDscx").toString(),
                     oTrans.getMaster("nDealrInc").toString(),
-                    oTrans.getMaster("cPayModex").toString(),
+                    paymentMethodDisplay,
                     oTrans.getMaster("sBnkAppCD").toString(),
-                    oTrans.getMaster("nTranTotl").toString(),
-                    oTrans.getMaster("nResrvFee").toString(),
-                    oTrans.getMaster("nDownPaym").toString(),
-                    oTrans.getMaster("nNetTTotl").toString(),
+                    totalAmount,
+                    reservationAmount,
+                    netAmountDue,
                     oTrans.getMaster("nAmtPaidx").toString(),
                     oTrans.getMaster("nFrgtChrg").toString(),
                     oTrans.getMaster("nDue2Supx").toString(),
@@ -249,39 +399,59 @@ public class VSPFormPrintController implements Initializable {
                     "",
                     "",
                     "",
-                    oTrans.getMaster("sCompnyNm").toString(),
-                    oTrans.getMaster("sAddressx").toString(),
-                    oTrans.getMaster("sDescript").toString(),
-                    oTrans.getMaster("sCSNoxxxx").toString(),
-                    oTrans.getMaster("sPlateNox").toString(),
+                    oTrans.getMaster("sCompnyNm").toString().toUpperCase(),
+                    ownerOfficeAddress,
+                    ownerHomeAddress,
+                    oTrans.getMaster("sDescript").toString().toUpperCase(),
+                    platOrCsNo,
                     oTrans.getMaster("sFrameNox").toString(),
                     oTrans.getMaster("sEngineNo").toString(),
-                    oTrans.getMaster("sSalesExe").toString(),
+                    salesExeFullName.toUpperCase(),
                     oTrans.getMaster("sSalesAgn").toString(),
                     oTrans.getMaster("sInqClntx").toString(),
                     oTrans.getMaster("dInqDatex").toString(),
                     "",
-                    oTrans.getMaster("sInqTypex").toString(),
+                    inqTypDisplay,
                     oTrans.getMaster("sOnlStore").toString(),
                     oTrans.getMaster("sRefTypex").toString(),
                     oTrans.getMaster("sKeyNoxxx").toString(),
                     oTrans.getMaster("sBranchNm").toString().toUpperCase(), //Branch Name
                     oTrans.getMaster("sInsTplNm").toString(),
-                    oTrans.getMaster("sInsComNm").toString() // Branch Address
-            ));
+                    oTrans.getMaster("sInsComNm").toString(),
+                    oTrans.getMaster("sTaxIDNox").toString(),
+                    oTrans.getMaster("sJobNoxxx").toString(),
+                    CommonUtils.xsDateMedium((Date) oTrans.getMaster("dBirthDte")),
+                    oTrans.getMaster("sEmailAdd").toString(),
+                    oTrans.getMaster("cOwnerxxx").toString(),
+                    notOfficeNumber,
+                    officeNumber,
+                    oTrans.getMaster("cOfficexx").toString(),
+                    oTrans.getMaster("cTrStatus").toString(),
+                    oTrans.getMaster("sBrnchAdd").toString()// Branch Address
+            )
+            );
 
 //            vspFinanceData.clear();
-//            String finAmount = oTrans.getVSPFinance("nFinAmtxx").toString();
-//            // Convert the amount to a decimal value
-//            double Finamount = Double.parseDouble(finAmount);
-//            String finAmountx = decimalFormat.format(Finamount);
+//            String Finamount = "0.00";
+//            if (!oTrans.getVSPFinance(5).toString().contains("0.00")) {
+//                Finamount = decimalFormat.format(Double.parseDouble(String.format("%.2f", oTrans.getVSPFinance(5))));
+//            } else {
+//                Finamount = "0.00";
+//            }
+//            String bankName = "";
+//            if (!oTrans.getVSPFinance("sBankname").toString().isEmpty()) {
+//                bankName = oTrans.getVSPFinance("sBankname").toString();
+//            } else {
+//                bankName = "";
+//            }
+//
 //            vspFinanceData.add(new VSPTableFinanceList(
 //                    "",
 //                    oTrans.getVSPFinance("sTransNox").toString(),
 //                    oTrans.getVSPFinance("cFinPromo").toString(),
 //                    oTrans.getVSPFinance("sBankIDxx").toString(),
-//                    oTrans.getVSPFinance("sBankname").toString(),
-//                    finAmountx,
+//                    bankName.toUpperCase(),
+//                    Finamount,
 //                    oTrans.getVSPFinance("nAcctTerm").toString(),
 //                    oTrans.getVSPFinance("nAcctRate").toString(),
 //                    oTrans.getVSPFinance("nRebatesx").toString(),

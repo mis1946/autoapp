@@ -189,6 +189,7 @@ public class InquiryFollowUpFormController implements Initializable {
                 
                 if (setSelection()){
                     oTransFollowUp.setTransNox(sSourceNo);
+                    oTransFollowUp.setisFollowUp(true);
                     if (oTransFollowUp.SaveRecord()){
                         ShowMessageFX.Information(null, pxeModuleName, oTransFollowUp.getMessage());
                     } else {

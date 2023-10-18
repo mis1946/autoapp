@@ -21,6 +21,10 @@ public class VSPTableLaborList {
     private SimpleStringProperty tblindex05_Labor;
     private SimpleStringProperty tblindex06_Labor;
     private SimpleStringProperty tblindex04_Labor;
+    private SimpleStringProperty tblindex04_Labor_Rust;
+    private SimpleStringProperty tblindex04_Labor_Perma;
+    private SimpleStringProperty tblindex04_Labor_Under;
+    private SimpleStringProperty tblindex04_Labor_Tint;
     private CheckBox addOrNot;
     private SimpleBooleanProperty tblindex09;
 
@@ -30,6 +34,10 @@ public class VSPTableLaborList {
             String tblindex05_Labor,
             String tblindex06_Labor,
             String tblindex04_Labor,
+            String tblindex04_Labor_Rust,
+            String tblindex04_Labor_Perma,
+            String tblindex04_Labor_Under,
+            String tblindex04_Labor_Tint,
             boolean tblindex09) {
         this.tblLaborRow = new SimpleStringProperty(tblLaborRow);
         this.tblindex03_Labor = new SimpleStringProperty(tblindex03_Labor);
@@ -37,6 +45,10 @@ public class VSPTableLaborList {
         this.tblindex05_Labor = new SimpleStringProperty(tblindex05_Labor);
         this.tblindex06_Labor = new SimpleStringProperty(tblindex06_Labor);
         this.tblindex04_Labor = new SimpleStringProperty(tblindex04_Labor);
+        this.tblindex04_Labor_Rust = new SimpleStringProperty(tblindex04_Labor_Rust);
+        this.tblindex04_Labor_Perma = new SimpleStringProperty(tblindex04_Labor_Perma);
+        this.tblindex04_Labor_Under = new SimpleStringProperty(tblindex04_Labor_Under);
+        this.tblindex04_Labor_Tint = new SimpleStringProperty(tblindex04_Labor_Tint);
         this.addOrNot = new CheckBox();
         this.tblindex09 = new SimpleBooleanProperty(tblindex09);
         this.addOrNot.setSelected(tblindex09);
@@ -89,6 +101,39 @@ public class VSPTableLaborList {
 
     public void setTblindex04_Labor(String tblindex04_Labor) {
         this.tblindex04_Labor.set(tblindex04_Labor);
+    }
+
+    public String getTblindex04_Labor_Rust() {
+        return tblindex04_Labor_Rust.get();
+    }
+
+    public void setTblindex04_Labor_Rust(String tblindex04_Labor_Rust) {
+        this.tblindex04_Labor_Rust.set(tblindex04_Labor_Rust);
+    }
+
+    public String getTblindex04_Labor_Perma() {
+        return tblindex04_Labor_Perma.get();
+    }
+
+    public void setTblindex04_Labor_Perma(String tblindex04_Labor_Perma) {
+        this.tblindex04_Labor_Perma.set(tblindex04_Labor_Perma);
+    }
+
+    public String getTblindex04_Labor_Under() {
+        return tblindex04_Labor_Under.get();
+    }
+
+    public void setTblindex04_Labor_Under(String tblindex04_Labor_Under) {
+        this.tblindex04_Labor_Under.set(tblindex04_Labor_Under);
+    }
+
+    public String getTblindex04_Labor_Tint() {
+        return tblindex04_Labor_Tint.get();
+    }
+
+    public void setTblindex04_Labor_Tint(String tblindex04_Labor_Tint) {
+        this.tblindex04_Labor_Tint.set(tblindex04_Labor_Tint);
+
     }
 
     public CheckBox getAddOrNot() {

@@ -174,7 +174,7 @@ public class VSPFormPrintController implements Initializable {
     public static String formatAmount(String amountString) {
         DecimalFormat numFormat = new DecimalFormat("#,##0.00");
         String formattedAmount = "";
-        if (amountString.contains("0.00")) {
+        if (amountString.contains("0.00") || amountString.isEmpty()) {
             formattedAmount = "";
         } else {
             double amount = Double.parseDouble(amountString);
@@ -333,6 +333,67 @@ public class VSPFormPrintController implements Initializable {
                     break;
             }
 
+            String tplInsuranceCompany = oTrans.getMaster("sInsTplNm").toString();
+            String tplInsuranceAmount = formatAmount(oTrans.getMaster("nTPLAmtxx").toString());
+
+            String displayTplInsuranceAmount = "";
+            String displayTplInsuranceComp = "";
+            String compreInsuranceCompany = oTrans.getMaster("sInsComNm").toString();
+
+            String compreInsuranceAmount = formatAmount(oTrans.getMaster("nCompAmtx").toString());
+            String displayCompInsuranceAmount = "";
+            String displayCompInsuranceComp = "";
+            switch (oTrans.getMaster("sTPLStatx").toString()) {
+                case "1":
+                    displayTplInsuranceComp = tplInsuranceCompany;
+                    displayTplInsuranceAmount = "FREE";
+                    break;
+                case "0":
+                case "2":
+                case "4":
+                    break;
+                case "3":
+                    displayTplInsuranceAmount = tplInsuranceAmount;
+                    displayTplInsuranceComp = tplInsuranceCompany;
+                    break;
+                default:
+                    break;
+
+            }
+            switch (oTrans.getMaster("sCompStat").toString()) {
+                case "1":
+                    displayTplInsuranceComp = compreInsuranceCompany;
+                    displayCompInsuranceAmount = "FREE";
+                    break;
+                case "0":
+                case "2":
+                case "4":
+                    break;
+                case "3":
+                    displayCompInsuranceAmount = compreInsuranceAmount;
+                    displayCompInsuranceComp = compreInsuranceCompany;
+                    break;
+                default:
+                    break;
+
+            }
+            String nAccessAmount = formatAmount(oTrans.getMaster("nAccesAmt").toString());
+
+            String bankName = "";
+            String amountFinance = "";
+            String netMonthlyFinance = "";
+            String promptPaymentDiscount = "";
+            String grossMonthly = "";
+            String promptNoteAmount = "";
+            if (oTrans.getVSPFinanceCount() > 0) {
+                bankName = oTrans.getVSPFinance(4).toString();
+                amountFinance = formatAmount(oTrans.getVSPFinance(5).toString());
+                netMonthlyFinance = formatAmount(oTrans.getVSPFinance(9).toString());
+                promptPaymentDiscount = formatAmount(oTrans.getVSPFinance(8).toString());
+                grossMonthly = formatAmount(oTrans.getVSPFinance(12).toString());
+                promptNoteAmount = formatAmount(oTrans.getVSPFinance(10).toString());
+            }
+
             vspMasterData.add(new VSPTableMasterList(
                     "",
                     oTrans.getMaster("sTransNox").toString(),
@@ -345,13 +406,20 @@ public class VSPFormPrintController implements Initializable {
                     unitPrice,
                     oTrans.getMaster("sRemarksx").toString(),
                     oTrans.getMaster("nAdvDwPmt").toString(),
+                    promptNoteAmount,
+                    amountFinance,
+                    bankName,
+                    netMonthlyFinance,
+                    promptPaymentDiscount,
+                    grossMonthly,
                     oTrans.getMaster("sOthrDesc").toString(),
                     oTrans.getMaster("nOthrChrg").toString(),
                     oTrans.getMaster("nLaborAmt").toString(),
-                    oTrans.getMaster("nAccesAmt").toString(),
+                    "",
+                    nAccessAmount,
                     oTrans.getMaster("nInsurAmt").toString(),
-                    oTrans.getMaster("nTPLAmtxx").toString(),
-                    oTrans.getMaster("nCompAmtx").toString(),
+                    displayCompInsuranceAmount,
+                    displayTplInsuranceAmount,
                     LtoAmount,
                     chmoDocStamps,
                     oTrans.getMaster("sTPLStatx").toString(),
@@ -416,8 +484,8 @@ public class VSPFormPrintController implements Initializable {
                     oTrans.getMaster("sRefTypex").toString(),
                     oTrans.getMaster("sKeyNoxxx").toString(),
                     oTrans.getMaster("sBranchNm").toString().toUpperCase(), //Branch Name
-                    oTrans.getMaster("sInsTplNm").toString(),
-                    oTrans.getMaster("sInsComNm").toString(),
+                    displayTplInsuranceComp,
+                    displayCompInsuranceComp,
                     oTrans.getMaster("sTaxIDNox").toString(),
                     oTrans.getMaster("sJobNoxxx").toString(),
                     CommonUtils.xsDateMedium((Date) oTrans.getMaster("dBirthDte")),
@@ -430,148 +498,28 @@ public class VSPFormPrintController implements Initializable {
                     oTrans.getMaster("sBrnchAdd").toString()// Branch Address
             )
             );
+            vspFinanceData.clear();
+            vspLaborData.clear();
+            vspPartData.clear();
 
-//            vspFinanceData.clear();
-//            String Finamount = "0.00";
-//            if (!oTrans.getVSPFinance(5).toString().contains("0.00")) {
-//                Finamount = decimalFormat.format(Double.parseDouble(String.format("%.2f", oTrans.getVSPFinance(5))));
-//            } else {
-//                Finamount = "0.00";
-//            }
-//            String bankName = "";
-//            if (!oTrans.getVSPFinance("sBankname").toString().isEmpty()) {
-//                bankName = oTrans.getVSPFinance("sBankname").toString();
-//            } else {
-//                bankName = "";
-//            }
-//
-//            vspFinanceData.add(new VSPTableFinanceList(
-//                    "",
-//                    oTrans.getVSPFinance("sTransNox").toString(),
-//                    oTrans.getVSPFinance("cFinPromo").toString(),
-//                    oTrans.getVSPFinance("sBankIDxx").toString(),
-//                    bankName.toUpperCase(),
-//                    Finamount,
-//                    oTrans.getVSPFinance("nAcctTerm").toString(),
-//                    oTrans.getVSPFinance("nAcctRate").toString(),
-//                    oTrans.getVSPFinance("nRebatesx").toString(),
-//                    oTrans.getVSPFinance("nMonAmort").toString(),
-//                    oTrans.getVSPFinance("nPNValuex").toString(),
-//                    oTrans.getVSPFinance("nBnkPaidx").toString(),
-//                    oTrans.getVSPFinance("nGrsMonth").toString(),
-//                    oTrans.getVSPFinance("nNtDwnPmt").toString(),
-//                    oTrans.getVSPFinance("nDiscount").toString()
-//            ));
-//            vspLaborData.clear();
-//
-//            for (lnCtr = 1; lnCtr <= oTrans.getVSPLaborCount(); lnCtr++) {
-//                String cType = "";
-//                switch (oTrans.getVSPLaborDetail(lnCtr, "sChrgeTyp").toString()) {
-//                    case "0":
-//                        cType = "FREE OF CHARGE";
-//                        break;
-//                    case "1":
-//                        cType = "CHARGE";
-//                        break;
-//                }
-//                String cTo = "";
-//                switch (oTrans.getVSPLaborDetail(lnCtr, "sChrgeTox").toString()) {
-//                    case "0":
-//                        cTo = "C/O CLIENT";
-//                        break;
-//                    case "1":
-//                        cTo = "C/O BANK";
-//                        break;
-//                }
-//
-//                if (oTrans.getVSPLaborDetail(lnCtr, "cAddtlxxx").toString().equals("1")) {
-//                    bAdditional = true;
-//                } else {
-//                    bAdditional = false;
-//                }
-//                String result = "";
-//                String rustAmount = oTrans.getVSPLaborDetail(lnCtr, "nLaborAmt").toString();
-//                if (oTrans.getVSPLaborDetail(lnCtr, "sLaborDsc").toString().equals("RustProof")) {
-//                    result = rustAmount;
-//                } else {
-//                    result = "";
-//                }
-//                String amountString = oTrans.getVSPLaborDetail(lnCtr, "nLaborAmt").toString();
-//                // Convert the amount to a decimal value
-//                double amount = Double.parseDouble(amountString);
-//
-//                String formattedAmount = decimalFormat.format(amount);
-//                vspLaborData.add(new VSPTableLaborList(
-//                        String.valueOf(lnCtr), //ROW
-//                        oTrans.getVSPLaborDetail(lnCtr, "sLaborCde").toString(),
-//                        oTrans.getVSPLaborDetail(lnCtr, "sLaborDsc").toString().toUpperCase(),
-//                        cType,
-//                        cTo,
-//                        formattedAmount,
-//                        bAdditional
-//                ));
-//                bAdditional = false;
-//            }
-//
-//            vspPartData.clear();
-//            for (lnCtr = 1;
-//                    lnCtr
-//                    <= oTrans.getVSPPartsCount();
-//                    lnCtr++) {
-//                String cType = "";
-//                switch (oTrans.getVSPPartsDetail(lnCtr, "sChrgeTyp").toString()) {
-//                    case "0":
-//                        cType = "FREE OF CHARGE";
-//                        break;
-//                    case "1":
-//                        cType = "CHARGE";
-//                        break;
-//                }
-//                String cTo = "";
-//                switch (oTrans.getVSPPartsDetail(lnCtr, "sChrgeTox").toString()) {
-//                    case "0":
-//                        cTo = "C/O CLIENT";
-//                        break;
-//                    case "1":
-//                        cTo = "C/O BANK";
-//                        break;
-//                }
-//                String amountString = oTrans.getVSPPartsDetail(lnCtr, "nSelPrice").toString();
-//                // Convert the amount to a decimal value
-//                double amount = Double.parseDouble(amountString);
-//                String formattedAmount = decimalFormat.format(amount);
-//                if (oTrans.getVSPPartsDetail(lnCtr, "cAddtlxxx").toString().equals("1")) {
-//                    bAdditional = true;
-//                } else {
-//                    bAdditional = false;
-//                }
-//                vspPartData.add(new VSPTablePartList(
-//                        String.valueOf(lnCtr), //ROW
-//                        oTrans.getVSPPartsDetail(lnCtr, "sBarCodex").toString(),
-//                        oTrans.getVSPPartsDetail(lnCtr, "sDescript").toString(),
-//                        cType,
-//                        oTrans.getVSPPartsDetail(lnCtr, "nQuantity").toString(),
-//                        formattedAmount,
-//                        cTo,
-//                        bAdditional
-//                ));
-//                bAdditional = false;
-//            }
         }
+
         String sourceFileName = "D://GGC_Java_Systems/reports/autoapp/vsp.jasper";
         String printFileName = null;
         JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(vspMasterData);
-//        JRBeanCollectionDataSource vspFinance = new JRBeanCollectionDataSource(vspFinanceData);
-//        JRBeanCollectionDataSource vspLabor = new JRBeanCollectionDataSource(vspLaborData);
-//        JRBeanCollectionDataSource vspPart = new JRBeanCollectionDataSource(vspPartData);
-//
-//        params.put(
-//                "vspLabor", vspLabor);
-//        params.put(
-//                "vspPart", vspPart);
-//        params.put(
-//                "vspFinance", vspFinance);
-        params.put("formName", "VEHICLE SALES PROPOSAL FORM");
+        JRBeanCollectionDataSource vspFinance = new JRBeanCollectionDataSource(vspFinanceData);
+        JRBeanCollectionDataSource vspLabor = new JRBeanCollectionDataSource(vspLaborData);
+        JRBeanCollectionDataSource vspPart = new JRBeanCollectionDataSource(vspPartData);
+
+        params.put(
+                "vspLabor", vspLabor);
+        params.put(
+                "vspPart", vspPart);
+        params.put(
+                "vspFinance", vspFinance);
+
+        params.put(
+                "formName", "VEHICLE SALES PROPOSAL FORM");
         try {
             jasperPrint = JasperFillManager.fillReport(sourceFileName, params, beanColDataSource);
             printFileName = jasperPrint.toString();

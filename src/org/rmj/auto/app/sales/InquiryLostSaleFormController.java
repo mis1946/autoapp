@@ -40,7 +40,9 @@ import org.rmj.appdriver.agentfx.CommonUtils;
 import org.rmj.appdriver.agentfx.ShowMessageFX;
 import org.rmj.appdriver.callback.MasterCallback;
 import org.rmj.auto.app.views.InputTextFormatter;
+import org.rmj.auto.parameters.CancellationMaster;
 import org.rmj.auto.sales.base.InquiryFollowUp;
+import org.rmj.auto.sales.base.VehicleSalesProposalMaster;
 
 /**
  * FXML Controller class
@@ -52,8 +54,10 @@ public class InquiryLostSaleFormController implements Initializable {
     private boolean pbLoaded = false;
     private MasterCallback oListener;
     private InquiryFollowUp oTransFollowUp;
+    private VehicleSalesProposalMaster oTransVSP;
 
     private String sSourceNo;
+    private String sVSPNox;
     private String sClient;
     private int iTag;
     private int iGdsCt;
@@ -86,14 +90,20 @@ public class InquiryLostSaleFormController implements Initializable {
     public void setGRider(GRider foValue) {
         oApp = foValue;
     }
-    public void setObject(InquiryFollowUp foValue){
+    public void setFollowUpObject(InquiryFollowUp foValue){
        oTransFollowUp = foValue;
+    }
+    public void setVSPObject(VehicleSalesProposalMaster foValue){
+       oTransVSP = foValue;
     }
     public void setState(boolean fsValue){
        state = fsValue;
     }
     public void setsSourceNo(String fsValue){
        sSourceNo = fsValue;
+    }
+    public void setsVSPNox(String fsValue){
+       sVSPNox = fsValue;
     }
     public void setClientName(String fsValue){
        sClient = fsValue;
@@ -117,11 +127,36 @@ public class InquiryLostSaleFormController implements Initializable {
         comboBox04.setItems(cTag); 
         comboBox13.setItems(cReasons); 
         comboBox10.setItems(cGdsCat); 
+        comboBox13.setDisable(true);
+        comboBox10.setDisable(true);
+        txtField11.setDisable(true);
+        txtField12.setDisable(true);
         
         if(state){
             comboBox04.getSelectionModel().select(1); //Tag
             comboBox04.setDisable(state);
+            comboBox13.setDisable(false);
         }
+        
+        comboBox04.setOnAction(event -> {
+            comboBox13.setValue("");
+            comboBox10.setValue("");
+            txtField11.setText("");
+            txtField12.setText("");
+            System.out.println("comboBox04.getSelectionModel().getSelectedIndex() >>> " + comboBox04.getSelectionModel().getSelectedIndex());
+            switch(comboBox04.getSelectionModel().getSelectedIndex()){
+                case 0:
+                    comboBox13.setDisable(true);
+                    comboBox10.setDisable(true);
+                    txtField11.setDisable(true);
+                    txtField12.setDisable(true);
+                    break;
+                case 1:
+                    comboBox13.setDisable(false);
+                    break;
+            }
+            
+        });
         
         comboBox13.setOnAction(event -> {
             comboBox10.setValue("");
@@ -187,31 +222,53 @@ public class InquiryLostSaleFormController implements Initializable {
      }
     
     private void cmdButton_Click(ActionEvent event) {
-        String lsButton = ((Button)event.getSource()).getId();
-        switch (lsButton){
-            case "btnTlost":
-                if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure you want to tag this inquiry as " + comboBox04.getValue().toString()+ " ?")) {
-                } else {
-                    return;
-                }
-                
-                if (textArea04.getText().length() < 20){
-                    ShowMessageFX.Warning(null, pxeModuleName, "Please enter at least 20 characters.");
-                    textArea04.requestFocus();
-                    return;
-                }
-                
-                if (setSelection()){
+        try {
+            String lsButton = ((Button)event.getSource()).getId();
+            boolean bisLostSale = true;
+            String sLostSale = "";
+            switch (lsButton){
+                case "btnTlost":
+                    if (!setSelection()){
+                        return;
+                    }
+                    
+                    if (comboBox04.getSelectionModel().getSelectedIndex() == 0){
+                        bisLostSale = false;
+                        sLostSale = " Cancel this Transaction";
+                    } else {
+                        bisLostSale = true;
+                        sLostSale = " tag this inquiry as " + comboBox04.getValue().toString();
+                        if (!state){
+                            sLostSale = sLostSale + " and Cancel VSP";
+                        } 
+                    } 
+                    
+                    if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure you want to" + sLostSale + " ?")) {
+                    } else {
+                        return;
+                    }
+
+                    if (textArea04.getText().length() < 20){
+                        ShowMessageFX.Warning(null, pxeModuleName, "Please enter at least 20 characters.");
+                        textArea04.requestFocus();
+                        return;
+                    }
+                    
                     oTransFollowUp.setTransNox(sSourceNo);
+                    oTransFollowUp.setVSPNox(sVSPNox);
+                    oTransFollowUp.setisFollowUp(false);
                     if (oTransFollowUp.SaveRecord()){
-                        try {
-                            if(oTransFollowUp.LostSale()){
-                            }else {
-                                ShowMessageFX.Warning(null, pxeModuleName, oTransFollowUp.getMessage());
+                        if (!state){
+                            if(!oTransVSP.cancelVSP()) {
+                                ShowMessageFX.Warning(null, pxeModuleName, oTransVSP.getMessage());
                                 return;
                             }
-                        } catch (SQLException ex) {
-                            Logger.getLogger(InquiryLostSaleFormController.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        
+                        if(oTransFollowUp.LostSale(bisLostSale,state)){
+                        }else {
+                            ShowMessageFX.Warning(null, pxeModuleName, oTransFollowUp.getMessage());
+                            return;
                         }
                         ShowMessageFX.Information(null, pxeModuleName, oTransFollowUp.getMessage());
                     } else {
@@ -219,18 +276,19 @@ public class InquiryLostSaleFormController implements Initializable {
                         ShowMessageFX.Warning(null, pxeModuleName, oTransFollowUp.getMessage());
                         return;
                     }
-                } else {
-                    return;
-                }
-                CommonUtils.closeStage(btnTlost);
-               break;
-            case "btnDlost":
-                CommonUtils.closeStage(btnDlost);
-               break;
+                    
+                    CommonUtils.closeStage(btnTlost);
+                   break;
+                case "btnDlost":
+                    CommonUtils.closeStage(btnDlost);
+                   break;
 
-            default:
-                ShowMessageFX.Warning(null, pxeModuleName, "Button with name " + lsButton + " not registered.");
-                break;
+                default:
+                    ShowMessageFX.Warning(null, pxeModuleName, "Button with name " + lsButton + " not registered.");
+                    break;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(InquiryLostSaleFormController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
      
@@ -258,20 +316,19 @@ public class InquiryLostSaleFormController implements Initializable {
     };
     /*Set TextArea to Master Class*/
     final ChangeListener<? super Boolean> txtArea_Focus = (o,ov,nv)->{
-        TextArea txtField = (TextArea)((ReadOnlyBooleanPropertyBase)o).getBean();
-        int lnIndex = Integer.parseInt(txtField.getId().substring(8, 10));
-        String lsValue = txtField.getText();
-
+        TextArea txtArea = (TextArea)((ReadOnlyBooleanPropertyBase)o).getBean();
+        int lnIndex = Integer.parseInt(txtArea.getId().substring(8, 10));
+        String lsValue = txtArea.getText();
         if (lsValue == null) return;
         try {
            if(!nv){ /*Lost Focus*/
                 switch (lnIndex){
                     case 4://sRemarksx 
-                       oTransFollowUp.setFollowUp(lnIndex, comboBox04.getValue().toString() + " " + lsValue); //Handle Encoded Value
+                       oTransFollowUp.setFollowUp(lnIndex, comboBox04.getValue().toString() + " : " + lsValue); //Handle Encoded Value
                     break;
                 }
             } else
-                txtField.selectAll();
+                txtArea.selectAll();
         } catch (SQLException e) {
            ShowMessageFX.Warning(getStage(),e.getMessage(), "Warning", null);
            System.exit(1);
@@ -312,22 +369,27 @@ public class InquiryLostSaleFormController implements Initializable {
                 comboBox04.requestFocus();
                 return false;
             }else { 
-                oTransFollowUp.setFollowUp(4,comboBox04.getValue().toString());
-                if (comboBox13.getSelectionModel().getSelectedIndex() < 0){
-                    ShowMessageFX.Warning("No `Reason` selected.", pxeModuleName, "Please select `Reason` value.");
-                    comboBox13.requestFocus();
-                    return false;
-                }else{ 
-                    oTransFollowUp.setFollowUp(13,comboBox13.getValue().toString());
+                //oTransFollowUp.setFollowUp(4,comboBox04.getValue().toString());
+                
+                if (comboBox04.getSelectionModel().getSelectedIndex() == 1){
+                    if (comboBox13.getSelectionModel().getSelectedIndex() < 0){
+                        ShowMessageFX.Warning("No `Reason` selected.", pxeModuleName, "Please select `Reason` value.");
+                        comboBox13.requestFocus();
+                        return false;
+                    }else{ 
+                        oTransFollowUp.setFollowUp(13,comboBox13.getValue().toString());
+                    }
                 }
             }
-            if ( (comboBox13.getSelectionModel().getSelectedIndex() != 4) && (comboBox13.getSelectionModel().getSelectedIndex() != 3) ){
-                if (comboBox10.getSelectionModel().getSelectedIndex() < 0){
-                    ShowMessageFX.Warning("No `Goods Category` selected.", pxeModuleName, "Please select `Goods Category` value.");
-                    comboBox10.requestFocus();
-                    return false;
-                }else {
-                    oTransFollowUp.setFollowUp(10,comboBox10.getValue().toString());
+            if (comboBox04.getSelectionModel().getSelectedIndex() == 1){
+                if ( (comboBox13.getSelectionModel().getSelectedIndex() != 4) && (comboBox13.getSelectionModel().getSelectedIndex() != 3) ){
+                    if (comboBox10.getSelectionModel().getSelectedIndex() < 0){
+                        ShowMessageFX.Warning("No `Goods Category` selected.", pxeModuleName, "Please select `Goods Category` value.");
+                        comboBox10.requestFocus();
+                        return false;
+                    }else {
+                        oTransFollowUp.setFollowUp(10,comboBox10.getValue().toString());
+                    }
                 }
             }
         } catch (SQLException ex) {

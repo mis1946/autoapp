@@ -153,6 +153,7 @@
                                                 <MenuItem fx:id="mnuColReceipt" mnemonicParsing="false" onAction="#mnuColReceiptClick" text="Collection Receipt" />
                                                 <MenuItem fx:id="mnuOfcReceipt" mnemonicParsing="false" onAction="#mnuOfcReceiptClick" text="Official Receipt" />
                                                 <MenuItem fx:id="mnuPartsSalesInv" mnemonicParsing="false" onAction="#mnuPartsSalesInvClick" text="Parts Sales Invoice" />
+                                                <MenuItem fx:id="mnuVhclSalesInv" mnemonicParsing="false" onAction="#mnuVhclSalesInvClick" text="Vehicle Sales Invoice" />
                                             </items>
                                           </Menu>
                                                         <Menu mnemonicParsing="false" text="Bank Transactions">

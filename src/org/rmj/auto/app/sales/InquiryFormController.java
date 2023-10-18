@@ -797,7 +797,7 @@ public class InquiryFormController implements Initializable, ScreenInterface {
                 /*CUSTOMER INQUIRY: GENERAL BUTTON*/
                 case "btnAdd":
                     //pnEditMode  = EditMode.ADDNEW; 
-                    
+                    tabPaneMain.getSelectionModel().select(tabCustomerInquiry);
                     /*Clear Fields*/
                     if (oTrans.NewRecord()) {
                         clearFields();
@@ -1879,7 +1879,9 @@ public class InquiryFormController implements Initializable, ScreenInterface {
         try {
             clearFields();
             oldTransNo = TransNo;
+            
             if (oTrans.OpenRecord(TransNo)) {
+                tabPaneMain.getSelectionModel().select(tabCustomerInquiry);
                 pnEditMode = oTrans.getEditMode(); //inqlistdata
                 loadCustomerInquiry() ;
                 loadTargetVehicle();

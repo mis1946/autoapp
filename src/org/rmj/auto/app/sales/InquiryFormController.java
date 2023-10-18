@@ -434,30 +434,66 @@ public class InquiryFormController implements Initializable, ScreenInterface {
         comboBox24.setItems(cInqStatus); //Inquiry Status
         cmbType012.setItems(cInquiryType); //Inquiry Type
         //cmbOnstr13.setItems(cOnlineStore); //Web Inquiry
+        //("WALK-IN", "WEB INQUIRY", "PHONE-IN", "REFERRAL", "SALES CALL", "EVENT", "SERVICE", "OFFICE ACCOUNT", "CAREMITTANCE", "DATABASE", "UIO"); //Inquiry Type values
+   
         cmbType012.setOnAction(event -> {
-            txtField13.setDisable(true);
-            txtField09.setDisable(true);
-            txtField15.setDisable(true);
-            switch (cmbType012.getSelectionModel().getSelectedIndex()) {
-                case 1:
-                    txtField13.setDisable(false);
-                    txtField15.setText("");
-                    txtField09.setText("");
-                    break;
-                case 3:
-                    txtField09.setDisable(false);
-                    txtField15.setText("");
-                    txtField13.setText("");
-                    break;
-                case 4:
-                case 5:
-                    txtField15.setDisable(false);
-                    txtField09.setText("");
-                    txtField13.setText("");
-                    break;
-            }
-
             try {
+                txtField13.setDisable(true); //online store
+                txtField09.setDisable(true); //ref agent
+                txtField15.setDisable(true); //event
+                switch (cmbType012.getSelectionModel().getSelectedIndex()) {
+                    case 0:
+                    case 2:  
+                    case 6:
+                    case 7:
+                    case 8:
+                    case 9:
+                    case 10:
+                        txtField13.clear();
+                        txtField09.clear();
+                        txtField15.clear();
+                        oTrans.setMaster(13, "");
+                        oTrans.setMaster(36, "");
+                        oTrans.setMaster(9, "");
+                        oTrans.setMaster(35, "");
+                        oTrans.setMaster(15, "");
+                        oTrans.setMaster(37, "");
+                        break;
+                    case 1: //WEB INQUIRY
+                        txtField13.setDisable(false);
+                        txtField15.clear();
+                        txtField09.clear();
+                        oTrans.setMaster(15, "");
+                        oTrans.setMaster(37, "");
+                        oTrans.setMaster(9, "");
+                        oTrans.setMaster(35, "");
+                        break;
+                    case 3: //REFERRAL
+                        txtField09.setDisable(false);
+                        txtField15.clear();
+                        txtField13.clear();
+                        
+                        oTrans.setMaster(15, "");
+                        oTrans.setMaster(37, "");
+                        oTrans.setMaster(13, "");
+                        oTrans.setMaster(36, "");
+                        break;
+                    case 4: //SALES CALL
+                    case 5: //EVENT
+                        txtField15.setDisable(false);
+                        txtField15.clear();
+                        txtField09.clear();
+                        txtField13.clear();
+                        
+                        oTrans.setMaster(15, "");
+                        oTrans.setMaster(37, "");
+                        oTrans.setMaster(9, "");
+                        oTrans.setMaster(35, "");
+                        oTrans.setMaster(13, "");
+                        oTrans.setMaster(36, "");
+                        break;
+                }
+
                 oTrans.setMaster(12, String.valueOf(cmbType012.getSelectionModel().getSelectedIndex()));
             } catch (SQLException ex) {
                 Logger.getLogger(InquiryFormController.class.getName()).log(Level.SEVERE, null, ex);
@@ -848,7 +884,11 @@ public class InquiryFormController implements Initializable, ScreenInterface {
                     loadPromosOfferred();
                     break;
                 case "btnConvertSales":
-                    ShowMessageFX.Information(getStage(), "You click convert to sales button", pxeModuleName, null);
+                    if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure you want to convert this inquiry for a new vsp record?") == true) {
+                    } else {
+                        return;
+                    }
+                    loadVSPWindow();
                     break;
                 case "btnPrintRefund":
                     loadPrintRefund((String) oTrans.getMaster(1));
@@ -1011,6 +1051,7 @@ public class InquiryFormController implements Initializable, ScreenInterface {
                 case "btnModify":
                     if (oTransProcess.UpdateRecord()) {
                         loadInquiryRequirements();
+                        initInquiryRequirements(); //added by rsie 10-07-2023
                     } else {
                         return;
                     }
@@ -1175,7 +1216,7 @@ public class InquiryFormController implements Initializable, ScreenInterface {
 
     }
     
-    /*OPEN WINDOW FOR VEHICLE DESCRIPTION ENTRY*/
+    /*OPEN WINDOW FOR VEHICLE SALES PROPOSAL*/
     private void loadVSPWindow() {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader();
@@ -1184,8 +1225,8 @@ public class InquiryFormController implements Initializable, ScreenInterface {
             loControl.setGRider(oApp);
             fxmlLoader.setController(loControl);
             Parent parent = fxmlLoader.load();
-            //TODO
-            //AnchorPane otherAnchorPane = loControl.AnchorMain;
+            loControl.setAddMode((String) oTrans.getMaster(1));
+            AnchorPane otherAnchorPane = loControl.AnchorMain;
 
             // Get the parent of the TabContent node
             Node tabContent = AnchorMain.getParent();
@@ -1197,13 +1238,23 @@ public class InquiryFormController implements Initializable, ScreenInterface {
 
                 for (Tab tab : tabpane.getTabs()) {
                     if (tab.getText().equals("Vehicle Sales Proposal")) {
+//                        if (ShowMessageFX.OkayCancel(null, pxeModuleName, "You have unsaved data on Vehicle Sales Proposal Form. Are you sure you want to convert this inquiry for a new vsp record?") == true) {
+//                        } else {
+//                            return;
+//                        }
+
+                        if (ShowMessageFX.OkayCancel(null, pxeModuleName, "You have opened Vehicle Sales Proposal Form. Are you sure you want to convert this inquiry for a new vsp record?") == true) {
+                        } else {
+                            return;
+                        }
                         tabpane.getSelectionModel().select(tab);
+                        unload.unloadForm(AnchorMain, oApp, "Vehicle Sales Proposal");
+                        loadVSPWindow();
                         return;
                     }
                 }
 
                 Tab newTab = new Tab("Vehicle Sales Proposal", parent);
-                //newTab.setStyle("-fx-font-weight: bold; -fx-pref-width: 180; -fx-font-size: 11px;");
                 newTab.setStyle("-fx-font-weight: bold; -fx-pref-width: 180; -fx-font-size: 10.5px; -fx-font-family: arial;");
 
                 tabpane.getTabs().add(newTab);
@@ -1211,8 +1262,7 @@ public class InquiryFormController implements Initializable, ScreenInterface {
                 newTab.setOnCloseRequest(event -> {
                     if (ShowMessageFX.YesNo(null, "Close Tab", "Are you sure, do you want to close tab?") == true) {
                         if (unload != null) {
-                            //TODO
-//                            unload.unloadForm(otherAnchorPane, oApp, "Vehicle Sales Proposal");
+                            unload.unloadForm(otherAnchorPane, oApp, "Vehicle Sales Proposal");
                         } else {
                             ShowMessageFX.Warning(getStage(), "Please notify the system administrator to configure the null value at the close button.", "Warning", pxeModuleName);
                         }
@@ -1223,10 +1273,13 @@ public class InquiryFormController implements Initializable, ScreenInterface {
 
                 });
             }
+            
         } catch (IOException e) {
             e.printStackTrace();
             ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
             System.exit(1);
+        } catch (SQLException ex) {
+            Logger.getLogger(InquiryFormController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
@@ -1499,8 +1552,9 @@ public class InquiryFormController implements Initializable, ScreenInterface {
 
             InquiryLostSaleFormController loControl = new InquiryLostSaleFormController();
             loControl.setGRider(oApp);
-            loControl.setObject(oTransFollowUp);
+            loControl.setFollowUpObject(oTransFollowUp);
             loControl.setsSourceNo(sSourceNox);
+            loControl.setsVSPNox("");
             loControl.setState(true); //If true set tag to lost sale automatically else allow user to edit.
             loControl.setClientName(oTrans.getMaster("sCompnyNm").toString()); //Set Client Name
             fxmlLoader.setController(loControl);
@@ -1918,6 +1972,8 @@ public class InquiryFormController implements Initializable, ScreenInterface {
                 
                 initBtnProcess(pnEditMode);
                 initButton(pnEditMode);
+                
+                initInquiryRequirements();
                 oldPnRow = pagecounter;
             }
 
@@ -2250,7 +2306,8 @@ public class InquiryFormController implements Initializable, ScreenInterface {
                 }
 
             }
-            initInquiryRequirements();
+            
+            //initInquiryRequirements();
         } catch (SQLException e) {
             ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
         }
@@ -2289,6 +2346,7 @@ public class InquiryFormController implements Initializable, ScreenInterface {
                 InquiryTableRequirements requirement = inqrequirementsdata.get(index);
                 BooleanProperty selected = requirement.selectedProperty();  
                 
+                loadInquiryRequirements();
                 selected.addListener((obs, oldValue, newValue) -> {
                     try {
                         if (newValue) {
@@ -2324,11 +2382,12 @@ public class InquiryFormController implements Initializable, ScreenInterface {
                                 oTransProcess.removeInqReq(oTransProcess.getInqReqSrc(index + 1, "sRqrmtCde").toString());
                             }
                         }
+                        
                     } catch (SQLException ex) {
                         Logger.getLogger(InquiryFormController.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 });
-                loadInquiryRequirements();
+                
                 return selected;
             }
         }));
@@ -2986,7 +3045,12 @@ public class InquiryFormController implements Initializable, ScreenInterface {
             !lbShow (TRUE)= visible
          */
         boolean lbShow = (fnValue == EditMode.UPDATE);
-
+        
+        if (comboBox24.getSelectionModel().getSelectedIndex() == 0){
+            rqrmIndex01.setVisible(true);
+        } else {
+            rqrmIndex01.setVisible(lbShow);
+        }
         /*INQUIRY PROCESS*/
         //Requirements
         cmbInqpr01.setDisable(!lbShow);
@@ -3031,6 +3095,8 @@ public class InquiryFormController implements Initializable, ScreenInterface {
             //Enable Button / textfield based on Inquiry Status
             switch (comboBox24.getSelectionModel().getSelectedIndex()) { // cTranStat
                 case 0://For Follow up
+                    
+                    rqrmIndex01.setVisible(true);
                     //Requirements
                     cmbInqpr01.setDisable(false);
                     cmbInqpr02.setDisable(false);

@@ -30,7 +30,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" fx:id="AnchorMain" prefHeight="1182.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane id="AnchorPane" fx:id="AnchorMain" prefHeight="1182.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" >
    <children>
       <StackPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -966,8 +966,8 @@
                                                                                              <children>
                                                                                                 <TableView fx:id="tblBankApplication" prefHeight="400.0" prefWidth="200.0" GridPane.columnIndex="1">
                                                                                                    <columns>
-                                                                                                      <TableColumn fx:id="bankCheck01" prefWidth="28.0" sortable="false" />
-                                                                                                      <TableColumn fx:id="bankIndex01" editable="false" prefWidth="29.0" sortable="false" text="Row" />
+                                                                                                      <TableColumn fx:id="bankCheck01" prefWidth="23.0" sortable="false" />
+                                                                                                      <TableColumn fx:id="bankIndex01" editable="false" prefWidth="34.0" sortable="false" text="Row" />
                                                                                                       <TableColumn fx:id="bankIndex02" editable="false" prefWidth="270.0" sortable="false" text="Bank Name" />
                                                                                                       <TableColumn fx:id="bankIndex03" editable="false" prefWidth="178.0" sortable="false" text="Bank Branch" />
                                                                                                       <TableColumn fx:id="bankIndex04" editable="false" prefWidth="218.0" sortable="false" text="Payment Mode" />
@@ -1030,12 +1030,12 @@
                                                                                              <children>
                                                                                                 <TableView fx:id="tblFollowHistory" GridPane.columnIndex="1">
                                                                                                    <columns>
-                                                                                                      <TableColumn fx:id="flwpIndex01" editable="false" prefWidth="34.0" sortable="false" text="Row" />
-                                                                                                      <TableColumn fx:id="flwpIndex02" editable="false" prefWidth="90.0" sortable="false" text="Followup Date" />
+                                                                                                      <TableColumn fx:id="flwpIndex01" editable="false" prefWidth="32.0" sortable="false" text="Row" />
+                                                                                                      <TableColumn fx:id="flwpIndex02" editable="false" prefWidth="92.0" sortable="false" text="Followup Date" />
                                                                                                       <TableColumn fx:id="flwpIndex03" editable="false" prefWidth="126.0" sortable="false" text="Next Follow-up Date" />
-                                                                                                      <TableColumn fx:id="flwpIndex04" editable="false" prefWidth="216.0" sortable="false" text="Medium" />
-                                                                                                      <TableColumn fx:id="flwpIndex05" editable="false" prefWidth="69.0" sortable="false" text="Platform" />
-                                                                                                      <TableColumn fx:id="flwpIndex06" editable="false" prefWidth="319.0" sortable="false" text="Remarks" />
+                                                                                                      <TableColumn fx:id="flwpIndex04" editable="false" prefWidth="165.0" sortable="false" text="Medium" />
+                                                                                                      <TableColumn fx:id="flwpIndex05" editable="false" sortable="false" text="Platform" />
+                                                                                                      <TableColumn fx:id="flwpIndex06" editable="false" prefWidth="340.0" sortable="false" text="Remarks" />
                                                                                                    </columns>
                                                                                                 </TableView>
                                                                                              </children>

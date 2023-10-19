@@ -23,16 +23,21 @@ public class VSPTableMasterList {
     private SimpleStringProperty tblindex08_Master;
     private SimpleStringProperty tblindex09_Master;
     private SimpleStringProperty tblindex10_Master;
-    private SimpleStringProperty tblindex10_Finance;
-    private SimpleStringProperty tblindex05_Finance;
-    private SimpleStringProperty tblindex04_Finance;
-    private SimpleStringProperty tblindex08_Finance;
-    private SimpleStringProperty tblindex09_Finance;
-    private SimpleStringProperty tblindex12_Finance;
     private SimpleStringProperty tblindex11_Master;
     private SimpleStringProperty tblindex12_Master;
     private SimpleStringProperty tblindex13_Master;
-    private SimpleStringProperty tblindex13_Finance;
+    private SimpleStringProperty tblindex0607_Finance;
+    private SimpleStringProperty tblindex04_Finance;
+    private SimpleStringProperty tblindex10_Finance;
+    private SimpleStringProperty tblindex05_Finance;
+    private SimpleStringProperty tblindex08_Finance;
+    private SimpleStringProperty tblindex09_Finance;
+    private SimpleStringProperty tblindex12_Finance;
+    private SimpleStringProperty tblindex04_Labor_Rust;
+    private SimpleStringProperty tblindex04_Labor_Under;
+    private SimpleStringProperty tblindex04_Labor_Perma;
+    private SimpleStringProperty tblindex04_Labor_Tint;
+    private SimpleStringProperty tblindex04_Labor_Additional;
     private SimpleStringProperty tblindex14_Master;
     private SimpleStringProperty tblindex15_Master;
     private SimpleStringProperty tblindex16_Master;
@@ -79,12 +84,6 @@ public class VSPTableMasterList {
     private SimpleStringProperty tblindex59_Master;
     private SimpleStringProperty tblindex60_Master;
     private SimpleStringProperty tblindex61_Master;
-    private SimpleStringProperty tblindex62_Master;
-    private SimpleStringProperty tblindex63_Master;
-    private SimpleStringProperty tblindex64_Master;
-    private SimpleStringProperty tblindex65_Master;
-    private SimpleStringProperty tblindex66_Master;
-    private SimpleStringProperty tblindex67_Master;
     private SimpleStringProperty tblindex68_Master;
     private SimpleStringProperty tblindex69_Master_Office;
     private SimpleStringProperty tblindex69_Master_Home;
@@ -102,6 +101,9 @@ public class VSPTableMasterList {
     private SimpleStringProperty tblindex82_Master;
     private SimpleStringProperty tblindex83_Master;
     private SimpleStringProperty tblindex84_Master;
+    private SimpleStringProperty tblindex84_Master_1;
+    private SimpleStringProperty tblindex84_Master_3;
+    private SimpleStringProperty tblindex84_Master_6;
     private SimpleStringProperty tblindex85_Master;
     private SimpleStringProperty tblindex86_Master;
     private SimpleStringProperty tblindex87_Master;
@@ -126,16 +128,21 @@ public class VSPTableMasterList {
             String tblindex08_Master,
             String tblindex09_Master,
             String tblindex10_Master,
-            String tblindex10_Finance,
-            String tblindex05_Finance,
-            String tblindex04_Finance,
-            String tblindex09_Finance,
-            String tblindex08_Finance,
-            String tblindex12_Finance,
             String tblindex11_Master,
             String tblindex12_Master,
             String tblindex13_Master,
-            String tblindex13_Finance,
+            String tblindex0607_Finance,
+            String tblindex04_Finance,
+            String tblindex10_Finance,
+            String tblindex05_Finance,
+            String tblindex09_Finance,
+            String tblindex08_Finance,
+            String tblindex12_Finance,
+            String tblindex04_Labor_Rust,
+            String tblindex04_Labor_Under,
+            String tblindex04_Labor_Perma,
+            String tblindex04_Labor_Tint,
+            String tblindex04_Labor_Additional,
             String tblindex14_Master,
             String tblindex15_Master,
             String tblindex16_Master,
@@ -181,12 +188,6 @@ public class VSPTableMasterList {
             String tblindex59_Master,
             String tblindex60_Master,
             String tblindex61_Master,
-            String tblindex62_Master,
-            String tblindex63_Master,
-            String tblindex64_Master,
-            String tblindex65_Master,
-            String tblindex66_Master,
-            String tblindex67_Master,
             String tblindex68_Master,
             String tblindex69_Master_Office,
             String tblindex69_Master_Home,
@@ -204,6 +205,9 @@ public class VSPTableMasterList {
             String tblindex82_Master,
             String tblindex83_Master,
             String tblindex84_Master,
+            String tblindex84_Master_1,
+            String tblindex84_Master_3,
+            String tblindex84_Master_6,
             String tblindex85_Master,
             String tblindex86_Master,
             String tblindex87_Master,
@@ -225,19 +229,24 @@ public class VSPTableMasterList {
         this.tblindex05_Master = new SimpleStringProperty(tblindex05_Master);
         this.tblindex06_Master = new SimpleStringProperty(tblindex06_Master);
         this.tblindex07_Master = new SimpleStringProperty(tblindex07_Master);
-        this.tblindex04_Master = new SimpleStringProperty(tblindex08_Master);
-        this.tblindex03_Master = new SimpleStringProperty(tblindex04_Master);
+        this.tblindex08_Master = new SimpleStringProperty(tblindex08_Master);
         this.tblindex09_Master = new SimpleStringProperty(tblindex09_Master);
         this.tblindex10_Master = new SimpleStringProperty(tblindex10_Master);
+        this.tblindex11_Master = new SimpleStringProperty(tblindex11_Master);
+        this.tblindex12_Master = new SimpleStringProperty(tblindex12_Master);
+        this.tblindex13_Master = new SimpleStringProperty(tblindex13_Master);
+        this.tblindex0607_Finance = new SimpleStringProperty(tblindex0607_Finance);
+        this.tblindex04_Finance = new SimpleStringProperty(tblindex04_Finance);
         this.tblindex10_Finance = new SimpleStringProperty(tblindex10_Finance);
         this.tblindex05_Finance = new SimpleStringProperty(tblindex05_Finance);
         this.tblindex09_Finance = new SimpleStringProperty(tblindex09_Finance);
         this.tblindex08_Finance = new SimpleStringProperty(tblindex08_Finance);
         this.tblindex12_Finance = new SimpleStringProperty(tblindex12_Finance);
-        this.tblindex11_Master = new SimpleStringProperty(tblindex11_Master);
-        this.tblindex12_Master = new SimpleStringProperty(tblindex12_Master);
-        this.tblindex13_Master = new SimpleStringProperty(tblindex13_Master);
-        this.tblindex13_Finance = new SimpleStringProperty(tblindex13_Finance);
+        this.tblindex04_Labor_Rust = new SimpleStringProperty(tblindex04_Labor_Rust);
+        this.tblindex04_Labor_Under = new SimpleStringProperty(tblindex04_Labor_Under);
+        this.tblindex04_Labor_Perma = new SimpleStringProperty(tblindex04_Labor_Perma);
+        this.tblindex04_Labor_Tint = new SimpleStringProperty(tblindex04_Labor_Tint);
+        this.tblindex04_Labor_Additional = new SimpleStringProperty(tblindex04_Labor_Additional);
         this.tblindex14_Master = new SimpleStringProperty(tblindex14_Master);
         this.tblindex15_Master = new SimpleStringProperty(tblindex15_Master);
         this.tblindex16_Master = new SimpleStringProperty(tblindex16_Master);
@@ -283,12 +292,6 @@ public class VSPTableMasterList {
         this.tblindex59_Master = new SimpleStringProperty(tblindex59_Master);
         this.tblindex60_Master = new SimpleStringProperty(tblindex60_Master);
         this.tblindex61_Master = new SimpleStringProperty(tblindex61_Master);
-        this.tblindex62_Master = new SimpleStringProperty(tblindex62_Master);
-        this.tblindex63_Master = new SimpleStringProperty(tblindex63_Master);
-        this.tblindex64_Master = new SimpleStringProperty(tblindex64_Master);
-        this.tblindex65_Master = new SimpleStringProperty(tblindex65_Master);
-        this.tblindex66_Master = new SimpleStringProperty(tblindex66_Master);
-        this.tblindex67_Master = new SimpleStringProperty(tblindex67_Master);
         this.tblindex68_Master = new SimpleStringProperty(tblindex68_Master);
         this.tblindex69_Master_Office = new SimpleStringProperty(tblindex69_Master_Office);
         this.tblindex69_Master_Home = new SimpleStringProperty(tblindex69_Master_Home);
@@ -306,6 +309,9 @@ public class VSPTableMasterList {
         this.tblindex82_Master = new SimpleStringProperty(tblindex82_Master);
         this.tblindex83_Master = new SimpleStringProperty(tblindex83_Master);
         this.tblindex84_Master = new SimpleStringProperty(tblindex84_Master);
+        this.tblindex84_Master_1 = new SimpleStringProperty(tblindex84_Master_1);
+        this.tblindex84_Master_3 = new SimpleStringProperty(tblindex84_Master_3);
+        this.tblindex84_Master_6 = new SimpleStringProperty(tblindex84_Master_6);
         this.tblindex85_Master = new SimpleStringProperty(tblindex85_Master);
         this.tblindex86_Master = new SimpleStringProperty(tblindex86_Master);
         this.tblindex87_Master = new SimpleStringProperty(tblindex87_Master);
@@ -408,54 +414,6 @@ public class VSPTableMasterList {
         this.tblindex10_Master.set(tblindex10_Master);
     }
 
-    public String getTblindex10_Finance() {
-        return tblindex10_Finance.get();
-    }
-
-    public void setTblindex10_Finance(String tblindex10_Finance) {
-        this.tblindex10_Finance.set(tblindex10_Finance);
-    }
-
-    public String getTblindex05_Finance() {
-        return tblindex05_Finance.get();
-    }
-
-    public void setTblindex05_Finance(String tblindex05_Finance) {
-        this.tblindex05_Finance.set(tblindex05_Finance);
-    }
-
-    public String getTblindex04_Finance() {
-        return tblindex04_Finance.get();
-    }
-
-    public void setTblindex04_Finance(String tblindex04_Finance) {
-        this.tblindex04_Finance.set(tblindex04_Finance);
-    }
-
-    public String getTblindex08_Finance() {
-        return tblindex08_Finance.get();
-    }
-
-    public void setTblindex08_Finance(String tblindex08_Finance) {
-        this.tblindex08_Finance.set(tblindex08_Finance);
-    }
-
-    public String getTblindex09_Finance() {
-        return tblindex09_Finance.get();
-    }
-
-    public void setTblindex09_Finance(String tblindex09_Finance) {
-        this.tblindex09_Finance.set(tblindex09_Finance);
-    }
-
-    public String getTblindex12_Finance() {
-        return tblindex12_Finance.get();
-    }
-
-    public void setTblindex12_Finance(String tblindex12_Finance) {
-        this.tblindex12_Finance.set(tblindex12_Finance);
-    }
-
     public String getTblindex11_Master() {
         return tblindex11_Master.get();
     }
@@ -480,12 +438,100 @@ public class VSPTableMasterList {
         this.tblindex13_Master.set(tblindex13_Master);
     }
 
-    public String getTblindex13_Finance() {
-        return tblindex13_Finance.get();
+    public String getTblindex04_Finance() {
+        return tblindex04_Finance.get();
     }
 
-    public void setTblindex13_Finance(String tblindex13_Finance) {
-        this.tblindex13_Finance.set(tblindex13_Finance);
+    public void setTblindex04_Finance(String tblindex04_Finance) {
+        this.tblindex04_Finance.set(tblindex04_Finance);
+    }
+
+    public String getTblindex10_Finance() {
+        return tblindex10_Finance.get();
+    }
+
+    public void setTblindex10_Finance(String tblindex10_Finance) {
+        this.tblindex10_Finance.set(tblindex10_Finance);
+    }
+
+    public String getTblindex05_Finance() {
+        return tblindex05_Finance.get();
+    }
+
+    public void setTblindex05_Finance(String tblindex05_Finance) {
+        this.tblindex05_Finance.set(tblindex05_Finance);
+    }
+
+    public String getTblindex08_Finance() {
+        return tblindex08_Finance.get();
+    }
+
+    public void setTblindex08_Finance(String tblindex08_Finance) {
+        this.tblindex08_Finance.set(tblindex08_Finance);
+    }
+
+    public String getTblindex0607_Finance() {
+        return tblindex0607_Finance.get();
+    }
+
+    public void setTblindex0607_Finance(String tblindex0607_Finance) {
+        this.tblindex0607_Finance.set(tblindex0607_Finance);
+    }
+
+    public String getTblindex09_Finance() {
+        return tblindex09_Finance.get();
+    }
+
+    public void setTblindex09_Finance(String tblindex09_Finance) {
+        this.tblindex09_Finance.set(tblindex09_Finance);
+    }
+
+    public String getTblindex12_Finance() {
+        return tblindex12_Finance.get();
+    }
+
+    public void setTblindex12_Finance(String tblindex12_Finance) {
+        this.tblindex12_Finance.set(tblindex12_Finance);
+    }
+
+    public String getTblindex04_Labor_Rust() {
+        return tblindex04_Labor_Rust.get();
+    }
+
+    public void setTblindex04_Labor_Rust(String tblindex04_Labor_Rust) {
+        this.tblindex04_Labor_Rust.set(tblindex04_Labor_Rust);
+    }
+
+    public String getTblindex04_Labor_Under() {
+        return tblindex04_Labor_Under.get();
+    }
+
+    public void setTblindex04_Labor_Under(String tblindex04_Labor_Under) {
+        this.tblindex04_Labor_Under.set(tblindex04_Labor_Under);
+    }
+
+    public String getTblindex04_Labor_Additional() {
+        return tblindex04_Labor_Additional.get();
+    }
+
+    public void setTblindex04_Labor_Additional(String tblindex04_Labor_Additional) {
+        this.tblindex04_Labor_Additional.set(tblindex04_Labor_Additional);
+    }
+
+    public String getTblindex04_Labor_Perma() {
+        return tblindex04_Labor_Perma.get();
+    }
+
+    public void setTblindex04_Labor_Perma(String tblindex04_Labor_Perma) {
+        this.tblindex04_Labor_Perma.set(tblindex04_Labor_Perma);
+    }
+
+    public String getTblindex04_Labor_Tint() {
+        return tblindex04_Labor_Tint.get();
+    }
+
+    public void setTblindex04_Labor_Tint(String tblindex04_Labor_Tint) {
+        this.tblindex04_Labor_Tint.set(tblindex04_Labor_Tint);
     }
 
     public String getTblindex14_Master() {
@@ -848,54 +894,6 @@ public class VSPTableMasterList {
         this.tblindex61_Master.set(tblindex61_Master);
     }
 
-    public String getTblindex62_Master() {
-        return tblindex62_Master.get();
-    }
-
-    public void setTblindex62_Master(String tblindex62_Master) {
-        this.tblindex62_Master.set(tblindex62_Master);
-    }
-
-    public String getTblindex63_Master() {
-        return tblindex63_Master.get();
-    }
-
-    public void setTblindex63_Master(String tblindex63_Master) {
-        this.tblindex63_Master.set(tblindex63_Master);
-    }
-
-    public String getTblindex64_Master() {
-        return tblindex64_Master.get();
-    }
-
-    public void setTblindex64_Master(String tblindex64_Master) {
-        this.tblindex64_Master.set(tblindex64_Master);
-    }
-
-    public String getTblindex65_Master() {
-        return tblindex65_Master.get();
-    }
-
-    public void setTblindex65_Master(String tblindex65_Master) {
-        this.tblindex65_Master.set(tblindex65_Master);
-    }
-
-    public String getTblindex66_Master() {
-        return tblindex66_Master.get();
-    }
-
-    public void setTblindex66_Master(String tblindex66_Master) {
-        this.tblindex66_Master.set(tblindex66_Master);
-    }
-
-    public String getTblindex67_Master() {
-        return tblindex67_Master.get();
-    }
-
-    public void setTblindex67_Master(String tblindex67_Master) {
-        this.tblindex67_Master.set(tblindex67_Master);
-    }
-
     public String getTblindex68_Master() {
         return tblindex68_Master.get();
     }
@@ -1035,6 +1033,33 @@ public class VSPTableMasterList {
 
     public void setTblindex84_Master(String tblindex84_Master) {
         this.tblindex84_Master.set(tblindex84_Master);
+    }
+
+    public String getTblindex84_Master_1() {
+
+        return tblindex84_Master_1.get();
+    }
+
+    public void setTblindex84_Master_1(String tblindex84_Master_1) {
+        this.tblindex84_Master_1.set(tblindex84_Master_1);
+    }
+
+    public String getTblindex84_Master_3() {
+
+        return tblindex84_Master_3.get();
+    }
+
+    public void setTblindex84_Master_3(String tblindex84_Master_3) {
+        this.tblindex84_Master_3.set(tblindex84_Master_3);
+    }
+
+    public String getTblindex84_Master_6() {
+
+        return tblindex84_Master_6.get();
+    }
+
+    public void setTblindex84_Master_6(String tblindex84_Master_6) {
+        this.tblindex84_Master_6.set(tblindex84_Master_6);
     }
 
     public String getTblindex85_Master() {

@@ -56,7 +56,7 @@ public class VSPFormPrintController implements Initializable {
     private JRViewer jrViewer;
     private ObservableList<VSPTableMasterList> vspMasterData = FXCollections.observableArrayList();
     private List<VSPTableFinanceList> vspFinanceData = new ArrayList<VSPTableFinanceList>();
-    private List<VSPTableLaborList> vspLaborData = new ArrayList<VSPTableLaborList>();
+    private ObservableList<VSPTableLaborList> vspLaborData = FXCollections.observableArrayList();
     private List<VSPTablePartList> vspPartData = new ArrayList<VSPTablePartList>();
     private boolean running = false;
     final static int interval = 100;
@@ -73,6 +73,7 @@ public class VSPFormPrintController implements Initializable {
     @FXML
     private VBox vbProgress;
     private String psTransNox;
+    private Map<String, Object> params = new HashMap<>();
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -185,52 +186,39 @@ public class VSPFormPrintController implements Initializable {
 
     private boolean loadReport() throws SQLException {
         //Create the parameter
-        int lnCtr = 1;
-        boolean bAdditional = false;
-        Map<String, Object> params = new HashMap<>();
-
         DecimalFormat decimalFormat = new DecimalFormat("#,##0.00");
         vspMasterData.clear();
         if (oTrans.OpenRecord(psTransNox)) {
-            String deliveryDate = CommonUtils.xsDateShort((Date) oTrans.getMaster("dDelvryDt"));
+            String deliveryDate = deliveryDate = CommonUtils.xsDateShort((Date) oTrans.getMaster("dDelvryDt"));;
             if (deliveryDate.isEmpty()) {
-                deliveryDate = " ";
+                deliveryDate = "";
             } else {
                 deliveryDate = CommonUtils.xsDateShort((Date) oTrans.getMaster("dDelvryDt"));
             }
+
             String salesExe = oTrans.getMaster("sSalesExe").toString();
             String salesExeFullName = formatName(salesExe);
             String ownerHomeAddress = "";
             String ownerOfficeAddress = "";
             if (oTrans.getMaster("cOfficexx").toString().equals("1")) {
                 ownerOfficeAddress = oTrans.getMaster("sAddressx").toString().toUpperCase();
-            } else {
-                ownerOfficeAddress = "";
             }
             if (oTrans.getMaster("cOfficexx").toString().equals("0")) {
                 ownerHomeAddress = oTrans.getMaster("sAddressx").toString().toUpperCase();
-            } else {
-                ownerHomeAddress = "";
             }
             String notOfficeNumber = "";
             String officeNumber = "";
             if (oTrans.getMaster("cOwnerxxx").toString().equals("0")) {
                 notOfficeNumber = oTrans.getMaster("sMobileNo").toString();
-            } else {
-                notOfficeNumber = "";
             }
             if (oTrans.getMaster("cOwnerxxx").toString().equals("1")) {
                 officeNumber = oTrans.getMaster("sMobileNo").toString();
-            } else {
-                officeNumber = "";
             }
             String platOrCsNo = "";
             if (oTrans.getMaster("sPlateNox").toString().isEmpty()) {
                 platOrCsNo = oTrans.getMaster("sCSNoxxxx").toString();
             } else if (!oTrans.getMaster("sPlateNox").toString().isEmpty()) {
                 platOrCsNo = oTrans.getMaster("sPlateNox").toString();
-            } else {
-                platOrCsNo = "";
             }
             String paymentMethodDisplay = "";
             String paymentMethod = oTrans.getMaster("cPayModex").toString();
@@ -332,15 +320,13 @@ public class VSPFormPrintController implements Initializable {
                     inqTypDisplay = "";
                     break;
             }
-
+            String nAccessAmount = formatAmount(oTrans.getMaster("nAccesAmt").toString());
             String tplInsuranceCompany = oTrans.getMaster("sInsTplNm").toString();
-            String tplInsuranceAmount = formatAmount(oTrans.getMaster("nTPLAmtxx").toString());
-
+            String tplInsuranceAmount = oTrans.getMaster("nTPLAmtxx").toString();
             String displayTplInsuranceAmount = "";
             String displayTplInsuranceComp = "";
             String compreInsuranceCompany = oTrans.getMaster("sInsComNm").toString();
-
-            String compreInsuranceAmount = formatAmount(oTrans.getMaster("nCompAmtx").toString());
+            String compreInsuranceAmount = oTrans.getMaster("nCompAmtx").toString();
             String displayCompInsuranceAmount = "";
             String displayCompInsuranceComp = "";
             switch (oTrans.getMaster("sTPLStatx").toString()) {
@@ -377,23 +363,70 @@ public class VSPFormPrintController implements Initializable {
                     break;
 
             }
-            String nAccessAmount = formatAmount(oTrans.getMaster("nAccesAmt").toString());
-
             String bankName = "";
+            String promptNoteAmount = "";
             String amountFinance = "";
             String netMonthlyFinance = "";
             String promptPaymentDiscount = "";
             String grossMonthly = "";
-            String promptNoteAmount = "";
+            String termsFinance = "";
+            String ratesFinance = "";
+            String termsAndRates = "";
             if (oTrans.getVSPFinanceCount() > 0) {
-                bankName = oTrans.getVSPFinance(4).toString();
+                bankName = oTrans.getVSPFinance(4).toString().toUpperCase();
+                promptNoteAmount = formatAmount(oTrans.getVSPFinance(10).toString());
                 amountFinance = formatAmount(oTrans.getVSPFinance(5).toString());
                 netMonthlyFinance = formatAmount(oTrans.getVSPFinance(9).toString());
                 promptPaymentDiscount = formatAmount(oTrans.getVSPFinance(8).toString());
                 grossMonthly = formatAmount(oTrans.getVSPFinance(12).toString());
-                promptNoteAmount = formatAmount(oTrans.getVSPFinance(10).toString());
+                termsFinance = oTrans.getVSPFinance(6).toString();
+                ratesFinance = formatAmount(oTrans.getVSPFinance(7).toString());
+                termsAndRates = termsFinance + " / " + ratesFinance;
             }
+            String rustAmount = "";
+            String underAmount = "";
+            String permaAmount = "";
+            String tintAmount = "";
+            double additionalAmount = 0.00;
+            String additionalAmountDisplay = "";
+            for (int i = 1; i <= oTrans.getVSPLaborCount(); i++) {
+                String currentLaborDsc = oTrans.getVSPLaborDetail(i, 8).toString();
+                String currentAmount = oTrans.getVSPLaborDetail(i, 4).toString();
+                String currentStatus = oTrans.getVSPLaborDetail(i, 9).toString();
+                if (currentLaborDsc.equalsIgnoreCase("RUSTPROOF")) {
+                    rustAmount = formatAmount(currentAmount);
+                } else if (currentLaborDsc.equalsIgnoreCase("UNDERCOAT")) {
+                    underAmount = formatAmount(currentAmount);
+                } else if (currentLaborDsc.equalsIgnoreCase("PERMASHINE") && currentStatus.equals("0")) {
+                    permaAmount = formatAmount(currentAmount);
+                } else if (currentLaborDsc.equalsIgnoreCase("TINT") && currentStatus.equals("0")) {
+                    tintAmount = formatAmount(currentAmount);
+                } else if (currentStatus.equals("1")) {
+                    double amount = Double.parseDouble(currentAmount);
+                    additionalAmount += amount;
+                    additionalAmountDisplay = "Additonal Labor: " + formatAmount(String.valueOf(additionalAmount));
+                } else {
+                    System.out.println("INVALID!");
+                }
 
+            }
+            String promoValue = oTrans.getMaster(28).toString();
+            String cashValue = oTrans.getMaster(32).toString();
+            String bundleValue = oTrans.getMaster(31).toString();
+
+            String promoDiscount = generateDiscountLabel(promoValue, "pRomo", "Promo disc:");
+            String cashDiscount = generateDiscountLabel(cashValue, "caSh", "Cash disc:");
+            String bundleDiscount = generateDiscountLabel(bundleValue, "bundle", "Bundle disc:");
+
+            String branchName_1 = oTrans.getMaster("sBranchNm").toString().toUpperCase();
+            String branchName_1_Display = "3. Deposit is good for 30 days(except in cases where stock is not available), and does not guarantee the buyer protection from sudden price increases. "
+                    + branchName_1 + " reserves the right to sell the car after the agreed period and will reimburse deposit to the client less administrative and incidental fees.";
+            String branchName_3 = oTrans.getMaster("sBranchNm").toString().toUpperCase();
+            String branchName_3_Display = "4. " + branchName_3 + " controls neither production, delivery prices nor specifications. The company agrees to relay to the customer all information concerning the order and in turn, the customer agrees to absolve the company from blame if factory cannot meet the requirements.";
+            String branchName_6 = oTrans.getMaster("sBranchNm").toString().toUpperCase();
+
+            String brancName_6_Display = "6. As a matter of policy, Sales Personnel are not allowed to receive payments. Please remit all payments to our duly authorized cashier. All checks should be made payable to "
+                    + branchName_6 + " .";
             vspMasterData.add(new VSPTableMasterList(
                     "",
                     oTrans.getMaster("sTransNox").toString(),
@@ -406,16 +439,21 @@ public class VSPFormPrintController implements Initializable {
                     unitPrice,
                     oTrans.getMaster("sRemarksx").toString(),
                     oTrans.getMaster("nAdvDwPmt").toString(),
-                    promptNoteAmount,
-                    amountFinance,
-                    bankName,
-                    netMonthlyFinance,
-                    promptPaymentDiscount,
-                    grossMonthly,
                     oTrans.getMaster("sOthrDesc").toString(),
                     oTrans.getMaster("nOthrChrg").toString(),
                     oTrans.getMaster("nLaborAmt").toString(),
-                    "",
+                    termsAndRates,
+                    bankName,
+                    promptNoteAmount,
+                    amountFinance,
+                    netMonthlyFinance,
+                    promptPaymentDiscount,
+                    grossMonthly,
+                    rustAmount,
+                    underAmount,
+                    permaAmount,
+                    tintAmount,
+                    additionalAmountDisplay.toString(),
                     nAccessAmount,
                     oTrans.getMaster("nInsurAmt").toString(),
                     displayCompInsuranceAmount,
@@ -428,11 +466,11 @@ public class VSPFormPrintController implements Initializable {
                     oTrans.getMaster("nInsurYrx").toString(),
                     oTrans.getMaster("sInsTplCd").toString(),
                     oTrans.getMaster("sInsCodex").toString(),
-                    oTrans.getMaster("nPromoDsc").toString(),
+                    promoDiscount,
                     oTrans.getMaster("nFleetDsc").toString(),
                     oTrans.getMaster("nSPFltDsc").toString(),
-                    oTrans.getMaster("nBndleDsc").toString(),
-                    oTrans.getMaster("nAddlDscx").toString(),
+                    bundleDiscount,
+                    cashDiscount,
                     oTrans.getMaster("nDealrInc").toString(),
                     paymentMethodDisplay,
                     oTrans.getMaster("sBnkAppCD").toString(),
@@ -461,12 +499,6 @@ public class VSPFormPrintController implements Initializable {
                     oTrans.getMaster("sLockedBy").toString(),
                     "",
                     oTrans.getMaster("cTranStat").toString(),
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
                     oTrans.getMaster("sCompnyNm").toString().toUpperCase(),
                     ownerOfficeAddress,
                     ownerHomeAddress,
@@ -483,7 +515,10 @@ public class VSPFormPrintController implements Initializable {
                     oTrans.getMaster("sOnlStore").toString(),
                     oTrans.getMaster("sRefTypex").toString(),
                     oTrans.getMaster("sKeyNoxxx").toString(),
-                    oTrans.getMaster("sBranchNm").toString().toUpperCase(), //Branch Name
+                    oTrans.getMaster("sBranchNm").toString().toUpperCase(),
+                    branchName_1_Display,
+                    branchName_3_Display,
+                    brancName_6_Display,//Branch Name
                     displayTplInsuranceComp,
                     displayCompInsuranceComp,
                     oTrans.getMaster("sTaxIDNox").toString(),
@@ -498,26 +533,12 @@ public class VSPFormPrintController implements Initializable {
                     oTrans.getMaster("sBrnchAdd").toString()// Branch Address
             )
             );
-            vspFinanceData.clear();
-            vspLaborData.clear();
-            vspPartData.clear();
 
         }
 
         String sourceFileName = "D://GGC_Java_Systems/reports/autoapp/vsp.jasper";
         String printFileName = null;
         JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(vspMasterData);
-        JRBeanCollectionDataSource vspFinance = new JRBeanCollectionDataSource(vspFinanceData);
-        JRBeanCollectionDataSource vspLabor = new JRBeanCollectionDataSource(vspLaborData);
-        JRBeanCollectionDataSource vspPart = new JRBeanCollectionDataSource(vspPartData);
-
-        params.put(
-                "vspLabor", vspLabor);
-        params.put(
-                "vspPart", vspPart);
-        params.put(
-                "vspFinance", vspFinance);
-
         params.put(
                 "formName", "VEHICLE SALES PROPOSAL FORM");
         try {
@@ -534,4 +555,16 @@ public class VSPFormPrintController implements Initializable {
 
         return false;
     }
+
+    private String generateDiscountLabel(String discountValue, String paramName, String label) {
+        String formattedDiscount = formatAmount(discountValue);
+        if (discountValue.equals("0.00") || discountValue.contains("0.00")) {
+            params.put(paramName, "");
+            return "";
+        } else {
+            params.put(paramName, label);
+            return formattedDiscount;
+        }
+    }
+
 }

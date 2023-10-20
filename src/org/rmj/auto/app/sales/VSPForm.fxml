@@ -464,7 +464,7 @@
                                                                                                                         <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="5.0" vgrow="SOMETIMES" />
                                                                                                                     </rowConstraints>
                                                                                                                     <children>
-                                                                                                                        <TextArea fx:id="textArea09" prefHeight="200.0" prefWidth="200.0" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.rowSpan="2" />
+                                                                                                                        <TextArea fx:id="textArea09" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.rowSpan="2" />
                                                                                                                     </children>
                                                                                                                 </GridPane>
                                                                                                             </children>
@@ -1085,7 +1085,7 @@
                                                                                                                                         <TableColumn fx:id="tblPartJobNo" editable="false" prefWidth="86.0" sortable="false" text="Job No." />
                                                                                                                                     </columns>
                                                                                                                                 </TableView>
-                                                                                                                                <Button fx:id="btnAddParts" mnemonicParsing="false" prefHeight="22.0" prefWidth="88.0" text="Add Parts" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                                                                                                                                <Button fx:id="btnAddParts" mnemonicParsing="false" prefHeight="22.0" prefWidth="88.0" text="Add Parts" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                                                                                                                     <graphic>
                                                                                                                                         <FontAwesomeIconView glyphName="PLUS" />
                                                                                                                                     </graphic>

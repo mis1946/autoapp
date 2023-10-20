@@ -6,10 +6,6 @@ package org.rmj.auto.app.sales;
 
 import javafx.beans.property.SimpleStringProperty;
 
-/**
- *
- * @author User
- */
 public class VSPTableMasterList {
 
     private SimpleStringProperty tblVSPMaster_Row;
@@ -44,7 +40,6 @@ public class VSPTableMasterList {
     private SimpleStringProperty tblindex17_Master;
     private SimpleStringProperty tblindex18_Master;
     private SimpleStringProperty tblindex19_Master;
-    private SimpleStringProperty tblindex20_Master;
     private SimpleStringProperty tblindex21_Master;
     private SimpleStringProperty tblindex22_Master;
     private SimpleStringProperty tblindex24_Master;
@@ -61,15 +56,10 @@ public class VSPTableMasterList {
     private SimpleStringProperty tblindex35_Master;
     private SimpleStringProperty tblindex36_Master;
     private SimpleStringProperty tblindex37_Master;
+    private SimpleStringProperty tblindex38_Master;
     private SimpleStringProperty tblindex39_Master;
     private SimpleStringProperty tblindex40_Master;
     private SimpleStringProperty tblindex41_Master;
-    private SimpleStringProperty tblindex42_Master;
-    private SimpleStringProperty tblindex43_Master;
-    private SimpleStringProperty tblindex44_Master;
-    private SimpleStringProperty tblindex45_Master;
-    private SimpleStringProperty tblindex46_Master;
-    private SimpleStringProperty tblindex47_Master;
     private SimpleStringProperty tblindex48_Master;
     private SimpleStringProperty tblindex49_Master;
     private SimpleStringProperty tblindex50_Master;
@@ -165,15 +155,10 @@ public class VSPTableMasterList {
             String tblindex35_Master,
             String tblindex36_Master,
             String tblindex37_Master,
+            String tblindex38_Master,
             String tblindex39_Master,
             String tblindex40_Master,
             String tblindex41_Master,
-            String tblindex42_Master,
-            String tblindex43_Master,
-            String tblindex44_Master,
-            String tblindex45_Master,
-            String tblindex46_Master,
-            String tblindex47_Master,
             String tblindex48_Master,
             String tblindex49_Master,
             String tblindex50_Master,
@@ -269,15 +254,10 @@ public class VSPTableMasterList {
         this.tblindex35_Master = new SimpleStringProperty(tblindex35_Master);
         this.tblindex36_Master = new SimpleStringProperty(tblindex36_Master);
         this.tblindex37_Master = new SimpleStringProperty(tblindex37_Master);
+        this.tblindex38_Master = new SimpleStringProperty(tblindex38_Master);
         this.tblindex39_Master = new SimpleStringProperty(tblindex39_Master);
         this.tblindex40_Master = new SimpleStringProperty(tblindex40_Master);
         this.tblindex41_Master = new SimpleStringProperty(tblindex41_Master);
-        this.tblindex42_Master = new SimpleStringProperty(tblindex42_Master);
-        this.tblindex43_Master = new SimpleStringProperty(tblindex43_Master);
-        this.tblindex44_Master = new SimpleStringProperty(tblindex44_Master);
-        this.tblindex45_Master = new SimpleStringProperty(tblindex45_Master);
-        this.tblindex46_Master = new SimpleStringProperty(tblindex46_Master);
-        this.tblindex47_Master = new SimpleStringProperty(tblindex47_Master);
         this.tblindex48_Master = new SimpleStringProperty(tblindex48_Master);
         this.tblindex49_Master = new SimpleStringProperty(tblindex49_Master);
         this.tblindex50_Master = new SimpleStringProperty(tblindex50_Master);
@@ -710,6 +690,14 @@ public class VSPTableMasterList {
         this.tblindex37_Master.set(tblindex37_Master);
     }
 
+    public String getTblindex38_Master() {
+        return tblindex38_Master.get();
+    }
+
+    public void setTblindex38_Master(String tblindex38_Master) {
+        this.tblindex38_Master.set(tblindex38_Master);
+    }
+
     public String getTblindex39_Master() {
         return tblindex39_Master.get();
     }
@@ -732,54 +720,6 @@ public class VSPTableMasterList {
 
     public void setTblindex41_Master(String tblindex41_Master) {
         this.tblindex41_Master.set(tblindex41_Master);
-    }
-
-    public String getTblindex42_Master() {
-        return tblindex42_Master.get();
-    }
-
-    public void setTblindex42_Master(String tblindex42_Master) {
-        this.tblindex42_Master.set(tblindex42_Master);
-    }
-
-    public String getTblindex43_Master() {
-        return tblindex43_Master.get();
-    }
-
-    public void setTblindex43_Master(String tblindex43_Master) {
-        this.tblindex43_Master.set(tblindex43_Master);
-    }
-
-    public String getTblindex44_Master() {
-        return tblindex44_Master.get();
-    }
-
-    public void setTblindex44_Master(String tblindex44_Master) {
-        this.tblindex44_Master.set(tblindex44_Master);
-    }
-
-    public String getTblindex45_Master() {
-        return tblindex45_Master.get();
-    }
-
-    public void setTblindex45_Master(String tblindex45_Master) {
-        this.tblindex45_Master.set(tblindex45_Master);
-    }
-
-    public String getTblindex46_Master() {
-        return tblindex46_Master.get();
-    }
-
-    public void setTblindex46_Master(String tblindex46_Master) {
-        this.tblindex46_Master.set(tblindex46_Master);
-    }
-
-    public String getTblindex47_Master() {
-        return tblindex47_Master.get();
-    }
-
-    public void setTblindex47_Master(String tblindex47_Master) {
-        this.tblindex47_Master.set(tblindex47_Master);
     }
 
     public String getTblindex48_Master() {

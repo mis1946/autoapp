@@ -4,13 +4,13 @@
  */
 package org.rmj.auto.app.sales;
 
+import java.awt.Component;
 import java.net.URL;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -28,13 +28,15 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import javax.swing.AbstractButton;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.JasperPrintManager;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.swing.JRViewer;
 import org.rmj.appdriver.GRider;
+import org.rmj.appdriver.SQLUtil;
 import org.rmj.appdriver.agentfx.CommonUtils;
 import org.rmj.appdriver.agentfx.ShowMessageFX;
 import org.rmj.appdriver.callback.MasterCallback;
@@ -52,12 +54,8 @@ public class VSPFormPrintController implements Initializable {
     private GRider oApp;
     private MasterCallback oListener;
     private JasperPrint jasperPrint; //Jasper Libraries
-    private JasperReport jasperReport;
     private JRViewer jrViewer;
     private ObservableList<VSPTableMasterList> vspMasterData = FXCollections.observableArrayList();
-    private List<VSPTableFinanceList> vspFinanceData = new ArrayList<VSPTableFinanceList>();
-    private ObservableList<VSPTableLaborList> vspLaborData = FXCollections.observableArrayList();
-    private List<VSPTablePartList> vspPartData = new ArrayList<VSPTablePartList>();
     private boolean running = false;
     final static int interval = 100;
     private Timeline timeline;
@@ -74,30 +72,8 @@ public class VSPFormPrintController implements Initializable {
     private VBox vbProgress;
     private String psTransNox;
     private Map<String, Object> params = new HashMap<>();
-
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        oTrans = new VehicleSalesProposalMaster(oApp, oApp.getBranchCode(), true);
-        oTrans.setCallback(oListener);
-        oTrans.setWithUI(true);
-        vbProgress.setVisible(true);
-        timeline = new Timeline();
-        generateReport();
-        btnClose.setOnAction(this::cmdButton_Click);
-
-    }
-
-    private void cmdButton_Click(ActionEvent event) {
-        String lsButton = ((Button) event.getSource()).getId();
-        switch (lsButton) {
-            case "btnClose":
-                CommonUtils.closeStage(btnClose);
-                break;
-            default:
-                ShowMessageFX.Warning(null, pxeModuleName, "Button with name " + lsButton + " not registered.");
-                break;
-        }
-    }
+    @FXML
+    private Button btnPrint;
 
     public void setGRider(GRider foValue) {
         oApp = foValue;
@@ -107,13 +83,48 @@ public class VSPFormPrintController implements Initializable {
         return (Stage) btnClose.getScene().getWindow();
     }
 
-    private void hideReport() {
-        jrViewer = new JRViewer(null);
-        reportPane.getChildren().clear();
-        jrViewer.setVisible(false);
-        running = false;
-        reportPane.setVisible(false);
-        timeline.stop();
+    public void setTransNox(String fsValue) {
+        psTransNox = fsValue;
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        oTrans = new VehicleSalesProposalMaster(oApp, oApp.getBranchCode(), true); //Initialize VehicleSalesProposalMaster
+        oTrans.setCallback(oListener);
+        oTrans.setWithUI(true);
+
+        vbProgress.setVisible(true);
+        timeline = new Timeline();
+        generateReport();
+        btnClose.setOnAction(this::cmdButton_Click);
+        btnPrint.setOnAction(this::cmdButton_Click);
+    }
+
+    private void cmdButton_Click(ActionEvent event) {
+        String lsButton = ((Button) event.getSource()).getId();
+        switch (lsButton) {
+            case "btnClose":
+                CommonUtils.closeStage(btnClose);
+                break;
+            case "btnPrint":
+                try {
+                if (JasperPrintManager.printReport(jasperPrint, true)) {
+                    ShowMessageFX.Information(null, pxeModuleName, "Printed Successfully");
+                    //Set Value to Refunded amount
+                    //oTrans.setMaster(0, dRefundAmt);
+                    CommonUtils.closeStage(btnClose);
+                } else {
+                    ShowMessageFX.Warning(null, pxeModuleName, "Print Aborted");
+                }
+            } catch (JRException ex) {
+
+                ShowMessageFX.Warning(null, pxeModuleName, "Print Aborted");
+            }
+            break;
+            default:
+                ShowMessageFX.Warning(null, pxeModuleName, "Button with name " + lsButton + " not registered.");
+                break;
+        }
     }
 
     private void generateReport() {
@@ -128,7 +139,6 @@ public class VSPFormPrintController implements Initializable {
                             timeSeconds = 0;
                         }
                         if (timeSeconds == 0) {
-
                             try {
                                 loadReport();
                             } catch (SQLException ex) {
@@ -141,10 +151,22 @@ public class VSPFormPrintController implements Initializable {
         }
     }
 
+    private void hideReport() {
+        jrViewer = new JRViewer(null);
+        reportPane.getChildren().clear();
+        jrViewer.setVisible(false);
+        running = false;
+        reportPane.setVisible(false);
+        timeline.stop();
+    }
+
     private void showReport() {
         vbProgress.setVisible(false);
         jrViewer = new JRViewer(jasperPrint);
         jrViewer.setZoomRatio(0.75f);
+        findAndHideButton(jrViewer, "Print");
+        findAndHideButton(jrViewer, "Save");
+        // Find and hide the buttons
         SwingNode swingNode = new SwingNode();
         jrViewer.setOpaque(true);
         jrViewer.setVisible(true);
@@ -161,8 +183,24 @@ public class VSPFormPrintController implements Initializable {
         timeline.stop();
     }
 
-    public void setTransNox(String fsValue) {
-        psTransNox = fsValue;
+    private void findAndHideButton(Component component, String buttonText) {
+        if (component instanceof AbstractButton) {
+            AbstractButton button = (AbstractButton) component;
+            if (button.getToolTipText() != null) {
+                if (button.getToolTipText().equals(buttonText)) {
+                    button.setVisible(false);
+                    return;
+                }
+            }
+        }
+
+        if (component instanceof java.awt.Container) {
+            java.awt.Container container = (java.awt.Container) component;
+            Component[] components = container.getComponents();
+            for (Component childComponent : components) {
+                findAndHideButton(childComponent, buttonText);
+            }
+        }
     }
 
     public static String formatName(String fullName) {
@@ -184,8 +222,18 @@ public class VSPFormPrintController implements Initializable {
         return formattedAmount;
     }
 
+    private String generateDiscountLabel(String discountValue, String paramName, String label) {
+        String formattedDiscount = formatAmount(discountValue);
+        if (discountValue.equals("0.00") || discountValue.contains("0.00")) {
+            params.put(paramName, "");
+            return "";
+        } else {
+            params.put(paramName, label);
+            return formattedDiscount;
+        }
+    }
+
     private boolean loadReport() throws SQLException {
-        //Create the parameter
         DecimalFormat decimalFormat = new DecimalFormat("#,##0.00");
         vspMasterData.clear();
         if (oTrans.OpenRecord(psTransNox)) {
@@ -244,12 +292,18 @@ public class VSPFormPrintController implements Initializable {
             }
 
             String unitPrice = "";
-            String nUPrice = decimalFormat.format(Double.parseDouble(oTrans.getMaster("nUnitPrce").toString()));
-            String dPayment = decimalFormat.format(Double.parseDouble(oTrans.getMaster("nDownPaym").toString()));
+            String dnPyment = "";
+            String nUPrice = formatAmount(oTrans.getMaster("nUnitPrce").toString());
+            String dPayment = formatAmount(oTrans.getMaster(38).toString());
+            if (oTrans.getMaster("nDownPaym").toString().contains("0.00")) {
+                dnPyment = "0.00";
+            } else {
+                dnPyment = dPayment;
+            }
             if (oTrans.getMaster("nUnitPrce").toString().contains("0.00")) {
                 unitPrice = "0.00";
             } else {
-                unitPrice = nUPrice + " / Downpayment:" + dPayment;
+                unitPrice = nUPrice;
             }
 
             String LtoAmount = "0.00";
@@ -279,7 +333,6 @@ public class VSPFormPrintController implements Initializable {
             }
             String totalAmount = formatAmount(oTrans.getMaster("nTranTotl").toString());
             String reservationAmount = formatAmount(oTrans.getMaster("nResrvFee").toString());
-//            String dwnPayment = formatAmount(oTrans.getMaster("nTranTotl").toString(), decimalFormat);
             String netAmountDue = formatAmount(oTrans.getMaster("nNetTTotl").toString());
             String inqTypDisplay = "";
             switch (oTrans.getMaster("sInqTypex").toString()) {
@@ -339,12 +392,11 @@ public class VSPFormPrintController implements Initializable {
                 case "4":
                     break;
                 case "3":
-                    displayTplInsuranceAmount = tplInsuranceAmount;
+                    displayTplInsuranceAmount = formatAmount(tplInsuranceAmount);
                     displayTplInsuranceComp = tplInsuranceCompany;
                     break;
                 default:
                     break;
-
             }
             switch (oTrans.getMaster("sCompStat").toString()) {
                 case "1":
@@ -356,7 +408,7 @@ public class VSPFormPrintController implements Initializable {
                 case "4":
                     break;
                 case "3":
-                    displayCompInsuranceAmount = compreInsuranceAmount;
+                    displayCompInsuranceAmount = formatAmount(compreInsuranceAmount);
                     displayCompInsuranceComp = compreInsuranceCompany;
                     break;
                 default:
@@ -404,7 +456,7 @@ public class VSPFormPrintController implements Initializable {
                 } else if (currentStatus.equals("1")) {
                     double amount = Double.parseDouble(currentAmount);
                     additionalAmount += amount;
-                    additionalAmountDisplay = "Additonal Labor: " + formatAmount(String.valueOf(additionalAmount));
+                    additionalAmountDisplay = formatAmount(String.valueOf(additionalAmount));
                 } else {
                     System.out.println("INVALID!");
                 }
@@ -427,9 +479,11 @@ public class VSPFormPrintController implements Initializable {
 
             String brancName_6_Display = "6. As a matter of policy, Sales Personnel are not allowed to receive payments. Please remit all payments to our duly authorized cashier. All checks should be made payable to "
                     + branchName_6 + " .";
+            String vsCode = "<" + oTrans.getMaster(1).toString() + ">";
+
             vspMasterData.add(new VSPTableMasterList(
                     "",
-                    oTrans.getMaster("sTransNox").toString(),
+                    vsCode,
                     oTrans.getMaster("dTransact").toString(),
                     oTrans.getMaster("sVSPNOxxx").toString(), //vspNo
                     deliveryDate, //dDelvryDt
@@ -453,7 +507,7 @@ public class VSPFormPrintController implements Initializable {
                     underAmount,
                     permaAmount,
                     tintAmount,
-                    additionalAmountDisplay.toString(),
+                    additionalAmountDisplay,
                     nAccessAmount,
                     oTrans.getMaster("nInsurAmt").toString(),
                     displayCompInsuranceAmount,
@@ -476,15 +530,10 @@ public class VSPFormPrintController implements Initializable {
                     oTrans.getMaster("sBnkAppCD").toString(),
                     totalAmount,
                     reservationAmount,
+                    dnPyment,
                     netAmountDue,
                     oTrans.getMaster("nAmtPaidx").toString(),
                     oTrans.getMaster("nFrgtChrg").toString(),
-                    oTrans.getMaster("nDue2Supx").toString(),
-                    oTrans.getMaster("nDue2Dlrx").toString(),
-                    oTrans.getMaster("nSPFD2Sup").toString(),
-                    oTrans.getMaster("nSPFD2Dlr").toString(),
-                    oTrans.getMaster("nPrmD2Sup").toString(),
-                    oTrans.getMaster("nPrmD2Dlr").toString(),
                     oTrans.getMaster("sEndPlate").toString(),
                     oTrans.getMaster("sBranchCD").toString(),
                     oTrans.getMaster("nDealrRte").toString(),
@@ -519,8 +568,8 @@ public class VSPFormPrintController implements Initializable {
                     branchName_1_Display,
                     branchName_3_Display,
                     brancName_6_Display,//Branch Name
-                    displayTplInsuranceComp,
-                    displayCompInsuranceComp,
+                    displayTplInsuranceComp.toUpperCase(),
+                    displayCompInsuranceComp.toUpperCase(),
                     oTrans.getMaster("sTaxIDNox").toString(),
                     oTrans.getMaster("sJobNoxxx").toString(),
                     CommonUtils.xsDateMedium((Date) oTrans.getMaster("dBirthDte")),
@@ -530,17 +579,34 @@ public class VSPFormPrintController implements Initializable {
                     officeNumber,
                     oTrans.getMaster("cOfficexx").toString(),
                     oTrans.getMaster("cTrStatus").toString(),
-                    oTrans.getMaster("sBrnchAdd").toString()// Branch Address
+                    oTrans.getMaster("sBrnchAdd").toString().toUpperCase()// Branch Address
             )
             );
-
         }
-
         String sourceFileName = "D://GGC_Java_Systems/reports/autoapp/vsp.jasper";
         String printFileName = null;
         JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(vspMasterData);
+        String branchName = "";
+        ResultSet name;
+        String lsQuery = "SELECT b.sCompnyNm "
+                + " FROM xxxSysUser a"
+                + " LEFT JOIN GGC_ISysDBF.Client_Master b"
+                + " ON a.sEmployNo  = b.sClientID"
+                + " WHERE a.sUserIDxx = " + SQLUtil.toSQL(oApp.getUserID());
+        name = oApp.executeQuery(lsQuery);
+        try {
+            if (name.next()) {
+                branchName = name.getString("sCompnyNm");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(InquiryRefundPrintController.class.getName()).log(Level.SEVERE, null, ex);
+        }
         params.put(
                 "formName", "VEHICLE SALES PROPOSAL FORM");
+        params.put(
+                "brnchUserName", formatName(branchName).toUpperCase());
+        params.put(
+                "dnPymntAmount", "0.00");
         try {
             jasperPrint = JasperFillManager.fillReport(sourceFileName, params, beanColDataSource);
             printFileName = jasperPrint.toString();
@@ -552,19 +618,6 @@ public class VSPFormPrintController implements Initializable {
             vbProgress.setVisible(false);
             timeline.stop();
         }
-
         return false;
     }
-
-    private String generateDiscountLabel(String discountValue, String paramName, String label) {
-        String formattedDiscount = formatAmount(discountValue);
-        if (discountValue.equals("0.00") || discountValue.contains("0.00")) {
-            params.put(paramName, "");
-            return "";
-        } else {
-            params.put(paramName, label);
-            return formattedDiscount;
-        }
-    }
-
 }

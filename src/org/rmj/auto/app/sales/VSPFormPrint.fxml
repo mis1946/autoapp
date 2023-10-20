@@ -10,6 +10,7 @@
 <?import javafx.scene.effect.Blend?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
@@ -70,14 +71,26 @@
                     <bottom>
                         <AnchorPane prefHeight="51.0" prefWidth="626.0" style="-fx-background-color: #515151; -fx-background-radius: 5;" BorderPane.alignment="CENTER">
                             <children>
-                                <Button fx:id="btnClose" contentDisplay="TOP" layoutX="556.0" layoutY="1.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="70.0" text="Close" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
-                                    <effect>
-                                        <Blend />
-                                    </effect>
-                                    <graphic>
-                                        <FontAwesomeIconView glyphName="POWER_OFF" size="20" />
-                                    </graphic>
-                                </Button>
+                                <HBox prefHeight="51.0" prefWidth="151.0" spacing="5.0" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
+                                    <children>
+                                        <Button fx:id="btnPrint" contentDisplay="TOP" mnemonicParsing="false" prefHeight="50.0" prefWidth="80.0" text="Print">
+                                            <effect>
+                                                <Blend />
+                                            </effect>
+                                            <graphic>
+                                                <FontAwesomeIconView glyphName="PRINT" size="20" />
+                                            </graphic>
+                                        </Button>
+                                        <Button fx:id="btnClose" contentDisplay="TOP" mnemonicParsing="false" prefHeight="50.0" prefWidth="70.0" text="Close">
+                                            <effect>
+                                                <Blend />
+                                            </effect>
+                                            <graphic>
+                                                <FontAwesomeIconView glyphName="POWER_OFF" size="20" />
+                                            </graphic>
+                                        </Button>
+                                    </children>
+                                </HBox>
                             </children>
                         </AnchorPane>
                     </bottom>

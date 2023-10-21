@@ -1950,25 +1950,6 @@ public class VSPFormController implements Initializable, ScreenInterface {
                 } else {
                     bAdditional = false;
                 }
-
-                switch (oTrans.getVSPLabor(7).toString()) {
-                    case "RUSTPROOF":
-                        bAdditional = false;
-                        break;
-                    case "PERMASHINE":
-                        bAdditional = false;
-                        break;
-                    case "TINT":
-                        bAdditional = false;
-                        break;
-                    case "UNDERCOAT":
-                        bAdditional = false;
-                        break;
-
-                    default:
-                        bAdditional = true;
-                        break;
-                }
                 String amountString = oTrans.getVSPLaborDetail(lnCtr, "nLaborAmt").toString();
                 // Convert the amount to a decimal value
                 double amount = Double.parseDouble(amountString);
@@ -2041,11 +2022,11 @@ public class VSPFormController implements Initializable, ScreenInterface {
             String textFieldValue = event.getNewValue();
             try {
                 oTrans.setVSPLaborDetail(fnRow, 7, textFieldValue);
-                switch (textFieldValue) {
-                    case "RUSTPROOF":
-                        oTrans.setVSPLaborDetail(fnRow, 8, textFieldValue);
-                        break;
-                }
+//                switch (textFieldValue) {
+//                    case "RUSTPROOF":
+//                        oTrans.setVSPLaborDetail(fnRow, 8, textFieldValue);
+//                        break;
+//                }
                 loadTableLabor();
             } catch (SQLException ex) {
                 Logger.getLogger(VSPFormController.class.getName()).log(Level.SEVERE, null, ex);
@@ -2103,7 +2084,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
                 }
                 try {
                     oTrans.setVSPLaborDetail(fnRow, 5, fsValue);
-                    loadTableParts();
+                    loadTableLabor();
                 } catch (SQLException ex) {
                     Logger.getLogger(VSPFormController.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -2123,23 +2104,24 @@ public class VSPFormController implements Initializable, ScreenInterface {
                 return string; // Convert string back to object (if needed)
             }
         }));
-        tblindex04_Labor.setCellFactory(col -> new TextFieldTableCell<VSPTableLaborList, String>() {
-            @Override
-            public void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || getTableRow() == null || getTableRow().getItem() == null) {
-                    setEditable(false);
-                    return;
-                }
-                VSPTableLaborList rowData = (VSPTableLaborList) getTableRow().getItem();
-                try {
-                    // Check the condition and set editable accordingly
-                    setEditable(oTrans.getVSPLaborDetail(Integer.parseInt(rowData.getTblLaborRow()), 5).toString().equals("1"));
-                } catch (SQLException ex) {
-                    Logger.getLogger(VSPFormController.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        });
+//        tblindex04_Labor.setCellFactory(col -> new TextFieldTableCell<VSPTableLaborList, String>() {
+//            @Override
+//            public void updateItem(String item, boolean empty) {
+//                super.updateItem(item, empty);
+//                if (empty || getTableRow() == null || getTableRow().getItem() == null) {
+//                    setEditable(false);
+//                    return;
+//                }
+//                VSPTableLaborList rowData = (VSPTableLaborList) getTableRow().getItem();
+//                try {
+//                    // Check the condition and set editable accordingly
+//                    setEditable(oTrans.getVSPLaborDetail(Integer.parseInt(rowData.getTblLaborRow()), 5).toString().equals("1"));
+//                    loadTableLabor();
+//                } catch (SQLException ex) {
+//                    Logger.getLogger(VSPFormController.class.getName()).log(Level.SEVERE, null, ex);
+//                }
+//            }
+//        });
 
         tblindex04_Labor.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<VSPTableLaborList, String>>() {
             @Override

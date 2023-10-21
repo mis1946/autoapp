@@ -17,41 +17,38 @@ public class VSPTableLaborList {
 
     private SimpleStringProperty tblLaborRow;
     private SimpleStringProperty tblindex03_Labor;
-    private SimpleStringProperty tblindex08_Labor;
+    private SimpleStringProperty tblindex07_Labor;
     private SimpleStringProperty tblindex05_Labor;
-    private SimpleStringProperty tblindex06_Labor;
     private SimpleStringProperty tblindex04_Labor;
     private SimpleStringProperty tblindex04_Labor_Rust;
     private SimpleStringProperty tblindex04_Labor_Perma;
     private SimpleStringProperty tblindex04_Labor_Under;
     private SimpleStringProperty tblindex04_Labor_Tint;
     private CheckBox addOrNot;
-    private SimpleBooleanProperty tblindex09;
+    private SimpleBooleanProperty tblindex08;
 
     VSPTableLaborList(String tblLaborRow,
             String tblindex03_Labor,
-            String tblindex08_Labor,
+            String tblindex07_Labor,
             String tblindex05_Labor,
-            String tblindex06_Labor,
             String tblindex04_Labor,
             String tblindex04_Labor_Rust,
             String tblindex04_Labor_Perma,
             String tblindex04_Labor_Under,
             String tblindex04_Labor_Tint,
-            boolean tblindex09) {
+            boolean tblindex08) {
         this.tblLaborRow = new SimpleStringProperty(tblLaborRow);
         this.tblindex03_Labor = new SimpleStringProperty(tblindex03_Labor);
-        this.tblindex08_Labor = new SimpleStringProperty(tblindex08_Labor);
+        this.tblindex07_Labor = new SimpleStringProperty(tblindex07_Labor);
         this.tblindex05_Labor = new SimpleStringProperty(tblindex05_Labor);
-        this.tblindex06_Labor = new SimpleStringProperty(tblindex06_Labor);
         this.tblindex04_Labor = new SimpleStringProperty(tblindex04_Labor);
         this.tblindex04_Labor_Rust = new SimpleStringProperty(tblindex04_Labor_Rust);
         this.tblindex04_Labor_Perma = new SimpleStringProperty(tblindex04_Labor_Perma);
         this.tblindex04_Labor_Under = new SimpleStringProperty(tblindex04_Labor_Under);
         this.tblindex04_Labor_Tint = new SimpleStringProperty(tblindex04_Labor_Tint);
         this.addOrNot = new CheckBox();
-        this.tblindex09 = new SimpleBooleanProperty(tblindex09);
-        this.addOrNot.setSelected(tblindex09);
+        this.tblindex08 = new SimpleBooleanProperty(tblindex08);
+        this.addOrNot.setSelected(tblindex08);
         addOrNot.setDisable(true);
     }
 
@@ -71,12 +68,12 @@ public class VSPTableLaborList {
         this.tblindex03_Labor.set(tblLaborRow);
     }
 
-    public String getTblindex08_Labor() {
-        return tblindex08_Labor.get();
+    public String getTblindex07_Labor() {
+        return tblindex07_Labor.get();
     }
 
-    public void setTblindex08_Labor(String tblindex08_Labor) {
-        this.tblindex08_Labor.set(tblindex08_Labor);
+    public void setTblindex08_Labor(String tblindex07_Labor) {
+        this.tblindex07_Labor.set(tblindex07_Labor);
     }
 
     public String getTblindex05_Labor() {
@@ -85,14 +82,6 @@ public class VSPTableLaborList {
 
     public void setTblindex05_Labor(String tblindex05_Labor) {
         this.tblindex05_Labor.set(tblindex05_Labor);
-    }
-
-    public String getTblindex06_Labor() {
-        return tblindex06_Labor.get();
-    }
-
-    public void setTblindex06_Labor(String tblindex06_Labor) {
-        this.tblindex06_Labor.set(tblindex06_Labor);
     }
 
     public String getTblindex04_Labor() {
@@ -144,16 +133,16 @@ public class VSPTableLaborList {
         this.addOrNot = addOrNot;
     }
 
-    public boolean isTblindex09() {
-        return tblindex09.get();
+    public boolean isTblindex08() {
+        return tblindex08.get();
     }
 
-    public void setTblindex09(boolean tblindex09) {
-        this.tblindex09.set(tblindex09);
+    public void setTblindex08(boolean tblindex08) {
+        this.tblindex08.set(tblindex08);
     }
 
     public BooleanProperty selectedProperty() {
-        return tblindex09;
+        return tblindex08;
     }
 
 }

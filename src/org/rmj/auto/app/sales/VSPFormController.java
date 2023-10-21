@@ -69,7 +69,6 @@ import org.rmj.appdriver.agentfx.CommonUtils;
 import org.rmj.appdriver.agentfx.ShowMessageFX;
 import org.rmj.appdriver.callback.MasterCallback;
 import org.rmj.appdriver.constants.EditMode;
-import org.rmj.auto.app.views.ActivityPrintController;
 import org.rmj.auto.app.views.InputTextFormatter;
 import org.rmj.auto.app.views.ScreenInterface;
 import org.rmj.auto.app.views.unloadForm;
@@ -285,21 +284,18 @@ public class VSPFormController implements Initializable, ScreenInterface {
     @FXML
     private TableColumn<VSPTableLaborList, String> tblindex05_Labor;
     @FXML
-    private TableColumn<VSPTableLaborList, String> tblindex06_Labor;
-    @FXML
     private TableColumn<VSPTableLaborList, String> tblindex04_Labor;
     @FXML
     private TableColumn<VSPTablePartList, String> tblPartsRow;
     @FXML
-    private TableColumn<VSPTablePartList, String> tblindex15_Part;
-    @FXML
-    private TableColumn<VSPTablePartList, String> tblindex10_Part;
-    @FXML
     private TableColumn<VSPTablePartList, String> tblindex08_Part;
     @FXML
-    private TableColumn<VSPTablePartList, String> tblindex09_Part;
-    @FXML
     private TableColumn<VSPTablePartList, String> tblindex05_Part;
+    @FXML
+    private TableColumn<VSPTablePartList, String> tblindex14_Part;
+    @FXML
+    private TableColumn<VSPTablePartList, String> tblindex09_Part;
+
     @FXML
     private Tab tabMain;
     @FXML
@@ -323,8 +319,6 @@ public class VSPFormController implements Initializable, ScreenInterface {
     @FXML
     private CheckBox chckBoxSpecialAccount;
     @FXML
-    private TableColumn<?, ?> tbladditionalOrNot9;
-    @FXML
     private TableColumn<VSPTablePartList, String> tblindex11_Part;
 
     @FXML
@@ -337,6 +331,8 @@ public class VSPFormController implements Initializable, ScreenInterface {
     private TableColumn<VSPTablePartList, String> tblPartJobNo;
     @FXML
     private Label lblVSPStatus;
+    @FXML
+    private TableColumn<VSPTableLaborList, String> tblindex07_Labor;
 
     private Stage getStage() {
         return (Stage) btnClose.getScene().getWindow();
@@ -1949,22 +1945,30 @@ public class VSPFormController implements Initializable, ScreenInterface {
                         cType = "CHARGE";
                         break;
                 }
-                String cTo = "";
-                switch (oTrans.getVSPLaborDetail(lnCtr, "sChrgeTox").toString()) {
-                    case "0":
-                        cTo = "C/O CLIENT";
-                        break;
-                    case "1":
-                        cTo = "C/O BANK";
-                        break;
-                }
-
                 if (oTrans.getVSPLaborDetail(lnCtr, "cAddtlxxx").toString().equals("1")) {
                     bAdditional = true;
                 } else {
                     bAdditional = false;
                 }
 
+                switch (oTrans.getVSPLabor(7).toString()) {
+                    case "RUSTPROOF":
+                        bAdditional = false;
+                        break;
+                    case "PERMASHINE":
+                        bAdditional = false;
+                        break;
+                    case "TINT":
+                        bAdditional = false;
+                        break;
+                    case "UNDERCOAT":
+                        bAdditional = false;
+                        break;
+
+                    default:
+                        bAdditional = true;
+                        break;
+                }
                 String amountString = oTrans.getVSPLaborDetail(lnCtr, "nLaborAmt").toString();
                 // Convert the amount to a decimal value
                 double amount = Double.parseDouble(amountString);
@@ -1975,7 +1979,6 @@ public class VSPFormController implements Initializable, ScreenInterface {
                         oTrans.getVSPLaborDetail(lnCtr, "sLaborCde").toString(),
                         oTrans.getVSPLaborDetail(lnCtr, "sLaborDsc").toString().toUpperCase(),
                         cType,
-                        cTo,
                         formattedAmount,
                         "",
                         "",
@@ -2002,11 +2005,19 @@ public class VSPFormController implements Initializable, ScreenInterface {
             tblViewLabor.setEditable(false);
         }
         tblLaborRow.setCellValueFactory(new PropertyValueFactory<>("tblLaborRow"));
-        tblindex08_Labor.setCellValueFactory(new PropertyValueFactory<>("tblindex08_Labor"));
-        tblindex08_Labor.setCellValueFactory(new PropertyValueFactory<>("tblindex08_Labor"));
-        tblindex08_Labor.setCellValueFactory(new PropertyValueFactory<>("tblindex08_Labor"));
+        tblindex07_Labor.setCellValueFactory(new PropertyValueFactory<>("tblindex07_Labor"));
+        tblindex07_Labor.setCellFactory(TextFieldTableCell.forTableColumn(new StringConverter<String>() {
+            @Override
+            public String toString(String object) {
+                return object; // Convert object to string representation
+            }
 
-        tblindex08_Labor.setCellFactory(col -> new TextFieldTableCell<VSPTableLaborList, String>() {
+            @Override
+            public String fromString(String string) {
+                return string; // Convert string back to object (if needed)
+            }
+        }));
+        tblindex07_Labor.setCellFactory(col -> new TextFieldTableCell<VSPTableLaborList, String>() {
             @Override
             public void updateItem(String item, boolean empty) {
                 super.updateItem(item, empty);
@@ -2024,12 +2035,17 @@ public class VSPFormController implements Initializable, ScreenInterface {
             }
         });
 
-        tblindex08_Labor.setOnEditCommit(event -> {
+        tblindex07_Labor.setOnEditCommit(event -> {
             VSPTableLaborList parts = event.getRowValue();
             int fnRow = Integer.parseInt(parts.getTblLaborRow());
             String textFieldValue = event.getNewValue();
             try {
-                oTrans.setVSPLaborDetail(fnRow, 8, textFieldValue);
+                oTrans.setVSPLaborDetail(fnRow, 7, textFieldValue);
+                switch (textFieldValue) {
+                    case "RUSTPROOF":
+                        oTrans.setVSPLaborDetail(fnRow, 8, textFieldValue);
+                        break;
+                }
                 loadTableLabor();
             } catch (SQLException ex) {
                 Logger.getLogger(VSPFormController.class.getName()).log(Level.SEVERE, null, ex);
@@ -2047,7 +2063,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
                             if (focusedCell.getTableColumn().isEditable()) {
                                 int lnIndex = Integer.parseInt(focusedCell.getTableColumn().getId().substring(9, 10));
                                 switch (lnIndex) {
-                                    case 8:
+                                    case 7:
                                         if (oTrans.searchLabor("", tblViewLabor.getSelectionModel().getSelectedIndex() + 1, true)) {
                                             loadTableLabor();
                                         } else {
@@ -2086,35 +2102,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
                     fsValue = 0;
                 }
                 try {
-                    oTrans.setVSPLaborDetail(fnRow, 5, String.valueOf(fsValue));
-                    loadTableParts();
-                } catch (SQLException ex) {
-                    Logger.getLogger(VSPFormController.class.getName()).log(Level.SEVERE, null, ex);
-                }
-
-            }
-        });
-        ObservableList<String> cTo = FXCollections.observableArrayList(
-                "C/O CLIENT",
-                "C/O BANK"
-        // Add more items as needed
-        );
-        tblindex06_Labor.setCellValueFactory(new PropertyValueFactory<VSPTableLaborList, String>("tblindex06_Labor"));
-        tblindex06_Labor.setCellFactory(ComboBoxTableCell.forTableColumn(cTo));
-        tblindex06_Labor.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<VSPTableLaborList, String>>() {
-            @Override
-            public void handle(TableColumn.CellEditEvent<VSPTableLaborList, String> event) {
-                VSPTableLaborList parts = event.getRowValue();
-                int fnRow = Integer.parseInt(parts.getTblLaborRow());
-                String selectedValue = event.getNewValue();
-                int fsValue;
-                if (selectedValue.equalsIgnoreCase("C/O BANK")) {
-                    fsValue = 1;
-                } else {
-                    fsValue = 0;
-                }
-                try {
-                    oTrans.setVSPLaborDetail(fnRow, 6, String.valueOf(fsValue));
+                    oTrans.setVSPLaborDetail(fnRow, 5, fsValue);
                     loadTableParts();
                 } catch (SQLException ex) {
                     Logger.getLogger(VSPFormController.class.getName()).log(Level.SEVERE, null, ex);
@@ -2124,6 +2112,35 @@ public class VSPFormController implements Initializable, ScreenInterface {
         });
         tblindex04_Labor.setCellValueFactory(new PropertyValueFactory<VSPTableLaborList, String>("tblindex04_Labor"));
         tblindex04_Labor.setCellFactory(TextFieldTableCell.forTableColumn());
+        tblindex04_Labor.setCellFactory(TextFieldTableCell.forTableColumn(new StringConverter<String>() {
+            @Override
+            public String toString(String object) {
+                return object; // Convert object to string representation
+            }
+
+            @Override
+            public String fromString(String string) {
+                return string; // Convert string back to object (if needed)
+            }
+        }));
+        tblindex04_Labor.setCellFactory(col -> new TextFieldTableCell<VSPTableLaborList, String>() {
+            @Override
+            public void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || getTableRow() == null || getTableRow().getItem() == null) {
+                    setEditable(false);
+                    return;
+                }
+                VSPTableLaborList rowData = (VSPTableLaborList) getTableRow().getItem();
+                try {
+                    // Check the condition and set editable accordingly
+                    setEditable(oTrans.getVSPLaborDetail(Integer.parseInt(rowData.getTblLaborRow()), 5).toString().equals("1"));
+                } catch (SQLException ex) {
+                    Logger.getLogger(VSPFormController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+
         tblindex04_Labor.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<VSPTableLaborList, String>>() {
             @Override
             public void handle(TableColumn.CellEditEvent<VSPTableLaborList, String> event) {
@@ -2132,16 +2149,19 @@ public class VSPFormController implements Initializable, ScreenInterface {
                 String textFieldValue = event.getNewValue().replace(",", "");
                 try {
                     double valueAmount = Double.parseDouble(textFieldValue);
-                    oTrans.setVSPLaborDetail(fnRow, 4, valueAmount);
+                    if (tblindex05_Labor.equals("1")) {
+                        oTrans.setVSPLaborDetail(fnRow, 4, Double.valueOf("0.00"));
+                    } else {
+                        oTrans.setVSPLaborDetail(fnRow, 4, valueAmount);
+                    }
                     loadTableLabor();
                 } catch (SQLException ex) {
                     Logger.getLogger(VSPFormController.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-
         }
         );
-        tbladditionalOrNot9.setCellValueFactory(new PropertyValueFactory<>("addOrNot"));
+        tblindex08_Labor.setCellValueFactory(new PropertyValueFactory<>("addOrNot"));
 
     }
 
@@ -2248,15 +2268,6 @@ public class VSPFormController implements Initializable, ScreenInterface {
                         cType = "CHARGE";
                         break;
                 }
-                String cTo = "";
-                switch (oTrans.getVSPPartsDetail(lnCtr, "sChrgeTox").toString()) {
-                    case "0":
-                        cTo = "C/O CLIENT";
-                        break;
-                    case "1":
-                        cTo = "C/O BANK";
-                        break;
-                }
                 String amountString = oTrans.getVSPPartsDetail(lnCtr, "nSelPrice").toString();
                 // Convert the amount to a decimal value
                 double amount = Double.parseDouble(amountString);
@@ -2275,7 +2286,6 @@ public class VSPFormController implements Initializable, ScreenInterface {
                         cType,
                         oTrans.getVSPPartsDetail(lnCtr, "nQuantity").toString(),
                         formattedAmount,
-                        cTo,
                         bAdditional
                 ));
                 bAdditional = false;
@@ -2297,17 +2307,17 @@ public class VSPFormController implements Initializable, ScreenInterface {
             tblViewParts.setEditable(false);
         }
         tblPartsRow.setCellValueFactory(new PropertyValueFactory<>("tblPartsRow"));
-        tblindex15_Part.setCellValueFactory(new PropertyValueFactory<>("tblindex15_Part"));
-        tblindex10_Part.setCellValueFactory(new PropertyValueFactory<VSPTablePartList, String>("tblindex10_Part"));
-        tblindex10_Part.setCellFactory(TextFieldTableCell.forTableColumn());
-        tblindex10_Part.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<VSPTablePartList, String>>() {
+        tblindex14_Part.setCellValueFactory(new PropertyValueFactory<>("tblindex14_Part"));
+        tblindex09_Part.setCellValueFactory(new PropertyValueFactory<VSPTablePartList, String>("tblindex09_Part"));
+        tblindex09_Part.setCellFactory(TextFieldTableCell.forTableColumn());
+        tblindex09_Part.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<VSPTablePartList, String>>() {
             @Override
             public void handle(TableColumn.CellEditEvent<VSPTablePartList, String> event) {
                 VSPTablePartList parts = event.getRowValue();
                 int fnRow = Integer.parseInt(parts.getTblPartsRow());
                 String textFieldValue = event.getNewValue();
                 try {
-                    oTrans.setVSPPartsDetail(fnRow, 10, textFieldValue.toUpperCase());
+                    oTrans.setVSPPartsDetail(fnRow, 9, textFieldValue.toUpperCase());
                     loadTableParts();
 
                 } catch (SQLException ex) {
@@ -2336,40 +2346,14 @@ public class VSPFormController implements Initializable, ScreenInterface {
                     fsValue = 0;
                 }
                 try {
-                    oTrans.setVSPPartsDetail(fnRow, 8, String.valueOf(fsValue));
+                    oTrans.setVSPPartsDetail(fnRow, 8, fsValue);
                     loadTableParts();
                 } catch (SQLException ex) {
                     Logger.getLogger(VSPFormController.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });
-        ObservableList<String> cTo = FXCollections.observableArrayList(
-                "C/O CLIENT",
-                "C/O BANK"
-        // Add more items as needed
-        );
-        tblindex09_Part.setCellValueFactory(new PropertyValueFactory<VSPTablePartList, String>("tblindex09_Part"));
-        tblindex09_Part.setCellFactory(ComboBoxTableCell.forTableColumn(cTo));
-        tblindex09_Part.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<VSPTablePartList, String>>() {
-            @Override
-            public void handle(TableColumn.CellEditEvent<VSPTablePartList, String> event) {
-                VSPTablePartList parts = event.getRowValue();
-                int fnRow = Integer.parseInt(parts.getTblPartsRow());
-                String selectedValue = event.getNewValue();
-                int fsValue;
-                if (selectedValue.equalsIgnoreCase("C/O BANK")) {
-                    fsValue = 1;
-                } else {
-                    fsValue = 0;
-                }
-                try {
-                    oTrans.setVSPPartsDetail(fnRow, 9, String.valueOf(fsValue));
-                    loadTableParts();
-                } catch (SQLException ex) {
-                    Logger.getLogger(VSPFormController.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        });
+
         tblindex06_Part.setCellValueFactory(new PropertyValueFactory<VSPTablePartList, String>("tblindex06_Part"));
         tblindex06_Part.setCellFactory(TextFieldTableCell.forTableColumn());
         tblindex06_Part.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<VSPTablePartList, String>>() {
@@ -2377,17 +2361,15 @@ public class VSPFormController implements Initializable, ScreenInterface {
             public void handle(TableColumn.CellEditEvent<VSPTablePartList, String> event) {
                 VSPTablePartList parts = event.getRowValue();
                 int fnRow = Integer.parseInt(parts.getTblPartsRow());
-                String txtQuantity = event.getNewValue();
+                String textFieldValue = event.getNewValue().replace(",", "");
                 try {
-                    int valueQuan = Integer.parseInt(txtQuantity);
-                    oTrans.setVSPPartsDetail(fnRow, "nQuantity", valueQuan);
-                    System.out.println("" + valueQuan);
+                    int valueAmount = Integer.parseInt(textFieldValue);
+                    oTrans.setVSPPartsDetail(fnRow, 6, valueAmount);
                     loadTableParts();
                 } catch (SQLException ex) {
                     Logger.getLogger(VSPFormController.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-
         }
         );
         tblindex05_Part.setCellValueFactory(new PropertyValueFactory<VSPTablePartList, String>("tblindex05_Part"));

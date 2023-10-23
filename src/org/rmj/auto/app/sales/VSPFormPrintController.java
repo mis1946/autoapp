@@ -96,6 +96,8 @@ public class VSPFormPrintController implements Initializable {
         vbProgress.setVisible(true);
         timeline = new Timeline();
         generateReport();
+        btnPrint.setVisible(false);
+        btnPrint.setDisable(true);
         btnClose.setOnAction(this::cmdButton_Click);
         btnPrint.setOnAction(this::cmdButton_Click);
     }
@@ -162,6 +164,8 @@ public class VSPFormPrintController implements Initializable {
 
     private void showReport() {
         vbProgress.setVisible(false);
+        btnPrint.setVisible(true);
+        btnPrint.setDisable(false);
         jrViewer = new JRViewer(jasperPrint);
         jrViewer.setZoomRatio(0.75f);
         findAndHideButton(jrViewer, "Print");
@@ -234,7 +238,6 @@ public class VSPFormPrintController implements Initializable {
     }
 
     private boolean loadReport() throws SQLException {
-        DecimalFormat decimalFormat = new DecimalFormat("#,##0.00");
         vspMasterData.clear();
         if (oTrans.OpenRecord(psTransNox)) {
             String deliveryDate = deliveryDate = CommonUtils.xsDateShort((Date) oTrans.getMaster("dDelvryDt"));;

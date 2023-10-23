@@ -326,6 +326,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
     private ObservableList<VSPTablePartList> partData = FXCollections.observableArrayList();
     @FXML
     private CheckBox chckBoxSpecialAccount;
+    @FXML
     private TableColumn<VSPTableLaborList, String> tblLaborJobNo;
     @FXML
     private TableColumn<VSPTablePartList, String> tblPartJobNo;
@@ -1772,12 +1773,6 @@ public class VSPFormController implements Initializable, ScreenInterface {
             txtField68.setText((String) oTrans.getMaster(68));
             textArea69.setText((String) oTrans.getMaster(69));
 
-            System.out.println("plants" + decimalFormat.format(Double.parseDouble(String.format("%.2f", oTrans.getMaster(42)))) + "\n"
-                    + decimalFormat.format(Double.parseDouble(String.format("%.2f", oTrans.getMaster(43)))) + "\n"
-                    + decimalFormat.format(Double.parseDouble(String.format("%.2f", oTrans.getMaster(44)))) + "\n"
-                    + decimalFormat.format(Double.parseDouble(String.format("%.2f", oTrans.getMaster(45)))) + "\n"
-                    + decimalFormat.format(Double.parseDouble(String.format("%.2f", oTrans.getMaster(46)))) + "\n"
-                    + decimalFormat.format(Double.parseDouble(String.format("%.2f", oTrans.getMaster(47)))));
             txtField46.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f", oTrans.getMaster(46)))));
             txtField42.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f", oTrans.getMaster(42)))));
             txtField43.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f", oTrans.getMaster(43)))));

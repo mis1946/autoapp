@@ -69,6 +69,7 @@ import org.rmj.appdriver.agentfx.CommonUtils;
 import org.rmj.appdriver.agentfx.ShowMessageFX;
 import org.rmj.appdriver.callback.MasterCallback;
 import org.rmj.appdriver.constants.EditMode;
+import org.rmj.auto.app.views.ActivityFormController;
 import org.rmj.auto.app.views.InputTextFormatter;
 import org.rmj.auto.app.views.ScreenInterface;
 import org.rmj.auto.app.views.unloadForm;
@@ -280,6 +281,8 @@ public class VSPFormController implements Initializable, ScreenInterface {
     @FXML
     private TableColumn<VSPTableLaborList, String> tblLaborRow;
     @FXML
+    private TableColumn<VSPTableLaborList, String> tblindex07_Labor;
+    @FXML
     private TableColumn<VSPTableLaborList, String> tblindex08_Labor;
     @FXML
     private TableColumn<VSPTableLaborList, String> tblindex05_Labor;
@@ -295,7 +298,12 @@ public class VSPFormController implements Initializable, ScreenInterface {
     private TableColumn<VSPTablePartList, String> tblindex14_Part;
     @FXML
     private TableColumn<VSPTablePartList, String> tblindex09_Part;
-
+    @FXML
+    private TableColumn<VSPTablePartList, String> tblindex06_Part;
+    @FXML
+    private TableView<VSPTablePartList> tblViewParts;
+    @FXML
+    private TableColumn<VSPTablePartList, String> tblindex11_Part;
     @FXML
     private Tab tabMain;
     @FXML
@@ -313,26 +321,17 @@ public class VSPFormController implements Initializable, ScreenInterface {
     @FXML
     private TableView<VSPTableLaborList> tblViewLabor;
     @FXML
-    private TableView<VSPTablePartList> tblViewParts;
+    private Button btnAddParts;
     private ObservableList<VSPTableLaborList> laborData = FXCollections.observableArrayList();
     private ObservableList<VSPTablePartList> partData = FXCollections.observableArrayList();
     @FXML
     private CheckBox chckBoxSpecialAccount;
-    @FXML
-    private TableColumn<VSPTablePartList, String> tblindex11_Part;
-
-    @FXML
-    private Button btnAddParts;
-    @FXML
-    private TableColumn<VSPTablePartList, String> tblindex06_Part;
-    @FXML
     private TableColumn<VSPTableLaborList, String> tblLaborJobNo;
     @FXML
     private TableColumn<VSPTablePartList, String> tblPartJobNo;
     @FXML
     private Label lblVSPStatus;
-    @FXML
-    private TableColumn<VSPTableLaborList, String> tblindex07_Labor;
+    private boolean isSearching = false;
 
     private Stage getStage() {
         return (Stage) btnClose.getScene().getWindow();
@@ -379,9 +378,9 @@ public class VSPFormController implements Initializable, ScreenInterface {
 
             InquiryLostSaleFormController loControl = new InquiryLostSaleFormController();
             loControl.setGRider(oApp);
-//            loControl.setFollowUpObject(oTransFollowUp);
-//            loControl.setVSPObject(oTrans);
-//            loControl.setsVSPNox((String) oTrans.getMaster("sTransNox"));
+            loControl.setFollowUpObject(oTransFollowUp);
+            loControl.setVSPObject(oTrans);
+            loControl.setsVSPNox((String) oTrans.getMaster("sTransNox"));
 
             loControl.setsSourceNo((String) oTrans.getMaster("sInqryIDx"));
             loControl.setState(false); //If true set tag to lost sale automatically else allow user to edit.
@@ -793,7 +792,34 @@ public class VSPFormController implements Initializable, ScreenInterface {
                     cancelRecordVSP();
                     break;
                 case "btnBrowse":
-                    browseRecordVSP();
+                    if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
+                        if (ShowMessageFX.OkayCancel(null, "Confirmation", "You have unsaved data. Are you sure you want to browse a new record?")) {
+                            switchToTab(tabMain, ImTabPane);
+                            removeRequired();
+                            pnEditMode = EditMode.READY;
+                        } else {
+                            return;
+                        }
+                    }
+                    try {
+                        if (oTrans.searchRecord()) {
+                            switchToTab(tabMain, ImTabPane);
+                            removeRequired();
+                            loadVSPField();
+                            loadTableLabor();
+                            loadTableParts();
+                            pnEditMode = EditMode.READY;
+                            initButton(pnEditMode);
+
+                        } else {
+                            ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                            clearFields();
+                            switchToTab(tabMain, ImTabPane);
+                            pnEditMode = EditMode.UNKNOWN;
+                        }
+                    } catch (SQLException ex) {
+                        Logger.getLogger(VSPFormController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                     break;
                 case "btnAdditionalLabor":
                     initLaborDescript("", Double.valueOf("0.00"), false);
@@ -942,22 +968,22 @@ public class VSPFormController implements Initializable, ScreenInterface {
                     break;
 
             }
-            if (chckBoxSpecialAccount.isSelected()) {
-                if (!txtField29.getText().isEmpty()) {
-                    if (txtField42.getText().trim().equals("0.00")) {
-                        ShowMessageFX.Warning(getStage(), "Please enter a value for STD Fleet Plant/Dealer (%)", "Warning", null);
-                        txtField42.requestFocus();
-                        return;
-                    }
-                }
-                if (!txtField30.getText().isEmpty()) {
-                    if (txtField44.getText().trim().equals("0.00")) {
-                        ShowMessageFX.Warning(getStage(), "Please enter a value for SPL Fleet Plant/Dealer (%)", "Warning", null);
-                        txtField44.requestFocus();
-                        return;
-                    }
-                }
-            }
+//            if (chckBoxSpecialAccount.isSelected()) {
+//                if (!txtField29.getText().isEmpty()) {
+//                    if (txtField42.getText().trim().equals("0.00")) {
+//                        ShowMessageFX.Warning(getStage(), "Please enter a value for STD Fleet Plant/Dealer (%)", "Warning", null);
+//                        txtField42.requestFocus();
+//                        return;
+//                    }
+//                }
+//                if (!txtField30.getText().isEmpty()) {
+//                    if (txtField44.getText().trim().equals("0.00")) {
+//                        ShowMessageFX.Warning(getStage(), "Please enter a value for SPL Fleet Plant/Dealer (%)", "Warning", null);
+//                        txtField44.requestFocus();
+//                        return;
+//                    }
+//                }
+//            }
 //            if (!txtField28.getText().isEmpty()) {
 //                if (txtField46.getText().trim().equals("0.00")) {
 //                    ShowMessageFX.Warning(getStage(), "Please enter a value for Promo Plant/Dealer (%)", "Warning", null);
@@ -1155,29 +1181,33 @@ public class VSPFormController implements Initializable, ScreenInterface {
                 switch (txtFieldID) {
                     case "txtSeek03":  //Search by VSP NO
                         if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
-                            if (ShowMessageFX.OkayCancel(null, "Confirmation", "You have unsaved data. Are you sure you want to browse a new record?") == true) {
+                            if (ShowMessageFX.OkayCancel(null, "Confirmation", "You have unsaved data. Are you sure you want to browse a new record?")) {
                                 switchToTab(tabMain, ImTabPane);
-                                clearFields();
+                                removeRequired();
                                 pnEditMode = EditMode.READY;
                             } else {
                                 return;
                             }
                         }
-                        if (oTrans.searchRecord()) {
-                            switchToTab(tabMain, ImTabPane);
-                            clearFields();
-                            loadVSPField();
-                            loadTableLabor();
-                            loadTableParts();
-                            initButton(pnEditMode);
-                            pnEditMode = oTrans.getEditMode();
-                        } else {
-                            ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
-                            clearFields();
-                            switchToTab(tabMain, ImTabPane);
-                            pnEditMode = EditMode.UNKNOWN;
+                        try {
+                            if (oTrans.searchRecord()) {
+                                switchToTab(tabMain, ImTabPane);
+                                removeRequired();
+                                loadVSPField();
+                                loadTableLabor();
+                                loadTableParts();
+                                pnEditMode = EditMode.READY;
+                                initButton(pnEditMode);
+
+                            } else {
+                                ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                                clearFields();
+                                switchToTab(tabMain, ImTabPane);
+                                pnEditMode = EditMode.UNKNOWN;
+                            }
+                        } catch (SQLException ex) {
+                            Logger.getLogger(VSPFormController.class.getName()).log(Level.SEVERE, null, ex);
                         }
-                        initButton(pnEditMode);
                         break;
                     case "txtField77":
                         if (oTrans.searchInquiry(txtField.getText(), false)) {
@@ -1742,6 +1772,31 @@ public class VSPFormController implements Initializable, ScreenInterface {
             txtField68.setText((String) oTrans.getMaster(68));
             textArea69.setText((String) oTrans.getMaster(69));
 
+            System.out.println("plants" + decimalFormat.format(Double.parseDouble(String.format("%.2f", oTrans.getMaster(42)))) + "\n"
+                    + decimalFormat.format(Double.parseDouble(String.format("%.2f", oTrans.getMaster(43)))) + "\n"
+                    + decimalFormat.format(Double.parseDouble(String.format("%.2f", oTrans.getMaster(44)))) + "\n"
+                    + decimalFormat.format(Double.parseDouble(String.format("%.2f", oTrans.getMaster(45)))) + "\n"
+                    + decimalFormat.format(Double.parseDouble(String.format("%.2f", oTrans.getMaster(46)))) + "\n"
+                    + decimalFormat.format(Double.parseDouble(String.format("%.2f", oTrans.getMaster(47)))));
+            txtField46.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f", oTrans.getMaster(46)))));
+            txtField42.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f", oTrans.getMaster(42)))));
+            txtField43.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f", oTrans.getMaster(43)))));
+            txtField44.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f", oTrans.getMaster(44)))));
+            txtField45.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f", oTrans.getMaster(45)))));
+            txtField46.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f", oTrans.getMaster(46)))));
+            txtField47.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f", oTrans.getMaster(47)))));
+
+            if (Double.valueOf(oTrans.getMaster(29).toString()) > 0.00 || Double.valueOf(oTrans.getMaster(30).toString()) > 0.00) {
+                chckBoxSpecialAccount.setSelected(true);
+                if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
+                    txtField29.setDisable(false);
+                    txtField30.setDisable(false);
+                }
+            } else {
+                chckBoxSpecialAccount.setSelected(false);
+                txtField29.setDisable(true);
+                txtField30.setDisable(true);
+            }
             String isVchlBrandNew = ((String) oTrans.getMaster(54));
             if (isVchlBrandNew.equals("0")) {
                 brandNewCat.setSelected(true);
@@ -1799,29 +1854,6 @@ public class VSPFormController implements Initializable, ScreenInterface {
             txtField28.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f", oTrans.getMaster(28)))));
             txtField31.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f", oTrans.getMaster(31)))));
             txtField32.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f", oTrans.getMaster(32)))));
-
-            txtField42.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f", oTrans.getMaster(42)))));
-            if (Double.valueOf(oTrans.getMaster(29).toString()) > 0.00 || Double.valueOf(oTrans.getMaster(30).toString()) > 0.00) {
-                chckBoxSpecialAccount.setSelected(true);
-                if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
-                    txtField29.setDisable(false);
-                    txtField30.setDisable(false);
-                }
-            } else {
-                chckBoxSpecialAccount.setSelected(false);
-                txtField29.setDisable(true);
-                txtField30.setDisable(true);
-            }
-
-            txtField43.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f", oTrans.getMaster(43)))));
-
-            txtField44.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f", oTrans.getMaster(44)))));
-
-            txtField45.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f", oTrans.getMaster(45)))));
-
-            txtField46.setText(decimalFormat.format(Double.parseDouble(String.format("%.3f", oTrans.getMaster(46)))));
-
-            txtField47.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f", oTrans.getMaster(47)))));
 
             txtField10.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f", oTrans.getMaster(10)))));
             txtField16.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f", oTrans.getMaster(16)))));
@@ -2032,6 +2064,8 @@ public class VSPFormController implements Initializable, ScreenInterface {
                 Logger.getLogger(VSPFormController.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
+
+        // Add a boolean flag to track whether a search is in progress
         tblViewLabor.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
             if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
                 TablePosition<VSPTableLaborList, String> focusedCell = tblViewLabor.getFocusModel().getFocusedCell();
@@ -2045,11 +2079,17 @@ public class VSPFormController implements Initializable, ScreenInterface {
                                 int lnIndex = Integer.parseInt(focusedCell.getTableColumn().getId().substring(9, 10));
                                 switch (lnIndex) {
                                     case 7:
-                                        if (oTrans.searchLabor("", tblViewLabor.getSelectionModel().getSelectedIndex() + 1, true)) {
-                                            loadTableLabor();
-                                        } else {
-                                            ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
-                                            return;
+                                        // Check if a search is already in progress
+                                        if (!isSearching) {
+                                            // Set the flag to indicate that a search is in progress
+                                            isSearching = true;
+                                            if (oTrans.searchLabor("", tblViewLabor.getSelectionModel().getSelectedIndex() + 1, true)) {
+                                                loadTableLabor();
+                                            } else {
+                                                ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                                            }
+                                            // Reset the flag after the search is completed
+                                            isSearching = false;
                                         }
                                         break;
                                 }
@@ -2083,8 +2123,14 @@ public class VSPFormController implements Initializable, ScreenInterface {
                     fsValue = 0;
                 }
                 try {
-                    oTrans.setVSPLaborDetail(fnRow, 5, fsValue);
+                    oTrans.setVSPLaborDetail(fnRow, 5, String.valueOf(fsValue));
+
+                    if (fsValue == 0) {
+                        oTrans.setVSPLaborDetail(fnRow, 4, Double.valueOf("0.00"));
+                    }
+
                     loadTableLabor();
+
                 } catch (SQLException ex) {
                     Logger.getLogger(VSPFormController.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -2104,24 +2150,6 @@ public class VSPFormController implements Initializable, ScreenInterface {
                 return string; // Convert string back to object (if needed)
             }
         }));
-//        tblindex04_Labor.setCellFactory(col -> new TextFieldTableCell<VSPTableLaborList, String>() {
-//            @Override
-//            public void updateItem(String item, boolean empty) {
-//                super.updateItem(item, empty);
-//                if (empty || getTableRow() == null || getTableRow().getItem() == null) {
-//                    setEditable(false);
-//                    return;
-//                }
-//                VSPTableLaborList rowData = (VSPTableLaborList) getTableRow().getItem();
-//                try {
-//                    // Check the condition and set editable accordingly
-//                    setEditable(oTrans.getVSPLaborDetail(Integer.parseInt(rowData.getTblLaborRow()), 5).toString().equals("1"));
-//                    loadTableLabor();
-//                } catch (SQLException ex) {
-//                    Logger.getLogger(VSPFormController.class.getName()).log(Level.SEVERE, null, ex);
-//                }
-//            }
-//        });
 
         tblindex04_Labor.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<VSPTableLaborList, String>>() {
             @Override
@@ -2321,14 +2349,17 @@ public class VSPFormController implements Initializable, ScreenInterface {
                 VSPTablePartList parts = event.getRowValue();
                 int fnRow = Integer.parseInt(parts.getTblPartsRow());
                 String selectedValue = event.getNewValue();
-                int fsValue;
+                int fnValue;
                 if (selectedValue.equalsIgnoreCase("CHARGE")) {
-                    fsValue = 1;
+                    fnValue = 1;
                 } else {
-                    fsValue = 0;
+                    fnValue = 0;
                 }
                 try {
-                    oTrans.setVSPPartsDetail(fnRow, 8, fsValue);
+                    oTrans.setVSPPartsDetail(fnRow, 8, String.valueOf(fnValue));
+                    if (fnValue == 0) {
+                        oTrans.setVSPPartsDetail(fnRow, 5, Double.valueOf("0.00"));
+                    }
                     loadTableParts();
                 } catch (SQLException ex) {
                     Logger.getLogger(VSPFormController.class.getName()).log(Level.SEVERE, null, ex);

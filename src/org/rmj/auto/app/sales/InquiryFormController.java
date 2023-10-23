@@ -41,6 +41,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
 import javafx.scene.control.Pagination;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Tab;
@@ -392,6 +393,8 @@ public class InquiryFormController implements Initializable, ScreenInterface {
     private TextArea textArea33;
     @FXML
     private TabPane tabPaneMain;
+    @FXML
+    private Label lblInqStatus;
 
     private Stage getStage() {
         return (Stage) textSeek01.getScene().getWindow();
@@ -2961,7 +2964,10 @@ public class InquiryFormController implements Initializable, ScreenInterface {
             txtField07.setDisable(!lbShow); //Customer ID 
             txtField29.setDisable(!lbShow); //Company ID 
         }
-
+        lblInqStatus.setText("");
+        if (comboBox24.getSelectionModel().getSelectedIndex() >= 0){
+            lblInqStatus.setText(comboBox24.getValue().toString());
+        }
         if (fnValue == EditMode.READY) { //show edit if user clicked save / browse
             btnEdit.setVisible(true);
             btnEdit.setManaged(true);
@@ -3014,6 +3020,8 @@ public class InquiryFormController implements Initializable, ScreenInterface {
                     break;
             }
         }
+        
+        
         
         if (selectedIndex == 1) {
             btnAdd.setVisible(false);

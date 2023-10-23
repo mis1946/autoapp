@@ -27,7 +27,7 @@ import org.rmj.auto.clients.base.Activity;
 /**
  * FXML Controller class
  *
- * @author User
+ * @author John Dave Aquino
  */
 public class ActivityVehicleDialogController implements Initializable, ScreenInterface {
 

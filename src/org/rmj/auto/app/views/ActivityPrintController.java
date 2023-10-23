@@ -4,6 +4,7 @@
  */
 package org.rmj.auto.app.views;
 
+import java.awt.Component;
 import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -29,9 +30,11 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import javax.swing.AbstractButton;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperPrintManager;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.swing.JRViewer;
@@ -54,7 +57,6 @@ public class ActivityPrintController implements Initializable, ScreenInterface {
     private GRider oApp;
     private MasterCallback oListener;
     private JasperPrint jasperPrint; //Jasper Libraries
-    private JasperReport jasperReport;
     private JRViewer jrViewer;
     private ObservableList<ActivityTableList> actMasterData = FXCollections.observableArrayList();
     private List<ActivityMemberTable> actMembersData = new ArrayList<ActivityMemberTable>();
@@ -75,6 +77,8 @@ public class ActivityPrintController implements Initializable, ScreenInterface {
     @FXML
     private VBox vbProgress;
     private String psTransNox;
+    @FXML
+    private Button btnPrint;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -82,10 +86,13 @@ public class ActivityPrintController implements Initializable, ScreenInterface {
         oTrans.setCallback(oListener);
         oTrans.setWithUI(true);
         vbProgress.setVisible(true);
+        btnPrint.setVisible(false);
+        btnPrint.setDisable(true);
         timeline = new Timeline();
         generateReport();
-        btnClose.setOnAction(this::cmdButton_Click);
 
+        btnClose.setOnAction(this::cmdButton_Click);
+        btnPrint.setOnAction(this::cmdButton_Click);
     }
 
     private void cmdButton_Click(ActionEvent event) {
@@ -94,6 +101,21 @@ public class ActivityPrintController implements Initializable, ScreenInterface {
             case "btnClose":
                 CommonUtils.closeStage(btnClose);
                 break;
+            case "btnPrint":
+                try {
+                if (JasperPrintManager.printReport(jasperPrint, true)) {
+                    ShowMessageFX.Information(null, pxeModuleName, "Printed Successfully");
+                    //Set Value to Refunded amount
+                    //oTrans.setMaster(0, dRefundAmt);
+                    CommonUtils.closeStage(btnClose);
+                } else {
+                    ShowMessageFX.Warning(null, pxeModuleName, "Print Aborted");
+                }
+            } catch (JRException ex) {
+
+                ShowMessageFX.Warning(null, pxeModuleName, "Print Aborted");
+            }
+            break;
             default:
                 ShowMessageFX.Warning(null, pxeModuleName, "Button with name " + lsButton + " not registered.");
                 break;
@@ -145,8 +167,13 @@ public class ActivityPrintController implements Initializable, ScreenInterface {
 
     private void showReport() {
         vbProgress.setVisible(false);
+        btnPrint.setVisible(true);
+        btnPrint.setDisable(false);
         jrViewer = new JRViewer(jasperPrint);
         jrViewer.setZoomRatio(0.75f);
+        findAndHideButton(jrViewer, "Print");
+        findAndHideButton(jrViewer, "Save");
+        // Find and hide the buttons
         SwingNode swingNode = new SwingNode();
         jrViewer.setOpaque(true);
         jrViewer.setVisible(true);
@@ -161,6 +188,26 @@ public class ActivityPrintController implements Initializable, ScreenInterface {
         running = true;
         reportPane.setVisible(true);
         timeline.stop();
+    }
+
+    private void findAndHideButton(Component component, String buttonText) {
+        if (component instanceof AbstractButton) {
+            AbstractButton button = (AbstractButton) component;
+            if (button.getToolTipText() != null) {
+                if (button.getToolTipText().equals(buttonText)) {
+                    button.setVisible(false);
+                    return;
+                }
+            }
+        }
+
+        if (component instanceof java.awt.Container) {
+            java.awt.Container container = (java.awt.Container) component;
+            Component[] components = container.getComponents();
+            for (Component childComponent : components) {
+                findAndHideButton(childComponent, buttonText);
+            }
+        }
     }
 
     public void setTransNox(String fsValue) {

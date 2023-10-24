@@ -72,7 +72,7 @@ public class VSPTableLaborList {
         return tblindex07_Labor.get();
     }
 
-    public void setTblindex08_Labor(String tblindex07_Labor) {
+    public void setTblindex07_Labor(String tblindex07_Labor) {
         this.tblindex07_Labor.set(tblindex07_Labor);
     }
 
@@ -143,6 +143,10 @@ public class VSPTableLaborList {
 
     public BooleanProperty selectedProperty() {
         return tblindex08;
+    }
+
+    public SimpleStringProperty laborProperty() {
+        return tblindex07_Labor;
     }
 
 }

@@ -15,17 +15,20 @@ public class CustomerTableSocialMedia {
      private SimpleStringProperty socmindex01;
      private SimpleStringProperty socmindex02; 
      private SimpleStringProperty socmindex03;
+     private SimpleStringProperty socmindex04;
      //private SimpleStringProperty xSocialID;
      
      CustomerTableSocialMedia( String socmindex01,
                          String socmindex02,
-                         String socmindex03
+                         String socmindex03,
+                         String socmindex04
                          //String xSocialID
                          ){
      
           this.socmindex01 = new SimpleStringProperty(socmindex01);
           this.socmindex02 = new SimpleStringProperty(socmindex02);
           this.socmindex03 = new SimpleStringProperty(socmindex03);
+          this.socmindex04 = new SimpleStringProperty(socmindex04);
           //this.xSocialID = new SimpleStringProperty(xSocialID);
      }
 /*    
@@ -45,5 +48,8 @@ public class CustomerTableSocialMedia {
      
      public String getSocmindex03(){return socmindex03.get();}
      public void setSocmindex03(String socmindex03){this.socmindex03.set(socmindex03);}
+     
+     public String getSocmindex04(){return socmindex04.get();}
+     public void setSocmindex04(String socmindex04){this.socmindex04.set(socmindex04);}
      
 }

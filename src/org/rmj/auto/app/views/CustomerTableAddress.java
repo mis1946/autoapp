@@ -17,11 +17,11 @@ public class CustomerTableAddress {
      private SimpleStringProperty addrindex03;
      private SimpleStringProperty addrindex04;
      private SimpleStringProperty addrindex05;
-//     private SimpleStringProperty addrindex06;
-//     private SimpleStringProperty addrindex07;
-//     private SimpleStringProperty addrindex08;
-//     private SimpleStringProperty addrindex09;
-//     private SimpleStringProperty addrindex10;
+     private SimpleStringProperty addrindex06;
+     private SimpleStringProperty addrindex07;
+     private SimpleStringProperty addrindex08;
+     private SimpleStringProperty addrindex09;
+     private SimpleStringProperty addrindex10;
 //     private SimpleStringProperty addrindex11;
 //     private SimpleStringProperty addrindex12;
 //     private SimpleStringProperty addrindex13;
@@ -30,13 +30,13 @@ public class CustomerTableAddress {
                          String addrindex02,
                          String addrindex03,
                          String addrindex04,
-                         String addrindex05
-          /*,
+                         String addrindex05,
                          String addrindex06,
                          String addrindex07,
                          String addrindex08,
                          String addrindex09,
-                         String addrindex10,
+                         String addrindex10
+             /*,
                          String addrindex11,
                          String addrindex12,
                          String addrindex13
@@ -47,11 +47,11 @@ public class CustomerTableAddress {
           this.addrindex03 = new SimpleStringProperty(addrindex03);
           this.addrindex04 = new SimpleStringProperty(addrindex04);
           this.addrindex05 = new SimpleStringProperty(addrindex05);
-//          this.addrindex06 = new SimpleStringProperty(addrindex06);
-//          this.addrindex07 = new SimpleStringProperty(addrindex07);
-//          this.addrindex08 = new SimpleStringProperty(addrindex08);
-//          this.addrindex09 = new SimpleStringProperty(addrindex09);
-//          this.addrindex10 = new SimpleStringProperty(addrindex10);
+          this.addrindex06 = new SimpleStringProperty(addrindex06);
+          this.addrindex07 = new SimpleStringProperty(addrindex07);
+          this.addrindex08 = new SimpleStringProperty(addrindex08);
+          this.addrindex09 = new SimpleStringProperty(addrindex09);
+          this.addrindex10 = new SimpleStringProperty(addrindex10);
 //          this.addrindex11 = new SimpleStringProperty(addrindex11);
 //          this.addrindex12 = new SimpleStringProperty(addrindex12);
 //          this.addrindex13 = new SimpleStringProperty(addrindex13);
@@ -72,7 +72,7 @@ public class CustomerTableAddress {
 
      public String getAddrindex05(){return addrindex05.get();}
      public void setAddrindex05(String addrindex05){this.addrindex05.set(addrindex05);}
-/*
+
      public String getAddrindex06(){return addrindex06.get();}
      public void setAddrindex06(String addrindex06){this.addrindex06.set(addrindex06);}
      
@@ -87,7 +87,7 @@ public class CustomerTableAddress {
 
      public String getAddrindex10(){return addrindex10.get();}
      public void setAddrindex10(String addrindex10){this.addrindex10.set(addrindex10);}
-
+/*
      public String getAddrindex11(){return addrindex11.get();}
      public void setAddrindex11(String addrindex11){this.addrindex11.set(addrindex11);}
      

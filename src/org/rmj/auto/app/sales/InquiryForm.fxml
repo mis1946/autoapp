@@ -30,7 +30,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" fx:id="AnchorMain" prefHeight="1182.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane id="AnchorPane" fx:id="AnchorMain" prefHeight="1182.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" >
    <children>
       <StackPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -69,13 +69,9 @@
                                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="12.0" minWidth="-Infinity" prefWidth="9.33331298828125" />
                                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="70.0" />
                                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="110.0" />
-                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="254.0" minWidth="0.0" prefWidth="0.0" />
-                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="254.0" minWidth="10.0" prefWidth="100.0" />
-                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="254.0" minWidth="10.0" prefWidth="100.0" />
-                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="254.0" minWidth="10.0" prefWidth="100.0" />
-                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="254.0" minWidth="10.0" prefWidth="100.0" />
-                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="254.0" minWidth="10.0" prefWidth="100.0" />
-                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="254.0" minWidth="10.0" prefWidth="100.0" />
+                                                <ColumnConstraints hgrow="ALWAYS" minWidth="-Infinity" prefWidth="10.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="150.0" prefWidth="180.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="10.0" />
                                              </columnConstraints>
                                              <rowConstraints>
                                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -99,6 +95,11 @@
                                                    </font>
                                                 </Label>
                                                 <DatePicker fx:id="dateSeek02" prefHeight="24.0" prefWidth="135.0" GridPane.columnIndex="7" />
+                                                <Label fx:id="lblInqStatus" text="FOR FOLLOW-UP" GridPane.columnIndex="9">
+                                                   <font>
+                                                      <Font name="Arial Bold" size="12.0" />
+                                                   </font>
+                                                </Label>
                                              </children>
                                           </GridPane>
                                        </children>
@@ -363,8 +364,7 @@
                                                                                                             <Tooltip text="Select Test Drive Model" />
                                                                                                          </tooltip></TextField>
                                                                                                       <DatePicker fx:id="txtField10" GridPane.columnIndex="7" />
-                                                                                                      <Label id="LabelDesc" text="Inquiry Status " GridPane.columnIndex="6" GridPane.rowIndex="1" />
-                                                                                                      <ComboBox fx:id="comboBox24" disable="true" prefWidth="150.0" GridPane.columnIndex="7" GridPane.rowIndex="1" />
+                                                                                                      <ComboBox fx:id="comboBox24" disable="true" prefWidth="150.0" visible="false" GridPane.columnIndex="7" GridPane.rowIndex="1" />
                                                                                                    </children>
                                                                                                    <VBox.margin>
                                                                                                       <Insets top="3.0" />
@@ -966,8 +966,8 @@
                                                                                              <children>
                                                                                                 <TableView fx:id="tblBankApplication" prefHeight="400.0" prefWidth="200.0" GridPane.columnIndex="1">
                                                                                                    <columns>
-                                                                                                      <TableColumn fx:id="bankCheck01" prefWidth="28.0" sortable="false" />
-                                                                                                      <TableColumn fx:id="bankIndex01" editable="false" prefWidth="29.0" sortable="false" text="Row" />
+                                                                                                      <TableColumn fx:id="bankCheck01" prefWidth="23.0" sortable="false" />
+                                                                                                      <TableColumn fx:id="bankIndex01" editable="false" prefWidth="34.0" sortable="false" text="Row" />
                                                                                                       <TableColumn fx:id="bankIndex02" editable="false" prefWidth="270.0" sortable="false" text="Bank Name" />
                                                                                                       <TableColumn fx:id="bankIndex03" editable="false" prefWidth="178.0" sortable="false" text="Bank Branch" />
                                                                                                       <TableColumn fx:id="bankIndex04" editable="false" prefWidth="218.0" sortable="false" text="Payment Mode" />
@@ -1030,12 +1030,12 @@
                                                                                              <children>
                                                                                                 <TableView fx:id="tblFollowHistory" GridPane.columnIndex="1">
                                                                                                    <columns>
-                                                                                                      <TableColumn fx:id="flwpIndex01" editable="false" prefWidth="34.0" sortable="false" text="Row" />
-                                                                                                      <TableColumn fx:id="flwpIndex02" editable="false" prefWidth="90.0" sortable="false" text="Followup Date" />
+                                                                                                      <TableColumn fx:id="flwpIndex01" editable="false" prefWidth="32.0" sortable="false" text="Row" />
+                                                                                                      <TableColumn fx:id="flwpIndex02" editable="false" prefWidth="92.0" sortable="false" text="Followup Date" />
                                                                                                       <TableColumn fx:id="flwpIndex03" editable="false" prefWidth="126.0" sortable="false" text="Next Follow-up Date" />
-                                                                                                      <TableColumn fx:id="flwpIndex04" editable="false" prefWidth="216.0" sortable="false" text="Medium" />
-                                                                                                      <TableColumn fx:id="flwpIndex05" editable="false" prefWidth="69.0" sortable="false" text="Platform" />
-                                                                                                      <TableColumn fx:id="flwpIndex06" editable="false" prefWidth="319.0" sortable="false" text="Remarks" />
+                                                                                                      <TableColumn fx:id="flwpIndex04" editable="false" prefWidth="165.0" sortable="false" text="Medium" />
+                                                                                                      <TableColumn fx:id="flwpIndex05" editable="false" sortable="false" text="Platform" />
+                                                                                                      <TableColumn fx:id="flwpIndex06" editable="false" prefWidth="340.0" sortable="false" text="Remarks" />
                                                                                                    </columns>
                                                                                                 </TableView>
                                                                                              </children>

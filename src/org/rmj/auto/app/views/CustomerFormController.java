@@ -471,17 +471,6 @@ public class CustomerFormController implements Initializable, ScreenInterface {
         addRequiredFieldListener(txtField05Addr);
         addRequiredFieldListener(txtField06Addr);
         addRequiredFieldListener(txtField03Cont);
-        //Vehicle Info
-        addRequiredFieldListener(txtField24V);
-        addRequiredFieldListener(txtField26V);
-        addRequiredFieldListener(txtField28V);
-        addRequiredFieldListener(txtField31V);
-        addRequiredFieldListener(txtField30V);
-        addRequiredFieldListener(txtField32V);
-        addRequiredFieldListener(txtField20V);//Plate No
-        addRequiredFieldListener(txtField08V);
-        addRequiredFieldListener(txtField03V);
-        addRequiredFieldListener(txtField04V);
         
         // Add a listener to the textProperty of the TextField
         //Plate number
@@ -539,7 +528,6 @@ public class CustomerFormController implements Initializable, ScreenInterface {
         comboBox04Cont.setItems(cTypCont); // Mobile Type 
 
         txtField11.setOnAction(this::getDate);
-
         txtField05Addr.setOnKeyPressed(this::txtField_KeyPressed); //Town
         txtField06Addr.setOnKeyPressed(this::txtField_KeyPressed); //Brgy
         txtField12.setOnKeyPressed(this::txtField_KeyPressed); //Birth Place
@@ -645,12 +633,28 @@ public class CustomerFormController implements Initializable, ScreenInterface {
         initButton(pnEditMode);
 
         /*CUSTOMER VEHICLE INFORMATION*/
+        custVehicleInfo();
+    }
+    
+    private void custVehicleInfo(){
         oTransVehicle = new ClientVehicleInfo(oApp, oApp.getBranchCode(), false);
         oTransVehicle.setCallback(oListener);
         oTransVehicle.setWithUI(true);
         initVehicleInfo();
         initVehicleHtry();
-
+        
+        //Vehicle Info
+        addRequiredFieldListener(txtField24V);
+        addRequiredFieldListener(txtField26V);
+        addRequiredFieldListener(txtField28V);
+        addRequiredFieldListener(txtField31V);
+        addRequiredFieldListener(txtField30V);
+        addRequiredFieldListener(txtField32V);
+        addRequiredFieldListener(txtField20V);//Plate No
+        addRequiredFieldListener(txtField08V);
+        addRequiredFieldListener(txtField03V);
+        addRequiredFieldListener(txtField04V);
+        
         setCapsLockBehavior(txtField03V);
         setCapsLockBehavior(txtField04V);
         setCapsLockBehavior(txtField08V);
@@ -694,12 +698,12 @@ public class CustomerFormController implements Initializable, ScreenInterface {
         txtField32V.setOnKeyPressed(this::txtField_KeyPressed_Vhcl);
         textArea34V.setOnKeyPressed(this::txtArea_KeyPressed);
 
-        btnVhclDesc.setOnAction(this::cmdButton_Click);
-        btnVhclAvl.setOnAction(this::cmdButton_Click);
-        btnVhclMnl.setOnAction(this::cmdButton_Click);
-        btnEngFrm.setOnAction(this::cmdButton_Click);
-        btnVSave.setOnAction(this::cmdButton_Click);
-        btnTransfer.setOnAction(this::cmdButton_Click);
+        btnVhclDesc.setOnAction(this::cmdButton_Click_vhcl);
+        btnVhclAvl.setOnAction(this::cmdButton_Click_vhcl);
+        btnVhclMnl.setOnAction(this::cmdButton_Click_vhcl);
+        btnEngFrm.setOnAction(this::cmdButton_Click_vhcl);
+        btnVSave.setOnAction(this::cmdButton_Click_vhcl);
+        btnTransfer.setOnAction(this::cmdButton_Click_vhcl);
 
         tabPaneMain.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Tab>() {
             @Override
@@ -716,6 +720,9 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                     /*CLIENT VEHICLE INFORMATION*/
                 } else if (selectedIndex == 1) {
                     initVhclInfoButton(pnVEditMode);
+                    if (bBtnVhclAvl){
+                        disableFields();
+                    }
                     btnAdd.setVisible(false);
                     btnAdd.setManaged(false);
                     btnSave.setVisible(false);
@@ -728,6 +735,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
         clearVehicleInfoFields();
         pnVEditMode = EditMode.UNKNOWN;
         initVhclInfoButton(pnVEditMode);
+    
     }
     
     //Animation    
@@ -959,12 +967,13 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                                 pnRow = 0;
                             } else {
                                 //Validate Primary Before Inserting
-                                if (validateContactInfo() >= 1) {
+                                if (!validateContactInfo()) {
                                     if (checkBox14Addr.isSelected()) {
                                         ShowMessageFX.Warning(getStage(), "Please note that you cannot add more than 1 primary address.", "Warning", pxeModuleName);
                                         return;
                                     }
                                 }
+                                
                                 if (setItemtoTable("btnTabAdd")) {
                                     loadAddress();
                                     oTransAddress.addAddress();
@@ -973,29 +982,14 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                                 }
                             }
                             /*Address*/
-                            /*Clear Red Color for required fileds*/
-                            txtField03Addr.getStyleClass().remove("required-field");
-                            txtField05Addr.getStyleClass().remove("required-field");
-                            txtField06Addr.getStyleClass().remove("required-field");
-                            txtField03Addr.clear(); //House No
-                            txtField04Addr.clear(); //Street / Address
-                            txtField05Addr.clear(); // Town
-                            txtField06Addr.clear(); // Brgy
-                            txtField07Addr.clear(); //Zip code
-                            radiobtn18AddY.setSelected(true); //Active status
-                            radiobtn18AddN.setSelected(false); //Active status
-                            checkBox14Addr.setSelected(false); //Primary
-                            checkBox17Addr.setSelected(false); //Current
-                            checkBox12Addr.setSelected(false); //Office
-                            checkBox13Addr.setSelected(false); //Provincial
-                            textArea11Addr.clear(); // Address Remarks
+                            clearAddress();
                             break;
                         case 1: //Mobile
 
                             if (pnRow >= 1) {
                                 pnRow = 0;
                             } else {
-                                if (validateContactInfo() >= 1) {
+                                if (!validateContactInfo()) {
                                     if (radiobtn11CntY.isSelected()) {
                                         ShowMessageFX.Warning(getStage(), "Please note that you cannot add more than 1 primary contact number.", "Warning", pxeModuleName);
                                         return;
@@ -1010,23 +1004,13 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                             }
 
                             /*Clear Fields*/
-                            comboBox05Cont.setValue(null); // Contact Ownership
-                            comboBox04Cont.setValue(null); // Mobile Type
-                            txtField03Cont.clear();  //Mobile Number
-                            /*Clear Red Color for required fileds*/
-                            txtField03Cont.getStyleClass().remove("required-field");
-                            radiobtn14CntY.setSelected(true); // Contact Active Status
-                            radiobtn14CntN.setSelected(false); // Contact Active Status
-                            radiobtn11CntY.setSelected(false); // Contact Primary
-                            radiobtn11CntN.setSelected(false); // Contact Primary
-                            textArea13Cont.clear(); // Contact Remarks
-
+                            clearContact();
                             break;
                         case 2: //Email
                             if (pnRow >= 1) {
                                 pnRow = 0;
                             } else {
-                                if (validateContactInfo() >= 1) {
+                                if (!validateContactInfo()) {
                                     if (radiobtn05EmaY.isSelected()) {
                                         ShowMessageFX.Warning(getStage(), "Please note that you cannot add more than 1 primary email.", "Warning", pxeModuleName);
                                         return;
@@ -1040,13 +1024,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                                 }
                             }
                             /*Clear Fields*/
-                            comboBox04EmAd.setValue(null); // Email Ownership
-                            radiobtn06EmaY.setSelected(true); // Email Active status
-                            radiobtn06EmaN.setSelected(false); // Email Active status
-                            radiobtn05EmaY.setSelected(false); // Email Primary
-                            radiobtn05EmaN.setSelected(false); // Email Primary
-                            txtField03EmAd.clear(); // Email Address
-
+                            clearEmail();
                             break;
                         case 3:
                             if (pnRow >= 1) {
@@ -1060,92 +1038,60 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                                 }
                             }
                             /*Clear Fields*/
-                            radiobtn05SocY.setSelected(true); // SocMed Active status
-                            radiobtn05SocN.setSelected(false); // SocMed Active status
-                            txtField03Socm.clear(); // SocMed Account
-                            comboBox04Socm.setValue(null); // SocMed Type
+                            clearSocMed();
                             break;
                     }
                     break;
                 case "btnTabUpd":
                     switch (iTabIndex) {
                         case 0:
-                            if (setItemtoTable("btnTabUpd")) {
-                                if (validateContactInfo() >= 1) {
-                                    if (checkBox14Addr.isSelected()) {
-                                        ShowMessageFX.Warning(getStage(), "Please note that you cannot add more than 1 primary address.", "Warning", pxeModuleName);
-                                        return;
-                                    }
+                            if (!validateContactInfo()) {
+                                if (checkBox14Addr.isSelected()) {
+                                    ShowMessageFX.Warning(getStage(), "Please note that you cannot add more than 1 primary address.", "Warning", pxeModuleName);
+                                    return;
                                 }
+                            }
+                            if (setItemtoTable("btnTabUpd")) {
                                 loadAddress();
                                 pnRow = 0;
                             } else {
                                 return;
                             }
                             /*Address*/
-                            /*Clear Red Color for required fileds*/
-                            txtField03Addr.getStyleClass().remove("required-field");
-                            txtField05Addr.getStyleClass().remove("required-field");
-                            txtField06Addr.getStyleClass().remove("required-field");
-                            txtField03Addr.clear(); //House No
-                            txtField04Addr.clear(); //Street / Address
-                            txtField05Addr.clear(); // Town
-                            txtField06Addr.clear(); // Brgy
-                            txtField07Addr.clear(); //Zip code
-                            radiobtn18AddY.setSelected(true); //Active status
-                            radiobtn18AddN.setSelected(false); //Active status
-                            checkBox14Addr.setSelected(false); //Primary
-                            checkBox17Addr.setSelected(false); //Current
-                            checkBox12Addr.setSelected(false); //Office
-                            checkBox13Addr.setSelected(false); //Provincial
-                            textArea11Addr.clear(); // Address Remarks
-
+                            clearAddress();
                             break;
                         case 1: //Mobile
-                            if (setItemtoTable("btnTabUpd")) {
-                                if (validateContactInfo() >= 1) {
-                                    if (radiobtn11CntY.isSelected()) {
-                                        ShowMessageFX.Warning(getStage(), "Please note that you cannot add more than 1 primary contact number.", "Warning", pxeModuleName);
-                                        return;
-                                    }
+                            if (!validateContactInfo()) {
+                                if (radiobtn11CntY.isSelected()) {
+                                    ShowMessageFX.Warning(getStage(), "Please note that you cannot add more than 1 primary contact number.", "Warning", pxeModuleName);
+                                    return;
                                 }
+                            }
+                            
+                            if (setItemtoTable("btnTabUpd")) {
                                 loadContact();
                                 pnRow = 0;
                             } else {
                                 return;
                             }
                             /*Clear Fields*/
-                            comboBox05Cont.setValue(null); // Contact Ownership
-                            comboBox04Cont.setValue(null); // Mobile Type
-                            txtField03Cont.clear();  //Mobile Number
-                            /*Clear Red Color for required fileds*/
-                            txtField03Cont.getStyleClass().remove("required-field");
-                            radiobtn14CntY.setSelected(true); // Contact Active Status
-                            radiobtn14CntN.setSelected(false); // Contact Active Status
-                            radiobtn11CntY.setSelected(false); // Contact Primary
-                            radiobtn11CntN.setSelected(false); // Contact Primary
-                            textArea13Cont.clear(); // Contact Remarks
+                            clearContact();
                             break;
                         case 2: //Email
-                            if (setItemtoTable("btnTabUpd")) {
-                                if (validateContactInfo() >= 1) {
-                                    if (radiobtn05EmaY.isSelected()) {
-                                        ShowMessageFX.Warning(getStage(), "Please note that you cannot add more than 1 primary email.", "Warning", pxeModuleName);
-                                        return;
-                                    }
+                            if (!validateContactInfo()) {
+                                if (radiobtn05EmaY.isSelected()) {
+                                    ShowMessageFX.Warning(getStage(), "Please note that you cannot add more than 1 primary email.", "Warning", pxeModuleName);
+                                    return;
                                 }
+                            }
+                            if (setItemtoTable("btnTabUpd")) {
                                 loadEmail();
                                 pnRow = 0;
                             } else {
                                 return;
                             }
                             /*Clear Fields*/
-                            comboBox04EmAd.setValue(null); // Email Ownership
-                            radiobtn06EmaY.setSelected(true); // Email Active status
-                            radiobtn06EmaN.setSelected(false); // Email Active status
-                            radiobtn05EmaY.setSelected(false); // Email Primary
-                            radiobtn05EmaN.setSelected(false); // Email Primary
-                            txtField03EmAd.clear(); // Email Address
+                            clearEmail();
                             break;
                         case 3:
                             if (setItemtoTable("btnTabUpd")) {
@@ -1154,10 +1100,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                                 return;
                             }
                             /*Clear Fields*/
-                            radiobtn05SocY.setSelected(true); // SocMed Active status
-                            radiobtn05SocN.setSelected(false); // SocMed Active status
-                            txtField03Socm.clear(); // SocMed Account
-                            comboBox04Socm.setValue(null); // SocMed Type
+                            clearSocMed();
                             break;
                     }
                     break;
@@ -1175,23 +1118,8 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                             oTransAddress.removeAddress(pnRow);
                             pnRow = 0;
                             loadAddress();
-                            /*Clear Red Color for required fileds*/
-                            txtField03Addr.getStyleClass().remove("required-field");
-                            txtField05Addr.getStyleClass().remove("required-field");
-                            txtField06Addr.getStyleClass().remove("required-field");
-                            /*Address*/
-                            txtField03Addr.clear(); //House No
-                            txtField04Addr.clear(); //Street / Address
-                            txtField05Addr.clear(); // Town
-                            txtField06Addr.clear(); // Brgy
-                            txtField07Addr.clear(); //Zip code
-                            radiobtn18AddY.setSelected(true); //Active status
-                            radiobtn18AddN.setSelected(false); //Active status
-                            checkBox14Addr.setSelected(false); //Primary
-                            checkBox17Addr.setSelected(false); //Current
-                            checkBox12Addr.setSelected(false); //Office
-                            checkBox13Addr.setSelected(false); //Provincial
-                            textArea11Addr.clear(); // Address Remarks
+                            /*Clear Fields*/
+                            clearAddress();
                             break;
                         case 1://Mobile
                             if (ShowMessageFX.OkayCancel(null, "Confirmation", "Are you sure you want to remove this Client Mobile?") == true) {
@@ -1202,16 +1130,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                             pnRow = 0;
                             loadContact();
                             /*Clear Fields*/
-                            comboBox05Cont.setValue(null); // Contact Ownership
-                            comboBox04Cont.setValue(null); // Mobile Type
-                            txtField03Cont.clear();  //Mobile Number
-                            /*Clear Red Color for required fileds*/
-                            txtField03Cont.getStyleClass().remove("required-field");
-                            radiobtn14CntY.setSelected(true); // Contact Active Status
-                            radiobtn14CntN.setSelected(false); // Contact Active Status
-                            radiobtn11CntY.setSelected(false); // Contact Primary
-                            radiobtn11CntN.setSelected(false); // Contact Primary
-                            textArea13Cont.clear(); // Contact Remarks
+                            clearContact();
 
                             break;
                         case 2://Email
@@ -1222,12 +1141,8 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                             oTransEmail.removeEmail(pnRow);
                             pnRow = 0;
                             loadEmail();
-                            comboBox04EmAd.setValue(null); // Email Ownership
-                            radiobtn06EmaY.setSelected(true); // Email Active status
-                            radiobtn06EmaN.setSelected(false); // Email Active status
-                            radiobtn05EmaY.setSelected(false); // Email Primary
-                            radiobtn05EmaN.setSelected(false); // Email Primary
-                            txtField03EmAd.clear(); // Email Address
+                            /*Clear Fields*/
+                            clearEmail();
                             break;
                         case 3://Social Media
                             if (ShowMessageFX.OkayCancel(null, "Confirmation", "Are you sure you want to remove this  Client Social Media?") == true) {
@@ -1238,14 +1153,84 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                             pnRow = 0;
                             loadSocialMedia();
                             /*Clear Fields*/
-                            radiobtn05SocY.setSelected(true); // SocMed Active status
-                            radiobtn05SocN.setSelected(false); // SocMed Active status
-                            txtField03Socm.clear(); // SocMed Account
-                            comboBox04Socm.setValue(null); // SocMed Type
+                            clearSocMed();
                             break;
                     }
 
                     break;
+                    
+                case "btnBrowse":
+                    if ((pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) ||
+                          (pnVEditMode == EditMode.ADDNEW || pnVEditMode == EditMode.UPDATE)) {
+                        if (ShowMessageFX.OkayCancel(null, "Confirmation", "You have unsaved data. Are you sure you want to browse a new record?") == true) {
+                            oTransAddress.removeAddress(oTransAddress.getItemCount());
+                            oTransMobile.removeMobile(oTransMobile.getItemCount());
+                            oTransEmail.removeEmail(oTransEmail.getItemCount());
+                            oTransSocMed.removeSocMed(oTransSocMed.getItemCount());
+                            clearFields();
+                            clearVehicleInfoFields();
+                        } else {
+                            return;
+                        }
+                    }
+                    
+                    boolean byClientID = true;
+                    String txtValue = "";
+                    if (!txtField26.getText().isEmpty() && !txtField26.getText().trim().equals("")) {
+                        byClientID = false;
+                        txtValue = txtField26.getText();
+                    } else {
+                        byClientID = true;
+                        txtValue = txtField01.getText();
+                    }
+                    
+                    if (oTrans.SearchRecord(txtValue, byClientID)) {
+                        if (oTransAddress.OpenRecord(oTrans.getMaster("sClientID").toString(), false)
+                                && oTransMobile.OpenRecord(oTrans.getMaster("sClientID").toString(), false)
+                                && oTransEmail.OpenRecord(oTrans.getMaster("sClientID").toString(), false)
+                                && oTransSocMed.OpenRecord(oTrans.getMaster("sClientID").toString(), false)) {
+                            loadClientMaster();
+                            loadAddress();
+                            loadContact();
+                            loadEmail();
+                            loadSocialMedia();
+                            loadVehicleInfoTable();
+                            loadVehicleHtryTable();
+                            pnEditMode = EditMode.READY;
+                            pnVEditMode = EditMode.UNKNOWN;
+                        } else {
+                            ShowMessageFX.Warning(getStage(), "There was an error while loading Contact Information Details.", "Warning", null);
+                            txtField26.clear(); // CLIENT Search
+                            txtField01.clear(); // CLIENT ID
+                            pnEditMode = EditMode.UNKNOWN;
+                            pnVEditMode = EditMode.UNKNOWN;
+                            clearFields();
+                            clearVehicleInfoFields();
+                        }
+                    } else {
+                        ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                        txtField26.clear(); // CLIENT Search
+                        txtField01.clear(); // CLIENT ID
+                        pnEditMode = EditMode.UNKNOWN;
+                        pnVEditMode = EditMode.UNKNOWN;
+                        clearFields();
+                        clearVehicleInfoFields();
+                    }
+
+                    break;
+            }
+            
+            initButton(pnEditMode);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
+        }
+    }
+    
+    private void cmdButton_Click_vhcl(ActionEvent event) {
+        String lsButton = ((Button) event.getSource()).getId();
+        try {
+            switch (lsButton) {
                 case "btnVhclDesc":
                     loadVehicleDescriptionWindow();
                     break;
@@ -1320,82 +1305,19 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                 case "btnTransfer":
                     loadTransferOwnershipWindow();
                     break;
-                    
-                case "btnBrowse":
-                    if ((pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) ||
-                          (pnVEditMode == EditMode.ADDNEW || pnVEditMode == EditMode.UPDATE)) {
-                        if (ShowMessageFX.OkayCancel(null, "Confirmation", "You have unsaved data. Are you sure you want to browse a new record?") == true) {
-                            oTransAddress.removeAddress(oTransAddress.getItemCount());
-                            oTransMobile.removeMobile(oTransMobile.getItemCount());
-                            oTransEmail.removeEmail(oTransEmail.getItemCount());
-                            oTransSocMed.removeSocMed(oTransSocMed.getItemCount());
-                            clearFields();
-                            clearVehicleInfoFields();
-                        } else {
-                            return;
-                        }
-                    }
-                    
-                    boolean byClientID = true;
-                    String txtValue = "";
-                    if (!txtField26.getText().isEmpty() && !txtField26.getText().trim().equals("")) {
-                        byClientID = false;
-                        txtValue = txtField26.getText();
-                    } else {
-                        byClientID = true;
-                        txtValue = txtField01.getText();
-                    }
-                    
-                    if (oTrans.SearchRecord(txtValue, byClientID)) {
-                        if (oTransAddress.OpenRecord(oTrans.getMaster("sClientID").toString(), false)
-                                && oTransMobile.OpenRecord(oTrans.getMaster("sClientID").toString(), false)
-                                && oTransEmail.OpenRecord(oTrans.getMaster("sClientID").toString(), false)
-                                && oTransSocMed.OpenRecord(oTrans.getMaster("sClientID").toString(), false)) {
-                            loadClientMaster();
-                            loadAddress();
-                            loadContact();
-                            loadEmail();
-                            loadSocialMedia();
-                            loadVehicleInfoTable();
-                            loadVehicleHtryTable();
-                            pnEditMode = EditMode.READY;
-                            pnVEditMode = EditMode.UNKNOWN;
-                        } else {
-                            ShowMessageFX.Warning(getStage(), "There was an error while loading Contact Information Details.", "Warning", null);
-                            txtField26.clear(); // CLIENT Search
-                            txtField01.clear(); // CLIENT ID
-                            pnEditMode = EditMode.UNKNOWN;
-                            pnVEditMode = EditMode.UNKNOWN;
-                            clearFields();
-                            clearVehicleInfoFields();
-                        }
-                    } else {
-                        ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
-                        txtField26.clear(); // CLIENT Search
-                        txtField01.clear(); // CLIENT ID
-                        pnEditMode = EditMode.UNKNOWN;
-                        pnVEditMode = EditMode.UNKNOWN;
-                        clearFields();
-                        clearVehicleInfoFields();
-                    }
-
-                    break;
             }
             
-            if (selectedIndex == 0) {
-                initButton(pnEditMode);
-            } else if (selectedIndex == 1) {
-                initVhclInfoButton(pnVEditMode);
-                
-                if (bBtnVhclAvl){
-                    disableFields();
-                }
-            }
+            initVhclInfoButton(pnVEditMode);
+            if (bBtnVhclAvl){
+                disableFields();
+            }   
         } catch (SQLException e) {
             e.printStackTrace();
             ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
         }
+    
     }
+    
     
     /*OPEN WINDOW FOR TRANSFER OWNERSHIP*/
    private void loadTransferOwnershipWindow() {
@@ -2099,29 +2021,28 @@ public class CustomerFormController implements Initializable, ScreenInterface {
         tblViewVhclHsty.setItems(vhclhtrydata);
     }
 
-    private int validateContactInfo() {
+    private boolean validateContactInfo() {
         iTabIndex = tabPCustCont.getSelectionModel().getSelectedIndex();
-        int iCntp = 0;
         try {
             switch (iTabIndex) {
                 case 0: //Address
                     for (lnCtr = 1; lnCtr <= oTransAddress.getItemCount(); lnCtr++) {
                         if (oTransAddress.getAddress(lnCtr, "cPrimaryx").toString().equals("1") && (lnCtr != pnRow)) {
-                            iCntp = iCntp + 1;
+                            return false;
                         }
                     }
                     break;
                 case 1: //Mobile
                     for (lnCtr = 1; lnCtr <= oTransMobile.getItemCount(); lnCtr++) {
                         if (oTransMobile.getMobile(lnCtr, "cPrimaryx").toString().equals("1") && (lnCtr != pnRow)) {
-                            iCntp = iCntp + 1;
+                            return false;
                         }
                     }
                     break;
                 case 2: //Email
                     for (lnCtr = 1; lnCtr <= oTransEmail.getItemCount(); lnCtr++) {
                         if (oTransEmail.getEmail(lnCtr, "cPrimaryx").toString().equals("1") && (lnCtr != pnRow)) {
-                            iCntp = iCntp + 1;
+                            return false;
                         }
                     }
                     break;
@@ -2129,7 +2050,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
         } catch (SQLException e) {
             ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
         }
-        return iCntp;
+        return true;
     }
 
     /*Populate Text Field Based on selected address in table*/
@@ -3713,6 +3634,54 @@ public class CustomerFormController implements Initializable, ScreenInterface {
         txtField08V.getStyleClass().remove("required-field");
         txtField03V.getStyleClass().remove("required-field");
         txtField04V.getStyleClass().remove("required-field");
+    }
+    
+    private void clearAddress(){
+        /*Clear Red Color for required fileds*/
+        txtField03Addr.getStyleClass().remove("required-field");
+        txtField05Addr.getStyleClass().remove("required-field");
+        txtField06Addr.getStyleClass().remove("required-field");
+        txtField03Addr.clear(); //House No
+        txtField04Addr.clear(); //Street / Address
+        txtField05Addr.clear(); // Town
+        txtField06Addr.clear(); // Brgy
+        txtField07Addr.clear(); //Zip code
+        radiobtn18AddY.setSelected(true); //Active status
+        radiobtn18AddN.setSelected(false); //Active status
+        checkBox14Addr.setSelected(false); //Primary
+        checkBox17Addr.setSelected(false); //Current
+        checkBox12Addr.setSelected(false); //Office
+        checkBox13Addr.setSelected(false); //Provincial
+        textArea11Addr.clear(); // Address Remarks
+    }
+
+    private void clearContact() {
+        comboBox05Cont.setValue(null); // Contact Ownership
+        comboBox04Cont.setValue(null); // Mobile Type
+        txtField03Cont.clear();  //Mobile Number
+        /*Clear Red Color for required fileds*/
+        txtField03Cont.getStyleClass().remove("required-field");
+        radiobtn14CntY.setSelected(true); // Contact Active Status
+        radiobtn14CntN.setSelected(false); // Contact Active Status
+        radiobtn11CntY.setSelected(false); // Contact Primary
+        radiobtn11CntN.setSelected(false); // Contact Primary
+        textArea13Cont.clear(); // Contact Remarks
+    }
+
+    private void clearEmail() {
+        comboBox04EmAd.setValue(null); // Email Ownership
+        radiobtn06EmaY.setSelected(true); // Email Active status
+        radiobtn06EmaN.setSelected(false); // Email Active status
+        radiobtn05EmaY.setSelected(false); // Email Primary
+        radiobtn05EmaN.setSelected(false); // Email Primary
+        txtField03EmAd.clear(); // Email Address
+    }
+
+    private void clearSocMed() {
+        radiobtn05SocY.setSelected(true); // SocMed Active status
+        radiobtn05SocN.setSelected(false); // SocMed Active status
+        txtField03Socm.clear(); // SocMed Account
+        comboBox04Socm.setValue(null); // SocMed Type
     }
 
 }

@@ -49,6 +49,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
+import static javafx.scene.input.KeyCode.DOWN;
+import static javafx.scene.input.KeyCode.UP;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -326,6 +328,60 @@ public class VSPFormController implements Initializable, ScreenInterface {
     @FXML
     private Label lblVSPStatus;
 
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        oListener = (int fnIndex, Object foValue) -> {
+            System.out.println("Set Class Value " + fnIndex + "-->" + foValue);
+        };
+
+        oTrans = new VehicleSalesProposalMaster(oApp, oApp.getBranchCode(), true); //Initialize VehicleSalesProposalMaster
+        oTrans.setCallback(oListener);
+        oTrans.setWithUI(true);
+
+        /*Set Capitalization Fields*/
+        initCapitalizationFields();
+
+        /*Set comboBox*/
+        initSetComboBoxtoVSPMaster();
+
+        /*Set Combo Items*/
+        initComboItems();
+
+        /*Monitoring Inquiry Type TextField*/
+        initMonitoringProperty();
+
+        /* Set check boxex */
+        initcheckBoxes();
+
+        /*Set Button Click Event*/
+        initCmdButton();
+
+        /*Set TextField Key-Pressed*/
+        initTextKeyPressed();
+
+        /*Set TextField Focus*/
+        initTextFieldFocus();
+
+        /* Set Number Format*/
+        initNumberFormatterFields();
+
+        addRowVSPLabor();
+
+        /* Set Table KeyPressed */
+        initTableKeyPressed();
+
+        /*Set TextField Required*/
+        initAddRequiredField();
+
+        tblViewLabor.setOnMouseClicked(this::tblLabor_Clicked);
+        tblViewParts.setOnMouseClicked(this::tblPart_Clicked);
+        date04.setOnAction(this::getDate);
+        date04.setDayCellFactory(DateFormatCell);
+        pnEditMode = EditMode.UNKNOWN;
+        initButton(pnEditMode);
+
+    }
+
     private Stage getStage() {
         return (Stage) btnClose.getScene().getWindow();
     }
@@ -422,58 +478,6 @@ public class VSPFormController implements Initializable, ScreenInterface {
             Logger.getLogger(VSPFormController.class.getName()).log(Level.SEVERE, null, ex);
         }
         return true;
-    }
-
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        oListener = (int fnIndex, Object foValue) -> {
-            System.out.println("Set Class Value " + fnIndex + "-->" + foValue);
-        };
-
-        oTrans = new VehicleSalesProposalMaster(oApp, oApp.getBranchCode(), true); //Initialize VehicleSalesProposalMaster
-        oTrans.setCallback(oListener);
-        oTrans.setWithUI(true);
-
-        /*Set Capitalization Fields*/
-        initCapitalizationFields();
-
-        /*Set comboBox*/
-        initSetComboBoxtoVSPMaster();
-
-        /*Set Combo Items*/
-        initComboItems();
-
-        /*Monitoring Inquiry Type TextField*/
-        initMonitoringProperty();
-
-        /* Set check boxex */
-        initcheckBoxes();
-
-        /*Set Button Click Event*/
-        initCmdButton();
-
-        /*Set TextField Key-Pressed*/
-        initTextKeyPressed();
-
-        /*Set TextField Focus*/
-        initTextFieldFocus();
-
-        /* Set Number Format*/
-        initNumberFormatterFields();
-
-        addRowVSPLabor();
-
-        /* Set Table KeyPressed */
-        initTableKeyPressed();
-
-        /*Set TextField Required*/
-        initAddRequiredField();
-
-        date04.setOnAction(this::getDate);
-        date04.setDayCellFactory(DateFormatCell);
-        pnEditMode = EditMode.UNKNOWN;
-        initButton(pnEditMode);
-
     }
 
     private void initCapitalizationFields() {
@@ -803,7 +807,6 @@ public class VSPFormController implements Initializable, ScreenInterface {
                             loadTableParts();
                             pnEditMode = EditMode.READY;
                             initButton(pnEditMode);
-
                         } else {
                             ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
                             clearFields();
@@ -814,29 +817,17 @@ public class VSPFormController implements Initializable, ScreenInterface {
                         Logger.getLogger(VSPFormController.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     break;
-                case "btnAdditionalLabor": {
-//                    try {
-//                        int fnRow = oTrans.getVSPLaborCount();
-////                        loadAdditionalDialog(fnRow, "");
-//                    } catch (IOException ex) {
-//                        Logger.getLogger(VSPFormController.class.getName()).log(Level.SEVERE, null, ex);
-//                    }
-                }
-
-                break;
-
+                case "btnAdditionalLabor":
+                    if (oTrans.addVSPLabor("", false)) {
+                        loadLaborAdditionalDialog(oTrans.getVSPLaborCount(), false, true);
+                    }
+                    break;
                 case "btnAddParts":
                     if (oTrans.AddVSPParts()) {
-                        try {
-                            oTrans.setVSPPartsDetail(oTrans.getVSPPartsCount(), "sDescript", "");
-                            oTrans.setVSPPartsDetail(oTrans.getVSPPartsCount(), "nSellPrice", Double.valueOf("0.00"));
-                        } catch (SQLException ex) {
-                            Logger.getLogger(VSPFormController.class.getName()).log(Level.SEVERE, null, ex);
-                        }
+                        loadPartAdditionalDialog(oTrans.getVSPPartsCount(), true);
                         loadTableParts();
-                    } else {
-                        ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", "Error while adding labor.");
                     }
+
                     break;
                 case "btnPrint":
                     String srowdata = oTrans.getMaster(1).toString();
@@ -856,6 +847,8 @@ public class VSPFormController implements Initializable, ScreenInterface {
         } catch (SQLException ex) {
             Logger.getLogger(UnitDeliveryReceiptFormController.class
                     .getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(VSPFormController.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }
@@ -1921,7 +1914,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
         return localDate;
     }
 
-    private void loadAdditionalDialog(Integer fnRow, String LbDsc, boolean isAdd) throws IOException {
+    private void loadLaborAdditionalDialog(Integer fnRow, boolean isWithLbDsc, boolean isAdd) throws IOException {
         /**
          * if state = true : ADD else if state = false : UPDATE *
          */
@@ -1934,8 +1927,10 @@ public class VSPFormController implements Initializable, ScreenInterface {
             VSPLaborEntryDialogController loControl = new VSPLaborEntryDialogController();
             loControl.setGRider(oApp);
             loControl.setObject(oTrans);
+            loControl.setState(isAdd);
+
+            loControl.setLbrDsc(isWithLbDsc);
             fxmlLoader.setController(loControl);
-            loControl.setLbrDsc(LbDsc);
             loControl.setRow(fnRow);
 
             //load the main interface
@@ -2035,7 +2030,6 @@ public class VSPFormController implements Initializable, ScreenInterface {
 
     }
 
-    @FXML
     private void tblLabor_Clicked(MouseEvent event) {
         if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
             pnRow = tblViewLabor.getSelectionModel().getSelectedIndex() + 1;
@@ -2045,7 +2039,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
 
             if (event.getClickCount() == 2) {
                 try {
-                    loadAdditionalDialog(pnRow, "", false);
+                    loadLaborAdditionalDialog(pnRow, true, false);
                 } catch (IOException ex) {
                     Logger.getLogger(VSPFormController.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -2082,7 +2076,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
     private void addRowVSPLabor() {
         chckBoxRustProof.setOnAction(event -> {
             if (chckBoxRustProof.isSelected()) {
-
+                initLaborDescript("RUSTPROOF", Double.valueOf("0.00"), true);
                 chckBoxRustProof.setSelected(false);
             }
         });
@@ -2110,11 +2104,12 @@ public class VSPFormController implements Initializable, ScreenInterface {
     private void initLaborDescript(String laborDescript, double fdblAmt, boolean withLabor) {
         if (oTrans.addVSPLabor(laborDescript, withLabor)) {
             try {
-                oTrans.setVSPLaborDetail(oTrans.getVSPLaborCount(), "nLaborAmt", fdblAmt);
+                loadLaborAdditionalDialog(oTrans.getVSPLaborCount(), true, true);
             } catch (SQLException ex) {
                 Logger.getLogger(VSPFormController.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(VSPFormController.class.getName()).log(Level.SEVERE, null, ex);
             }
-            loadTableLabor();
         } else {
             ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", "Error while adding labor.");
         }
@@ -2167,11 +2162,105 @@ public class VSPFormController implements Initializable, ScreenInterface {
         }
     }
 
+    private void loadPartAdditionalDialog(Integer fnRow, boolean isAdd) throws IOException {
+        /**
+         * if state = true : ADD else if state = false : UPDATE *
+         */
+        try {
+            Stage stage = new Stage();
+
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            fxmlLoader.setLocation(getClass().getResource("VSPPartsEntryDialog.fxml"));
+
+            VSPPartsEntryDialogController loControl = new VSPPartsEntryDialogController();
+            loControl.setGRider(oApp);
+            loControl.setObject(oTrans);
+            loControl.setState(isAdd);
+            fxmlLoader.setController(loControl);
+            loControl.setRow(fnRow);
+
+            //load the main interface
+            Parent parent = fxmlLoader.load();
+
+            parent.setOnMousePressed(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    xOffset = event.getSceneX();
+                    yOffset = event.getSceneY();
+                }
+            });
+
+            parent.setOnMouseDragged(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    stage.setX(event.getScreenX() - xOffset);
+                    stage.setY(event.getScreenY() - yOffset);
+                }
+            });
+
+            //set the main interface as the scene/*
+            Scene scene = new Scene(parent);
+            stage.setScene(scene);
+            stage.initStyle(StageStyle.TRANSPARENT);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle("");
+            stage.showAndWait();
+            loadTableParts();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
+            System.exit(1);
+        }
+    }
+
+    private void tblPart_Clicked(MouseEvent event) {
+        if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
+            pnRow = tblViewParts.getSelectionModel().getSelectedIndex() + 1;
+            if (pnRow == 0) {
+                return;
+            }
+
+            if (event.getClickCount() == 2) {
+                try {
+                    loadPartAdditionalDialog(pnRow, true);
+                } catch (IOException ex) {
+                    Logger.getLogger(VSPFormController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                loadTableParts();
+            }
+            tblViewLabor.setOnKeyReleased((KeyEvent t) -> {
+                KeyCode key = t.getCode();
+                switch (key) {
+                    case DOWN:
+                        pnRow = tblViewParts.getSelectionModel().getSelectedIndex();
+                        if (pnRow == tblViewParts.getItems().size()) {
+                            pnRow = tblViewParts.getItems().size();
+                        } else {
+                            int y = 1;
+                            pnRow = pnRow + y;
+                        }
+                        break;
+
+                    case UP:
+                        int pnRows = 0;
+                        int x = -1;
+                        pnRows = tblViewParts.getSelectionModel().getSelectedIndex() + 1;
+                        pnRow = pnRows;
+                        break;
+                    default:
+                        return;
+                }
+
+            });
+
+        }
+    }
+
     private void loadTableParts() {
         try {
             /*Populate table*/
             partData.clear();
-
             for (int lnCtr = 1; lnCtr <= oTrans.getVSPPartsCount(); lnCtr++) {
                 String cType = "";
                 switch (oTrans.getVSPPartsDetail(lnCtr, "sChrgeTyp").toString()) {
@@ -2196,7 +2285,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
                 partData.add(new VSPTablePartList(
                         String.valueOf(lnCtr), //ROW
                         oTrans.getVSPPartsDetail(lnCtr, "sBarCodex").toString(),
-                        oTrans.getVSPPartsDetail(lnCtr, "sDescript").toString(),
+                        oTrans.getVSPPartsDetail(lnCtr, 9).toString(),
                         cType,
                         oTrans.getVSPPartsDetail(lnCtr, "nQuantity").toString(),
                         formattedAmount,

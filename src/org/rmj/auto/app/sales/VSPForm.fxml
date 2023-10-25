@@ -28,7 +28,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" fx:id="AnchorMain" prefHeight="620.0" prefWidth="1458.0" stylesheets="@../css/FrameStyle.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane id="AnchorPane" fx:id="AnchorMain" prefHeight="620.0" prefWidth="1458.0" stylesheets="@../css/FrameStyle.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.rmj.auto.app.sales.VSPFormController">
     <children>
         <StackPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
@@ -525,7 +525,11 @@
                                                                                                                                 <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="10.0" vgrow="SOMETIMES" />
                                                                                                                             </rowConstraints>
                                                                                                                             <children>
-                                                                                                                                <Label id="LabelDesc" text="Payment Mode" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                                                                                                                <Label text="Payment Mode" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                                                                                                                    <font>
+                                                                                                                                        <Font name="Arial Bold" size="12.0" />
+                                                                                                                                    </font>
+                                                                                                                                </Label>
                                                                                                                                 <Label text="Unit SRP" GridPane.columnIndex="1" GridPane.rowIndex="2">
                                                                                                                                     <font>
                                                                                                                                         <Font name="Arial Bold" size="11.5" />
@@ -541,7 +545,7 @@
                                                                                                                                 <Label id="LabelDesc" text="Sales Promo" GridPane.columnIndex="1" GridPane.rowIndex="7" />
                                                                                                                                 <Label id="LabelDesc" text="Finance Promo" GridPane.columnIndex="1" GridPane.rowIndex="8" />
                                                                                                                                 <Label id="LabelDesc" text="Bank" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                                                                                                                                <Label text="Net SRP" GridPane.columnIndex="7" GridPane.columnSpan="3" GridPane.rowIndex="1">
+                                                                                                                                <Label prefHeight="14.0" prefWidth="132.0" text="Approved Net SRP" GridPane.columnIndex="7" GridPane.columnSpan="4" GridPane.rowIndex="1">
                                                                                                                                     <font>
                                                                                                                                         <Font name="Arial Bold" size="11.5" />
                                                                                                                                     </font>
@@ -618,7 +622,7 @@
                                                                                                                                         <Tooltip text="check to in-able STD Fleet and SPL Fleet Discount" />
                                                                                                                                     </tooltip>
                                                                                                                                 </CheckBox>
-                                                                                                                                <Label alignment="CENTER_RIGHT" prefHeight="14.0" prefWidth="59.0" text="*" textFill="#fb0000" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                                                                                                                <Label alignment="CENTER_RIGHT" prefHeight="14.0" prefWidth="69.0" text="*" textFill="#fb0000" GridPane.columnIndex="1" GridPane.rowIndex="2">
                                                                                                                                     <font>
                                                                                                                                         <Font name="Arial Bold" size="11.5" />
                                                                                                                                     </font>

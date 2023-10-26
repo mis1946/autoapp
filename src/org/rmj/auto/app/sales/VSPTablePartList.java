@@ -15,6 +15,7 @@ import javafx.scene.control.CheckBox;
 public class VSPTablePartList {
 
     private SimpleStringProperty tblPartsRow;
+    private SimpleStringProperty tblindex01_Part;
     private SimpleStringProperty tblindex14_Part;
     private SimpleStringProperty tblindex09_Part;
     private SimpleStringProperty tblindex08_Part;
@@ -23,6 +24,7 @@ public class VSPTablePartList {
     private SimpleStringProperty tblindex11_Part;
 
     VSPTablePartList(String tblPartsRow,
+            String tblindex01_Part,
             String tblindex14_Part,
             String tblindex09_Part,
             String tblindex08_Part,
@@ -30,6 +32,7 @@ public class VSPTablePartList {
             String tblindex05_Part,
             String tblindex11_Part) {
         this.tblPartsRow = new SimpleStringProperty(tblPartsRow);
+        this.tblindex01_Part = new SimpleStringProperty(tblindex01_Part);
         this.tblindex14_Part = new SimpleStringProperty(tblindex14_Part);
         this.tblindex09_Part = new SimpleStringProperty(tblindex09_Part);
         this.tblindex08_Part = new SimpleStringProperty(tblindex08_Part);
@@ -44,6 +47,14 @@ public class VSPTablePartList {
 
     public void setTblPartsRow(String tblPartsRow) {
         this.tblPartsRow.set(tblPartsRow);
+    }
+
+    public String getTblindex01_Part() {
+        return tblindex01_Part.get();
+    }
+
+    public void setTblindex01_Part(String tblindex01_Part) {
+        this.tblindex01_Part.set(tblindex01_Part);
     }
 
     public String getTblindex14_Part() {

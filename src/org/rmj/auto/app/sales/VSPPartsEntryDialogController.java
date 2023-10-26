@@ -27,7 +27,6 @@ import javafx.stage.Stage;
 import org.rmj.appdriver.GRider;
 import org.rmj.appdriver.agentfx.CommonUtils;
 import org.rmj.appdriver.agentfx.ShowMessageFX;
-import static org.rmj.auto.app.sales.VSPLaborEntryDialogController.formatAmount;
 import org.rmj.auto.app.views.ScreenInterface;
 import org.rmj.auto.sales.base.VehicleSalesProposalMaster;
 
@@ -38,12 +37,10 @@ import org.rmj.auto.sales.base.VehicleSalesProposalMaster;
  */
 public class VSPPartsEntryDialogController implements Initializable, ScreenInterface {
 
-    private int nRow;
-    private Boolean lbrDsc;
     private int pnRow = 0;
     private boolean pbState = true;
     private boolean additional;
-    private final String pxeModuleName = "Vsp Labor Entry Form";
+    private final String pxeModuleName = "Vsp Parts Entry Form";
     private int pnEditMode;//Modifying fields
     private VehicleSalesProposalMaster oTrans;
     ObservableList<String> cChargeType = FXCollections.observableArrayList("FREE OF CHARGE", "CHARGE");
@@ -61,8 +58,6 @@ public class VSPPartsEntryDialogController implements Initializable, ScreenInter
     @FXML
     private TextField txtField06_Parts;
     @FXML
-    private CheckBox isAdditionalChecklBox;
-    @FXML
     private TextField txtField09_Parts;
     @FXML
     private TextField txtField05_Parts;
@@ -77,17 +72,12 @@ public class VSPPartsEntryDialogController implements Initializable, ScreenInter
         btnEditPart.setOnAction(this::cmdButton_Click);
         txtField09_Parts.setOnKeyPressed(this::txtField_KeyPressed);
         txtField05_Parts.setOnKeyPressed(this::txtField_KeyPressed);
+        txtField05_Parts.focusedProperty().addListener(txtField_Focus);
         txtField06_Parts.setOnKeyPressed(this::txtField_KeyPressed);
+
         comboBox8.setItems(cChargeType);
         handleComboBoxSelectionVSPMaster(comboBox8, 8);
         setCapsLockBehavior(txtField09_Parts);
-        txtField05_Parts.focusedProperty().addListener(txtField_Focus);
-        txtField06_Parts.focusedProperty().addListener(txtField_Focus);
-        try {
-            oTrans.setVSPPartsDetail(nRow, 11, "1");
-        } catch (SQLException ex) {
-            Logger.getLogger(VSPPartsEntryDialogController.class.getName()).log(Level.SEVERE, null, ex);
-        }
         loadVSPPartField();
         if (pbState) {
             btnAddPart.setVisible(true);
@@ -104,7 +94,8 @@ public class VSPPartsEntryDialogController implements Initializable, ScreenInter
     }
 
     @Override
-    public void setGRider(GRider foValue) {
+    public void setGRider(GRider foValue
+    ) {
         oApp = foValue;
     }
 
@@ -113,11 +104,7 @@ public class VSPPartsEntryDialogController implements Initializable, ScreenInter
     }
 
     public void setRow(int fnRow) {
-        nRow = fnRow;
-    }
-
-    public void setLbrDsc(Boolean fbValue) {
-        lbrDsc = fbValue;
+        pnRow = fnRow;
     }
 
     public void isAdditional(boolean additional) {
@@ -137,7 +124,7 @@ public class VSPPartsEntryDialogController implements Initializable, ScreenInter
     }
 
     private Stage getStage() {
-        return (Stage) txtField14_Parts.getScene().getWindow();
+        return (Stage) txtField09_Parts.getScene().getWindow();
     }
 
     private void handleComboBoxSelectionVSPMaster(ComboBox<String> comboBox, int fieldNumber) {
@@ -147,14 +134,15 @@ public class VSPPartsEntryDialogController implements Initializable, ScreenInter
                 if (selectedType >= 0) {
                     switch (fieldNumber) {
                         case 8:
-                            oTrans.setVSPPartsDetail(nRow, fieldNumber, String.valueOf(selectedType));
+                            oTrans.setVSPPartsDetail(pnRow, fieldNumber, String.valueOf(selectedType));
                             if (selectedType == 0) {
-                                oTrans.setVSPPartsDetail(nRow, 5, Double.valueOf("0.00"));
+                                oTrans.setVSPPartsDetail(pnRow, 5, Double.valueOf("0.00"));
                                 txtField05_Parts.setText("0.00");
                                 txtField05_Parts.setDisable(true);
                             } else {
                                 txtField05_Parts.setDisable(false);
                             }
+
                             break;
                     }
                 }
@@ -165,50 +153,11 @@ public class VSPPartsEntryDialogController implements Initializable, ScreenInter
         }
         );
     }
-    final ChangeListener<? super Boolean> txtField_Focus = (o, ov, nv) -> {
-        try {
-            TextField txtField = (TextField) ((ReadOnlyBooleanPropertyBase) o).getBean();
-            int lnIndex = Integer.parseInt(txtField.getId().substring(8, 10));
-            String lsValue = txtField.getText();
-            if (lsValue == null) {
-                return;
-            }
-            if (!nv) {
-                /* Lost Focus */
-                switch (lnIndex) {
-                    case 5:
-                        if (lsValue.isEmpty()) {
-                            lsValue = "0.00";
-                        }
-                        oTrans.setVSPPartsDetail(nRow, lnIndex, Double.valueOf(lsValue.replace(",", "")));
-                        loadVSPPartField();
-                        break;
-                    case 6:
-                        if (lsValue.isEmpty()) {
-                            lsValue = "0";
-                        }
-                        oTrans.setVSPPartsDetail(nRow, lnIndex, Integer.valueOf(lsValue.replace(",", "")));
-                        loadVSPPartField();
-                        break;
-
-                }
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(VSPPartsEntryDialogController.class
-                    .getName()).log(Level.SEVERE, null, ex);
-
-        }
-    };
 
     private void loadVSPPartField() {
         try {
-            txtField09_Parts.setText(oTrans.getVSPPartsDetail(nRow, "sDescript").toString());
-            if (oTrans.getVSPPartsDetail(nRow, 11).equals("1")) {
-                isAdditionalChecklBox.setSelected(true);
-            } else {
-                isAdditionalChecklBox.setSelected(false);
-            }
-            String selectedItem8 = oTrans.getVSPPartsDetail(nRow, 8).toString();
+            txtField09_Parts.setText((String) oTrans.getVSPPartsDetail(pnRow, 9));
+            String selectedItem8 = oTrans.getVSPPartsDetail(pnRow, 8).toString();
             switch (selectedItem8) {
                 case "0":
                     selectedItem8 = "FREE OF CHARGE";
@@ -220,9 +169,9 @@ public class VSPPartsEntryDialogController implements Initializable, ScreenInter
                     break;
             }
             comboBox8.setValue(selectedItem8);
-            String currenPartAmount = oTrans.getVSPPartsDetail(nRow, 5).toString();
+            String currenPartAmount = oTrans.getVSPPartsDetail(pnRow, 5).toString();
             txtField05_Parts.setText(formatAmount(currenPartAmount));
-            txtField06_Parts.setText(String.valueOf(oTrans.getVSPPartsDetail(nRow, 6)));
+            txtField06_Parts.setText(String.valueOf(oTrans.getVSPPartsDetail(pnRow, 6)));
 
         } catch (SQLException ex) {
             Logger.getLogger(VSPPartsEntryDialogController.class
@@ -236,13 +185,16 @@ public class VSPPartsEntryDialogController implements Initializable, ScreenInter
             switch (lsButton) {
                 case "btnEditPart":
                 case "btnAddPart":
-                    settoClass();
-                    CommonUtils.closeStage(btnClosePart);
+                    if (setClass()) {
+                        CommonUtils.closeStage(btnClosePart);
+                    } else {
+                        return;
+                    }
                     break;
                 case "btnClosePart":
                     if (pbState) {
-                        if (oTrans.getVSPPartsDetail(nRow, 1).toString().isEmpty()) {
-                            oTrans.removeVSPParts(nRow);
+                        if (oTrans.getVSPPartsDetail(pnRow, 1).toString().isEmpty()) {
+                            oTrans.removeVSPParts(pnRow);
                         }
                     }
                     CommonUtils.closeStage(btnClosePart);
@@ -270,20 +222,37 @@ public class VSPPartsEntryDialogController implements Initializable, ScreenInter
         }
         return formattedAmount;
     }
+    final ChangeListener<? super Boolean> txtField_Focus = (o, ov, nv) -> {
+        try {
+            TextField txtField = (TextField) ((ReadOnlyBooleanPropertyBase) o).getBean();
+            int lnIndex = Integer.parseInt(txtField.getId().substring(8, 10));
+            String lsValue = txtField.getText();
+            if (lsValue == null) {
+                return;
+            }
+            if (!nv) {
+                /* Lost Focus */
+                switch (lnIndex) {
+                    case 5:
+                        if (lsValue.isEmpty()) {
+                            lsValue = "0.00";
+                        }
+                        oTrans.setVSPPartsDetail(pnRow, lnIndex, Double.valueOf(lsValue.replace(",", "")));
+                        loadVSPPartField();
+                        break;
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(VSPFormController.class
+                    .getName()).log(Level.SEVERE, null, ex);
+
+        }
+    };
 
     private void txtField_KeyPressed(KeyEvent event) {
         String txtFieldID = ((TextField) event.getSource()).getId();
         if (event.getCode() == KeyCode.TAB || event.getCode() == KeyCode.ENTER || event.getCode() == KeyCode.F3) {
             switch (txtFieldID) {
-                case "txtField14_Parts":
-//                        if (oTrans.searchParts("", nRow, true)) {
-//                            loadVSPPartField();
-//                        } else {
-//                            txtField14_Parts.clear();
-//                            txtField14_Parts.requestFocus();
-//                            ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
-//                        }
-                    break;
             }
             event.consume();
             CommonUtils.SetNextFocus((TextField) event.getSource());
@@ -293,11 +262,11 @@ public class VSPPartsEntryDialogController implements Initializable, ScreenInter
         }
     }
 
-    private boolean settoClass() {
+    private boolean setClass() {
         try {
-            String partQuantity = txtField06_Parts.getText();
-            if (txtField09_Parts.getText().isEmpty()) {
-                ShowMessageFX.Warning(getStage(), "Please input Part Description", "Warning", null);
+            String partQuantity = txtField06_Parts.getText().trim();
+            if (txtField09_Parts.getText().trim().equals("")) {
+                ShowMessageFX.Warning(getStage(), "Please enter a value for Part Description", "Warning", null);
                 txtField09_Parts.requestFocus();
                 return false;
             }
@@ -306,8 +275,8 @@ public class VSPPartsEntryDialogController implements Initializable, ScreenInter
                 comboBox8.requestFocus();
                 return false;
             }
-            if (oTrans.getVSPPartsDetail(nRow, 8).toString().equals("1")) {
-                String partAmount = txtField05_Parts.getText();
+            if (oTrans.getVSPPartsDetail(pnRow, 8).toString().equals("1")) {
+                String partAmount = txtField05_Parts.getText().trim();
                 if (partAmount.equals("0.00")) {
                     ShowMessageFX.Warning(getStage(), "Please input Labor Amount", "Warning", null);
                     txtField05_Parts.requestFocus();
@@ -319,16 +288,13 @@ public class VSPPartsEntryDialogController implements Initializable, ScreenInter
                 txtField06_Parts.requestFocus();
                 return false;
             }
-            oTrans.setVSPPartsDetail(nRow, 9, txtField09_Parts.getText());
-            oTrans.setVSPPartsDetail(nRow, 5, Double.valueOf(txtField05_Parts.getText().replace(",", "")));
-            oTrans.setVSPPartsDetail(nRow, 6, Integer.valueOf(txtField06_Parts.getText()));
-
+            oTrans.setVSPPartsDetail(pnRow, 9, txtField09_Parts.getText());
+            oTrans.setVSPPartsDetail(pnRow, 5, Double.valueOf(txtField05_Parts.getText().replace(",", "")));
+            oTrans.setVSPPartsDetail(pnRow, 6, Integer.valueOf(txtField06_Parts.getText()));
         } catch (SQLException ex) {
             Logger.getLogger(VSPPartsEntryDialogController.class
                     .getName()).log(Level.SEVERE, null, ex);
         }
-
         return true;
     }
-
 }

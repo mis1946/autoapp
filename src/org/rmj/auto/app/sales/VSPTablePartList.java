@@ -20,8 +20,7 @@ public class VSPTablePartList {
     private SimpleStringProperty tblindex08_Part;
     private SimpleStringProperty tblindex05_Part;
     private SimpleStringProperty tblindex06_Part;
-    private SimpleBooleanProperty tblindex11_Part;
-    private CheckBox addOrNot;
+    private SimpleStringProperty tblindex11_Part;
 
     VSPTablePartList(String tblPartsRow,
             String tblindex14_Part,
@@ -29,17 +28,14 @@ public class VSPTablePartList {
             String tblindex08_Part,
             String tblindex06_Part,
             String tblindex05_Part,
-            boolean tblindex11_Part) {
+            String tblindex11_Part) {
         this.tblPartsRow = new SimpleStringProperty(tblPartsRow);
         this.tblindex14_Part = new SimpleStringProperty(tblindex14_Part);
         this.tblindex09_Part = new SimpleStringProperty(tblindex09_Part);
         this.tblindex08_Part = new SimpleStringProperty(tblindex08_Part);
         this.tblindex05_Part = new SimpleStringProperty(tblindex05_Part);
         this.tblindex06_Part = new SimpleStringProperty(tblindex06_Part);
-        this.addOrNot = new CheckBox();
-        this.tblindex11_Part = new SimpleBooleanProperty(tblindex11_Part);
-        this.addOrNot.setSelected(tblindex11_Part);
-        addOrNot.setDisable(true);
+        this.tblindex11_Part = new SimpleStringProperty(tblindex11_Part);
     }
 
     public String getTblPartsRow() {
@@ -90,12 +86,12 @@ public class VSPTablePartList {
         this.tblindex05_Part.set(tblindex05_Part);
     }
 
-    public CheckBox getAddOrNot() {
-        return addOrNot;
+    public String getTblindex11_Part() {
+        return tblindex11_Part.get();
     }
 
-    public void setAddOrNot(CheckBox addOrNot) {
-        this.addOrNot = addOrNot;
+    public void setTblindex11_Part(String tblindex11_Part) {
+        this.tblindex11_Part.set(tblindex11_Part);
     }
 
 }

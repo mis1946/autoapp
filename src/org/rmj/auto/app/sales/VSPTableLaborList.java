@@ -16,6 +16,7 @@ import javafx.scene.control.CheckBox;
 public class VSPTableLaborList {
 
     private SimpleStringProperty tblLaborRow;
+    private SimpleStringProperty tblindex01_Labor;
     private SimpleStringProperty tblindex03_Labor;
     private SimpleStringProperty tblindex07_Labor;
     private SimpleStringProperty tblindex05_Labor;
@@ -28,6 +29,7 @@ public class VSPTableLaborList {
     private SimpleBooleanProperty tblindex08;
 
     VSPTableLaborList(String tblLaborRow,
+            String tblindex01_Labor,
             String tblindex03_Labor,
             String tblindex07_Labor,
             String tblindex05_Labor,
@@ -38,6 +40,7 @@ public class VSPTableLaborList {
             String tblindex04_Labor_Tint,
             boolean tblindex08) {
         this.tblLaborRow = new SimpleStringProperty(tblLaborRow);
+        this.tblindex01_Labor = new SimpleStringProperty(tblindex01_Labor);
         this.tblindex03_Labor = new SimpleStringProperty(tblindex03_Labor);
         this.tblindex07_Labor = new SimpleStringProperty(tblindex07_Labor);
         this.tblindex05_Labor = new SimpleStringProperty(tblindex05_Labor);
@@ -60,12 +63,20 @@ public class VSPTableLaborList {
         this.tblLaborRow.set(tblLaborRow);
     }
 
+    public String getTblindex01_Labor() {
+        return tblindex01_Labor.get();
+    }
+
+    public void setTblindex01_Labor(String tblindex01_Labor) {
+        this.tblindex01_Labor.set(tblindex01_Labor);
+    }
+
     public String getTblindex03_Labor() {
         return tblindex03_Labor.get();
     }
 
-    public void setTblindex03_Labor(String tblLaborRow) {
-        this.tblindex03_Labor.set(tblLaborRow);
+    public void setTblindex03_Labor(String tblindex03_Labor) {
+        this.tblindex03_Labor.set(tblindex03_Labor);
     }
 
     public String getTblindex07_Labor() {

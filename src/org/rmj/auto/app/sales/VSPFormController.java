@@ -324,8 +324,6 @@ public class VSPFormController implements Initializable, ScreenInterface {
     @FXML
     private TableColumn<VSPTableLaborList, String> tblLaborJobNo;
     @FXML
-    private TableColumn<VSPTablePartList, String> tblPartJobNo;
-    @FXML
     private Label lblVSPStatus;
 
     @Override
@@ -689,9 +687,14 @@ public class VSPFormController implements Initializable, ScreenInterface {
         );
 
         txtField12.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
-            if (newValue == null || newValue.trim().isEmpty() || newValue.equals("0.00")) {
-                txtField11.setDisable(true);
-                txtField11.setText("");
+            if (newValue == null || newValue.trim().isEmpty() || newValue.equals("0.00") || newValue.equals("0")) {
+                try {
+                    txtField11.setText("");
+                    oTrans.setMaster(11, "");
+                    txtField11.setDisable(true);
+                } catch (SQLException ex) {
+                    Logger.getLogger(VSPFormController.class.getName()).log(Level.SEVERE, null, ex);
+                }
             } else {
                 txtField11.setDisable(false);
             }
@@ -823,10 +826,8 @@ public class VSPFormController implements Initializable, ScreenInterface {
                     }
                     break;
                 case "btnAddParts":
-                    if (oTrans.AddVSPParts()) {
-                        loadPartAdditionalDialog(oTrans.getVSPPartsCount(), true);
-                        loadTableParts();
-                    }
+                    oTrans.AddVSPParts();
+                    loadPartAdditionalDialog(oTrans.getVSPPartsCount(), true);
 
                     break;
                 case "btnPrint":
@@ -962,29 +963,6 @@ public class VSPFormController implements Initializable, ScreenInterface {
                     break;
 
             }
-//            if (chckBoxSpecialAccount.isSelected()) {
-//                if (!txtField29.getText().isEmpty()) {
-//                    if (txtField42.getText().trim().equals("0.00")) {
-//                        ShowMessageFX.Warning(getStage(), "Please enter a value for STD Fleet Plant/Dealer (%)", "Warning", null);
-//                        txtField42.requestFocus();
-//                        return;
-//                    }
-//                }
-//                if (!txtField30.getText().isEmpty()) {
-//                    if (txtField44.getText().trim().equals("0.00")) {
-//                        ShowMessageFX.Warning(getStage(), "Please enter a value for SPL Fleet Plant/Dealer (%)", "Warning", null);
-//                        txtField44.requestFocus();
-//                        return;
-//                    }
-//                }
-//            }
-//            if (!txtField28.getText().isEmpty()) {
-//                if (txtField46.getText().trim().equals("0.00")) {
-//                    ShowMessageFX.Warning(getStage(), "Please enter a value for Promo Plant/Dealer (%)", "Warning", null);
-//                    txtField46.requestFocus();
-//                    return;
-//                }
-//            }
 
             switch (comboBox21.getSelectionModel().getSelectedIndex()) {
                 case 1://FOC
@@ -1996,6 +1974,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
                 String formattedAmount = decimalFormat.format(amount);
                 laborData.add(new VSPTableLaborList(
                         String.valueOf(lnCtr), //ROW
+                        oTrans.getVSPLaborDetail(lnCtr, "sTransNox").toString(),
                         oTrans.getVSPLaborDetail(lnCtr, "sLaborCde").toString(),
                         oTrans.getVSPLaborDetail(lnCtr, "sLaborDsc").toString().toUpperCase(),
                         cType,
@@ -2043,32 +2022,8 @@ public class VSPFormController implements Initializable, ScreenInterface {
                 } catch (IOException ex) {
                     Logger.getLogger(VSPFormController.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                loadTableLabor();
+
             }
-            tblViewLabor.setOnKeyReleased((KeyEvent t) -> {
-                KeyCode key = t.getCode();
-                switch (key) {
-                    case DOWN:
-                        pnRow = tblViewLabor.getSelectionModel().getSelectedIndex();
-                        if (pnRow == tblViewLabor.getItems().size()) {
-                            pnRow = tblViewLabor.getItems().size();
-                        } else {
-                            int y = 1;
-                            pnRow = pnRow + y;
-                        }
-                        break;
-
-                    case UP:
-                        int pnRows = 0;
-                        int x = -1;
-                        pnRows = tblViewLabor.getSelectionModel().getSelectedIndex() + 1;
-                        pnRow = pnRows;
-                        break;
-                    default:
-                        return;
-                }
-
-            });
 
         }
     }
@@ -2162,7 +2117,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
         }
     }
 
-    private void loadPartAdditionalDialog(Integer fnRow, boolean isAdd) throws IOException {
+    private void loadPartAdditionalDialog(Integer fnRow, boolean isAdded) throws IOException {
         /**
          * if state = true : ADD else if state = false : UPDATE *
          */
@@ -2171,11 +2126,10 @@ public class VSPFormController implements Initializable, ScreenInterface {
 
             FXMLLoader fxmlLoader = new FXMLLoader();
             fxmlLoader.setLocation(getClass().getResource("VSPPartsEntryDialog.fxml"));
-
             VSPPartsEntryDialogController loControl = new VSPPartsEntryDialogController();
             loControl.setGRider(oApp);
             loControl.setObject(oTrans);
-            loControl.setState(isAdd);
+            loControl.setState(isAdded);
             fxmlLoader.setController(loControl);
             loControl.setRow(fnRow);
 
@@ -2223,36 +2177,12 @@ public class VSPFormController implements Initializable, ScreenInterface {
 
             if (event.getClickCount() == 2) {
                 try {
-                    loadPartAdditionalDialog(pnRow, true);
+                    loadPartAdditionalDialog(pnRow, false);
                 } catch (IOException ex) {
                     Logger.getLogger(VSPFormController.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 loadTableParts();
             }
-            tblViewLabor.setOnKeyReleased((KeyEvent t) -> {
-                KeyCode key = t.getCode();
-                switch (key) {
-                    case DOWN:
-                        pnRow = tblViewParts.getSelectionModel().getSelectedIndex();
-                        if (pnRow == tblViewParts.getItems().size()) {
-                            pnRow = tblViewParts.getItems().size();
-                        } else {
-                            int y = 1;
-                            pnRow = pnRow + y;
-                        }
-                        break;
-
-                    case UP:
-                        int pnRows = 0;
-                        int x = -1;
-                        pnRows = tblViewParts.getSelectionModel().getSelectedIndex() + 1;
-                        pnRow = pnRows;
-                        break;
-                    default:
-                        return;
-                }
-
-            });
 
         }
     }
@@ -2276,22 +2206,17 @@ public class VSPFormController implements Initializable, ScreenInterface {
                 double amount = Double.parseDouble(amountString);
                 DecimalFormat decimalFormat = new DecimalFormat("#,##0.00");
                 String formattedAmount = decimalFormat.format(amount);
-                boolean bAdditional = false;
-                if (oTrans.getVSPPartsDetail(lnCtr, "cAddtlxxx").toString().equals("1")) {
-                    bAdditional = true;
-                } else {
-                    bAdditional = false;
-                }
+
                 partData.add(new VSPTablePartList(
                         String.valueOf(lnCtr), //ROW
+                        oTrans.getVSPPartsDetail(lnCtr, "sTransNox").toString(),
                         oTrans.getVSPPartsDetail(lnCtr, "sBarCodex").toString(),
-                        oTrans.getVSPPartsDetail(lnCtr, 9).toString(),
+                        oTrans.getVSPPartsDetail(lnCtr, "sDescript").toString(),
                         cType,
                         oTrans.getVSPPartsDetail(lnCtr, "nQuantity").toString(),
                         formattedAmount,
-                        bAdditional
+                        ""
                 ));
-                bAdditional = false;
             }
             tblViewParts.setItems(partData);
             initTableParts();
@@ -2318,7 +2243,6 @@ public class VSPFormController implements Initializable, ScreenInterface {
         tblindex06_Part.setCellValueFactory(new PropertyValueFactory<VSPTablePartList, String>("tblindex06_Part"));
 
         tblindex05_Part.setCellValueFactory(new PropertyValueFactory<VSPTablePartList, String>("tblindex05_Part"));
-        tblindex11_Part.setCellValueFactory(new PropertyValueFactory<>("addOrNot"));
 
     }
 
@@ -2395,7 +2319,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
         tabAddOns.setDisable(!(lbShow && !txtField77.getText().isEmpty()));
 
         txtField12.setDisable(!lbShow);
-        txtField11.setDisable(!(lbShow && !txtField77.getText().isEmpty()));
+        txtField11.setDisable(!(lbShow && !txtField12.getText().trim().equals("0.00")));
         textArea09.setDisable(!lbShow);
         brandNewCat.setDisable(true);
         preOwnedCat.setDisable(true);
@@ -2478,12 +2402,15 @@ public class VSPFormController implements Initializable, ScreenInterface {
                         txtField46.setDisable(false);
                         txtField47.setDisable(false);
                     }
+                    if (Double.valueOf(oTrans.getMaster(12).toString()) > 0.00) {
+                        txtField11.setDisable(false);
+                    }
                 } catch (SQLException ex) {
                     Logger.getLogger(VSPFormController.class.getName()).log(Level.SEVERE, null, ex);
                 }
 
                 if (Double.valueOf(txtField12.getText()) > 0.00) {
-                    txtField11.setDisable(!lbShow);
+                    txtField11.setDisable(false);
                 }
 
                 if (Double.valueOf(txtField28.getText()) > 0.00) {

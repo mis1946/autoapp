@@ -49,8 +49,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
-import static javafx.scene.input.KeyCode.DOWN;
-import static javafx.scene.input.KeyCode.UP;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -491,12 +489,12 @@ public class VSPFormController implements Initializable, ScreenInterface {
         setTextFieldCapital(txtField77);
         setTextFieldCapital(txtField68);
         setTextFieldCapital(txtField28);
-
+        setTextFieldCapital(txtField48);
         setTextFieldCapital(txtField71);
         setTextFieldCapital(txtField72);
         setTextFieldCapital(txtField73);
         setTextFieldCapital(txtField74);
-
+        setTextFieldCapital(txtField76);
         setTextFieldCapital(txtField04_Finance);
 
         setTextFieldCapital(txtField26);
@@ -909,19 +907,28 @@ public class VSPFormController implements Initializable, ScreenInterface {
                 txtField08.requestFocus();
                 return;
             }
-            String dnPayment = txtField38.getText().replace(",", ""); // Remove commas from the input string
-            try {
-                double dnPaymentAmount = Double.parseDouble(dnPayment);
-                if (dnPaymentAmount == 0.00 || dnPaymentAmount < 0.00) {
-                    ShowMessageFX.Warning(getStage(), "Please enter a value for Downpayment", "Warning", null);
-                    txtField38.requestFocus();
-                    return;
-                }
-            } catch (NumberFormatException e) {
-                ShowMessageFX.Warning(getStage(), "Invalid Downpayment Amount", "Warning", null);
-                txtField38.requestFocus();
-                return;
+            switch (comboBox34.getSelectionModel().getSelectedIndex()) {
+                case 1: //BANK PURCHASE ORDER
+                case 2:
+                case 3:
+                case 4:
+                    String dnPayment = txtField38.getText().replace(",", ""); // Remove commas from the input string
+                    try {
+                        double dnPaymentAmount = Double.parseDouble(dnPayment);
+                        if (dnPaymentAmount == 0.00 || dnPaymentAmount < 0.00) {
+                            ShowMessageFX.Warning(getStage(), "Please enter a value for Downpayment", "Warning", null);
+                            txtField38.requestFocus();
+                            return;
+                        }
+                    } catch (NumberFormatException e) {
+                        ShowMessageFX.Warning(getStage(), "Invalid Downpayment Amount", "Warning", null);
+                        txtField38.requestFocus();
+                        return;
+                    }
+                    break;
+
             }
+
             String bnkDscount = txtField14_Finance.getText().replace(",", ""); // Remove commas from the input string
             try {
                 double bnkDscountAmount = Double.parseDouble(bnkDscount);
@@ -1220,25 +1227,25 @@ public class VSPFormController implements Initializable, ScreenInterface {
                     double promoPlantAmount = Double.parseDouble(promoPlant);
                     if (promoPlantAmount < 0.00) {
                         ShowMessageFX.Warning(getStage(), "Please enter a value for Promo Plant Discount Ammount", "Warning", null);
-                        txtField47.requestFocus();
+                        txtField46.requestFocus();
                         return;
                     }
                 } catch (NumberFormatException e) {
                     ShowMessageFX.Warning(getStage(), "Invalid Promo Plant Discount Amount", "Warning", null);
-                    txtField47.requestFocus();
+                    txtField46.requestFocus();
                     return;
                 }
-                String promoDealer = txtField48.getText().replace(",", ""); // Remove commas from the input string
+                String promoDealer = txtField47.getText().replace(",", ""); // Remove commas from the input string
                 try {
                     double promoDealerAmount = Double.parseDouble(promoDealer);
                     if (promoDealerAmount < 0.00) {
                         ShowMessageFX.Warning(getStage(), "Please enter a value for Promo Dealer  Discount Ammount", "Warning", null);
-                        txtField48.requestFocus();
+                        txtField47.requestFocus();
                         return;
                     }
                 } catch (NumberFormatException e) {
                     ShowMessageFX.Warning(getStage(), "Invalid Promo Dealer Discount Amount", "Warning", null);
-                    txtField48.requestFocus();
+                    txtField47.requestFocus();
                     return;
                 }
             }
@@ -1281,6 +1288,15 @@ public class VSPFormController implements Initializable, ScreenInterface {
                 txtField31.requestFocus();
                 return;
             }
+//            try {
+//                if (Double.valueOf(oTrans.getMaster(6).toString()) < 0.00) {
+//                    ShowMessageFX.Warning(getStage(), "Invalid Gross Amount", "Warning", null);
+//                    return;
+//                }
+//            } catch (NumberFormatException e) {
+//                ShowMessageFX.Warning(getStage(), "Invalid Gross Amount", "Warning", null);
+//                return;
+//            }
 
             //Proceed to saving record
             if (oTrans.SaveRecord()) {
@@ -1404,6 +1420,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
                     case "txtField77":
                         if (oTrans.searchInquiry(txtField.getText(), false)) {
                             txtField77.setText((String) oTrans.getMaster(77));
+                            clearUnitDeTails();
                             clearClassMasterField();
                             loadVSPField();
                             initButton(pnEditMode);
@@ -1522,6 +1539,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
     }
     final ChangeListener<? super Boolean> txtField_Focus = (o, ov, nv) -> {
         try {
+            DecimalFormat decimalFormat = new DecimalFormat("###0.00");
             TextField txtField = (TextField) ((ReadOnlyBooleanPropertyBase) o).getBean();
             int lnIndex = Integer.parseInt(txtField.getId().substring(8, 10));
             String lsValue = txtField.getText();
@@ -1661,7 +1679,8 @@ public class VSPFormController implements Initializable, ScreenInterface {
                                 ShowMessageFX.Warning(getStage(), "Unit Price cannot be less than Downpayment", "Warning", null);
                                 txtField08.requestFocus();
                             } else {
-                                oTrans.setMaster(lnIndex, Double.valueOf(lsValue.replace(",", "")));
+
+                                oTrans.setMaster(lnIndex, decimalFormat.format(Double.valueOf(lsValue.replace(",", ""))));
                             }
                             loadVSPField();
                             break;
@@ -1839,7 +1858,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
     };
 
     private void initNumberFormatterFields() {
-        Pattern numberOnlyPattern = Pattern.compile("[0-9,.]*");
+        Pattern numberOnlyPattern = Pattern.compile("[0-9,.-]*");
 
         txtField08.setTextFormatter(new InputTextFormatter(numberOnlyPattern));
         txtField38.setTextFormatter(new InputTextFormatter(numberOnlyPattern));
@@ -1861,12 +1880,6 @@ public class VSPFormController implements Initializable, ScreenInterface {
         txtField13.setTextFormatter(new InputTextFormatter(numberOnlyPattern));
         txtField14.setTextFormatter(new InputTextFormatter(numberOnlyPattern));
         txtField12.setTextFormatter(new InputTextFormatter(numberOnlyPattern));
-        txtField36.setTextFormatter(new InputTextFormatter(numberOnlyPattern));
-        txtField37.setTextFormatter(new InputTextFormatter(numberOnlyPattern));
-        txtField39.setTextFormatter(new InputTextFormatter(numberOnlyPattern));
-        txtField362.setTextFormatter(new InputTextFormatter(numberOnlyPattern));
-        txtField372.setTextFormatter(new InputTextFormatter(numberOnlyPattern));
-        txtField392.setTextFormatter(new InputTextFormatter(numberOnlyPattern));
         txtField29.setTextFormatter(new InputTextFormatter(numberOnlyPattern));
         txtField32.setTextFormatter(new InputTextFormatter(numberOnlyPattern));
         txtField30.setTextFormatter(new InputTextFormatter(numberOnlyPattern));
@@ -1892,8 +1905,10 @@ public class VSPFormController implements Initializable, ScreenInterface {
 
     private void loadVSPField() {
         try {
-            oTrans.computeAmount();
-            DecimalFormat decimalFormat = new DecimalFormat("#,##0.00");
+            if (!oTrans.computeAmount()) {
+                ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+            }
+            DecimalFormat decimalFormat = new DecimalFormat("#,###,###.00");
             /* MAIN INTERFACE */
             txtField03.setText((String) oTrans.getMaster(3));
             txtField02.setText(CommonUtils.xsDateMedium((Date) oTrans.getMaster(2)));
@@ -2011,8 +2026,6 @@ public class VSPFormController implements Initializable, ScreenInterface {
 
             /* DETAILS INTERFACE */
             String selectedItem34 = oTrans.getMaster(34).toString();
-
-            System.out.println("payment nuimber" + selectedItem34);
             switch (selectedItem34) {
                 case "0":
                     selectedItem34 = "CASH";
@@ -2033,9 +2046,8 @@ public class VSPFormController implements Initializable, ScreenInterface {
                     break;
 
             }
-            System.out.println("payment" + selectedItem34);
             comboBox34.setValue(selectedItem34);
-            txtField08.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f", oTrans.getMaster(8)))));
+            txtField08.setText(String.valueOf(decimalFormat.format(Double.parseDouble(String.valueOf(oTrans.getMaster(8))))));
             txtField38.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f", oTrans.getMaster(38)))));
             txtField29.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f", oTrans.getMaster(29)))));
             txtField30.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f", oTrans.getMaster(30)))));
@@ -2198,6 +2210,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
             stage.setTitle("");
             stage.showAndWait();
             loadTableLabor();
+            loadVSPField();
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -2421,6 +2434,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
             stage.setTitle("");
             stage.showAndWait();
             loadTableParts();
+            loadVSPField();
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -2469,9 +2483,8 @@ public class VSPFormController implements Initializable, ScreenInterface {
                 DecimalFormat decimalFormat = new DecimalFormat("#,##0.00");
                 String formattedAmount = decimalFormat.format(amount);
 
-                System.out.println("row " + lnCtr);
                 String partDesc = (String) oTrans.getVSPPartsDetail(lnCtr, "sDescript");
-                System.out.println("DESC " + oTrans.getVSPPartsDetail(lnCtr, "sDescript").toString());
+
                 partData.add(new VSPTablePartList(
                         String.valueOf(lnCtr), //ROW
                         oTrans.getVSPPartsDetail(lnCtr, "sTransNox").toString(),
@@ -2553,6 +2566,17 @@ public class VSPFormController implements Initializable, ScreenInterface {
             }
         }
         );
+    }
+
+    private void clearUnitDeTails() {
+        tgUnitCategory.selectToggle(null);
+        txtField71.setText("");
+        txtField72.setText("");
+        txtField73.setText("");
+        txtField74.setText("");
+        txtField48.setText("");
+        txtField83.setText("");
+        textArea70.setText("");
     }
 
     private VSPTableLaborList getLaborSelectedItem() {
@@ -2690,6 +2714,9 @@ public class VSPFormController implements Initializable, ScreenInterface {
 
         }
         switch (comboBox34.getSelectionModel().getSelectedIndex()) {
+            case 0:
+                txtField38.setDisable(true);
+                break;
             case 1: //BANK PURCHASE ORDER
                 txtField10.setDisable(!lbShow);
                 txtField04_Finance.setDisable(!lbShow);

@@ -9,11 +9,13 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -1560,13 +1562,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
                         case 11:
                             oTrans.setMaster(lnIndex, lsValue); // Handle Encoded Value
                             break;
-                        case 10:
-                            if (lsValue.isEmpty()) {
-                                lsValue = "0.00";
-                            }
-                            oTrans.setMaster(lnIndex, Double.valueOf(lsValue.replace(",", "")));
-                            loadVSPField();
-                            break;
+
                         case 42:
                             if (lsValue.isEmpty()) {
                                 lsValue = "0.00";
@@ -1665,10 +1661,12 @@ public class VSPFormController implements Initializable, ScreenInterface {
                         case 18:
                         case 19:
                         case 12:
+                        case 10:
+                        case 4:
                             if (lsValue.isEmpty()) {
                                 lsValue = "0.00";
                             }
-                            oTrans.setMaster(lnIndex, Double.valueOf(lsValue.replace(",", "")));
+                            oTrans.setMaster(lnIndex, decimalFormat.format(Double.valueOf(lsValue.replace(",", ""))));
                             loadVSPField();
                             break;
                         case 8://unit price
@@ -1679,7 +1677,6 @@ public class VSPFormController implements Initializable, ScreenInterface {
                                 ShowMessageFX.Warning(getStage(), "Unit Price cannot be less than Downpayment", "Warning", null);
                                 txtField08.requestFocus();
                             } else {
-
                                 oTrans.setMaster(lnIndex, decimalFormat.format(Double.valueOf(lsValue.replace(",", ""))));
                             }
                             loadVSPField();
@@ -1698,7 +1695,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
                                 }
 
                             }
-                            oTrans.setMaster(lnIndex, Double.valueOf(lsValue.replace(",", "")));
+                            oTrans.setMaster(lnIndex, decimalFormat.format(Double.valueOf(lsValue.replace(",", ""))));
                             loadVSPField();
                             break;
                         case 46:
@@ -1747,13 +1744,6 @@ public class VSPFormController implements Initializable, ScreenInterface {
                             txtField47.setText(String.format("%.2f", enteredValue47));
 
                             break;
-                        case 4:
-                            if (lsValue.isEmpty()) {
-                                lsValue = "0.00";
-                            }
-                            oTrans.setMaster(lnIndex, Double.valueOf(lsValue.replace(",", "")));
-                            loadVSPField();
-                            break;
 
                     }
                 } catch (NumberFormatException e) {
@@ -1770,6 +1760,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
     };
     final ChangeListener<? super Boolean> txtFieldFinance_Focus = (o, ov, nv) -> {
         try {
+            DecimalFormat decimalFormat = new DecimalFormat("###0.00");
             TextField txtField = (TextField) ((ReadOnlyBooleanPropertyBase) o).getBean();
             int lnIndex = Integer.parseInt(txtField.getId().substring(8, 10));
             String lsValue = txtField.getText();
@@ -1784,19 +1775,25 @@ public class VSPFormController implements Initializable, ScreenInterface {
                     if (oTrans.getVSPFinanceCount() > 0) {
                         switch (lnIndex) {
                             case 4:
-                                oTrans.setMaster(lnIndex, lsValue); // Handle Encoded Value
+                                oTrans.setVSPFinance(lnIndex, lsValue); // Handle Encoded Value
                                 break;
                             case 6:
                                 oTrans.setVSPFinance(lnIndex, Integer.valueOf(lsValue.replace(",", "")));
                                 loadVSPField();
                                 break;
                             case 7:
+                                if (lsValue.isEmpty()) {
+                                    lsValue = "0.00";
+                                }
+                                oTrans.setVSPFinance(lnIndex, Double.valueOf(lsValue.replace(",", "")));
+                                loadVSPField();
+                                break;
                             case 14:
                             case 8:
                                 if (lsValue.isEmpty()) {
                                     lsValue = "0.00";
                                 }
-                                oTrans.setVSPFinance(lnIndex, Double.valueOf(lsValue.replace(",", "")));
+                                oTrans.setVSPFinance(lnIndex, decimalFormat.format(Double.valueOf(lsValue.replace(",", ""))));
                                 loadVSPField();
                                 break;
                             case 13:
@@ -1813,7 +1810,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
                                     }
 
                                 }
-                                oTrans.setVSPFinance(lnIndex, Double.valueOf(lsValue.replace(",", "")));
+                                oTrans.setVSPFinance(lnIndex, decimalFormat.format(Double.valueOf(lsValue.replace(",", ""))));
                                 loadVSPField();
                                 break;
 
@@ -1908,7 +1905,9 @@ public class VSPFormController implements Initializable, ScreenInterface {
             if (!oTrans.computeAmount()) {
                 ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
             }
-            DecimalFormat decimalFormat = new DecimalFormat("#,###,###.00");
+            DecimalFormat decimalFormat = new DecimalFormat("#,##0.00");
+
+//            NumberFormat nf = NumberFormat.getInstance(Locale.US);
             /* MAIN INTERFACE */
             txtField03.setText((String) oTrans.getMaster(3));
             txtField02.setText(CommonUtils.xsDateMedium((Date) oTrans.getMaster(2)));
@@ -2019,9 +2018,9 @@ public class VSPFormController implements Initializable, ScreenInterface {
             textArea09.setText((String) oTrans.getMaster(9));
 
             // Format the decimal value with decimal separators
-            txtField36.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f", oTrans.getMaster(36)))));
-            txtField37.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f", oTrans.getMaster(37)))));
-            txtField39.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f", oTrans.getMaster(39)))));
+            txtField36.setText(String.valueOf(decimalFormat.format(Double.parseDouble(String.valueOf(oTrans.getMaster(36))))));
+            txtField37.setText(String.valueOf(decimalFormat.format(Double.parseDouble(String.valueOf(oTrans.getMaster(37))))));
+            txtField39.setText(String.valueOf(decimalFormat.format(Double.parseDouble(String.valueOf(oTrans.getMaster(39))))));
 
 
             /* DETAILS INTERFACE */
@@ -2048,19 +2047,19 @@ public class VSPFormController implements Initializable, ScreenInterface {
             }
             comboBox34.setValue(selectedItem34);
             txtField08.setText(String.valueOf(decimalFormat.format(Double.parseDouble(String.valueOf(oTrans.getMaster(8))))));
-            txtField38.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f", oTrans.getMaster(38)))));
-            txtField29.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f", oTrans.getMaster(29)))));
-            txtField30.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f", oTrans.getMaster(30)))));
-            txtField28.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f", oTrans.getMaster(28)))));
-            txtField31.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f", oTrans.getMaster(31)))));
-            txtField32.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f", oTrans.getMaster(32)))));
+            txtField38.setText(String.valueOf(decimalFormat.format(Double.parseDouble(String.valueOf(oTrans.getMaster(38))))));
+            txtField29.setText(String.valueOf(decimalFormat.format(Double.parseDouble(String.valueOf(oTrans.getMaster(29))))));
+            txtField30.setText(String.valueOf(decimalFormat.format(Double.parseDouble(String.valueOf(oTrans.getMaster(30))))));
+            txtField28.setText(String.valueOf(decimalFormat.format(Double.parseDouble(String.valueOf(oTrans.getMaster(28))))));
+            txtField31.setText(String.valueOf(decimalFormat.format(Double.parseDouble(String.valueOf(oTrans.getMaster(31))))));
+            txtField32.setText(String.valueOf(decimalFormat.format(Double.parseDouble(String.valueOf(oTrans.getMaster(32))))));
 
-            txtField10.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f", oTrans.getMaster(10)))));
-            txtField16.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f", oTrans.getMaster(16)))));
+            txtField10.setText(String.valueOf(decimalFormat.format(Double.parseDouble(String.valueOf(oTrans.getMaster(10))))));
+            txtField16.setText(String.valueOf(decimalFormat.format(Double.parseDouble(String.valueOf(oTrans.getMaster(16))))));
             comboBox21.getSelectionModel().select(Integer.parseInt(oTrans.getMaster(21).toString()));
             txtField26.setText((String) oTrans.getMaster(85));
 
-            txtField17.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f", oTrans.getMaster(17)))));
+            txtField17.setText(String.valueOf(decimalFormat.format(Double.parseDouble(String.valueOf(oTrans.getMaster(17))))));
             comboBox22.getSelectionModel().select(Integer.parseInt(oTrans.getMaster(22).toString()));
             txtField27.setText((String) oTrans.getMaster(86));
             comboBox24.getSelectionModel().select(Integer.parseInt(oTrans.getMaster(24).toString()));
@@ -2085,9 +2084,9 @@ public class VSPFormController implements Initializable, ScreenInterface {
                     break;
             }
             comboBox25.setValue(selectedItem25);
-            txtField18.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f", oTrans.getMaster(18)))));
+            txtField18.setText(String.valueOf(decimalFormat.format(Double.parseDouble(String.valueOf(oTrans.getMaster(18))))));
             comboBox23.getSelectionModel().select(Integer.parseInt(oTrans.getMaster(23).toString()));
-            txtField19.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f", oTrans.getMaster(19)))));
+            txtField19.setText(String.valueOf(decimalFormat.format(Double.parseDouble(String.valueOf(oTrans.getMaster(19))))));
             comboBox20.getSelectionModel().select(Integer.parseInt(oTrans.getMaster(20).toString()));
             switch (comboBox34.getSelectionModel().getSelectedIndex()) {
                 case 1://FINANCING
@@ -2095,17 +2094,17 @@ public class VSPFormController implements Initializable, ScreenInterface {
                 case 3:
                 case 4:
                     if (oTrans.getVSPFinanceCount() > 0) {
-                        txtField14_Finance.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f", oTrans.getVSPFinance(14)))));
+                        txtField14_Finance.setText(String.valueOf(decimalFormat.format(Double.parseDouble(String.valueOf(oTrans.getVSPFinance(14))))));
                         txtField04_Finance.setText((String) oTrans.getVSPFinance(4)); // Assuming it's an integer
-                        txtField13_Finance.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f", oTrans.getVSPFinance(13)))));
-                        txtField05_Finance.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f", oTrans.getVSPFinance(5)))));
-                        txtField09_Finance.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f", oTrans.getVSPFinance(9)))));
-                        txtField08_Finance.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f", oTrans.getVSPFinance(8)))));
-                        txtField12_Finance.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f", oTrans.getVSPFinance(12)))));
-                        txtField10_Finance.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f", oTrans.getVSPFinance(10)))));
+                        txtField13_Finance.setText(String.valueOf(decimalFormat.format(Double.parseDouble(String.valueOf(oTrans.getVSPFinance(13))))));
+                        txtField05_Finance.setText(String.valueOf(decimalFormat.format(Double.parseDouble(String.valueOf(oTrans.getVSPFinance(5))))));
+                        txtField09_Finance.setText(String.valueOf(decimalFormat.format(Double.parseDouble(String.valueOf(oTrans.getVSPFinance(9))))));
+                        txtField08_Finance.setText(String.valueOf(decimalFormat.format(Double.parseDouble(String.valueOf(oTrans.getVSPFinance(8))))));
+                        txtField12_Finance.setText(String.valueOf(decimalFormat.format(Double.parseDouble(String.valueOf(oTrans.getVSPFinance(12))))));
+                        txtField10_Finance.setText(String.valueOf(decimalFormat.format(Double.parseDouble(String.valueOf(oTrans.getVSPFinance(10))))));
                         txtField06_Finance.setText(String.valueOf(oTrans.getVSPFinance(6)));
                         txtField07_Finance.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f", oTrans.getVSPFinance(7)))));
-                        double dblnSRP = Double.parseDouble(String.format("%.2f", oTrans.getMaster(8))) - Double.parseDouble(String.format("%.2f", oTrans.getVSPFinance(14)));
+                        double dblnSRP = Double.parseDouble(String.valueOf(oTrans.getMaster(8))) - Double.parseDouble(String.valueOf(oTrans.getVSPFinance(14)));
 
                         // txtField082_Finance.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f", oTrans.getMaster(8)))));
                         txtField082_Finance.setText(decimalFormat.format(dblnSRP));
@@ -2130,13 +2129,13 @@ public class VSPFormController implements Initializable, ScreenInterface {
                     break;
             }
 
-            txtField13.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f", oTrans.getMaster(13)))));
-            txtField14.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f", oTrans.getMaster(14)))));
-            txtField12.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f", oTrans.getMaster(12)))));
+            txtField13.setText(String.valueOf(decimalFormat.format(Double.parseDouble(String.valueOf(oTrans.getMaster(13))))));
+            txtField14.setText(String.valueOf(decimalFormat.format(Double.parseDouble(String.valueOf(oTrans.getMaster(14))))));
+            txtField12.setText(String.valueOf(decimalFormat.format(Double.parseDouble(String.valueOf(oTrans.getMaster(12))))));
             txtField11.setText((String) oTrans.getMaster(11));
-            txtField362.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f", oTrans.getMaster(36)))));
-            txtField372.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f", oTrans.getMaster(37)))));
-            txtField392.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f", oTrans.getMaster(39)))));
+            txtField362.setText(String.valueOf(decimalFormat.format(Double.parseDouble(String.valueOf(oTrans.getMaster(36))))));
+            txtField372.setText(String.valueOf(decimalFormat.format(Double.parseDouble(String.valueOf(oTrans.getMaster(37))))));
+            txtField392.setText(String.valueOf(decimalFormat.format(Double.parseDouble(String.valueOf(oTrans.getMaster(39))))));
 
             if (((String) oTrans.getMaster(61)).equals("0")) {
                 lblVSPStatus.setText("Cancelled");
@@ -2245,6 +2244,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
                 double amount = Double.parseDouble(amountString);
                 DecimalFormat decimalFormat = new DecimalFormat("#,##0.00");
                 String formattedAmount = decimalFormat.format(amount);
+
                 laborData.add(new VSPTableLaborList(
                         String.valueOf(lnCtr), //ROW
                         oTrans.getVSPLaborDetail(lnCtr, "sTransNox").toString(),
@@ -2537,6 +2537,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
                             String fsRow = selectedVSPLabor.getTblLaborRow();
                             int fnRow = Integer.parseInt(fsRow);
                             oTrans.removeVSPLabor(fnRow);
+                            loadVSPField();
                             loadTableLabor();
                         } catch (SQLException ex) {
                             Logger.getLogger(VSPFormController.class.getName()).log(Level.SEVERE, null, ex);
@@ -2556,6 +2557,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
                             String fsRow = selectedVSPParts.getTblPartsRow();
                             int fnRow = Integer.parseInt(fsRow);
                             oTrans.removeVSPParts(fnRow);
+                            loadVSPField();
                             loadTableParts();
                         } catch (SQLException ex) {
                             Logger.getLogger(VSPFormController.class.getName()).log(Level.SEVERE, null, ex);

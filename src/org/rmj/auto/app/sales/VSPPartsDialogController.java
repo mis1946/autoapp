@@ -160,7 +160,9 @@ public class VSPPartsDialogController implements Initializable, ScreenInterface 
     }
 
     final ChangeListener<? super Boolean> txtField_Focus = (o, ov, nv) -> {
+
         try {
+            DecimalFormat numFormat = new DecimalFormat("###0.00");
             TextField txtField = (TextField) ((ReadOnlyBooleanPropertyBase) o).getBean();
             int lnIndex = Integer.parseInt(txtField.getId().substring(8, 10));
             String lsValue = txtField.getText();
@@ -177,7 +179,7 @@ public class VSPPartsDialogController implements Initializable, ScreenInterface 
                         if (lsValue.isEmpty()) {
                             lsValue = "0.00";
                         }
-                        oTrans.setVSPPartsDetail(pnRow, lnIndex, Double.valueOf(lsValue.replace(",", "")));
+                        oTrans.setVSPPartsDetail(pnRow, lnIndex, numFormat.format(Double.valueOf(lsValue.replace(",", ""))));
                         String currentPartsAmount = oTrans.getVSPPartsDetail(pnRow, 5).toString();
                         txtField05_Part.setText(formatAmount(currentPartsAmount));
                         break;

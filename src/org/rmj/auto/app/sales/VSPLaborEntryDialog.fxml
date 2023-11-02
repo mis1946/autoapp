@@ -7,6 +7,7 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.effect.Blend?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
@@ -65,25 +66,42 @@
                                                 <Font name="Arial Bold" size="12.0" />
                                             </font>
                                         </Label>
-                                        <TextField fx:id="txtField07_Labor" promptText="Search: F3" style="-fx-font-weight: bold;" GridPane.columnIndex="2" GridPane.columnSpan="4" />
+                                        <TextField fx:id="txtField07_Labor" promptText="Search: F3" style="-fx-font-weight: bold;" GridPane.columnIndex="2" GridPane.columnSpan="4">
+                                            <tooltip>
+                                                <Tooltip text="Please fill in the VSP Labor Description." />
+                                            </tooltip>
+                                        </TextField>
                                         <Label text="Charge Type:" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                             <font>
                                                 <Font name="Arial Bold" size="12.0" />
                                             </font>
                                         </Label>
-                                        <ComboBox fx:id="comboBox5" prefWidth="150.0" GridPane.columnIndex="2" GridPane.columnSpan="4" GridPane.rowIndex="1" />
+                                        <ComboBox fx:id="comboBox5" prefWidth="150.0" GridPane.columnIndex="2" GridPane.columnSpan="4" GridPane.rowIndex="1">
+                                            <tooltip>
+                                                <Tooltip text="Please select VSP Labor Charge Type." />
+                                            </tooltip>
+                                        </ComboBox>
                                         <Label text="Labor Amount:" GridPane.columnIndex="1" GridPane.rowIndex="2">
                                             <font>
                                                 <Font name="Arial Bold" size="12.0" />
                                             </font>
                                         </Label>
-                                        <TextField fx:id="txtField04_Labor" promptText="0.00" style="-fx-font-weight: bold;" GridPane.columnIndex="2" GridPane.columnSpan="3" GridPane.rowIndex="2" />
+                                        <TextField fx:id="txtField04_Labor" promptText="0.00" style="-fx-font-weight: bold;" GridPane.columnIndex="2" GridPane.columnSpan="3" GridPane.rowIndex="2">
+                                            <tooltip>
+                                                <Tooltip text="Please fill in the VSP Labor Amount." />
+                                            </tooltip>
+                                        </TextField>
                                         <Label text="Additional:" GridPane.columnIndex="1" GridPane.rowIndex="3">
                                             <font>
                                                 <Font name="Arial Bold" size="12.0" />
                                             </font>
                                         </Label>
                                         <CheckBox fx:id="isAdditionalChecklBox" disable="true" mnemonicParsing="false" prefHeight="18.0" prefWidth="15.0" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                                        <Label alignment="CENTER_RIGHT" prefHeight="14.0" prefWidth="137.0" text="*" textFill="#fb0000" GridPane.columnIndex="1">
+                                            <font>
+                                                <Font name="Arial Bold" size="11.5" />
+                                            </font>
+                                        </Label>
                                     </children>
                                     <opaqueInsets>
                                         <Insets />

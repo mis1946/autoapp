@@ -17,7 +17,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="270.0" prefWidth="526.0" stylesheets="@../css/FrameStyle.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane id="AnchorPane" prefHeight="270.0" prefWidth="526.0" stylesheets="@../css/FrameStyle.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" >
     <children>
         <StackPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
@@ -108,6 +108,11 @@
                                             </font>
                                         </Label>
                                         <Label alignment="CENTER_RIGHT" prefHeight="14.0" prefWidth="134.0" text="*" textFill="#fb0000" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                            <font>
+                                                <Font name="Arial Bold" size="11.5" />
+                                            </font>
+                                        </Label>
+                                        <Label alignment="CENTER_RIGHT" prefHeight="14.0" prefWidth="57.0" text="*" textFill="#fb0000" GridPane.columnIndex="1" GridPane.rowIndex="2">
                                             <font>
                                                 <Font name="Arial Bold" size="11.5" />
                                             </font>

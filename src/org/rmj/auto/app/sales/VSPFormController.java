@@ -9,13 +9,11 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
-import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -803,6 +801,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
                     }
                     try {
                         clearFields();
+                        switchToTab(tabMain, ImTabPane);
                         if (oTrans.searchRecord()) {
                             switchToTab(tabMain, ImTabPane);
                             removeRequired();
@@ -1123,7 +1122,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
                     try {
                         double tplInsuranceAmount = Double.parseDouble(tplInsurance);
                         if (tplInsuranceAmount == 0.00 || tplInsuranceAmount < 0.00) {
-                            ShowMessageFX.Warning(getStage(), "Please enter a value for TPL Insurance Ammount", "Warning", null);
+                            ShowMessageFX.Warning(getStage(), "Please enter a value for TPL Insurance Amount", "Warning", null);
                             txtField16.requestFocus();
                             return;
                         }
@@ -1153,7 +1152,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
                     try {
                         double compreInsuranceAmount = Double.parseDouble(compreInsurance);
                         if (compreInsuranceAmount == 0.00 || compreInsuranceAmount < 0.00) {
-                            ShowMessageFX.Warning(getStage(), "Please enter a value for Compre Insurance Ammount", "Warning", null);
+                            ShowMessageFX.Warning(getStage(), "Please enter a value for Compre Insurance Amount", "Warning", null);
                             txtField17.requestFocus();
                             return;
                         }
@@ -1176,7 +1175,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
                     try {
                         double LTOAmount = Double.parseDouble(LTO);
                         if (LTOAmount == 0.00 || LTOAmount < 0.00) {
-                            ShowMessageFX.Warning(getStage(), "Please enter a value for LTO Ammount", "Warning", null);
+                            ShowMessageFX.Warning(getStage(), "Please enter a value for LTO Amount", "Warning", null);
                             txtField18.requestFocus();
                             return;
                         }
@@ -1199,7 +1198,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
                     try {
                         double cmoAmmount = Double.parseDouble(cmo);
                         if (cmoAmmount == 0.00 || cmoAmmount < 0.00) {
-                            ShowMessageFX.Warning(getStage(), "Please enter a value for CHMO/Doc Stamps Ammount", "Warning", null);
+                            ShowMessageFX.Warning(getStage(), "Please enter a value for CHMO/Doc Stamps Amount", "Warning", null);
                             txtField19.requestFocus();
                             return;
                         }
@@ -1214,7 +1213,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
             double promoDiscountAmount = Double.parseDouble(promoDiscount);
             try {
                 if (promoDiscountAmount < 0.00) {
-                    ShowMessageFX.Warning(getStage(), "Please enter a value for Promo Discount Ammount", "Warning", null);
+                    ShowMessageFX.Warning(getStage(), "Please enter a value for Promo Discount Amount", "Warning", null);
                     txtField28.requestFocus();
                     return;
                 }
@@ -1228,7 +1227,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
                 try {
                     double promoPlantAmount = Double.parseDouble(promoPlant);
                     if (promoPlantAmount < 0.00) {
-                        ShowMessageFX.Warning(getStage(), "Please enter a value for Promo Plant Discount Ammount", "Warning", null);
+                        ShowMessageFX.Warning(getStage(), "Please enter a value for Promo Plant Discount Amount", "Warning", null);
                         txtField46.requestFocus();
                         return;
                     }
@@ -1241,7 +1240,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
                 try {
                     double promoDealerAmount = Double.parseDouble(promoDealer);
                     if (promoDealerAmount < 0.00) {
-                        ShowMessageFX.Warning(getStage(), "Please enter a value for Promo Dealer  Discount Ammount", "Warning", null);
+                        ShowMessageFX.Warning(getStage(), "Please enter a value for Promo Dealer  Discount Amount", "Warning", null);
                         txtField47.requestFocus();
                         return;
                     }
@@ -1255,7 +1254,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
             try {
                 double cashAmount = Double.parseDouble(cash);
                 if (cashAmount < 0.00) {
-                    ShowMessageFX.Warning(getStage(), "Please enter a value for Cash Discount Ammount", "Warning", null);
+                    ShowMessageFX.Warning(getStage(), "Please enter a value for Cash Discount Amount", "Warning", null);
                     txtField32.requestFocus();
                     return;
                 }
@@ -1268,7 +1267,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
             try {
                 double bundleAmount = Double.parseDouble(bundle);
                 if (bundleAmount < 0.00) {
-                    ShowMessageFX.Warning(getStage(), "Please enter a value for Bundle Discount Ammount", "Warning", null);
+                    ShowMessageFX.Warning(getStage(), "Please enter a value for Bundle Discount Amount", "Warning", null);
                     txtField31.requestFocus();
                     return;
                 }
@@ -1282,34 +1281,43 @@ public class VSPFormController implements Initializable, ScreenInterface {
                 double miscChargAmount = Double.parseDouble(miscCharg);
                 if (miscChargAmount < 0.00) {
                     ShowMessageFX.Warning(getStage(), "Please enter a value for Misc Charges Amount", "Warning", null);
-                    txtField31.requestFocus();
+                    txtField12.requestFocus();
                     return;
+                }
+                if (miscChargAmount > 0.00) {
+                    if (txtField11.getText().trim().isEmpty()) {
+                        ShowMessageFX.Warning(getStage(), "Please enter a value for Misc Charges Remarks", "Warning", null);
+                        txtField11.requestFocus();
+                        return;
+                    }
                 }
             } catch (NumberFormatException e) {
                 ShowMessageFX.Warning(getStage(), "Invalid Misc Charges Amount", "Warning", null);
-                txtField31.requestFocus();
+                txtField12.requestFocus();
                 return;
             }
-//            try {
-//                if (Double.valueOf(oTrans.getMaster(6).toString()) < 0.00) {
-//                    ShowMessageFX.Warning(getStage(), "Invalid Gross Amount", "Warning", null);
-//                    return;
-//                }
-//            } catch (NumberFormatException e) {
-//                ShowMessageFX.Warning(getStage(), "Invalid Gross Amount", "Warning", null);
-//                return;
-//            }
 
+//            try {
+            //                if (Double.valueOf(oTrans.getMaster(6).toString()) < 0.00) {
+            //                    ShowMessageFX.Warning(getStage(), "Invalid Gross Amount", "Warning", null);
+            //                    return;
+            //                }
+            //            } catch (NumberFormatException e) {
+            //                ShowMessageFX.Warning(getStage(), "Invalid Gross Amount", "Warning", null);
+            //                return;
+            //            }
             //Proceed to saving record
-            if (oTrans.SaveRecord()) {
-                ShowMessageFX.Information(getStage(), "Transaction save successfully.", pxeModuleName, null);
-                loadVSPField();
-                pnEditMode = EditMode.READY;
-                initButton(pnEditMode);
-                loadTableLabor();
-                loadTableParts();
-            } else {
-                ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", "Error while saving " + pxeModuleName + ".");
+            {
+                if (oTrans.SaveRecord()) {
+                    ShowMessageFX.Information(getStage(), "Transaction save successfully.", pxeModuleName, null);
+                    loadVSPField();
+                    pnEditMode = EditMode.READY;
+                    initButton(pnEditMode);
+                    loadTableLabor();
+                    loadTableParts();
+                } else {
+                    ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", "Error while saving " + pxeModuleName + ".");
+                }
             }
 
         }
@@ -1400,6 +1408,8 @@ public class VSPFormController implements Initializable, ScreenInterface {
                             }
                         }
                         try {
+                            clearFields();
+                            switchToTab(tabMain, ImTabPane);
                             if (oTrans.searchRecord()) {
                                 switchToTab(tabMain, ImTabPane);
                                 removeRequired();
@@ -1652,10 +1662,86 @@ public class VSPFormController implements Initializable, ScreenInterface {
                             txtField45.setText(String.format("%.2f", enteredValue45));
                             break;
                         case 29: //STD
+                            if (lsValue.isEmpty()) {
+                                lsValue = "0.00";
+                            }
+                            if (Double.parseDouble(oTrans.getMaster(8).toString()) > 0.00) {
+                                if (Double.parseDouble(lsValue.replace(",", "")) >= Double.parseDouble(oTrans.getMaster(8).toString())) {
+                                    txtField29.setText("0.00");
+
+                                    lsValue = "0.00";
+                                    ShowMessageFX.Warning(getStage(), "STD Fleet Discount cannot be greater than Unit Price", "Warning", null);
+                                    txtField29.requestFocus();
+                                }
+
+                            }
+                            oTrans.setMaster(lnIndex, decimalFormat.format(Double.valueOf(lsValue.replace(",", ""))));
+                            loadVSPField();
+                            break;
                         case 30: // SPL
+                            if (lsValue.isEmpty()) {
+                                lsValue = "0.00";
+                            }
+                            if (Double.parseDouble(oTrans.getMaster(8).toString()) > 0.00) {
+                                if (Double.parseDouble(lsValue.replace(",", "")) >= Double.parseDouble(oTrans.getMaster(8).toString())) {
+                                    txtField30.setText("0.00");
+                                    lsValue = "0.00";
+                                    ShowMessageFX.Warning(getStage(), "SPL Fleet Discount cannot be greater than Unit Price", "Warning", null);
+                                    txtField30.requestFocus();
+                                }
+
+                            }
+                            oTrans.setMaster(lnIndex, decimalFormat.format(Double.valueOf(lsValue.replace(",", ""))));
+                            loadVSPField();
+                            break;
                         case 28: //Promo Discount
+                            if (lsValue.isEmpty()) {
+                                lsValue = "0.00";
+                            }
+                            if (Double.parseDouble(oTrans.getMaster(8).toString()) > 0.00) {
+                                if (Double.parseDouble(lsValue.replace(",", "")) >= Double.parseDouble(oTrans.getMaster(8).toString())) {
+                                    txtField28.setText("0.00");
+                                    lsValue = "0.00";
+                                    ShowMessageFX.Warning(getStage(), "Promo Discount cannot be greater than Unit Price", "Warning", null);
+                                    txtField28.requestFocus();
+                                }
+
+                            }
+                            oTrans.setMaster(lnIndex, decimalFormat.format(Double.valueOf(lsValue.replace(",", ""))));
+                            loadVSPField();
+                            break;
                         case 32:
+                            if (lsValue.isEmpty()) {
+                                lsValue = "0.00";
+                            }
+                            if (Double.parseDouble(oTrans.getMaster(8).toString()) > 0.00) {
+                                if (Double.parseDouble(lsValue.replace(",", "")) >= Double.parseDouble(oTrans.getMaster(8).toString())) {
+                                    txtField32.setText("0.00");
+                                    lsValue = "0.00";
+                                    ShowMessageFX.Warning(getStage(), "Cash Discount cannot be greater than Unit Price", "Warning", null);
+                                    txtField32.requestFocus();
+                                }
+
+                            }
+                            oTrans.setMaster(lnIndex, decimalFormat.format(Double.valueOf(lsValue.replace(",", ""))));
+                            loadVSPField();
+                            break;
                         case 31:
+                            if (lsValue.isEmpty()) {
+                                lsValue = "0.00";
+                            }
+                            if (Double.parseDouble(oTrans.getMaster(8).toString()) > 0.00) {
+                                if (Double.parseDouble(lsValue.replace(",", "")) >= Double.parseDouble(oTrans.getMaster(8).toString())) {
+                                    txtField31.setText("0.00");
+                                    lsValue = "0.00";
+                                    ShowMessageFX.Warning(getStage(), "Bundle Discount cannot be greater than Unit Price", "Warning", null);
+                                    txtField31.requestFocus();
+                                }
+
+                            }
+                            oTrans.setMaster(lnIndex, decimalFormat.format(Double.valueOf(lsValue.replace(",", ""))));
+                            loadVSPField();
+                            break;
                         case 16:
                         case 17:
                         case 18:
@@ -1688,7 +1774,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
                             if (Double.parseDouble(oTrans.getMaster(8).toString()) > 0.00) {
                                 if (Double.parseDouble(lsValue.replace(",", "")) >= Double.parseDouble(oTrans.getMaster(8).toString())) {
                                     txtField38.setText("0.00");
-                                    //oTrans.setMaster(lnIndex, Double.valueOf("0.00"));
+
                                     lsValue = "0.00";
                                     ShowMessageFX.Warning(getStage(), "Downpayment cannot be greater than Unit Price", "Warning", null);
                                     txtField38.requestFocus();
@@ -1789,9 +1875,47 @@ public class VSPFormController implements Initializable, ScreenInterface {
                                 loadVSPField();
                                 break;
                             case 14:
+                                if (lsValue.isEmpty()) {
+                                    lsValue = "0.00";
+                                }
+//                                double enteredValue14 = Double.parseDouble(lsValue.replace(",", ""));
+//
+//                                String unitSrp = txtField08.getText().replace(",", "");
+//                                String downPymnt = txtField38.getText().replace(",", "");
+//                                double unitSRPAmount = Double.parseDouble(unitSrp);
+//                                double downPymntAmount = Double.parseDouble(downPymnt);
+//                                double diff = unitSRPAmount - downPymntAmount;
+//                                if (enteredValue14 > diff) {
+//                                    txtField14_Finance.setText("0.0");
+//                                    lsValue = "0.00";
+//                                    ShowMessageFX.Warning(getStage(), "Bank Discount Amount cannot be greater than Unit SRP", "Warning", null);
+//                                    txtField14_Finance.requestFocus();
+//                                    break;
+//                                }
+                                if (Double.parseDouble(oTrans.getMaster(8).toString()) > 0.00) {
+                                    if (Double.parseDouble(lsValue.replace(",", "")) >= Double.parseDouble(oTrans.getMaster(8).toString())) {
+                                        txtField14_Finance.setText("0.00");
+                                        lsValue = "0.00";
+                                        ShowMessageFX.Warning(getStage(), "Bank Discount Amount cannot be greater than Unit Price", "Warning", null);
+                                        txtField14_Finance.requestFocus();
+                                    }
+
+                                }
+                                oTrans.setVSPFinance(lnIndex, decimalFormat.format(Double.valueOf(lsValue.replace(",", ""))));
+                                loadVSPField();
+                                break;
                             case 8:
                                 if (lsValue.isEmpty()) {
                                     lsValue = "0.00";
+                                }
+                                if (Double.parseDouble(oTrans.getMaster(8).toString()) > 0.00) {
+                                    if (Double.parseDouble(lsValue.replace(",", "")) > Double.parseDouble(oTrans.getMaster(8).toString())) {
+                                        txtField08_Finance.setText("0.00");
+                                        lsValue = "0.00";
+                                        ShowMessageFX.Warning(getStage(), "Prompt Payment Discount cannot be greater than Unit SRP", "Warning", null);
+                                        txtField08_Finance.requestFocus();
+                                    }
+
                                 }
                                 oTrans.setVSPFinance(lnIndex, decimalFormat.format(Double.valueOf(lsValue.replace(",", ""))));
                                 loadVSPField();

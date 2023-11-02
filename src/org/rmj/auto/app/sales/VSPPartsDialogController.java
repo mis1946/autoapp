@@ -285,8 +285,17 @@ public class VSPPartsDialogController implements Initializable, ScreenInterface 
                 }
             }
 
-            if (txtField06_Part.getText().equals("0")) {
-                ShowMessageFX.Warning(getStage(), "Please input Quantity", "Warning", null);
+            String laborQuantity = txtField06_Part.getText(); // Remove commas from the input string
+            try {
+                int amount = Integer.parseInt(laborQuantity);
+                if (amount == 0 || amount < 0) {
+                    ShowMessageFX.Warning(getStage(), "Please input Quantity amount", "Warning", null);
+                    txtField06_Part.requestFocus();
+                    return false;
+                }
+            } catch (NumberFormatException e) {
+                // Handle the case where laborAmount is not a valid number
+                ShowMessageFX.Warning(getStage(), "Invalid Quantity Amount", "Warning", null);
                 txtField06_Part.requestFocus();
                 return false;
             }

@@ -686,13 +686,8 @@ public class VSPFormController implements Initializable, ScreenInterface {
 
         txtField12.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
             if (newValue == null || newValue.trim().isEmpty() || newValue.equals("0.00") || newValue.equals("0")) {
-                try {
-                    txtField11.setText("");
-                    oTrans.setMaster(11, "");
-                    txtField11.setDisable(true);
-                } catch (SQLException ex) {
-                    Logger.getLogger(VSPFormController.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                txtField11.setText("");
+                txtField11.setDisable(true);
             } else {
                 txtField11.setDisable(false);
             }
@@ -893,19 +888,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
                 txtField03.requestFocus();
                 return;
             }
-
-            String unitSRP = txtField08.getText().replace(",", ""); // Remove commas from the input string
-
-            try {
-                double unitAmount = Double.parseDouble(unitSRP);
-                if (unitAmount == 0.00 || unitAmount < 0.00) {
-                    ShowMessageFX.Warning(getStage(), "Please enter a value for Unit SRP", "Warning", null);
-                    txtField08.requestFocus();
-                    return;
-                }
-            } catch (NumberFormatException e) {
-                ShowMessageFX.Warning(getStage(), "Invalid Unit SRP Amount", "Warning", null);
-                txtField08.requestFocus();
+            if (!validateDoubleInput(txtField08, "Unit SRP")) {
                 return;
             }
             switch (comboBox34.getSelectionModel().getSelectedIndex()) {
@@ -913,34 +896,12 @@ public class VSPFormController implements Initializable, ScreenInterface {
                 case 2:
                 case 3:
                 case 4:
-                    String dnPayment = txtField38.getText().replace(",", ""); // Remove commas from the input string
-                    try {
-                        double dnPaymentAmount = Double.parseDouble(dnPayment);
-                        if (dnPaymentAmount == 0.00 || dnPaymentAmount < 0.00) {
-                            ShowMessageFX.Warning(getStage(), "Please enter a value for Downpayment", "Warning", null);
-                            txtField38.requestFocus();
-                            return;
-                        }
-                    } catch (NumberFormatException e) {
-                        ShowMessageFX.Warning(getStage(), "Invalid Downpayment Amount", "Warning", null);
-                        txtField38.requestFocus();
+                    if (!validateDoubleInput(txtField38, "Downpayment")) {
                         return;
                     }
-                    break;
-
             }
 
-            String bnkDscount = txtField14_Finance.getText().replace(",", ""); // Remove commas from the input string
-            try {
-                double bnkDscountAmount = Double.parseDouble(bnkDscount);
-                if (bnkDscountAmount < 0.00) {
-                    ShowMessageFX.Warning(getStage(), "Please enter a value for Bank Discount", "Warning", null);
-                    txtField14_Finance.requestFocus();
-                    return;
-                }
-            } catch (NumberFormatException e) {
-                ShowMessageFX.Warning(getStage(), "Invalid Bank Discount Amount", "Warning", null);
-                txtField14_Finance.requestFocus();
+            if (!validateLessthanDoubleInput(txtField14_Finance, "Bank Discount")) {
                 return;
             }
             switch (comboBox34.getSelectionModel().getSelectedIndex()) {
@@ -960,6 +921,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
                 case 3:
                 case 4:
                     if (!txtField04_Finance.getText().isEmpty() && !txtField14_Finance.getText().isEmpty()) {
+
                         String terms = txtField06_Finance.getText().replace(",", ""); // Remove commas from the input string
                         try {
                             int termsAmount = Integer.parseInt(terms);
@@ -973,127 +935,37 @@ public class VSPFormController implements Initializable, ScreenInterface {
                             txtField06_Finance.requestFocus();
                             return;
                         }
-                        String rate = txtField07_Finance.getText().replace(",", ""); // Remove commas from the input string
-                        try {
-                            double rateAmount = Double.parseDouble(rate);
-                            if (rateAmount == 0.00 || rateAmount < 0.00) {
-                                ShowMessageFX.Warning(getStage(), "Please enter a value for Rates", "Warning", null);
-                                txtField07_Finance.requestFocus();
-                                return;
-                            }
-                        } catch (NumberFormatException e) {
-                            ShowMessageFX.Warning(getStage(), "Invalid Rates Amount", "Warning", null);
-                            txtField07_Finance.requestFocus();
+                        if (!validateDoubleInput(txtField07_Finance, "Rates")) {
                             return;
                         }
-
                     }
                     break;
             }
-            String netDownpayment = txtField13_Finance.getText().replace(",", ""); // Remove commas from the input string
-            try {
-                double netDownpaymentAmount = Double.parseDouble(netDownpayment);
-                if (netDownpaymentAmount < 0.00) {
-                    ShowMessageFX.Warning(getStage(), "Please enter a value for Net Downpayment", "Warning", null);
-                    txtField13_Finance.requestFocus();
-                    return;
-                }
-            } catch (NumberFormatException e) {
-                ShowMessageFX.Warning(getStage(), "Invalid Net Downpayment Amount", "Warning", null);
-                txtField13_Finance.requestFocus();
+            if (!validateLessthanDoubleInput(txtField13_Finance, "Net Downpayment")) {
                 return;
             }
-            String promptPayment = txtField08_Finance.getText().replace(",", ""); // Remove commas from the input string
-            try {
-                double promptPaymentAmount = Double.parseDouble(promptPayment);
-                if (promptPaymentAmount < 0.00) {
-                    ShowMessageFX.Warning(getStage(), "Please enter a value for Prompt Payment Disc.", "Warning", null);
-                    txtField08_Finance.requestFocus();
-                    return;
-                }
-            } catch (NumberFormatException e) {
-                ShowMessageFX.Warning(getStage(), "Invalid Prompt Payment Disc. Amount", "Warning", null);
-                txtField08_Finance.requestFocus();
+            if (!validateLessthanDoubleInput(txtField08_Finance, "Prompt Payment Disc.")) {
                 return;
             }
 
             if (chckBoxSpecialAccount.isSelected()) {
-                String stdDiscount = txtField29.getText().replace(",", ""); // Remove commas from the input string
-                try {
-                    double stdDiscountAmount = Double.parseDouble(stdDiscount);
-                    if (stdDiscountAmount == 0.00 || stdDiscountAmount < 0.00) {
-                        ShowMessageFX.Warning(getStage(), "Please enter a value for STD Fleet Discount", "Warning", null);
-                        txtField29.requestFocus();
-                        return;
-                    }
-                } catch (NumberFormatException e) {
-                    ShowMessageFX.Warning(getStage(), "Invalid STD Fleet Discount Amount", "Warning", null);
-                    txtField29.requestFocus();
+                if (!validateDoubleInput(txtField29, "STD Fleet Discount")) {
                     return;
                 }
-                String stdPlant = txtField42.getText().replace(",", ""); // Remove commas from the input string
-                try {
-                    double stdPlantAmount = Double.parseDouble(stdPlant);
-                    if (stdPlantAmount < 0.00) {
-                        ShowMessageFX.Warning(getStage(), "Please enter a value for STD Fleet Discount Plant", "Warning", null);
-                        txtField42.requestFocus();
-                        return;
-                    }
-                } catch (NumberFormatException e) {
-                    ShowMessageFX.Warning(getStage(), "Invalid STD Fleet Discount Plant Amount", "Warning", null);
-                    txtField42.requestFocus();
+                if (!validateLessthanDoubleInput(txtField42, "STD Fleet Plant Discount")) {
                     return;
                 }
-                String stdDealer = txtField43.getText().replace(",", ""); // Remove commas from the input string
-                try {
-                    double stdDealerAmount = Double.parseDouble(stdDealer);
-                    if (stdDealerAmount < 0.00) {
-                        ShowMessageFX.Warning(getStage(), "Please enter a value for STD Fleet Discount Dealer", "Warning", null);
-                        txtField43.requestFocus();
-                        return;
-                    }
-                } catch (NumberFormatException e) {
-                    ShowMessageFX.Warning(getStage(), "Invalid STD Fleet Discount Dealer Amount", "Warning", null);
-                    txtField43.requestFocus();
+                if (!validateLessthanDoubleInput(txtField43, "STD Fleet Dealer Discount")) {
                     return;
                 }
-                String splDiscount = txtField30.getText().replace(",", ""); // Remove commas from the input string
-                try {
-                    double splDiscountAmount = Double.parseDouble(splDiscount);
-                    if (splDiscountAmount == 0.00 || splDiscountAmount < 0.00) {
-                        ShowMessageFX.Warning(getStage(), "Please enter a value for SPL Fleet Discount", "Warning", null);
-                        txtField30.requestFocus();
-                        return;
-                    }
-                } catch (NumberFormatException e) {
-                    ShowMessageFX.Warning(getStage(), "Invalid SPL Fleet Discount Amount", "Warning", null);
-                    txtField30.requestFocus();
+                if (!validateDoubleInput(txtField30, "SPL Fleet Discount")) {
                     return;
                 }
-                String splPlant = txtField44.getText().replace(",", ""); // Remove commas from the input string
-                try {
-                    double splPlantAmount = Double.parseDouble(splPlant);
-                    if (splPlantAmount < 0.00) {
-                        ShowMessageFX.Warning(getStage(), "Please enter a value for SPL Fleet Discount Plant", "Warning", null);
-                        txtField44.requestFocus();
-                        return;
-                    }
-                } catch (NumberFormatException e) {
-                    ShowMessageFX.Warning(getStage(), "Invalid SPL Fleet Discount Plant Amount", "Warning", null);
-                    txtField44.requestFocus();
+                if (!validateLessthanDoubleInput(txtField44, "SPL Fleet Plant Discount")) {
                     return;
                 }
-                String splDealer = txtField45.getText().replace(",", ""); // Remove commas from the input string
-                try {
-                    double splDealerAmount = Double.parseDouble(splDealer);
-                    if (splDealerAmount < 0.00) {
-                        ShowMessageFX.Warning(getStage(), "Please enter a value for SPL Fleet Discount Dealer", "Warning", null);
-                        txtField45.requestFocus();
-                        return;
-                    }
-                } catch (NumberFormatException e) {
-                    ShowMessageFX.Warning(getStage(), "Invalid SPL Fleet Discount Dealer Amount", "Warning", null);
-                    txtField45.requestFocus();
+
+                if (!validateLessthanDoubleInput(txtField45, "SPL Fleet Dealer Discount")) {
                     return;
                 }
 
@@ -1118,17 +990,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
                     }
                     break;
                 case 3:
-                    String tplInsurance = txtField16.getText().replace(",", ""); // Remove commas from the input string
-                    try {
-                        double tplInsuranceAmount = Double.parseDouble(tplInsurance);
-                        if (tplInsuranceAmount == 0.00 || tplInsuranceAmount < 0.00) {
-                            ShowMessageFX.Warning(getStage(), "Please enter a value for TPL Insurance Amount", "Warning", null);
-                            txtField16.requestFocus();
-                            return;
-                        }
-                    } catch (NumberFormatException e) {
-                        ShowMessageFX.Warning(getStage(), "Invalid TPL Insurance Amount", "Warning", null);
-                        txtField16.requestFocus();
+                    if (!validateDoubleInput(txtField16, "TPL Insurance")) {
                         return;
                     }
                     if (txtField26.getText().trim().equals("")) {
@@ -1148,17 +1010,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
                     }
                     break;
                 case 3:
-                    String compreInsurance = txtField17.getText().replace(",", ""); // Remove commas from the input string
-                    try {
-                        double compreInsuranceAmount = Double.parseDouble(compreInsurance);
-                        if (compreInsuranceAmount == 0.00 || compreInsuranceAmount < 0.00) {
-                            ShowMessageFX.Warning(getStage(), "Please enter a value for Compre Insurance Amount", "Warning", null);
-                            txtField17.requestFocus();
-                            return;
-                        }
-                    } catch (NumberFormatException e) {
-                        ShowMessageFX.Warning(getStage(), "Invalid Compre Insurance Amount", "Warning", null);
-                        txtField17.requestFocus();
+                    if (!validateDoubleInput(txtField17, "Compre Insurance")) {
                         return;
                     }
                     if (txtField27.getText().trim().equals("")) {
@@ -1170,18 +1022,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
             }
             switch (comboBox23.getSelectionModel().getSelectedIndex()) {
                 case 2:
-
-                    String LTO = txtField18.getText().replace(",", ""); // Remove commas from the input string
-                    try {
-                        double LTOAmount = Double.parseDouble(LTO);
-                        if (LTOAmount == 0.00 || LTOAmount < 0.00) {
-                            ShowMessageFX.Warning(getStage(), "Please enter a value for LTO Amount", "Warning", null);
-                            txtField18.requestFocus();
-                            return;
-                        }
-                    } catch (NumberFormatException e) {
-                        ShowMessageFX.Warning(getStage(), "Invalid LTO Amount", "Warning", null);
-                        txtField18.requestFocus();
+                    if (!validateDoubleInput(txtField18, "LTO")) {
                         return;
                     }
                     break;
@@ -1189,91 +1030,40 @@ public class VSPFormController implements Initializable, ScreenInterface {
             switch (comboBox20.getSelectionModel().getSelectedIndex()) {
                 case 2:
                 case 3:
-                    if (txtField19.getText().trim().equals("0.00")) {
-                        ShowMessageFX.Warning(getStage(), "Please enter a value for CHMO/Doc Stamps Amount", "Warning", null);
-                        txtField19.requestFocus();
-                        return;
-                    }
-                    String cmo = txtField19.getText().replace(",", ""); // Remove commas from the input string
-                    try {
-                        double cmoAmmount = Double.parseDouble(cmo);
-                        if (cmoAmmount == 0.00 || cmoAmmount < 0.00) {
-                            ShowMessageFX.Warning(getStage(), "Please enter a value for CHMO/Doc Stamps Amount", "Warning", null);
-                            txtField19.requestFocus();
-                            return;
-                        }
-                    } catch (NumberFormatException e) {
-                        ShowMessageFX.Warning(getStage(), "Invalid CHMO/Doc Stamps Amount", "Warning", null);
-                        txtField19.requestFocus();
+                    if (!validateDoubleInput(txtField19, "CHMO/Doc Stamps")) {
                         return;
                     }
                     break;
             }
             String promoDiscount = txtField28.getText().replace(",", ""); // Remove commas from the input string
-            double promoDiscountAmount = Double.parseDouble(promoDiscount);
             try {
+                double promoDiscountAmount = Double.parseDouble(promoDiscount);
                 if (promoDiscountAmount < 0.00) {
                     ShowMessageFX.Warning(getStage(), "Please enter a value for Promo Discount Amount", "Warning", null);
                     txtField28.requestFocus();
                     return;
+                }
+                if (promoDiscountAmount > 0.00) {
+                    if (!validateLessthanDoubleInput(txtField46, "Promo Plant Discount")) {
+                        return;
+                    }
+                    if (!validateLessthanDoubleInput(txtField47, "Promo Dealer Discount")) {
+                        return;
+                    }
                 }
             } catch (NumberFormatException e) {
                 ShowMessageFX.Warning(getStage(), "Invalid Promo Discount Amount", "Warning", null);
                 txtField28.requestFocus();
                 return;
             }
-            if (promoDiscountAmount > 0.00) {
-                String promoPlant = txtField46.getText().replace(",", ""); // Remove commas from the input string
-                try {
-                    double promoPlantAmount = Double.parseDouble(promoPlant);
-                    if (promoPlantAmount < 0.00) {
-                        ShowMessageFX.Warning(getStage(), "Please enter a value for Promo Plant Discount Amount", "Warning", null);
-                        txtField46.requestFocus();
-                        return;
-                    }
-                } catch (NumberFormatException e) {
-                    ShowMessageFX.Warning(getStage(), "Invalid Promo Plant Discount Amount", "Warning", null);
-                    txtField46.requestFocus();
-                    return;
-                }
-                String promoDealer = txtField47.getText().replace(",", ""); // Remove commas from the input string
-                try {
-                    double promoDealerAmount = Double.parseDouble(promoDealer);
-                    if (promoDealerAmount < 0.00) {
-                        ShowMessageFX.Warning(getStage(), "Please enter a value for Promo Dealer  Discount Amount", "Warning", null);
-                        txtField47.requestFocus();
-                        return;
-                    }
-                } catch (NumberFormatException e) {
-                    ShowMessageFX.Warning(getStage(), "Invalid Promo Dealer Discount Amount", "Warning", null);
-                    txtField47.requestFocus();
-                    return;
-                }
-            }
-            String cash = txtField32.getText().replace(",", ""); // Remove commas from the input string
-            try {
-                double cashAmount = Double.parseDouble(cash);
-                if (cashAmount < 0.00) {
-                    ShowMessageFX.Warning(getStage(), "Please enter a value for Cash Discount Amount", "Warning", null);
-                    txtField32.requestFocus();
-                    return;
-                }
-            } catch (NumberFormatException e) {
-                ShowMessageFX.Warning(getStage(), "Invalid Cash Discount Amount", "Warning", null);
-                txtField32.requestFocus();
+
+            if (!validateLessthanDoubleInput(txtField32, "Cash Discount")) {
                 return;
             }
-            String bundle = txtField31.getText().replace(",", ""); // Remove commas from the input string
-            try {
-                double bundleAmount = Double.parseDouble(bundle);
-                if (bundleAmount < 0.00) {
-                    ShowMessageFX.Warning(getStage(), "Please enter a value for Bundle Discount Amount", "Warning", null);
-                    txtField31.requestFocus();
-                    return;
-                }
-            } catch (NumberFormatException e) {
-                ShowMessageFX.Warning(getStage(), "Invalid Bundle Discount Amount", "Warning", null);
-                txtField31.requestFocus();
+            if (!validateLessthanDoubleInput(txtField31, "Bundle Discount")) {
+                return;
+            }
+            if (!validateLessthanDoubleInput(txtField10, "OMA & CMF")) {
                 return;
             }
             String miscCharg = txtField12.getText().replace(",", ""); // Remove commas from the input string
@@ -1296,32 +1086,53 @@ public class VSPFormController implements Initializable, ScreenInterface {
                 txtField12.requestFocus();
                 return;
             }
-
-//            try {
-            //                if (Double.valueOf(oTrans.getMaster(6).toString()) < 0.00) {
-            //                    ShowMessageFX.Warning(getStage(), "Invalid Gross Amount", "Warning", null);
-            //                    return;
-            //                }
-            //            } catch (NumberFormatException e) {
-            //                ShowMessageFX.Warning(getStage(), "Invalid Gross Amount", "Warning", null);
-            //                return;
-            //            }
-            //Proceed to saving record
-            {
-                if (oTrans.SaveRecord()) {
-                    ShowMessageFX.Information(getStage(), "Transaction save successfully.", pxeModuleName, null);
-                    loadVSPField();
-                    pnEditMode = EditMode.READY;
-                    initButton(pnEditMode);
-                    loadTableLabor();
-                    loadTableParts();
-                } else {
-                    ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", "Error while saving " + pxeModuleName + ".");
-                }
+            if (oTrans.SaveRecord()) {
+                ShowMessageFX.Information(getStage(), "Transaction save successfully.", pxeModuleName, null);
+                loadVSPField();
+                pnEditMode = EditMode.READY;
+                initButton(pnEditMode);
+                loadTableLabor();
+                loadTableParts();
+            } else {
+                ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", "Error while saving " + pxeModuleName + ".");
             }
 
         }
 
+    }
+
+    public boolean validateDoubleInput(TextField textField, String fieldName) {
+        String input = textField.getText().replace(",", "");
+        try {
+            double amount = Double.parseDouble(input);
+            if (amount == 0.00 || amount < 0.00) {
+                ShowMessageFX.Warning(getStage(), "Please enter a value for " + fieldName, "Warning", null);
+                textField.requestFocus();
+                return false;
+            }
+        } catch (NumberFormatException e) {
+            ShowMessageFX.Warning(getStage(), "Invalid " + fieldName + " Amount", "Warning", null);
+            textField.requestFocus();
+            return false;
+        }
+        return true;
+    }
+
+    public boolean validateLessthanDoubleInput(TextField textField, String fieldName) {
+        String input = textField.getText().replace(",", "");
+        try {
+            double amount = Double.parseDouble(input);
+            if (amount < 0.00) {
+                ShowMessageFX.Warning(getStage(), "Please enter a value for " + fieldName, "Warning", null);
+                textField.requestFocus();
+                return false;
+            }
+        } catch (NumberFormatException e) {
+            ShowMessageFX.Warning(getStage(), "Invalid " + fieldName + " Amount", "Warning", null);
+            textField.requestFocus();
+            return false;
+        }
+        return true;
     }
 
     private void cancelRecordVSP() {
@@ -1540,7 +1351,6 @@ public class VSPFormController implements Initializable, ScreenInterface {
         txtField19.focusedProperty().addListener(txtField_Focus);
 
         textArea09.focusedProperty().addListener(txtArea_Focus);
-
         txtField04_Finance.focusedProperty().addListener(txtFieldFinance_Focus);
         txtField14_Finance.focusedProperty().addListener(txtFieldFinance_Focus);
         txtField06_Finance.focusedProperty().addListener(txtFieldFinance_Focus);
@@ -1564,15 +1374,10 @@ public class VSPFormController implements Initializable, ScreenInterface {
                 /* Lost Focus */
                 try {
                     switch (lnIndex) {
-                        case 77:
-                        case 68:
-                        case 71:
-                        case 72:
                         case 48:
                         case 11:
                             oTrans.setMaster(lnIndex, lsValue); // Handle Encoded Value
                             break;
-
                         case 42:
                             if (lsValue.isEmpty()) {
                                 lsValue = "0.00";
@@ -1860,9 +1665,6 @@ public class VSPFormController implements Initializable, ScreenInterface {
                 try {
                     if (oTrans.getVSPFinanceCount() > 0) {
                         switch (lnIndex) {
-                            case 4:
-                                oTrans.setVSPFinance(lnIndex, lsValue); // Handle Encoded Value
-                                break;
                             case 6:
                                 oTrans.setVSPFinance(lnIndex, Integer.valueOf(lsValue.replace(",", "")));
                                 loadVSPField();
@@ -1878,20 +1680,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
                                 if (lsValue.isEmpty()) {
                                     lsValue = "0.00";
                                 }
-//                                double enteredValue14 = Double.parseDouble(lsValue.replace(",", ""));
-//
-//                                String unitSrp = txtField08.getText().replace(",", "");
-//                                String downPymnt = txtField38.getText().replace(",", "");
-//                                double unitSRPAmount = Double.parseDouble(unitSrp);
-//                                double downPymntAmount = Double.parseDouble(downPymnt);
-//                                double diff = unitSRPAmount - downPymntAmount;
-//                                if (enteredValue14 > diff) {
-//                                    txtField14_Finance.setText("0.0");
-//                                    lsValue = "0.00";
-//                                    ShowMessageFX.Warning(getStage(), "Bank Discount Amount cannot be greater than Unit SRP", "Warning", null);
-//                                    txtField14_Finance.requestFocus();
-//                                    break;
-//                                }
+
                                 if (Double.parseDouble(oTrans.getMaster(8).toString()) > 0.00) {
                                     if (Double.parseDouble(lsValue.replace(",", "")) >= Double.parseDouble(oTrans.getMaster(8).toString())) {
                                         txtField14_Finance.setText("0.00");
@@ -1927,7 +1716,6 @@ public class VSPFormController implements Initializable, ScreenInterface {
                                 if (Double.parseDouble(oTrans.getMaster(8).toString()) > 0.00) {
                                     if (Double.parseDouble(lsValue.replace(",", "")) > Double.parseDouble(oTrans.getMaster(8).toString())) {
                                         txtField13.setText("0.00");
-                                        //oTrans.setMaster(lnIndex, Double.valueOf("0.00"));
                                         lsValue = "0.00";
                                         ShowMessageFX.Warning(getStage(), "Net Downpayment cannot be greater than Net SRP", "Warning", null);
                                         txtField13.requestFocus();
@@ -2026,12 +1814,12 @@ public class VSPFormController implements Initializable, ScreenInterface {
 
     private void loadVSPField() {
         try {
+            DecimalFormat decimalFormat = new DecimalFormat("#,##0.00");
             if (!oTrans.computeAmount()) {
                 ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                return;
             }
-            DecimalFormat decimalFormat = new DecimalFormat("#,##0.00");
 
-//            NumberFormat nf = NumberFormat.getInstance(Locale.US);
             /* MAIN INTERFACE */
             txtField03.setText((String) oTrans.getMaster(3));
             txtField02.setText(CommonUtils.xsDateMedium((Date) oTrans.getMaster(2)));
@@ -2300,6 +2088,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
             VSPLaborEntryDialogController loControl = new VSPLaborEntryDialogController();
             loControl.setGRider(oApp);
             loControl.setObject(oTrans);
+            loControl.setOrigDsc((String) oTrans.getVSPLaborDetail(fnRow, 7));
             loControl.setState(isAdd);
 
             loControl.setLbrDsc(isWithLbDsc);
@@ -2339,6 +2128,8 @@ public class VSPFormController implements Initializable, ScreenInterface {
             e.printStackTrace();
             ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
             System.exit(1);
+        } catch (SQLException ex) {
+            Logger.getLogger(VSPFormController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -2530,6 +2321,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
             loControl.setState(isAdd);
             fxmlLoader.setController(loControl);
             loControl.setRow(fnRow);
+            loControl.setOrigDsc((String) oTrans.getVSPPartsDetail(fnRow, 9));
             loControl.setLbrDsc(isWithLbDsc);
             //load the main interface
             Parent parent = fxmlLoader.load();
@@ -2564,6 +2356,8 @@ public class VSPFormController implements Initializable, ScreenInterface {
             e.printStackTrace();
             ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
             System.exit(1);
+        } catch (SQLException ex) {
+            Logger.getLogger(VSPFormController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -2641,11 +2435,8 @@ public class VSPFormController implements Initializable, ScreenInterface {
         tblPartsRow.setCellValueFactory(new PropertyValueFactory<VSPTablePartList, String>("tblPartsRow"));
         tblindex14_Part.setCellValueFactory(new PropertyValueFactory<VSPTablePartList, String>("tblindex14_Part"));
         tblindex09_Part.setCellValueFactory(new PropertyValueFactory<VSPTablePartList, String>("tblindex09_Part"));
-
         tblindex08_Part.setCellValueFactory(new PropertyValueFactory<VSPTablePartList, String>("tblindex08_Part"));
-
         tblindex06_Part.setCellValueFactory(new PropertyValueFactory<VSPTablePartList, String>("tblindex06_Part"));
-
         tblindex05_Part.setCellValueFactory(new PropertyValueFactory<VSPTablePartList, String>("tblindex05_Part"));
 
     }

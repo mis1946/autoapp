@@ -9,7 +9,6 @@ import com.sun.javafx.scene.control.skin.TableHeaderRow;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
@@ -63,7 +62,6 @@ import org.rmj.appdriver.agentfx.ShowMessageFX;
 import org.rmj.appdriver.callback.MasterCallback;
 import org.rmj.appdriver.constants.EditMode;
 import org.rmj.auto.app.bank.BankEntryFormController;
-import org.rmj.auto.app.views.ActivityMemberTable;
 import org.rmj.auto.app.views.ScreenInterface;
 import org.rmj.auto.app.views.unloadForm;
 import org.rmj.auto.parts.base.ItemEntry;
@@ -92,7 +90,7 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
     private Image pimage;
     private String psFileName = "";
     private String psFileUrl = "";
-
+    private int imgIdentfier = 0;
     private int pnRow = -1;
     private int oldPnRow = -1;
     private int pagecounter;
@@ -208,6 +206,8 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
     private TableView<ItemEntryModelTable> tblModelView;
     @FXML
     private Button btnModelExpand;
+    @FXML
+    private Button btnRemoveImage;
 
     private Stage getStage() {
         return (Stage) txtSeeks01.getScene().getWindow();
@@ -247,7 +247,7 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
         btnCapture.setOnAction(this::cmdButton_Click);
         btnUpload.setOnAction(this::cmdButton_Click);
         btnLoadPhoto.setOnAction(this::cmdButton_Click);
-
+        btnRemoveImage.setOnAction(this::cmdButton_Click);
         setCapsLockBehavior(txtField01);
         setCapsLockBehavior(txtField02);
         setCapsLockBehavior(txtField32);
@@ -446,7 +446,6 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
 //                    }
                 break;
             case "btnUpload":
-
                 if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
                     FileChooser fileChooser = new FileChooser();
                     // Set the title and extension filters if desired
@@ -473,12 +472,32 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
                 }
                 break;
             case "btnLoadPhoto":
-                if (!psFileUrl.isEmpty()) {
+                try {
+                if (!oTrans.getMaster(26).toString().isEmpty()) {
                     loadPhotoWindow();
+                } else {
+                    psFileUrl = "";
+//                    ShowMessageFX.Error(null, "No Image to view!", pxeModuleName);
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(ItemEntryFormController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            break;
+
+            case "btnRemoveImage":
+                imgPartsPic.setImage(null); // Remove the displayed image
+                psFileUrl = ""; // Clear the file URL
+                psFileName = ""; // Clear the file name
+                pimage = null; // Clear the Image object
+                try {
+                    oTrans.setMaster(26, psFileUrl);
+                    ShowMessageFX.Information(null, pxeModuleName, "Image removed Successfully");
+                } catch (SQLException ex) {
+                    Logger.getLogger(ItemEntryFormController.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 break;
             case "btnAdd":
-
                 if (oTrans.NewRecord()) {
                     clearFields();
                     pnEditMode = oTrans.getEditMode();
@@ -501,6 +520,7 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
                     pnEditMode = EditMode.UNKNOWN;
                 }
                 break;
+
             case "btnSave":
                 //Validate before saving
                 if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure, do you want to save?") == true) {
@@ -547,7 +567,6 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
                     //Proceed Saving
                     if (oTrans.SaveRecord()) {
                         ShowMessageFX.Information(getStage(), "Transaction save successfully.", pxeModuleName, null);
-
                         loadItemInformationField();
                         loadItemModelTable();
                         loadItemList();
@@ -1261,7 +1280,7 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
 
     private void loadItemInformationField() {
 
-        String unitPrice = "0.00";
+        String fnSRP = "0.00";
         try {
             txtField01.setText((String) oTrans.getMaster(1));
             txtField02.setText((String) oTrans.getMaster(2));
@@ -1271,13 +1290,17 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
 //            if (!String.valueOf((BigDecimal) oTrans.getMaster(13)).equals("null")) {
 //                unitPrice = String.valueOf((BigDecimal) oTrans.getMaster(13));
 //            } // Format the double value with 2 decimal places
-            txtField13.setText(unitPrice);
+            txtField13.setText(fnSRP);
             txtField12.setText((String) oTrans.getMaster(12));
             txtField33.setText((String) oTrans.getMaster(33));
             txtField37.setText((String) oTrans.getMaster(37));
             txtField34.setText((String) oTrans.getMaster(34));
 
             String imageFilePath = oTrans.getMaster(26).toString();
+
+            if (!oTrans.getMaster(26).toString().isEmpty()) {
+                imgIdentfier = 1;
+            }
             String imageName = imageFilePath.substring(imageFilePath.lastIndexOf('/') + 1);
             if (imageFilePath == null || imageFilePath.isEmpty()) {
                 Image NoImage = new Image("file:D:/GGC_SEG_Folder-Java/autoapp/src/org/rmj/auto/app/images/no-image-available.png");
@@ -1289,6 +1312,7 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
                 Image image = new Image(imageFilePath);
                 imgPartsPic.setImage(image);
             }
+
         } catch (SQLException e) {
             ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
         }
@@ -1349,6 +1373,7 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
     }
 
     private void initButton(int fnValue) {
+
         boolean lbShow = (fnValue == EditMode.ADDNEW || fnValue == EditMode.UPDATE);
         btnBrandName.setVisible(lbShow);
         btnCategory.setVisible(lbShow);
@@ -1369,10 +1394,10 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
         btnModelAdd.setDisable(!lbShow);
         btnModelDel.setDisable(!lbShow);
         btnModelExpand.setDisable(!lbShow);
+        btnRemoveImage.setVisible(false);
+        btnRemoveImage.setManaged(false);
         btnCapture.setDisable(!lbShow);
         btnUpload.setDisable(!lbShow);
-        tblSupersede.setDisable(!lbShow);
-        tblModelView.setDisable(!lbShow);
         btnAdd.setVisible(!lbShow);
         btnAdd.setManaged(!lbShow);
         btnEdit.setVisible(false);
@@ -1381,6 +1406,7 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
         btnCancel.setManaged(lbShow);
         btnSave.setVisible(lbShow);
         btnSave.setManaged(lbShow);
+        tblModelSelect.setVisible(lbShow);
 
         if (fnValue == EditMode.READY) {
             btnEdit.setVisible(true);
@@ -1388,8 +1414,25 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
         }
         if (fnValue == EditMode.UPDATE) {
             txtField02.setDisable(true);
-
         }
+
+        if (fnValue == EditMode.ADDNEW) {
+            btnRemoveImage.setVisible(true);
+            btnRemoveImage.setDisable(false);
+            btnRemoveImage.setManaged(true);
+        }
+        if (fnValue == EditMode.UPDATE) {
+            if (imgIdentfier != 1) {
+                btnRemoveImage.setVisible(false);
+                btnRemoveImage.setDisable(true);
+                btnRemoveImage.setManaged(false);
+            } else {
+                btnRemoveImage.setVisible(true);
+                btnRemoveImage.setDisable(false);
+                btnRemoveImage.setManaged(true);
+            }
+        }
+
     }
 
 }

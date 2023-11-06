@@ -39,7 +39,7 @@
                     <top>
                         <AnchorPane prefHeight="25.0" style="-fx-background-color: #515151; -fx-background-radius: 5;" BorderPane.alignment="CENTER">
                             <children>
-                                <Label alignment="CENTER" contentDisplay="CENTER" text="ITEM ENTRY" textAlignment="CENTER" textFill="WHITE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                <Label alignment="CENTER" contentDisplay="CENTER" text="ITEM INFORMATION" textAlignment="CENTER" textFill="WHITE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                     <font>
                                         <Font name="Arial Bold" size="12.0" />
                                     </font>
@@ -250,7 +250,7 @@
                                                                                                                                 <Tooltip text="Click to add Brand name." />
                                                                                                                             </tooltip>
                                                                                                                         </Button>
-                                                                                                                        <Label id="LabelDesc" text="Unit Price" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+                                                                                                                        <Label id="LabelDesc" text="SRP" GridPane.columnIndex="1" GridPane.rowIndex="7" />
                                                                                                                         <Label alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="69.0" text="*" textFill="#fb0000" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                                                                                                                         <Label alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="74.0" text="*" textFill="#fb0000" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                                                                                                                         <Label alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="74.0" text="*" textFill="#fb0000" GridPane.columnIndex="1" GridPane.rowIndex="3" />
@@ -506,6 +506,7 @@
                                                                                                                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="190.0" prefWidth="300.0" />
                                                                                                                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="25.0" />
                                                                                                                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="25.0" />
+                                                                                                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="25.0" />
                                                                                                                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="10.0" />
                                                                                                                             </columnConstraints>
                                                                                                                             <rowConstraints>
@@ -514,21 +515,21 @@
                                                                                                                                 <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="5.0" vgrow="SOMETIMES" />
                                                                                                                             </rowConstraints>
                                                                                                                             <children>
-                                                                                                                                <AnchorPane style="-fx-background-color: #FACEA1;" GridPane.columnSpan="5">
+                                                                                                                                <AnchorPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #FACEA1;" GridPane.columnSpan="6">
                                                                                                                                     <children>
-                                                                                                                                        <Label layoutX="85.0" layoutY="-8.0" text="Image" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                                                                                                        <Label layoutX="8.0" layoutY="2.0" text="Image">
                                                                                                                                             <font>
                                                                                                                                                 <Font name="Arial Bold" size="12.0" />
                                                                                                                                             </font>
                                                                                                                                         </Label>
                                                                                                                                     </children>
                                                                                                                                 </AnchorPane>
-                                                                                                                                <Button fx:id="btnCapture" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="18.0" prefWidth="24.0" GridPane.columnIndex="2">
+                                                                                                                                <Button fx:id="btnCapture" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="18.0" prefWidth="24.0" GridPane.columnIndex="3">
                                                                                                                                     <graphic>
                                                                                                                                         <FontAwesomeIconView glyphName="CAMERA" size="10" />
                                                                                                                                     </graphic>
                                                                                                                                 </Button>
-                                                                                                                                <Button fx:id="btnUpload" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="18.0" prefWidth="24.0" GridPane.columnIndex="3">
+                                                                                                                                <Button fx:id="btnUpload" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="18.0" prefWidth="24.0" GridPane.columnIndex="4">
                                                                                                                                     <graphic>
                                                                                                                                         <FontAwesomeIconView glyphName="UPLOAD" size="10" />
                                                                                                                                     </graphic>
@@ -545,6 +546,14 @@
                                                                                                                                     </viewport>
                                                                                                                                 </ImageView>
                                                                                                                                 <Button fx:id="btnLoadPhoto" mnemonicParsing="false" opacity="0.0" prefHeight="173.0" prefWidth="286.0" text="Button" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="1" />
+                                                                                                                                <Button fx:id="btnRemoveImage" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="18.0" prefWidth="24.0" GridPane.columnIndex="2">
+                                                                                                                                    <tooltip>
+                                                                                                                                        <Tooltip text="Click to upload image." />
+                                                                                                                                    </tooltip>
+                                                                                                                                    <graphic>
+                                                                                                                                        <FontAwesomeIconView glyphName="REMOVE" />
+                                                                                                                                    </graphic>
+                                                                                                                                </Button>
                                                                                                                             </children>
                                                                                                                         </GridPane>
                                                                                                                     </children>

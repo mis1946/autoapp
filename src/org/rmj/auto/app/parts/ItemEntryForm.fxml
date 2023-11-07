@@ -357,10 +357,10 @@
                                                                                                                                 </Label>
                                                                                                                             </children>
                                                                                                                         </AnchorPane>
-                                                                                                                        <TextField GridPane.columnIndex="3" GridPane.rowIndex="3" />
-                                                                                                                        <TextField GridPane.columnIndex="3" GridPane.rowIndex="4" />
-                                                                                                                        <ComboBox prefWidth="150.0" GridPane.columnIndex="6" GridPane.rowIndex="3" />
-                                                                                                                        <TextField GridPane.columnIndex="6" GridPane.rowIndex="4" />
+                                                                                                                        <TextField disable="true" editable="false" promptText="Search F3" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+                                                                                                                        <TextField disable="true" editable="false" GridPane.columnIndex="3" GridPane.rowIndex="4" />
+                                                                                                                        <ComboBox disable="true" prefWidth="150.0" GridPane.columnIndex="6" GridPane.rowIndex="3" />
+                                                                                                                        <TextField disable="true" GridPane.columnIndex="6" GridPane.rowIndex="4" />
                                                                                                                         <Label id="LabelDesc" text="Unit" GridPane.columnIndex="5" GridPane.rowIndex="3" />
                                                                                                                         <Label id="LabelDesc" text="Qty" GridPane.columnIndex="5" GridPane.rowIndex="4" />
                                                                                                                         <Label id="LabelDesc" text="Unit" GridPane.columnIndex="2" GridPane.rowIndex="3" />
@@ -416,7 +416,7 @@
                                                                                                                                 <FontAwesomeIconView glyphName="PLUS" size="10.0" />
                                                                                                                             </graphic>
                                                                                                                         </Button>
-                                                                                                                        <TableView fx:id="tblSupersede" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="2">
+                                                                                                                        <TableView fx:id="tblSupersede" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="5" GridPane.rowIndex="2">
                                                                                                                             <columns>
                                                                                                                                 <TableColumn fx:id="tblindex01_sups" prefWidth="24.0" sortable="false" />
                                                                                                                                 <TableColumn fx:id="tblindex02_sups" prefWidth="30.0" sortable="false" />
@@ -545,7 +545,7 @@
                                                                                                                                         <Rectangle2D />
                                                                                                                                     </viewport>
                                                                                                                                 </ImageView>
-                                                                                                                                <Button fx:id="btnLoadPhoto" mnemonicParsing="false" opacity="0.0" prefHeight="173.0" prefWidth="286.0" text="Button" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="1" />
+                                                                                                                                <Button fx:id="btnLoadPhoto" mnemonicParsing="false" opacity="0.0" prefHeight="173.0" prefWidth="286.0" text="Button" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="1" />
                                                                                                                                 <Button fx:id="btnRemoveImage" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="18.0" prefWidth="24.0" GridPane.columnIndex="2">
                                                                                                                                     <tooltip>
                                                                                                                                         <Tooltip text="Click to upload image." />

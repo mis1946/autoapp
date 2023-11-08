@@ -78,7 +78,7 @@ public class ActivityFormController implements Initializable, ScreenInterface {
     private ObservableList<ActivityVchlEntryTable> actVhclModelData = FXCollections.observableArrayList();
     unloadForm unload = new unloadForm(); //Used in Close Button
     CancelForm cancelform = new CancelForm(); //Object for closing form
-    private final String pxeModuleName = "Activity Entry"; //Form Title
+    private final String pxeModuleName = "Activity Information"; //Form Title
     private int pnEditMode;//Modifying fields
     @FXML
     private Button btnAdd;

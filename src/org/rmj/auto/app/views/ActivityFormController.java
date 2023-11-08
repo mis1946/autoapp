@@ -78,7 +78,7 @@ public class ActivityFormController implements Initializable, ScreenInterface {
     private ObservableList<ActivityVchlEntryTable> actVhclModelData = FXCollections.observableArrayList();
     unloadForm unload = new unloadForm(); //Used in Close Button
     CancelForm cancelform = new CancelForm(); //Object for closing form
-    private final String pxeModuleName = "Activity Entry"; //Form Title
+    private final String pxeModuleName = "Activity Information"; //Form Title
     private int pnEditMode;//Modifying fields
     @FXML
     private Button btnAdd;
@@ -751,145 +751,136 @@ public class ActivityFormController implements Initializable, ScreenInterface {
         TextField txtField = (TextField) event.getSource();
         String txtFieldID = ((TextField) event.getSource()).getId();
         try {
-            switch (event.getCode()) {
-                case F3:
-                case TAB:
-                case ENTER:
-                    switch (txtFieldID) {
-                        case "textSeek01":  //Search by Activity No
-                            if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
-                                if (ShowMessageFX.OkayCancel(null, "Confirmation", "You have unsaved data. Are you sure you want to browse a new record?") == true) {
-                                } else {
-                                    return;
-                                }
+            if (event.getCode() == KeyCode.TAB || event.getCode() == KeyCode.ENTER || event.getCode() == KeyCode.F3) {
+                switch (txtFieldID) {
+                    case "textSeek01":  //Search by Activity No
+                        if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
+                            if (ShowMessageFX.OkayCancel(null, "Confirmation", "You have unsaved data. Are you sure you want to browse a new record?") == true) {
+                            } else {
+                                return;
                             }
-                            if (oTrans.SearchRecord(textSeek01.getText(), false)) {
-                                removeRequired();
+                        }
+                        if (oTrans.SearchRecord(textSeek01.getText(), false)) {
+                            removeRequired();
+                            loadActivityField();
+                            loadActivityVehicleTable();
+                            loadActMembersTable();
+                            loadTownTable();
+                            pnEditMode = oTrans.getEditMode();
+                        } else {
+                            ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                            textSeek02.clear();
+                            actVhclModelData.clear();
+                            actMembersData.clear();
+                            clearFields();
+                            pnEditMode = EditMode.UNKNOWN;
+                        }
+                        initButton(pnEditMode);
+                        break;
+                    case "textSeek02":  //Search by Activity Name
+                        if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
+                            if (ShowMessageFX.OkayCancel(null, "Confirmation", "You have unsaved data. Are you sure you want to browse a new record?") == true) {
+                            } else {
+                                return;
+                            }
+                        }
+                        if (oTrans.SearchRecord(textSeek02.getText(), false)) {
+                            removeRequired();
+                            loadActivityField();
+                            loadActivityVehicleTable();
+                            loadActMembersTable();
+                            loadTownTable();
+                            pnEditMode = oTrans.getEditMode();
+                        } else {
+                            ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                            textSeek01.clear();
+                            actVhclModelData.clear();
+                            actMembersData.clear();
+                            clearFields();
+                            pnEditMode = EditMode.UNKNOWN;
+                        }
+                        initButton(pnEditMode);
+                        break;
+                    case "txtField05":
+                        String selectedType = comboBox29.getValue();
+                        if (selectedType == null) {
+                            ShowMessageFX.Warning(getStage(), "Please choose Activity Type first to proceed.", "Warning", null);
+                        } else {
+                            switch (selectedType) {
+                                case "EVENT":
+                                    selectedType = "eve";
+                                    break;
+                                case "SALES CALL":
+                                    selectedType = "sal";
+                                    break;
+                                case "PROMO":
+                                    selectedType = "pro";
+                                    break;
+                                default:
+                                    break;
+                            }
+                            if (oTrans.searchEventType(selectedType)) {
                                 loadActivityField();
-                                loadActivityVehicleTable();
-                                loadActMembersTable();
-                                loadTownTable();
-                                pnEditMode = oTrans.getEditMode();
-                            } else {
-                                ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
-                                textSeek02.clear();
-                                actVhclModelData.clear();
-                                actMembersData.clear();
-                                clearFields();
-                                pnEditMode = EditMode.UNKNOWN;
-                            }
-                            initButton(pnEditMode);
-                            break;
-                        case "textSeek02":  //Search by Activity Name
-                            if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
-                                if (ShowMessageFX.OkayCancel(null, "Confirmation", "You have unsaved data. Are you sure you want to browse a new record?") == true) {
-                                } else {
-                                    return;
-                                }
-                            }
-                            if (oTrans.SearchRecord(textSeek02.getText(), false)) {
-                                removeRequired();
-                                loadActivityField();
-                                loadActivityVehicleTable();
-                                loadActMembersTable();
-                                loadTownTable();
-                                pnEditMode = oTrans.getEditMode();
-                            } else {
-                                ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
-                                textSeek01.clear();
-                                actVhclModelData.clear();
-                                actMembersData.clear();
-                                clearFields();
-                                pnEditMode = EditMode.UNKNOWN;
-                            }
-                            initButton(pnEditMode);
-                            break;
-                        case "txtField05":
-                            String selectedType = comboBox29.getValue();
-                            if (selectedType == null) {
-                                ShowMessageFX.Warning(getStage(), "Please choose Activity Type first to proceed.", "Warning", null);
-                            } else {
-                                switch (selectedType) {
-                                    case "EVENT":
-                                        selectedType = "eve";
-                                        break;
-                                    case "SALES CALL":
-                                        selectedType = "sal";
-                                        break;
-                                    case "PROMO":
-                                        selectedType = "pro";
-                                        break;
-                                    default:
-                                        break;
-                                }
-                                if (oTrans.searchEventType(selectedType)) {
-                                    loadActivityField();
-                                } else {
-                                    ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
-                                }
-                            }
-                            break;
-                        case "txtField24":
-                            if (oTrans.searchDepartment(txtField.getText())) {
-                                txtField24.setText((String) oTrans.getMaster(24));
                             } else {
                                 ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
                             }
-                            break;
-                        case "txtField25":
-                            if (oTrans.searchEmployee(txtField.getText())) {
-                                txtField25.setText((String) oTrans.getMaster(25));
-                            } else {
-                                ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
-                            }
-                            break;
-                        case "txtField26":
-                            if (oTrans.searchBranch(txtField.getText())) {
-                                txtField26.setText((String) oTrans.getMaster(26));
-                            } else {
-                                ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
-                            }
-                            break;
-                        case "txtField28":
-                            if (oTrans.searchProvince(txtField.getText())) {
-                                btnCitySearch.setDisable(false);
-                                btnCityRemove.setDisable(false);
-                                tblViewCity.setDisable(false);
+                        }
+                        break;
+                    case "txtField24":
+                        if (oTrans.searchDepartment(txtField.getText())) {
+                            txtField24.setText((String) oTrans.getMaster(24));
+                        } else {
+                            ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                        }
+                        break;
+                    case "txtField25":
+                        if (oTrans.searchEmployee(txtField.getText())) {
+                            txtField25.setText((String) oTrans.getMaster(25));
+                        } else {
+                            ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                        }
+                        break;
+                    case "txtField26":
+                        if (oTrans.searchBranch(txtField.getText())) {
+                            txtField26.setText((String) oTrans.getMaster(26));
+                        } else {
+                            ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                        }
+                        break;
+                    case "txtField28":
+                        if (oTrans.searchProvince(txtField.getText())) {
+                            btnCitySearch.setDisable(false);
+                            btnCityRemove.setDisable(false);
+                            tblViewCity.setDisable(false);
 
-                                int lnCtr = 1;
-                                int lnRow = 0;
-                                Integer[] fsValue = new Integer[oTrans.getActTownCount()];
-                                while (lnCtr <= oTrans.getActTownCount()) {
-                                    fsValue[lnRow] = lnCtr;
-                                    lnRow++;
-                                    lnCtr++;
-                                }
-                                oTrans.removeTown(fsValue);
-                                loadActivityField();
-                                loadTownTable();
-                                pnEditMode = oTrans.getEditMode();
-                            } else {
-                                ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                            int lnCtr = 1;
+                            int lnRow = 0;
+                            Integer[] fsValue = new Integer[oTrans.getActTownCount()];
+                            while (lnCtr <= oTrans.getActTownCount()) {
+                                fsValue[lnRow] = lnCtr;
+                                lnRow++;
+                                lnCtr++;
                             }
+                            oTrans.removeTown(fsValue);
+                            loadActivityField();
+                            loadTownTable();
+                            pnEditMode = oTrans.getEditMode();
+                        } else {
+                            ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                        }
 
-                            break;
-                    }
-                    break;
+                        break;
 
+                }
+                event.consume();
+                CommonUtils.SetNextFocus((TextField) event.getSource());
+            } else if (event.getCode() == KeyCode.UP) {
+                event.consume();
+                CommonUtils.SetPreviousFocus((TextField) event.getSource());
             }
         } catch (SQLException e) {
             ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
         }
-
-        switch (event.getCode()) {
-            case ENTER:
-            case DOWN:
-                CommonUtils.SetNextFocus(txtField);
-                break;
-            case UP:
-                CommonUtils.SetPreviousFocus(txtField);
-        }
-
     }
 
     private void initAddRequiredField() {
@@ -958,8 +949,10 @@ public class ActivityFormController implements Initializable, ScreenInterface {
             // Set the type ID in the text field
             try {
                 oTrans.setMaster(29, selectedType); // Pass the selected type to the setMaster method
+
             } catch (SQLException ex) {
-                Logger.getLogger(ActivityFormController.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(ActivityFormController.class
+                        .getName()).log(Level.SEVERE, null, ex);
             }
 
         });
@@ -990,16 +983,20 @@ public class ActivityFormController implements Initializable, ScreenInterface {
     public void getDateFrom(ActionEvent event) {
         try {
             oTrans.setMaster(6, SQLUtil.toDate(dateFrom06.getValue().toString(), SQLUtil.FORMAT_SHORT_DATE));
+
         } catch (SQLException ex) {
-            Logger.getLogger(CustomerFormController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CustomerFormController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     public void getDateTo(ActionEvent event) {
         try {
             oTrans.setMaster(7, SQLUtil.toDate(dateTo07.getValue().toString(), SQLUtil.FORMAT_SHORT_DATE));
+
         } catch (SQLException ex) {
-            Logger.getLogger(CustomerFormController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CustomerFormController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -1227,9 +1224,9 @@ public class ActivityFormController implements Initializable, ScreenInterface {
             Stage stage = new Stage();
 
             FXMLLoader fxmlLoader = new FXMLLoader();
-            fxmlLoader.setLocation(getClass().getResource("ActivityVehicleEntryDialog.fxml"));
+            fxmlLoader.setLocation(getClass().getResource("ActivityVehicleDialog.fxml"));
 
-            ActivityVehicleEntryDialogController loControl = new ActivityVehicleEntryDialogController();
+            ActivityVehicleDialogController loControl = new ActivityVehicleDialogController();
             loControl.setGRider(oApp);
             loControl.setObject(oTrans);
             fxmlLoader.setController(loControl);
@@ -1374,7 +1371,6 @@ public class ActivityFormController implements Initializable, ScreenInterface {
             /*Populate table*/
             actMembersData.clear();
             for (int lnCtr = 1; lnCtr <= oTrans.getActMemberCount(); lnCtr++) {
-                System.out.println(oTrans.getActMember(lnCtr, "cOriginal"));
                 if (oTrans.getActMember(lnCtr, "cOriginal").equals("1")) {
                     actMembersData.add(new ActivityMemberTable(
                             String.valueOf(lnCtr), //ROW
@@ -1421,7 +1417,6 @@ public class ActivityFormController implements Initializable, ScreenInterface {
             /*Populate table*/
             actVhclModelData.clear();
             for (int lnCtr = 1; lnCtr <= oTrans.getActVehicleCount(); lnCtr++) {
-
                 actVhclModelData.add(new ActivityVchlEntryTable(
                         String.valueOf(lnCtr), //ROW
                         oTrans.getActVehicle(lnCtr, "sSerialID").toString(),

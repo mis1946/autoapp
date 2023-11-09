@@ -15,6 +15,7 @@ public class VSPTableMasterList {
     private SimpleStringProperty tblindex04_Master;
     private SimpleStringProperty tblindex05_Master;
     private SimpleStringProperty tblindex06_Master;
+
     private SimpleStringProperty tblindex07_Master;
     private SimpleStringProperty tblindex08_Master;
     private SimpleStringProperty tblindex09_Master;
@@ -213,6 +214,7 @@ public class VSPTableMasterList {
         this.tblindex04_Master = new SimpleStringProperty(tblindex04_Master);
         this.tblindex05_Master = new SimpleStringProperty(tblindex05_Master);
         this.tblindex06_Master = new SimpleStringProperty(tblindex06_Master);
+
         this.tblindex07_Master = new SimpleStringProperty(tblindex07_Master);
         this.tblindex08_Master = new SimpleStringProperty(tblindex08_Master);
         this.tblindex09_Master = new SimpleStringProperty(tblindex09_Master);

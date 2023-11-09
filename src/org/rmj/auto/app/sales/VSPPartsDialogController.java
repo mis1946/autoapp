@@ -77,6 +77,7 @@ public class VSPPartsDialogController implements Initializable, ScreenInterface 
         comboBox8.setItems(cChargeType);
         handleComboBoxSelectionVSPMaster(comboBox8, 8);
         initNumberFormatterFields();
+        initAlphabeticalFormatterFields();
         txtField09_Part.focusedProperty().addListener(txtField_Focus);
         txtField05_Part.focusedProperty().addListener(txtField_Focus);
         txtField06_Part.focusedProperty().addListener(txtField_Focus);
@@ -99,6 +100,11 @@ public class VSPPartsDialogController implements Initializable, ScreenInterface 
         Pattern pattern = Pattern.compile("[0-9,.]*");
         txtField05_Part.setTextFormatter(new InputTextFormatter(pattern));
         txtField06_Part.setTextFormatter(new InputTextFormatter(pattern));
+    }
+
+    private void initAlphabeticalFormatterFields() {
+        Pattern lettersOnlyPattern = Pattern.compile("[A-Za-z]*");
+        txtField09_Part.setTextFormatter(new InputTextFormatter(lettersOnlyPattern));
     }
 
     @Override

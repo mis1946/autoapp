@@ -484,6 +484,13 @@ public class VSPFormPrintController implements Initializable {
                     + branchName_6 + " .";
             String vsCode = "<" + oTrans.getMaster(1).toString() + ">";
 
+            String buyersName = "";
+
+            if (!oTrans.getMaster("sCoBuyrNm").toString().isEmpty()) {
+                buyersName = oTrans.getMaster("sCompnyNm").toString() + " / " + oTrans.getMaster("sCoBuyrNm").toString();
+            } else {
+                buyersName = oTrans.getMaster("sCompnyNm").toString();
+            }
             vspMasterData.add(new VSPTableMasterList(
                     "",
                     vsCode,
@@ -551,7 +558,7 @@ public class VSPFormPrintController implements Initializable {
                     oTrans.getMaster("sLockedBy").toString(),
                     "",
                     oTrans.getMaster("cTranStat").toString(),
-                    oTrans.getMaster("sCompnyNm").toString().toUpperCase(),
+                    buyersName.toUpperCase(),
                     ownerOfficeAddress,
                     ownerHomeAddress,
                     oTrans.getMaster("sDescript").toString().toUpperCase(),

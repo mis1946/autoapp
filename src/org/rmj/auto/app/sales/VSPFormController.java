@@ -68,6 +68,7 @@ import org.rmj.auto.app.views.ScreenInterface;
 import org.rmj.auto.app.views.unloadForm;
 import org.rmj.auto.sales.base.InquiryFollowUp;
 import org.rmj.auto.sales.base.VehicleSalesProposalMaster;
+import org.rmj.gcamera.app.Capture;
 
 /**
  * FXML Controller class
@@ -80,12 +81,10 @@ public class VSPFormController implements Initializable, ScreenInterface {
     private VehicleSalesProposalMaster oTrans;
     private MasterCallback oListener;
     private InquiryFollowUp oTransFollowUp;
-
     unloadForm unload = new unloadForm(); //Used in Close Button
     private final String pxeModuleName = "Vehicle Sales Proposal"; //Form Title
     public int pnEditMode;//Modifying fields
     private int lnCtr = 0;
-
     private String TransNo = "";
     private int pnRow = -1;
     @FXML
@@ -331,7 +330,6 @@ public class VSPFormController implements Initializable, ScreenInterface {
         oListener = (int fnIndex, Object foValue) -> {
             System.out.println("Set Class Value " + fnIndex + "-->" + foValue);
         };
-
         oTrans = new VehicleSalesProposalMaster(oApp, oApp.getBranchCode(), true); //Initialize VehicleSalesProposalMaster
         oTrans.setCallback(oListener);
         oTrans.setWithUI(true);
@@ -670,7 +668,8 @@ public class VSPFormController implements Initializable, ScreenInterface {
         }
 
         txtField29.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
-            if (newValue == null || newValue.trim().isEmpty() || newValue.equals("0.00") || newValue.equals("0")) {
+            double lnValue = Double.parseDouble(newValue);
+            if (newValue == null || newValue.trim().isEmpty() || newValue.equals("0.00") || newValue.equals("0") || lnValue <= 0.00) {
                 try {
                     txtField42.setText("0.00");
                     txtField43.setText("0.00");
@@ -788,24 +787,14 @@ public class VSPFormController implements Initializable, ScreenInterface {
 
     private void initcheckBoxes() {
         chckBoxSpecialAccount.setOnAction(event -> {
-            if (chckBoxSpecialAccount.isSelected()) {
-                txtField29.setDisable(false);
-                txtField30.setDisable(false);
-            } else {
-                try {
-                    oTrans.setMaster(29, Double.valueOf("0.00"));
-                    oTrans.setMaster(30, Double.valueOf("0.00"));
-                    oTrans.setMaster(42, Double.valueOf("0.00"));
-                    oTrans.setMaster(43, Double.valueOf("0.00"));
-                    oTrans.setMaster(44, Double.valueOf("0.00"));
-                    oTrans.setMaster(45, Double.valueOf("0.00"));
-                    txtField29.setDisable(true);
-                    txtField30.setDisable(true);
-                    loadVSPField();
-                } catch (SQLException ex) {
-                    Logger.getLogger(VSPFormController.class.getName()).log(Level.SEVERE, null, ex);
+            try {
+                if (chckBoxSpecialAccount.isSelected()) {
+                    oTrans.setMaster(55, "1");
+                } else {
+                    oTrans.setMaster(55, "0");
                 }
-
+            } catch (SQLException ex) {
+                Logger.getLogger(VSPFormController.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
 
@@ -990,28 +979,21 @@ public class VSPFormController implements Initializable, ScreenInterface {
                 return;
             }
 
-            if (chckBoxSpecialAccount.isSelected()) {
-                if (!validateDoubleInput(txtField29, "STD Fleet Discount")) {
-                    return;
-                }
-                if (!validateLessthanDoubleInput(txtField42, "STD Fleet Plant Discount")) {
-                    return;
-                }
-                if (!validateLessthanDoubleInput(txtField43, "STD Fleet Dealer Discount")) {
-                    return;
-                }
-                if (!validateDoubleInput(txtField30, "SPL Fleet Discount")) {
-                    return;
-                }
-                if (!validateLessthanDoubleInput(txtField44, "SPL Fleet Plant Discount")) {
-                    return;
-                }
-
-                if (!validateLessthanDoubleInput(txtField45, "SPL Fleet Dealer Discount")) {
-                    return;
-                }
-
+            if (!validateLessthanDoubleInput(txtField42, "STD Fleet Plant Discount")) {
+                return;
             }
+            if (!validateLessthanDoubleInput(txtField43, "STD Fleet Dealer Discount")) {
+                return;
+            }
+
+            if (!validateLessthanDoubleInput(txtField44, "SPL Fleet Plant Discount")) {
+                return;
+            }
+
+            if (!validateLessthanDoubleInput(txtField45, "SPL Fleet Dealer Discount")) {
+                return;
+            }
+
             switch (comboBox22.getSelectionModel().getSelectedIndex()) {
                 case 3:
                     if (comboBox24.getSelectionModel().isSelected(0)) {
@@ -1409,7 +1391,9 @@ public class VSPFormController implements Initializable, ScreenInterface {
             TextField txtField = (TextField) ((ReadOnlyBooleanPropertyBase) o).getBean();
             int lnIndex = Integer.parseInt(txtField.getId().substring(8, 10));
             String lsValue = txtField.getText();
-
+            double lnValue28 = Double.parseDouble(txtField28.getText());
+            double lnValue29 = Double.parseDouble(txtField29.getText());
+            double lnValue30 = Double.parseDouble(txtField30.getText());
             if (lsValue == null) {
                 return;
             }
@@ -1441,14 +1425,14 @@ public class VSPFormController implements Initializable, ScreenInterface {
                                 break;
                             }
 
-                            if (!txtField29.getText().isEmpty()) {
+                            if (lnValue29 > 0.00) {
                                 double remainingValue = 100.00 - enteredValue42;
                                 oTrans.setMaster(43, remainingValue);
                                 txtField43.setText(String.format("%.2f", remainingValue));
+                                oTrans.setMaster(lnIndex, enteredValue42);
+                                txtField42.setText(String.format("%.2f", enteredValue42));
                             }
 
-                            oTrans.setMaster(lnIndex, enteredValue42);
-                            txtField42.setText(String.format("%.2f", enteredValue42));
                             break;
                         case 43:
                             if (lsValue.isEmpty()) {
@@ -1463,14 +1447,14 @@ public class VSPFormController implements Initializable, ScreenInterface {
                                 break;
                             }
 
-                            if (!txtField29.getText().isEmpty()) {
+                            if (lnValue29 > 0.00) {
                                 double remainingValue = 100.00 - enteredValue43;
                                 oTrans.setMaster(42, remainingValue);
                                 txtField42.setText(String.format("%.2f", remainingValue));
+                                oTrans.setMaster(lnIndex, enteredValue43);
+                                txtField43.setText(String.format("%.2f", enteredValue43));
                             }
 
-                            oTrans.setMaster(lnIndex, enteredValue43);
-                            txtField43.setText(String.format("%.2f", enteredValue43));
                             break;
                         case 44:
                             if (lsValue.isEmpty()) {
@@ -1485,14 +1469,14 @@ public class VSPFormController implements Initializable, ScreenInterface {
                                 break;
                             }
 
-                            if (!txtField30.getText().isEmpty()) {
+                            if (lnValue30 > 0.00) {
                                 double remainingValue = 100.00 - enteredValue44;
                                 oTrans.setMaster(45, remainingValue);
                                 txtField45.setText(String.format("%.2f", remainingValue));
+                                oTrans.setMaster(lnIndex, enteredValue44);
+                                txtField44.setText(String.format("%.2f", enteredValue44));
                             }
 
-                            oTrans.setMaster(lnIndex, enteredValue44);
-                            txtField44.setText(String.format("%.2f", enteredValue44));
                             break;
                         case 45:
                             if (lsValue.isEmpty()) {
@@ -1507,14 +1491,14 @@ public class VSPFormController implements Initializable, ScreenInterface {
                                 break;
                             }
 
-                            if (!txtField30.getText().isEmpty()) {
+                            if (lnValue30 > 0.00) {
                                 double remainingValue = 100.00 - enteredValue45;
                                 oTrans.setMaster(44, remainingValue);
                                 txtField44.setText(String.format("%.2f", remainingValue));
+                                oTrans.setMaster(lnIndex, enteredValue45);
+                                txtField45.setText(String.format("%.2f", enteredValue45));
                             }
 
-                            oTrans.setMaster(lnIndex, enteredValue45);
-                            txtField45.setText(String.format("%.2f", enteredValue45));
                             break;
                         case 29: //STD
                             if (lsValue.isEmpty()) {
@@ -1694,14 +1678,15 @@ public class VSPFormController implements Initializable, ScreenInterface {
                                 break;
                             }
 
-                            if (!txtField28.getText().isEmpty()) {
+                            if (lnValue28 > 0.00) {
                                 double remainingValue = 100.00 - enteredValue46;
                                 oTrans.setMaster(47, remainingValue);
                                 txtField47.setText(String.format("%.2f", remainingValue));
+
+                                oTrans.setMaster(lnIndex, enteredValue46);
+                                txtField46.setText(String.format("%.2f", enteredValue46));
                             }
 
-                            oTrans.setMaster(lnIndex, enteredValue46);
-                            txtField46.setText(String.format("%.2f", enteredValue46));
                             break;
 
                         case 47:
@@ -1717,14 +1702,15 @@ public class VSPFormController implements Initializable, ScreenInterface {
                                 break;
                             }
 
-                            if (!txtField28.getText().isEmpty()) {
+                            if (lnValue28 > 0.00) {
+
                                 double remainingValue = 100.00 - enteredValue47;
                                 oTrans.setMaster(46, remainingValue);
                                 txtField46.setText(String.format("%.2f", remainingValue));
-                            }
 
-                            oTrans.setMaster(lnIndex, enteredValue47);
-                            txtField47.setText(String.format("%.2f", enteredValue47));
+                                oTrans.setMaster(lnIndex, enteredValue47);
+                                txtField47.setText(String.format("%.2f", enteredValue47));
+                            }
 
                             break;
 
@@ -1998,18 +1984,23 @@ public class VSPFormController implements Initializable, ScreenInterface {
             txtField45.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f", oTrans.getMaster(45)))));
             txtField46.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f", oTrans.getMaster(46)))));
             txtField47.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f", oTrans.getMaster(47)))));
-
-            if (Double.valueOf(oTrans.getMaster(29).toString()) > 0.00 || Double.valueOf(oTrans.getMaster(30).toString()) > 0.00) {
+            if (oTrans.getMaster(55).toString().equals("1")) {
                 chckBoxSpecialAccount.setSelected(true);
-                if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
-                    txtField29.setDisable(false);
-                    txtField30.setDisable(false);
-                }
             } else {
                 chckBoxSpecialAccount.setSelected(false);
-                txtField29.setDisable(true);
-                txtField30.setDisable(true);
             }
+
+//            if (Double.valueOf(oTrans.getMaster(29).toString()) > 0.00 || Double.valueOf(oTrans.getMaster(30).toString()) > 0.00) {
+//                chckBoxSpecialAccount.setSelected(true);
+//                if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
+//                    txtField29.setDisable(false);
+//                    txtField30.setDisable(false);
+//                }
+//            } else {
+//                chckBoxSpecialAccount.setSelected(false);
+//                txtField29.setDisable(true);
+//                txtField30.setDisable(true);
+//            }
             String isVchlBrandNew = ((String) oTrans.getMaster(54));
             if (isVchlBrandNew.equals("0")) {
                 brandNewCat.setSelected(true);
@@ -2688,10 +2679,6 @@ public class VSPFormController implements Initializable, ScreenInterface {
         txtField46.setDisable(true);
         txtField47.setDisable(true);
         txtField11.setDisable(true);
-
-        txtField29.setDisable(true);
-        txtField30.setDisable(true);
-
         txtField36.setDisable(true);
         txtField37.setDisable(true);
         txtField39.setDisable(true);
@@ -2699,6 +2686,8 @@ public class VSPFormController implements Initializable, ScreenInterface {
         txtField362.setDisable(true);
         txtField372.setDisable(true);
         txtField392.setDisable(true);
+        txtField30.setDisable(!lbShow); // promo
+        txtField29.setDisable(!lbShow); // promo
         txtField28.setDisable(!lbShow); // promo
         txtField31.setDisable(!lbShow); // bundle
         txtField32.setDisable(!lbShow); // cash

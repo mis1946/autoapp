@@ -1989,18 +1989,6 @@ public class VSPFormController implements Initializable, ScreenInterface {
             } else {
                 chckBoxSpecialAccount.setSelected(false);
             }
-
-//            if (Double.valueOf(oTrans.getMaster(29).toString()) > 0.00 || Double.valueOf(oTrans.getMaster(30).toString()) > 0.00) {
-//                chckBoxSpecialAccount.setSelected(true);
-//                if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
-//                    txtField29.setDisable(false);
-//                    txtField30.setDisable(false);
-//                }
-//            } else {
-//                chckBoxSpecialAccount.setSelected(false);
-//                txtField29.setDisable(true);
-//                txtField30.setDisable(true);
-//            }
             String isVchlBrandNew = ((String) oTrans.getMaster(54));
             if (isVchlBrandNew.equals("0")) {
                 brandNewCat.setSelected(true);

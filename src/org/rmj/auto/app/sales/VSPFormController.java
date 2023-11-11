@@ -979,6 +979,9 @@ public class VSPFormController implements Initializable, ScreenInterface {
                 return;
             }
 
+            if (!validateLessthanDoubleInput(txtField29, "STD Fleet Discount")) {
+                return;
+            }
             if (!validateLessthanDoubleInput(txtField42, "STD Fleet Plant Discount")) {
                 return;
             }
@@ -986,6 +989,9 @@ public class VSPFormController implements Initializable, ScreenInterface {
                 return;
             }
 
+            if (!validateLessthanDoubleInput(txtField30, "SPL Fleet Discount")) {
+                return;
+            }
             if (!validateLessthanDoubleInput(txtField44, "SPL Fleet Plant Discount")) {
                 return;
             }
@@ -1619,13 +1625,13 @@ public class VSPFormController implements Initializable, ScreenInterface {
                                 ShowMessageFX.Warning(getStage(), "Unit Price cannot be less than Downpayment", "Warning", null);
                                 txtField08.requestFocus();
                             } else {
-                                if (Double.parseDouble(lsValue) < Double.parseDouble(oTrans.getVSPFinance(13).toString())) {
+                                if (Double.parseDouble(lsValue.replace(",", "")) < Double.parseDouble(oTrans.getVSPFinance(13).toString())) {
                                     oTrans.setVSPFinance(13, 0.00);
                                 }
                                 oTrans.setMaster(lnIndex, decimalFormat.format(Double.valueOf(lsValue.replace(",", ""))));
-
                             }
-                            if (lsValue.equals("0.00")) {
+
+                            if (oTrans.getMaster(8).toString().equals("0.00")) {
                                 switch (comboBox34.getSelectionModel().getSelectedIndex()) {
                                     case 1:
                                     case 2:

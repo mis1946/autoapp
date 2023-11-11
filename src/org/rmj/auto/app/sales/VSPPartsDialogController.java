@@ -31,11 +31,6 @@ import org.rmj.auto.app.views.InputTextFormatter;
 import org.rmj.auto.app.views.ScreenInterface;
 import org.rmj.auto.sales.base.VehicleSalesProposalMaster;
 
-/**
- * FXML Controller class
- *
- * @author User
- */
 public class VSPPartsDialogController implements Initializable, ScreenInterface {
 
     private Boolean lbrDsc;

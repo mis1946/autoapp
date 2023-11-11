@@ -4,14 +4,8 @@
  */
 package org.rmj.auto.app.sales;
 
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.scene.control.CheckBox;
 
-/**
- *
- * @author User
- */
 public class VSPTablePartList {
 
     private SimpleStringProperty tblPartsRow;

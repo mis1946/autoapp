@@ -43,11 +43,6 @@ import org.rmj.appdriver.callback.MasterCallback;
 import org.rmj.auto.app.views.unloadForm;
 import org.rmj.auto.sales.base.VehicleSalesProposalMaster;
 
-/**
- * FXML Controller class
- *
- * @author User
- */
 public class VSPFormPrintController implements Initializable {
 
     private VehicleSalesProposalMaster oTrans;

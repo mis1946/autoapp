@@ -9,10 +9,6 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.CheckBox;
 
-/**
- *
- * @author User
- */
 public class VSPTableLaborList {
 
     private SimpleStringProperty tblLaborRow;

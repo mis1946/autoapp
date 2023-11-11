@@ -15,7 +15,6 @@ public class VSPTableMasterList {
     private SimpleStringProperty tblindex04_Master;
     private SimpleStringProperty tblindex05_Master;
     private SimpleStringProperty tblindex06_Master;
-
     private SimpleStringProperty tblindex07_Master;
     private SimpleStringProperty tblindex08_Master;
     private SimpleStringProperty tblindex09_Master;

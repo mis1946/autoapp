@@ -68,7 +68,6 @@ import org.rmj.auto.app.views.ScreenInterface;
 import org.rmj.auto.app.views.unloadForm;
 import org.rmj.auto.sales.base.InquiryFollowUp;
 import org.rmj.auto.sales.base.VehicleSalesProposalMaster;
-import org.rmj.gcamera.app.Capture;
 
 /**
  * FXML Controller class

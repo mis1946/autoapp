@@ -1396,9 +1396,9 @@ public class VSPFormController implements Initializable, ScreenInterface {
             TextField txtField = (TextField) ((ReadOnlyBooleanPropertyBase) o).getBean();
             int lnIndex = Integer.parseInt(txtField.getId().substring(8, 10));
             String lsValue = txtField.getText();
-            double lnValue28 = Double.parseDouble(txtField28.getText());
-            double lnValue29 = Double.parseDouble(txtField29.getText());
-            double lnValue30 = Double.parseDouble(txtField30.getText());
+            double lnValue28 = Double.parseDouble(txtField28.getText().replace(",", ""));
+            double lnValue29 = Double.parseDouble(txtField29.getText().replace(",", ""));
+            double lnValue30 = Double.parseDouble(txtField30.getText().replace(",", ""));
             if (lsValue == null) {
                 return;
             }
@@ -1437,7 +1437,6 @@ public class VSPFormController implements Initializable, ScreenInterface {
                                 oTrans.setMaster(lnIndex, enteredValue42);
                                 txtField42.setText(String.format("%.2f", enteredValue42));
                             }
-
                             break;
                         case 43:
                             if (lsValue.isEmpty()) {
@@ -1687,7 +1686,6 @@ public class VSPFormController implements Initializable, ScreenInterface {
                                 double remainingValue = 100.00 - enteredValue46;
                                 oTrans.setMaster(47, remainingValue);
                                 txtField47.setText(String.format("%.2f", remainingValue));
-
                                 oTrans.setMaster(lnIndex, enteredValue46);
                                 txtField46.setText(String.format("%.2f", enteredValue46));
                             }

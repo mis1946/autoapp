@@ -2150,7 +2150,6 @@ public class VSPFormController implements Initializable, ScreenInterface {
     public void getDate(ActionEvent event) {
         try {
             oTrans.setMaster(4, SQLUtil.toDate(date04.getValue().toString(), SQLUtil.FORMAT_SHORT_DATE));
-
         } catch (SQLException ex) {
             Logger.getLogger(VSPFormController.class
                     .getName()).log(Level.SEVERE, null, ex);

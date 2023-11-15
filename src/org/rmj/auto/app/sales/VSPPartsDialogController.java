@@ -98,7 +98,7 @@ public class VSPPartsDialogController implements Initializable, ScreenInterface 
     }
 
     private void initAlphabeticalFormatterFields() {
-        Pattern lettersOnlyPattern = Pattern.compile("[A-Za-z]*");
+        Pattern lettersOnlyPattern = Pattern.compile("[A-Za-z ]*");
         txtField09_Part.setTextFormatter(new InputTextFormatter(lettersOnlyPattern));
     }
 
@@ -133,21 +133,27 @@ public class VSPPartsDialogController implements Initializable, ScreenInterface 
 
     private void handleComboBoxSelectionVSPMaster(ComboBox<String> comboBox, int fieldNumber) {
         comboBox.setOnAction(e -> {
-            int selectedType = comboBox.getSelectionModel().getSelectedIndex(); // Retrieve the selected type
-            if (selectedType >= 0) {
-                switch (fieldNumber) {
-                    case 8:
-                        if (selectedType == 0) {
-                            txtField05_Part.setText("0.00");
-                            txtField05_Part.setDisable(true);
-                        } else {
-                            txtField05_Part.setDisable(false);
-                        }
-                        break;
+            try {
+                int selectedType = comboBox.getSelectionModel().getSelectedIndex(); // Retrieve the selected type
+                if (selectedType >= 0) {
+                    switch (fieldNumber) {
+                        case 8:
+                            if (selectedType == 0) {
+                                txtField05_Part.setText("0.00");
+                                oTrans.setVSPPartsDetail(pnRow, 5, Double.valueOf("0.00"));
+                                txtField05_Part.setDisable(true);
+                            } else {
+                                txtField05_Part.setDisable(false);
+                            }
+                            break;
+                    }
                 }
+
+            } catch (SQLException ex) {
+                Logger.getLogger(VSPPartsDialogController.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }
-        );
+
+        });
     }
 
     private static void setCapsLockBehavior(TextField textField) {
@@ -170,11 +176,11 @@ public class VSPPartsDialogController implements Initializable, ScreenInterface 
             /* Lost Focus */
             switch (lnIndex) {
                 case 5:
+                    DecimalFormat getFormat = new DecimalFormat("#,##0.00");
                     if (lsValue.isEmpty()) {
                         lsValue = "0.00";
                     }
-                    String currentPartsAmount = lsValue;
-                    txtField05_Part.setText(formatAmount(currentPartsAmount));
+                    txtField05_Part.setText(String.valueOf(getFormat.format(Double.parseDouble(String.valueOf(txtField05_Part.getText().replace(",", ""))))));
                     break;
             }
         }
@@ -182,7 +188,7 @@ public class VSPPartsDialogController implements Initializable, ScreenInterface 
 
     private void loadVSPPartsField() {
         try {
-
+            DecimalFormat getFormat = new DecimalFormat("#,##0.00");
             txtField09_Part.setText((String) oTrans.getVSPPartsDetail(pnRow, "sDescript"));
             if ((!oTrans.getVSPPartsDetail(pnRow, "sTransNox").toString().isEmpty())) {
                 txtField09_Part.setDisable(true);
@@ -201,41 +207,17 @@ public class VSPPartsDialogController implements Initializable, ScreenInterface 
             }
             comboBox8.setValue(selectedItem8);
             txtField06_Part.setText(String.valueOf(oTrans.getVSPPartsDetail(pnRow, 6)));
-            String currentPartsAmount = oTrans.getVSPPartsDetail(pnRow, 5).toString();
-            txtField05_Part.setText(formatAmount(currentPartsAmount));
+            txtField05_Part.setText(String.valueOf(getFormat.format(Double.parseDouble(String.valueOf(oTrans.getVSPPartsDetail(pnRow, 5))))));
+
         } catch (SQLException ex) {
             Logger.getLogger(VSPPartsDialogController.class
                     .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    public static String formatAmount(String amountString) {
-        DecimalFormat numFormat = new DecimalFormat("#,##0.00");
-        String formattedAmount = "";
-
-        if (amountString.isEmpty()) {
-            formattedAmount = "";
-        } else {
-            try {
-                double amount = Double.parseDouble(amountString);
-                if (amount == 0.00 || amount < 0.00) {
-                    formattedAmount = "";
-                } else {
-                    formattedAmount = numFormat.format(amount);
-                }
-            } catch (NumberFormatException e) {
-                // Handle the case where input is not a valid number
-                formattedAmount = "";
-            }
-        }
-
-        return formattedAmount;
-    }
-
     private boolean settoClass() {
         try {
-
-            DecimalFormat numFormat = new DecimalFormat("###0.00");
+            DecimalFormat setFormat = new DecimalFormat("###0.00");
             int selectedType = comboBox8.getSelectionModel().getSelectedIndex();
             if (txtField09_Part.getText().trim().isEmpty()) {
                 ShowMessageFX.Warning(getStage(), "Please input Parts Description", "Warning", null);
@@ -247,12 +229,26 @@ public class VSPPartsDialogController implements Initializable, ScreenInterface 
                 txtField09_Part.requestFocus();
                 return false;
             }
+
+            String laborQuantity = txtField06_Part.getText(); // Remove commas from the input string
+            try {
+                int amount = Integer.parseInt(laborQuantity);
+                if (amount == 0 || amount < 0) {
+                    ShowMessageFX.Warning(getStage(), "Please input Quantity amount", "Warning", null);
+                    txtField06_Part.requestFocus();
+                    return false;
+                }
+            } catch (NumberFormatException e) {
+                // Handle the case where laborAmount is not a valid number
+                ShowMessageFX.Warning(getStage(), "Invalid Quantity Amount", "Warning", null);
+                txtField06_Part.requestFocus();
+                return false;
+            }
             if (comboBox8.getSelectionModel().getSelectedIndex() == -1) {
                 ShowMessageFX.Warning(getStage(), "Please select Charge Type", "Warning", null);
                 comboBox8.requestFocus();
                 return false;
             }
-
             if (selectedType == 1) {
                 String laborAmount = txtField05_Part.getText().replace(",", ""); // Remove commas from the input string
                 try {
@@ -270,28 +266,13 @@ public class VSPPartsDialogController implements Initializable, ScreenInterface 
                 }
             }
 
-            String laborQuantity = txtField06_Part.getText(); // Remove commas from the input string
-            try {
-                int amount = Integer.parseInt(laborQuantity);
-                if (amount == 0 || amount < 0) {
-                    ShowMessageFX.Warning(getStage(), "Please input Quantity amount", "Warning", null);
-                    txtField06_Part.requestFocus();
-                    return false;
-                }
-            } catch (NumberFormatException e) {
-                // Handle the case where laborAmount is not a valid number
-                ShowMessageFX.Warning(getStage(), "Invalid Quantity Amount", "Warning", null);
-                txtField06_Part.requestFocus();
-                return false;
-            }
-
             oTrans.setVSPPartsDetail(pnRow, 9, txtField09_Part.getText());
 
             int targetClients = Integer.parseInt(txtField06_Part.getText());
 
             oTrans.setVSPPartsDetail(pnRow, 8, String.valueOf(selectedType));
             oTrans.setVSPPartsDetail(pnRow, 6, targetClients);
-            oTrans.setVSPPartsDetail(pnRow, 5, numFormat.format(Double.valueOf(txtField05_Part.getText().replace(",", ""))));
+            oTrans.setVSPPartsDetail(pnRow, 5, setFormat.format(Double.valueOf(txtField05_Part.getText().replace(",", ""))));
         } catch (SQLException ex) {
             Logger.getLogger(VSPLaborEntryDialogController.class.getName()).log(Level.SEVERE, null, ex);
         }

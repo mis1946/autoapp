@@ -687,6 +687,13 @@ public class VSPFormController implements Initializable, ScreenInterface {
             }
         });
 
+        txtField68.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+            if (newValue.isEmpty()) {
+                textArea69.setText("");
+            }
+        }
+        );
+
         //BANK NAME
         switch (comboBox34.getSelectionModel().getSelectedIndex()) {
             case 0:
@@ -749,10 +756,9 @@ public class VSPFormController implements Initializable, ScreenInterface {
                 });
 
                 break;
-        }
-
-        //STD FLEET DISCOUNT
-        txtField29.textProperty()
+        } //STD FLEET DISCOUNT
+        txtField29
+                .textProperty()
                 .addListener(new ChangeListener<String>() {
                     @Override
                     public void changed(ObservableValue<? extends String> observable, String oldValue,
@@ -1423,14 +1429,14 @@ public class VSPFormController implements Initializable, ScreenInterface {
                         }
                         break;
                     case "txtField71":
-                        if (oTrans.searchAvailableVhcl(txtField.getText())) {
+                        if (oTrans.searchAvailableVhcl(txtField.getText(), false)) {
                             loadVSPField();
                         } else {
                             ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
                         }
                         break;
                     case "txtField72":
-                        if (oTrans.searchAvailableVhcl(txtField.getText())) {
+                        if (oTrans.searchAvailableVhcl(txtField.getText(), false)) {
                             loadVSPField();
                         } else {
                             ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
@@ -3093,7 +3099,8 @@ public class VSPFormController implements Initializable, ScreenInterface {
                         oTrans.setMaster(25, String.valueOf("0"));
 
                     } catch (SQLException ex) {
-                        Logger.getLogger(VSPFormController.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(VSPFormController.class
+                                .getName()).log(Level.SEVERE, null, ex);
                     }
                 }
                 loadVSPField();
@@ -3116,7 +3123,8 @@ public class VSPFormController implements Initializable, ScreenInterface {
                         oTrans.setMaster(19, Double.valueOf("0.00"));
 
                     } catch (SQLException ex) {
-                        Logger.getLogger(VSPFormController.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(VSPFormController.class
+                                .getName()).log(Level.SEVERE, null, ex);
                     }
                 }
                 loadVSPField();
@@ -3151,9 +3159,11 @@ public class VSPFormController implements Initializable, ScreenInterface {
                 tabDetails.setDisable(false);
             }
         }
-        if (fnValue == EditMode.UPDATE) {
+        if (fnValue == EditMode.UPDATE || fnValue == EditMode.ADDNEW) {
             try {
-                txtField77.setDisable(true);
+                if (fnValue == EditMode.UPDATE) {
+                    txtField77.setDisable(true);
+                }
                 txtField71.setDisable(true);
                 txtField72.setDisable(true);
 
@@ -3167,11 +3177,14 @@ public class VSPFormController implements Initializable, ScreenInterface {
                 if (preOwnedCat.isSelected()) {
                     txtField71.setDisable(!master71Value.isEmpty());
                     txtField72.setDisable(!master72Value.isEmpty());
+
                 }
             } catch (SQLException ex) {
-                Logger.getLogger(VSPFormController.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(VSPFormController.class
+                        .getName()).log(Level.SEVERE, null, ex);
             }
         }
+
         btnAddParts.setDisable(!lbShow);
     }
 

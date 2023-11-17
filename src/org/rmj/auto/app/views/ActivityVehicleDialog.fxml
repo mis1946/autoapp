@@ -76,12 +76,12 @@
                                         <TableView fx:id="tblViewActVchl" prefHeight="200.0" prefWidth="200.0">
                                             <columns>
                                                 <TableColumn fx:id="tblindexRow" editable="false" prefWidth="42.0" sortable="false" text="Row" />
-                                                <TableColumn fx:id="tblSelectActVhcl" prefWidth="30.0" sortable="false">
+                                                <TableColumn fx:id="tblSelectActVhcl" editable="false" prefWidth="30.0" sortable="false">
                                                     <graphic>
                                                         <CheckBox fx:id="selectAllCheckBox" mnemonicParsing="false" />
                                                     </graphic>
                                                 </TableColumn>
-                                                <TableColumn fx:id="tblDescript" editable="false" prefWidth="293.0" text="Vehicle Description" />
+                                                <TableColumn fx:id="tblDescript" editable="false" prefWidth="293.0" sortable="false" text="Vehicle Description" />
                                             </columns>
                                         </TableView>
                                     </children>

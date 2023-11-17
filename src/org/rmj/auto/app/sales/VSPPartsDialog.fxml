@@ -76,6 +76,11 @@
                                                 <Font name="Arial Bold" size="12.0" />
                                             </font>
                                         </Label>
+                                        <TextField fx:id="txtField06_Part" promptText="0" style="-fx-font-weight: bold;" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                                            <tooltip>
+                                                <Tooltip text="Please fill in the VSP Parts Quantity." />
+                                            </tooltip>
+                                        </TextField>
                                         <ComboBox fx:id="comboBox8" prefWidth="150.0" GridPane.columnIndex="2" GridPane.columnSpan="4" GridPane.rowIndex="3">
                                             <tooltip>
                                                 <Tooltip text="Please select VSP Parts Charge Type." />
@@ -92,11 +97,6 @@
                                             </tooltip>
                                         </TextField>
                                         <TextField fx:id="txtField14_Part" disable="true" style="-fx-font-weight: bold;" GridPane.columnIndex="2" GridPane.columnSpan="4" />
-                                        <TextField fx:id="txtField06_Part" promptText="0" style="-fx-font-weight: bold;" GridPane.columnIndex="2" GridPane.rowIndex="2">
-                                            <tooltip>
-                                                <Tooltip text="Please fill in the VSP Parts Quantity." />
-                                            </tooltip>
-                                        </TextField>
                                         <Label text="Quantity" GridPane.columnIndex="1" GridPane.rowIndex="2">
                                             <font>
                                                 <Font name="Arial Bold" size="12.0" />

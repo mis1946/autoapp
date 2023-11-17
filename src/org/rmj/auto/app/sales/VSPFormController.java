@@ -885,7 +885,6 @@ public class VSPFormController implements Initializable, ScreenInterface {
                     oTrans.setMaster(55, "0");
                 }
                 loadVSPField();
-
             } catch (SQLException ex) {
                 Logger.getLogger(VSPFormController.class
                         .getName()).log(Level.SEVERE, null, ex);
@@ -2198,6 +2197,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
                 default:
                     break;
             }
+
             comboBox25.setValue(selectedItem25);
             txtField18.setText(String.valueOf(decimalFormat.format(Double.parseDouble(String.valueOf(oTrans.getMaster(18))))));
             comboBox23.getSelectionModel().select(Integer.parseInt(oTrans.getMaster(23).toString()));
@@ -2801,8 +2801,8 @@ public class VSPFormController implements Initializable, ScreenInterface {
         txtField362.setDisable(true);
         txtField372.setDisable(true);
         txtField392.setDisable(true);
-        txtField30.setDisable(!lbShow); // promo
-        txtField29.setDisable(!lbShow); // promo
+        txtField30.setDisable(true);
+        txtField29.setDisable(true);
         txtField28.setDisable(!lbShow); // promo
         txtField31.setDisable(!lbShow); // bundle
         txtField32.setDisable(!lbShow); // cash
@@ -3171,6 +3171,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
                 String master72Value = oTrans.getMaster(72).toString().trim();
 
                 if (brandNewCat.isSelected()) {
+
                     txtField71.setDisable(!master71Value.isEmpty());
                     txtField72.setDisable(true);
                 }

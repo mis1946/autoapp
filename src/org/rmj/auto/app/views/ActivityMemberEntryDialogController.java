@@ -4,9 +4,11 @@
  */
 package org.rmj.auto.app.views;
 
+import com.sun.javafx.scene.control.skin.TableHeaderRow;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -72,6 +74,8 @@ public class ActivityMemberEntryDialogController implements Initializable, Scree
         btnClose.setOnAction(this::cmdButton_Click);
         btnAdd.setOnAction(this::cmdButton_Click);
         loadDepartTable();
+
+        initTablePropert();
         tblViewDepart.setOnMouseClicked(event -> {
             ActivityMemberTable selectedDepartment = tblViewDepart.getSelectionModel().getSelectedItem();
             if (selectedDepartment != null) {
@@ -79,6 +83,22 @@ public class ActivityMemberEntryDialogController implements Initializable, Scree
 
                 loadEmployeeTable(departmentID);
             }
+        });
+
+    }
+
+    private void initTablePropert() {
+        tblViewDepart.widthProperty().addListener((ObservableValue<? extends Number> source, Number oldWidth, Number newWidth) -> {
+            TableHeaderRow header = (TableHeaderRow) tblViewDepart.lookup("TableHeaderRow");
+            header.reorderingProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+                header.setReordering(false);
+            });
+        });
+        tblViewEmployee.widthProperty().addListener((ObservableValue<? extends Number> source, Number oldWidth, Number newWidth) -> {
+            TableHeaderRow header = (TableHeaderRow) tblViewEmployee.lookup("TableHeaderRow");
+            header.reorderingProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+                header.setReordering(false);
+            });
         });
 
     }

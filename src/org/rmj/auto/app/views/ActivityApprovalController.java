@@ -4,6 +4,7 @@
  */
 package org.rmj.auto.app.views;
 
+import com.sun.javafx.scene.control.skin.TableHeaderRow;
 import java.net.URL;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
@@ -137,6 +138,13 @@ public class ActivityApprovalController implements Initializable, ScreenInterfac
         btnDepart.setOnAction(this::cmdButton_Click);
         btnApproved.setOnAction(this::cmdButton_Click);
         btnRefresh.setOnAction(this::cmdButton_Click);
+
+        tblViewActApproval.widthProperty().addListener((ObservableValue<? extends Number> source, Number oldWidth, Number newWidth) -> {
+            TableHeaderRow header = (TableHeaderRow) tblViewActApproval.lookup("TableHeaderRow");
+            header.reorderingProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+                header.setReordering(false);
+            });
+        });
 
     }
 

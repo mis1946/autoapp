@@ -74,9 +74,9 @@
                                         </Label>
                                         <TableView fx:id="tblViewTown" prefHeight="200.0" prefWidth="200.0">
                                             <columns>
-                                                <TableColumn fx:id="tblRow" prefWidth="42.0" text="Row" />
-                                                <TableColumn fx:id="tblSelect" prefWidth="47.0" />
-                                                <TableColumn fx:id="tblTown" prefWidth="276.0" text="Municipalities/Cities" />
+                                                <TableColumn fx:id="tblRow" editable="false" prefWidth="42.0" sortable="false" text="Row" />
+                                                <TableColumn fx:id="tblSelect" editable="false" prefWidth="47.0" sortable="false" />
+                                                <TableColumn fx:id="tblTown" editable="false" prefWidth="276.0" sortable="false" text="Municipalities/Cities" />
                                             </columns>
                                         </TableView>
                                     </children>

@@ -3313,7 +3313,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
         });
     }
 
-    //Animation
+    //TextFieldAnimation
     private void shakeTextField(TextField textField) {
         Timeline timeline = new Timeline();
         double originalX = textField.getTranslateX();
@@ -3340,6 +3340,6 @@ public class VSPFormController implements Initializable, ScreenInterface {
     public void removeRequired() {
         txtField77.getStyleClass().remove("required-field");
         txtField68.getStyleClass().remove("required-field");
-        txtField08.getStyleClass().remove("required-field");
+
     }
 }

@@ -121,8 +121,8 @@ public class CustomerFormController implements Initializable, ScreenInterface {
 
     /*populate comboxes client_master*/
     ObservableList<String> cCvlStat = FXCollections.observableArrayList("SINGLE", "MARRIED", "DIVORCED", "SEPARATED", "WIDOWED");
-    ObservableList<String> cGender = FXCollections.observableArrayList("MALE", "FEMALE", "LGBTQ");
-    ObservableList<String> cCusttype = FXCollections.observableArrayList("CLIENT", "COMPANY", "INSTITUTIONAL");
+    ObservableList<String> cGender = FXCollections.observableArrayList("MALE", "FEMALE");
+    ObservableList<String> cCusttype = FXCollections.observableArrayList("CLIENT", "COMPANY");
     ObservableList<String> cTitle = FXCollections.observableArrayList("MR.", "MISS", "MRS.");
 
     @FXML
@@ -1205,6 +1205,9 @@ public class CustomerFormController implements Initializable, ScreenInterface {
             loControl.setObject(oTransAddress);
             loControl.setRow(fnRow);
             loControl.setState(isAdd);
+            loControl.setOrigTown((String) oTransAddress.getAddress(fnRow, 5));
+            loControl.setOrigBrgy((String) oTransAddress.getAddress(fnRow, 6));
+            
             fxmlLoader.setController(loControl);
 
             //load the main interface
@@ -1238,6 +1241,8 @@ public class CustomerFormController implements Initializable, ScreenInterface {
             e.printStackTrace();
             ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
             System.exit(1);
+        } catch (SQLException ex) {
+            Logger.getLogger(CustomerFormController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
@@ -1807,7 +1812,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
             addressdata.clear();
             /*Set Values to Class Address Master*/
             for (lnCtr = 1; lnCtr <= oTransAddress.getItemCount(); lnCtr++) {
-                sAddress = oTransAddress.getAddress(lnCtr, "sAddressx").toString() + " " + oTransAddress.getAddress(lnCtr, "sBrgyName").toString() + " " + oTransAddress.getAddress(lnCtr, "sTownName").toString();
+                sAddress = oTransAddress.getAddress(lnCtr, "sAddressx").toString() + " " + oTransAddress.getAddress(lnCtr, "sBrgyName").toString() + " " + oTransAddress.getAddress(lnCtr, "sTownName").toString() ;
 
                 if (oTransAddress.getAddress(lnCtr, "cPrimaryx").toString().equals("1")) {
                     sPrimary = "Y";
@@ -1834,7 +1839,10 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                 } else {
                     sStatus = "INACTIVE";
                 }
-                if (!sAddress.isEmpty() && !sAddress.trim().equals("")) {
+                //if (!sAddress.isEmpty() && !sAddress.trim().equals("")) {
+                if ((!sAddress.isEmpty() && !sAddress.trim().equals("")) &&
+                        !oTransAddress.getAddress(lnCtr, "sHouseNox").toString().isEmpty())
+                    {
                     addressdata.add(new CustomerTableAddress(
                             String.valueOf(lnCtr), //ROW
                             sPrimary,

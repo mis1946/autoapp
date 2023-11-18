@@ -126,13 +126,15 @@ public class VehicleSalesInvoiceFormController implements Initializable, ScreenI
     private TextField textSeek01;
     @FXML
     private ComboBox cmbType032;
-    ObservableList<String> cCustomerType = FXCollections.observableArrayList("SUPPLIER", "CUSTOMER"); // Customer Type Values
+    ObservableList<String> cCustomerType = FXCollections.observableArrayList("CUSTOMER", "SUPPLIER"); // Customer Type Values
     @FXML
     private Label lblStatus15;
     @FXML
     private TextField txtField33;
     @FXML
     private TextArea textArea34;
+    @FXML
+    private TextField txtField36;
     
     
     private Stage getStage() {
@@ -174,6 +176,18 @@ public class VehicleSalesInvoiceFormController implements Initializable, ScreenI
                 //clearFields();
                 clearClassFields();
                 loadFields();
+            }
+        });
+        
+        cmbType032.setOnAction(event -> {
+            if (pnEditMode == EditMode.ADDNEW){
+                clearClass();
+                try {
+                    oTrans.setMaster(32, String.valueOf(cmbType032.getSelectionModel().getSelectedIndex()));
+                    loadFields();
+                } catch (SQLException ex) {
+                    Logger.getLogger(VehicleSalesInvoiceFormController.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
         
@@ -426,12 +440,11 @@ public class VehicleSalesInvoiceFormController implements Initializable, ScreenI
             txtField22.setText((String) oTrans.getMaster(22)); //sEngineNo
             textArea18.setText((String) oTrans.getMaster(18)); //sDescript
             txtField23.setText((String) oTrans.getMaster(23)); //sColorDsc
-            System.out.println(Integer.parseInt(oTrans.getMaster(32).toString()));
             cmbType032.getSelectionModel().select(Integer.parseInt(oTrans.getMaster(32).toString())); //Customer Type
             
             textArea34.setText((String) oTrans.getMaster(34)); //Remarks
             txtField33.setText((String) oTrans.getMaster(33)); //Tin
-            
+            txtField36.setText((String) oTrans.getMaster(36)); //sCoCltNmx
             if (((String) oTrans.getMaster(15)).equals("1")){
                 lblStatus15.setText("Active");
             } else {
@@ -497,6 +510,49 @@ public class VehicleSalesInvoiceFormController implements Initializable, ScreenI
         }
     }
     
+    /*Clear Class*/
+    public void clearClass(){
+        try {
+            for (int lnCtr = 1; lnCtr <= 36; lnCtr++){
+                switch(lnCtr) {                      
+                    case 6: //a.sSourceNo             
+                    case 7: //a.sSourceCd
+                    case 8: //a.sClientID 
+                    case 18: //sDescript 
+                    case 19: //sCSNoxxxx                                                                                                                                                                                                                                                                        
+                    case 20: //sPlateNox 			 																																		                                                                                                                                                                                            
+                    case 21: //sFrameNox 			 																																		                                                                                                                                                                                            
+                    case 22: //sEngineNo 			 																																	                                                                                                                                                                                              
+                    case 23: //sColorDsc 			 																																	                                                                                                                                                                                              
+                    case 24: //sSalesExe                                                                                                                                                                                                                                                                       
+                    case 25: //sEmployID              
+                    case 30: //sCompnyNm 
+                    case 31: //sAddressx 
+                    case 33: //sTaxIDNox
+                    case 34: //sRemarksx
+                    case 35: //sCoCltIDx
+                    case 36: //sCoCltNmx
+                        oTrans.setMaster(lnCtr, "");
+                        break;
+                    case 9: //a.nTranTotl
+                    case 10: //a.nDiscount
+                    case 11: //a.nVatRatex
+                    case 12: //a.nVatAmtxx
+                    case 13: //a.nAmtPaidx
+                    case 26: //nAddlDscx 
+                    case 27: //nPromoDsc 
+                    case 28: //nFleetDsc 
+                    case 29: //nUnitPrce 
+                        oTrans.setMaster(lnCtr, 0.00);
+                        break;
+                }
+
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(VehicleSalesInvoiceFormController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     /*Clear Fields*/
     public void clearFields(){
         /*Clear Red Color for required fileds*/
@@ -522,6 +578,7 @@ public class VehicleSalesInvoiceFormController implements Initializable, ScreenI
         txtField12.clear(); //nVatAmtxx
         txtField10.clear(); //nDiscount
         txtField09.clear(); //nTranTotl
+        txtField36.clear(); //sCoCltNmx
     }
     
     /*Enabling / Disabling Fields*/
@@ -546,11 +603,6 @@ public class VehicleSalesInvoiceFormController implements Initializable, ScreenI
         btnPrint.setVisible(false);
         btnPrint.setManaged(false);
         
-        if (fnValue == EditMode.ADDNEW){
-            btnCancel.setVisible(true);
-            btnCancel.setManaged(true);
-        }
-
         if (fnValue == EditMode.READY) { //show edit if user clicked save / browse
             btnEdit.setVisible(true); 
             btnEdit.setManaged(true);
@@ -566,7 +618,10 @@ public class VehicleSalesInvoiceFormController implements Initializable, ScreenI
         cmbType032.setDisable(true); //Customer type
         textArea34.setDisable(!lbShow); //Remarks
         textArea18.setDisable(!lbShow); //vehicle description
+        
         if (fnValue == EditMode.ADDNEW){
+            btnCancel.setVisible(true);
+            btnCancel.setManaged(true);
             txtField05.setDisable(false);//sReferNox
             cmbType032.setDisable(false); //Customer type
             txtField06.setDisable(false); //sSourceNo

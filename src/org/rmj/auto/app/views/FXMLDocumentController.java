@@ -450,7 +450,7 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
             case "VehicleDescriptionForm.fxml":
                 return "Vehicle Description";
             case "VehicleEntryForm.fxml":
-                return "Vehicle Entry";
+                return "Vehicle Information";
             case "UnitReceivingForm.fxml":
                 return "Unit Receiving";
             case "InquiryForm.fxml":
@@ -475,7 +475,7 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
                 return "Vehicle Sales Invoice";
             /*PARTS*/
             case "ItemEntryForm.fxml":
-                return "Item Entry";
+                return "Item Information";
             default:
                 ShowMessageFX.Warning(null, "Warning", "Notify System Admin to Configure Tab Title for " + menuaction);
                 return null;

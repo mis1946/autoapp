@@ -578,6 +578,19 @@ public class InquiryFormController implements Initializable, ScreenInterface {
         oTransProcess.setCallback(oListener);
         oTransProcess.setWithUI(true);
         initInquiryAdvances();
+        
+        tblRequirementsInfo.widthProperty().addListener((ObservableValue<? extends Number> source, Number oldWidth, Number newWidth) -> {
+            TableHeaderRow header = (TableHeaderRow) tblRequirementsInfo.lookup("TableHeaderRow");
+            header.reorderingProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+                header.setReordering(false);
+            });
+        });
+        
+        /*INQUIRY BANK APPLICATION*/
+        oTransBankApp = new InquiryBankApplication(oApp, oApp.getBranchCode(), true);
+        oTransBankApp.setCallback(oListener);
+        oTransBankApp.setWithUI(true);
+        initBankApplication();
 
         cmbInqpr01.setItems(cModeOfPayment); //Mode of Payment
         cmbInqpr02.setItems(cCustomerType); //Customer Type
@@ -639,10 +652,10 @@ public class InquiryFormController implements Initializable, ScreenInterface {
         });
 
         /*INQUIRY BANK APPLICATION*/
-        oTransBankApp = new InquiryBankApplication(oApp, oApp.getBranchCode(), true);
-        oTransBankApp.setCallback(oListener);
-        oTransBankApp.setWithUI(true);
-        initBankApplication();
+//        oTransBankApp = new InquiryBankApplication(oApp, oApp.getBranchCode(), true);
+//        oTransBankApp.setCallback(oListener);
+//        oTransBankApp.setWithUI(true);
+//        initBankApplication();
 
         btnBankAppNew.setOnAction(this::cmdButton_Click);
         btnBankAppUpdate.setOnAction(this::cmdButton_Click);
@@ -685,6 +698,36 @@ public class InquiryFormController implements Initializable, ScreenInterface {
             }
         });
 
+    }
+    
+    //TODO
+    private boolean validatePayMode(){
+        try {
+                String lsPayMode = "";
+                String lsTrnStat = "";
+                String lsRecStat = "";
+                int lnPayMode = cmbInqpr01.getSelectionModel().getSelectedIndex() - 1;
+                for(int lnCtr = 1;lnCtr <= oTransBankApp.getBankAppCount(); lnCtr++){
+                    lsPayMode = String.valueOf(oTransBankApp.getBankAppDet(lnCtr, 4));
+                    lsTrnStat = String.valueOf(oTransBankApp.getBankAppDet(lnCtr, 9));
+                    //lsRecStat = String.valueOf(oTransBankApp.getBankAppDet(lnCtr, 10));
+                    //if (lnPayMode >= 0){
+                        //if(lsRecStat.equals("1")){ //Active
+                            if (lsTrnStat.equals("0") || lsTrnStat.equals("2")){ //on-going or approved
+                                if((lnPayMode != Integer.valueOf(lsPayMode))){
+//                                    cmbInqpr01.getSelectionModel().select(Integer.valueOf(lsPayMode));
+//                                    cmbInqpr02.getSelectionModel().select(Integer.parseInt(oTransProcess.getInqReq(oTransProcess.getInqReqCount(), "cCustGrpx").toString()));
+                                    ShowMessageFX.Warning(getStage(), "Invalid Payment Mode: Please cancle on-going or approved bank application with different payment mode.", "Warning", null);
+                                    return false;
+                                }
+                            }
+                        //}
+                    //}
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(InquiryFormController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            return true;
     }
 
     private static void setCapsLockBehavior(TextField textField) {
@@ -1032,6 +1075,18 @@ public class InquiryFormController implements Initializable, ScreenInterface {
                             return;
                         }
                     }
+                    
+                    if (cmbInqpr01.getSelectionModel().getSelectedIndex() >= 0){
+                        if (cmbInqpr02.getSelectionModel().getSelectedIndex() < 0){
+                            ShowMessageFX.Warning(getStage(), "Please select Customer Type.", "Warning", "Error while saving " + pxeModuleName);
+                            return;
+                        }
+                        
+                        if (!validatePayMode()){
+                            return;
+                        }
+                    }
+                    
                     if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure, do you want to save?") == true) {
                         oTransProcess.setClientID(sClientID);
                         oTransProcess.setTransNox(sSourceNox);
@@ -1102,6 +1157,7 @@ public class InquiryFormController implements Initializable, ScreenInterface {
                         }
                         for (InquiryTableBankApplications item : selBankItems) {
                             String sTransNo = item.getTblindex10();
+                            //String sSourceNo = item.getTblindex13();
 
                             switch (lsButton) {
                                 case "btnBankAppCancel":
@@ -2445,13 +2501,13 @@ public class InquiryFormController implements Initializable, ScreenInterface {
                         break;
                 }
                 
-                
-                
-                amount= Double.parseDouble(String.format("%.2f", oTransProcess.getInqRsv(lnCtr, 5)));
+                // amount= Double.parseDouble(String.format("%.2f", oTransProcess.getInqRsv(lnCtr, 5)));
                 // Format the decimal value with decimal separators
+                //TODO
                 DecimalFormat decimalFormat = new DecimalFormat("#,##0.00");
-                formattedAmount = decimalFormat.format(amount);
-
+                //DecimalFormat decimalFormat = new DecimalFormat("###,###,###,###,###.######");
+                //DecimalFormat decimalFormat = new DecimalFormat("###############.######");
+                formattedAmount = decimalFormat.format( Double.parseDouble(String.valueOf(oTransProcess.getInqRsv(lnCtr, 5))));
                 inqvsadata.add(new InquiryTableVehicleSalesAdvances(
                           false
                         , String.valueOf(lnCtr) //Row
@@ -2583,7 +2639,8 @@ public class InquiryFormController implements Initializable, ScreenInterface {
                         ,CommonUtils.xsDateShort((Date) oTransBankApp.getBankAppDet(lnCtr, 3)) //Approval Date
                         ,(String) oTransBankApp.getBankAppDet(lnCtr, 1) //sTransNox    
                         ,(String) oTransBankApp.getBankAppDet(lnCtr, 14) //Cancelled By    
-                        ,CommonUtils.xsDateShort((Date) oTransBankApp.getBankAppDet(lnCtr, 15))//Cancelled Date  
+                        ,CommonUtils.xsDateShort((Date) oTransBankApp.getBankAppDet(lnCtr, 15))//Cancelled Date 
+                        //,(String) oTransBankApp.getBankAppDet(lnCtr, 6) //sSourceNo  
                 ));
             }
             initBankApplication();
@@ -2949,6 +3006,7 @@ public class InquiryFormController implements Initializable, ScreenInterface {
         btnBankAppUpdate.setVisible(false);
         btnBankAppCancel.setVisible(false);
         btnBankAppView.setVisible(false);
+        bankCheck01.setVisible(false);
         //For Follow up
         btnFollowUp.setVisible(false);
 
@@ -2981,13 +3039,18 @@ public class InquiryFormController implements Initializable, ScreenInterface {
                 case 1: //On process
                     btnLostSale.setVisible(true);
                     btnLostSale.setManaged(true);
-                    btnConvertSales.setVisible(true);
-                    btnConvertSales.setManaged(true);
-                    //Bank Application
-                    btnBankAppNew.setVisible(true);
-                    btnBankAppUpdate.setVisible(true);
-                    btnBankAppCancel.setVisible(true);
-                    btnBankAppView.setVisible(true);
+                    if (cmbInqpr01.getSelectionModel().getSelectedIndex() >= 0){
+                        btnConvertSales.setVisible(true);
+                        btnConvertSales.setManaged(true);
+                    }
+                    if (cmbInqpr01.getSelectionModel().getSelectedIndex() > 0){
+                        //Bank Application
+                        btnBankAppNew.setVisible(true);
+                        btnBankAppUpdate.setVisible(true);
+                        btnBankAppCancel.setVisible(true);
+                        btnBankAppView.setVisible(true);
+                        bankCheck01.setVisible(true);
+                    }
                     //For Follow up
                     btnFollowUp.setVisible(true);
                     break;
@@ -2997,6 +3060,7 @@ public class InquiryFormController implements Initializable, ScreenInterface {
                     btnBankAppUpdate.setVisible(true);
                     btnBankAppCancel.setVisible(true);
                     btnBankAppView.setVisible(true);
+                    bankCheck01.setVisible(true);
                     //For Follow up
                     btnFollowUp.setVisible(true);
                     break;

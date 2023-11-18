@@ -5,8 +5,11 @@
  */
 package org.rmj.auto.app.sales;
 
+import java.math.BigDecimal;
 import java.net.URL;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
@@ -115,7 +118,8 @@ public class InquiryVehicleSalesAdvancesFormController implements Initializable 
           comboBox12.setItems(cSlipType); //Slipt Type
           
           Pattern pattern;
-          pattern = Pattern.compile("^\\d*(\\.\\d{0,2})?$");
+          //pattern = Pattern.compile("^\\d*(\\.\\d{0,2})?$");
+          pattern = Pattern.compile("^[\\d,.]*$");
           txtField05.setTextFormatter(new InputTextFormatter(pattern)); //Amount
           addRequiredFieldListener(txtField05);
           txtField05.setOnKeyPressed(this::txtField_KeyPressed);   //Amount
@@ -209,7 +213,12 @@ public class InquiryVehicleSalesAdvancesFormController implements Initializable 
             } else { 
                 txtField02.setText(CommonUtils.xsDateShort((Date) oTransProcess.getInqRsv(tbl_row,2)));
                 txtField03.setText(oTransProcess.getInqRsv(tbl_row,3).toString());
-                txtField05.setText(String.format("%.2f", oTransProcess.getInqRsv(tbl_row,5)));
+                DecimalFormat decimalFormat = new DecimalFormat("#,##0.00");
+                //DecimalFormat decimalFormat = new DecimalFormat("###,###,###,###,###.######");
+                String formattedAmount = decimalFormat.format( Double.parseDouble(String.valueOf(oTransProcess.getInqRsv(tbl_row, 5))));
+                System.out.println("formattedAmount >>> " + formattedAmount);
+                System.out.println("oTransProcess.getInqRsv(tbl_row, 5) >>> " + oTransProcess.getInqRsv(tbl_row, 5));
+                txtField05.setText(formattedAmount);
                 switch (oTransProcess.getInqRsv(tbl_row,13).toString()) {
                     case "0":
                         txtField13.setText("FOR APPROVAL");
@@ -265,7 +274,6 @@ public class InquiryVehicleSalesAdvancesFormController implements Initializable 
                         break;
                 }
                 txtField14.setText((String) oTransProcess.getInqRsv(tbl_row,23));
-                //txtField15.setText( oTransProcess.getInqRsv(tbl_row,15).toString());
                 txtField15.setText(CommonUtils.xsDateShort((Date) oTransProcess.getInqRsv(tbl_row,15)));
                 textArea06.setText((String) oTransProcess.getInqRsv(tbl_row,6));
                 comboBox12.getSelectionModel().select(Integer.parseInt(oTransProcess.getInqRsv(tbl_row,12).toString())); //VSA Type
@@ -300,13 +308,23 @@ public class InquiryVehicleSalesAdvancesFormController implements Initializable 
                     CommonUtils.closeStage(btnClose);
                     break;
                 case "btnApply":
-                    if(state){
-                         oTransProcess.addReserve();
-                    }
                     if (setSelection()){
-                         oTransProcess.setInqRsv(tbl_row, 2,SQLUtil.toDate(txtField02.getText(), SQLUtil.FORMAT_SHORT_DATE));
-                         oTransProcess.setInqRsv(tbl_row, 5,Double.valueOf(txtField05.getText()));
-                         oTransProcess.setInqRsv(tbl_row, 6,textArea06.getText());
+                        if(state){
+                            oTransProcess.addReserve();
+                        }
+                        // Create a DecimalFormat with two decimal places
+                        DecimalFormat decimalFormat = new DecimalFormat("###0.00");
+                        //DecimalFormat decimalFormat = new DecimalFormat("###,###,###,###,###.##");
+                        //DecimalFormat decimalFormat = new DecimalFormat("###############.######");
+                        System.out.println("replace >>> " + Double.parseDouble(txtField05.getText().replace(",", "")) );
+                        System.out.println("set to class >>> " + decimalFormat.format( Double.parseDouble(txtField05.getText().replace(",", ""))));
+                        oTransProcess.setInqRsv(tbl_row, 2,SQLUtil.toDate(txtField02.getText(), SQLUtil.FORMAT_SHORT_DATE));
+                        oTransProcess.setInqRsv(tbl_row, 5,decimalFormat.format( Double.parseDouble(txtField05.getText().replace(",", ""))));
+                        //oTransProcess.setInqRsv(tbl_row, 5,Double.parseDouble(txtField05.getText().replace(",", "")));
+                        oTransProcess.setInqRsv(tbl_row, 6,textArea06.getText());
+                        oTransProcess.setInqRsv(tbl_row, 12,comboBox12.getSelectionModel().getSelectedIndex());
+                    } else {
+                        return;
                     }
                     CommonUtils.closeStage(btnApply);
                     break;
@@ -330,17 +348,11 @@ public class InquiryVehicleSalesAdvancesFormController implements Initializable 
     /*Set ComboBox Value to Master Class*/ 
     @SuppressWarnings("ResultOfMethodCallIgnored")
     private boolean setSelection(){
-         try {
-              if (comboBox12.getSelectionModel().getSelectedIndex() < 0){
-                  ShowMessageFX.Warning("No `Slip Type` selected.", pxeModuleName, "Please select `Slip Type` value.");
-                  comboBox12.requestFocus();
-                  return false;
-              }else 
-                   oTransProcess.setInqRsv(tbl_row, 12,comboBox12.getSelectionModel().getSelectedIndex());
-
-         } catch (SQLException ex) {
-              ShowMessageFX.Warning(getStage(),ex.getMessage(), "Warning", null);
-         }
+        if (comboBox12.getSelectionModel().getSelectedIndex() < 0){
+            ShowMessageFX.Warning("No `Slip Type` selected.", pxeModuleName, "Please select `Slip Type` value.");
+            comboBox12.requestFocus();
+            return false;
+        }
          return true;
     }
 

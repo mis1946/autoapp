@@ -49,6 +49,8 @@ public class CustomerAddressFormController implements Initializable, ScreenInter
     private final String pxeModuleName = "Customer Address";
     private int pnRow = 0;
     private boolean pbState = true;
+    private String psOrigTown = "";
+    private String psOrigBrgy = "";
     
     @FXML
     private Button btnEdit;
@@ -94,7 +96,13 @@ public class CustomerAddressFormController implements Initializable, ScreenInter
     public void setState(boolean fbValue){
         pbState = fbValue;
     }
+    public void setOrigTown(String fsValue){
+        psOrigTown = fsValue;
+    }
     
+    public void setOrigBrgy(String fsValue){
+        psOrigBrgy = fsValue;
+    }
     private Stage getStage(){
          return (Stage) btnClose.getScene().getWindow();
     }
@@ -251,6 +259,11 @@ public class CustomerAddressFormController implements Initializable, ScreenInter
                     }
                     break;
                 case "btnClose":
+                    if(oTransAddress.searchTown(pnRow, psOrigTown, true)){
+                        if(oTransAddress.searchBarangay(pnRow, psOrigBrgy, true)){
+                        } 
+                    }
+                    
                     CommonUtils.closeStage(btnClose);
                     break;
 
@@ -413,7 +426,7 @@ public class CustomerAddressFormController implements Initializable, ScreenInter
                     switch (txtFieldID) {
                         case "txtField05Addr":  //Search by Town Address
                             if (oTransAddress.searchTown(pnRow, txtField05Addr.getText(), false)) {
-                                txtField05Addr.setText((String) oTransAddress.getAddress(pnRow, "sTownName"));
+                                txtField05Addr.setText((String) oTransAddress.getAddress(pnRow, "sTownName")  );
                                 txtField07Addr.setText((String) oTransAddress.getAddress(pnRow, "sZippCode"));
                                 txtField06Addr.setDisable(false);
                             } else {

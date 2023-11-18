@@ -114,7 +114,9 @@ public class CustomerContactFormController implements Initializable, ScreenInter
         
         comboBox05Cont.setItems(cOwnCont); // Contact Ownership 
         comboBox04Cont.setItems(cTypCont); // Mobile Type
-        
+        comboBox04Cont.setOnAction(e -> {
+            txtField03Cont.clear();
+        });
         //CLIENT Mobile
         setCapsLockBehavior(txtField03Cont);
         setCapsLockBehavior(textArea13Cont);

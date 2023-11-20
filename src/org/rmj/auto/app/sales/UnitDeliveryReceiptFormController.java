@@ -36,11 +36,6 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.KeyCode;
-import static javafx.scene.input.KeyCode.DOWN;
-import static javafx.scene.input.KeyCode.ENTER;
-import static javafx.scene.input.KeyCode.F3;
-import static javafx.scene.input.KeyCode.TAB;
-import static javafx.scene.input.KeyCode.UP;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -63,7 +58,7 @@ import org.rmj.auto.sales.base.VehicleDeliveryReceipt;
 /**
  * Unit Delivery Receipt Form Controller class
  *
- * @author John Dave
+ * @author
  */
 public class UnitDeliveryReceiptFormController implements Initializable, ScreenInterface {
 
@@ -484,18 +479,18 @@ public class UnitDeliveryReceiptFormController implements Initializable, ScreenI
     private void loadCustomerField() {
         try {
             date02.setValue(strToDate(CommonUtils.xsDateShort((Date) oTrans.getMaster(2))));
-            txtField03.setText((String) oTrans.getMaster(3));
-            textArea06.setText((String) oTrans.getMaster(6));
-            txtField35.setText((String) oTrans.getMaster(35));
-            txtField22.setText((String) oTrans.getMaster(22));
-            txtField23.setText((String) oTrans.getMaster(23));
-            txtField24.setText((String) oTrans.getMaster(24));
-            txtField25.setText((String) oTrans.getMaster(25));
-            txtField26.setText((String) oTrans.getMaster(26));
-            txtField27.setText((String) oTrans.getMaster(27));
-            txtField28.setText((String) oTrans.getMaster(28));
-            txtField29.setText((String) oTrans.getMaster(29));
-            txtField34.setText((String) oTrans.getMaster(34));
+            txtField03.setText((String) oTrans.getMaster(3).toString().toUpperCase());
+            textArea06.setText((String) oTrans.getMaster(6).toString().toUpperCase());
+            txtField35.setText((String) oTrans.getMaster(35).toString().toUpperCase());
+            txtField22.setText((String) oTrans.getMaster(22).toString().toUpperCase());
+            txtField23.setText((String) oTrans.getMaster(23).toString().toUpperCase());
+            txtField24.setText((String) oTrans.getMaster(24).toString().toUpperCase());
+            txtField25.setText((String) oTrans.getMaster(25).toString().toUpperCase());
+            txtField26.setText((String) oTrans.getMaster(26).toString().toUpperCase());
+            txtField27.setText((String) oTrans.getMaster(27).toString().toUpperCase());
+            txtField28.setText((String) oTrans.getMaster(28).toString().toUpperCase());
+            txtField29.setText((String) oTrans.getMaster(29).toString().toUpperCase());
+            txtField34.setText((String) oTrans.getMaster(34).toString().toUpperCase());
 
             String isVchlBrandNew = ((String) oTrans.getMaster(30));
             if (isVchlBrandNew.equals("0")) {

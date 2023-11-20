@@ -5,6 +5,7 @@
  */
 package org.rmj.auto.app.cashiering;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
@@ -24,8 +25,12 @@ import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DateCell;
@@ -35,8 +40,11 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Callback;
 import javafx.util.Duration;
 import javafx.util.StringConverter;
@@ -67,6 +75,8 @@ public class VehicleSalesInvoiceFormController implements Initializable, ScreenI
     private String pxeModuleName = "Vehicle Sales Invoice";
     private int pnEditMode;//Modifying fields
     private int lnCtr = 0;
+    private double xOffset = 0;
+    private double yOffset = 0;
     
     @FXML
     private Button btnAdd;
@@ -299,6 +309,10 @@ public class VehicleSalesInvoiceFormController implements Initializable, ScreenI
                     }
                     break;
                 case "btnPrint":
+                    if(!loadPrint((String) oTrans.getMaster(1))){
+                        ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", "Error while printing " + pxeModuleName);
+                        return;
+                    }
                     break;
                 case "btnCancel":
                     clearFields();
@@ -468,7 +482,54 @@ public class VehicleSalesInvoiceFormController implements Initializable, ScreenI
     
     }
     
-    public void clearClassFields(){
+    private boolean loadPrint(String fsValue){
+        try {
+            Stage stage = new Stage();
+
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            fxmlLoader.setLocation(getClass().getResource("VehicleSalesInvoicePrint.fxml"));
+
+            VehicleSalesInvoicePrintController loControl = new VehicleSalesInvoicePrintController();
+            loControl.setGRider(oApp);
+            loControl.setTransNox(fsValue);
+            loControl.setObject(oTrans);
+            fxmlLoader.setController(loControl);
+
+            //load the main interface
+            Parent parent = fxmlLoader.load();
+
+            parent.setOnMousePressed(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    xOffset = event.getSceneX();
+                    yOffset = event.getSceneY();
+                }
+            });
+
+            parent.setOnMouseDragged(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    stage.setX(event.getScreenX() - xOffset);
+                    stage.setY(event.getScreenY() - yOffset);
+                }
+            });
+
+            //set the main interface as the scene
+            Scene scene = new Scene(parent);
+            stage.setScene(scene);
+            stage.initStyle(StageStyle.TRANSPARENT);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle("");
+            stage.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+            ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
+            System.exit(1);
+        }
+        return true;
+    }
+    
+    private void clearClassFields(){
         try {
             //Class Master
             for (lnCtr = 1; lnCtr <= 34; lnCtr++) {

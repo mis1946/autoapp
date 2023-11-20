@@ -6,7 +6,6 @@ package org.rmj.auto.app.sales;
 
 import java.awt.Component;
 import java.net.URL;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.HashMap;
@@ -35,11 +34,9 @@ import net.sf.jasperreports.engine.JasperPrintManager;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.swing.JRViewer;
 import org.rmj.appdriver.GRider;
-import org.rmj.appdriver.SQLUtil;
 import org.rmj.appdriver.agentfx.CommonUtils;
 import org.rmj.appdriver.agentfx.ShowMessageFX;
 import org.rmj.appdriver.callback.MasterCallback;
-import static org.rmj.auto.app.sales.VSPFormPrintController.formatName;
 import org.rmj.auto.sales.base.VehicleDeliveryReceipt;
 
 /**
@@ -217,37 +214,51 @@ public class UnitDeliveryReceiptPrintController implements Initializable {
     private boolean loadReport() throws SQLException {
         udrMasterData.clear();
         if (oTrans.OpenRecord(psTransNox)) {
-            String deliveryDate = deliveryDate = CommonUtils.xsDateShort((Date) oTrans.getMaster(2));;
+            String deliveryDate = CommonUtils.xsDateShort((Date) oTrans.getMaster(2));;
             if (deliveryDate.isEmpty()) {
                 deliveryDate = "";
-            } else {
-                deliveryDate = CommonUtils.xsDateShort((Date) oTrans.getMaster(2));
             }
-
             String branchName = processAndUpperCase(oTrans, 37);
             String approvedBy = processAndUpperCase(oTrans, 15);
             String branchAdd = processAndUpperCase(oTrans, 36);
             String buyerName = "";
-            if (!oTrans.getMaster(34).toString().isEmpty()) {
-                buyerName = oTrans.getMaster(22).toString() + " / " + oTrans.getMaster(34).toString();
+            if (!oTrans.getMaster("sCoCltNmx").toString().isEmpty()) {
+                buyerName = oTrans.getMaster("sCompnyNm").toString() + " / " + oTrans.getMaster("sCoCltNmx").toString();
             } else {
-                buyerName = oTrans.getMaster(22).toString();
+                buyerName = oTrans.getMaster("sCompnyNm").toString();
+            }
+            String pymntMode = "";
+            switch (oTrans.getMaster("cPayModex").toString()) {
+                case "0":
+                    pymntMode = "CASH";
+                    break;
+                case "1":
+                    pymntMode = "BANK PURCHASE ORDER";
+                    break;
+                case "2":
+                    pymntMode = "BANK FINANCING";
+                    break;
+                case "3":
+                    pymntMode = "COMPANY PURCHASE ORDER";
+                    break;
+                case "4":
+                    pymntMode = "COMPANY FINANCING";
+                    break;
             }
             String buyerAddress = processAndUpperCase(oTrans, 23);
             String preparedBy = processAndUpperCase(oTrans, 35);
             String remarks = processAndUpperCase(oTrans, 6);
             String csNo = "";
             if (!oTrans.getMaster(26).toString().isEmpty()) {
-                csNo = oTrans.getMaster(26).toString().toUpperCase();
+                csNo = oTrans.getMaster(26).toString();
             } else {
-                csNo = oTrans.getMaster(25).toString().toUpperCase();
+                csNo = oTrans.getMaster(25).toString();
             }
             String engineNo = processAndUpperCase(oTrans, 27);
             String description = processAndUpperCase(oTrans, 24);
             String frameNo = processAndUpperCase(oTrans, 28);
             String purchasedNo = processAndUpperCase(oTrans, 3);
             String color = processAndUpperCase(oTrans, 39);
-            String pymentMode = processAndUpperCase(oTrans, 38);
 
             udrMasterData.add(new UnitDeliveryReceiptMasterList(
                     "",
@@ -272,10 +283,10 @@ public class UnitDeliveryReceiptPrintController implements Initializable {
                     "",
                     "",
                     "",
-                    buyerName,
+                    buyerName.toUpperCase(),
                     buyerAddress,
                     description,
-                    csNo,
+                    csNo.toUpperCase(),
                     "",
                     engineNo,
                     frameNo,
@@ -288,14 +299,21 @@ public class UnitDeliveryReceiptPrintController implements Initializable {
                     preparedBy,
                     branchAdd,
                     branchName,
-                    pymentMode,
+                    pymntMode,
                     color
             ));
         }
+        String sReport = oTrans.getReport("udr");
+        if (sReport.isEmpty()) {
+            ShowMessageFX.Warning(null, pxeModuleName, oTrans.getMessage());
+            return false;
+        }
 
-        String sourceFileName = "D://GGC_Java_Systems/reports/autoapp/udr.jasper";
+        String sourceFileName = "D://GGC_Java_Systems/reports/autoapp/" + sReport;
         String printFileName = null;
         JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(udrMasterData);
+        params.put(
+                "quantity", "One(1)");
         try {
             jasperPrint = JasperFillManager.fillReport(sourceFileName, params, beanColDataSource);
             printFileName = jasperPrint.toString();

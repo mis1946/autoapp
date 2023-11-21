@@ -203,7 +203,7 @@ public class UnitDeliveryReceiptPrintController implements Initializable {
         }
     }
 
-    public static String processAndUpperCase(VehicleDeliveryReceipt oTrans, int indexMaster) throws SQLException {
+    private static String processAndUpperCase(VehicleDeliveryReceipt oTrans, int indexMaster) throws SQLException {
         String fieldValue = "";
         if (oTrans != null && !oTrans.getMaster(indexMaster).toString().isEmpty()) {
             fieldValue = oTrans.getMaster(indexMaster).toString().toUpperCase();
@@ -218,6 +218,7 @@ public class UnitDeliveryReceiptPrintController implements Initializable {
             if (deliveryDate.isEmpty()) {
                 deliveryDate = "";
             }
+
             String branchName = processAndUpperCase(oTrans, 37);
             String approvedBy = processAndUpperCase(oTrans, 15);
             String branchAdd = processAndUpperCase(oTrans, 36);
@@ -260,6 +261,9 @@ public class UnitDeliveryReceiptPrintController implements Initializable {
             String purchasedNo = processAndUpperCase(oTrans, 3);
             String color = processAndUpperCase(oTrans, 39);
 
+            String sRegex = "";
+            sRegex = "\\s*\\b" + color + "\\b\\s*";
+            description = description.replaceAll(sRegex, " ");
             udrMasterData.add(new UnitDeliveryReceiptMasterList(
                     "",
                     "",

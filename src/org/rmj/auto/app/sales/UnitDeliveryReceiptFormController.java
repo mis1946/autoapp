@@ -19,6 +19,7 @@ import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.beans.property.ReadOnlyBooleanPropertyBase;
 import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -116,8 +117,6 @@ public class UnitDeliveryReceiptFormController implements Initializable, ScreenI
     @FXML
     private RadioButton radioPreOwned;
     @FXML
-    private ComboBox<String> comboBox30;
-    @FXML
     private TextField txtField15;
 
     private int daysToDisable = 30;
@@ -125,6 +124,8 @@ public class UnitDeliveryReceiptFormController implements Initializable, ScreenI
     private TextField txtField34;
     @FXML
     private TextField txtField35;
+    @FXML
+    private ComboBox<String> comboBox32;
 
     /**
      * Initializes the controller class.
@@ -136,6 +137,8 @@ public class UnitDeliveryReceiptFormController implements Initializable, ScreenI
         oTrans = new VehicleDeliveryReceipt(oApp, oApp.getBranchCode(), true);
         oTrans.setCallback(oListener);
         oTrans.setWithUI(true);
+
+        initMonitoringProperty();
 
         initCapitalizationFields();
 
@@ -158,9 +161,23 @@ public class UnitDeliveryReceiptFormController implements Initializable, ScreenI
         date02.setOnAction(this::getDate);
         date02.setDayCellFactory(DateCellDisabler.createDisableDateCallback(daysToDisable));
 
-        comboBox30.setItems(cFormItems);
+        comboBox32.setItems(cFormItems);
         pnEditMode = EditMode.UNKNOWN;
         initButton(pnEditMode);
+    }
+
+    private void initMonitoringProperty() {
+        txtField29.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+            if (newValue.isEmpty()) {
+                try {
+                    clearFields();
+                    clearVSPFieldsMaster();
+                } catch (SQLException ex) {
+                    Logger.getLogger(UnitDeliveryReceiptFormController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+
     }
 
     private void initCapitalizationFields() {
@@ -241,7 +258,7 @@ public class UnitDeliveryReceiptFormController implements Initializable, ScreenI
     private void saveRecord() throws SQLException {
         if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure, do you want to save?") == true) {
             if (pnEditMode == EditMode.ADDNEW) {
-                if (comboBox30.getSelectionModel().isEmpty()) {
+                if (comboBox32.getSelectionModel().isEmpty()) {
                     ShowMessageFX.Warning(getStage(), "Please choose a value for Customer Type", "Warning", null);
                     return;
                 }
@@ -251,7 +268,7 @@ public class UnitDeliveryReceiptFormController implements Initializable, ScreenI
                 txtField03.requestFocus();
                 return;
             }
-            switch (comboBox30.getSelectionModel().getSelectedIndex()) {
+            switch (comboBox32.getSelectionModel().getSelectedIndex()) {
                 case 0:
                     if (txtField29.getText().trim().equals("")) {
                         ShowMessageFX.Warning(getStage(), "Please enter a value for VSP No.", "Warning", null);
@@ -424,7 +441,7 @@ public class UnitDeliveryReceiptFormController implements Initializable, ScreenI
     private void initSetComboBoxMaster() {
 
         /* SET TO MASTER */
-        handleComboBoxSelectionMaster(comboBox30, 30);
+        handleComboBoxSelectionMaster(comboBox32, 32);
 
     }
 
@@ -434,18 +451,18 @@ public class UnitDeliveryReceiptFormController implements Initializable, ScreenI
                 int selectedType = comboBox.getSelectionModel().getSelectedIndex(); // Retrieve the selected type
                 if (selectedType >= 0) {
                     switch (fieldNumber) {
-                        case 30:
+                        case 32:
                             if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
                                 if (selectedType == 0) {
                                     oTrans.setMaster(fieldNumber, String.valueOf(selectedType));
                                     txtField29.setDisable(false);
                                 } else {
                                     txtField29.setDisable(true);
+                                    removeRequiredField();
                                     clearVSPFieldsMaster();
                                     clearVSPFields();
                                     ShowMessageFX.Warning(getStage(), "Supplier is Under Development, Please select Customer.", "Warning", null);
                                 }
-                                loadCustomerField();
                             }
 
                             break;
@@ -505,7 +522,19 @@ public class UnitDeliveryReceiptFormController implements Initializable, ScreenI
             txtField28.setText((String) oTrans.getMaster(28).toString().toUpperCase());
             txtField29.setText((String) oTrans.getMaster(29).toString().toUpperCase());
             txtField34.setText((String) oTrans.getMaster(34).toString().toUpperCase());
-            comboBox30.getSelectionModel().select(Integer.parseInt(oTrans.getMaster(30).toString()));
+
+            String selectedItem32 = oTrans.getMaster(32).toString();
+            switch (selectedItem32) {
+                case "0":
+                    selectedItem32 = "CUSTOMER";
+                    break;
+                case "1":
+                    selectedItem32 = "SUPPLIER";
+                    break;
+
+            }
+            comboBox32.setValue(selectedItem32);
+//            comboBox32.getSelectionModel().select(Integer.parseInt(oTrans.getMaster(30).toString()));
             String isVchlBrandNew = ((String) oTrans.getMaster(30));
             if (isVchlBrandNew.equals("0")) {
                 radioBrandNew.setSelected(true);
@@ -563,7 +592,7 @@ public class UnitDeliveryReceiptFormController implements Initializable, ScreenI
         txtField27.setDisable(true);
         txtField28.setDisable(true);
         txtField29.setDisable(!lbShow);
-        comboBox30.setDisable(!lbShow);
+        comboBox32.setDisable(!lbShow);
         txtField34.setDisable(true);
 
         radioBrandNew.setDisable(true);
@@ -577,7 +606,7 @@ public class UnitDeliveryReceiptFormController implements Initializable, ScreenI
         }
         if (fnValue == EditMode.UPDATE) {
             txtField29.setDisable(true);
-            comboBox30.setDisable(true);
+            comboBox32.setDisable(true);
         }
     }
 
@@ -637,7 +666,7 @@ public class UnitDeliveryReceiptFormController implements Initializable, ScreenI
         txtField28.setText("");
         txtField29.setText("");
         txtField34.setText("");
-        comboBox30.setValue(null);
+        comboBox32.setValue(null);
     }
 
     @Override

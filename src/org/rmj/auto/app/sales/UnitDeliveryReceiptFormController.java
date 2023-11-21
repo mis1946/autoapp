@@ -137,6 +137,8 @@ public class UnitDeliveryReceiptFormController implements Initializable, ScreenI
         oTrans.setCallback(oListener);
         oTrans.setWithUI(true);
 
+        initCapitalizationFields();
+
         initButtonClick();
 
         initTextFieldFocus();
@@ -159,6 +161,18 @@ public class UnitDeliveryReceiptFormController implements Initializable, ScreenI
         comboBox30.setItems(cFormItems);
         pnEditMode = EditMode.UNKNOWN;
         initButton(pnEditMode);
+    }
+
+    private void initCapitalizationFields() {
+        setTextAreaCapital(textArea06);
+    }
+
+    private static void setTextAreaCapital(TextArea textArea) {
+        textArea.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (textArea.getText() != null) {
+                textArea.setText(newValue.toUpperCase());
+            }
+        });
     }
 
     private void initButtonClick() {
@@ -491,7 +505,7 @@ public class UnitDeliveryReceiptFormController implements Initializable, ScreenI
             txtField28.setText((String) oTrans.getMaster(28).toString().toUpperCase());
             txtField29.setText((String) oTrans.getMaster(29).toString().toUpperCase());
             txtField34.setText((String) oTrans.getMaster(34).toString().toUpperCase());
-
+            comboBox30.getSelectionModel().select(Integer.parseInt(oTrans.getMaster(30).toString()));
             String isVchlBrandNew = ((String) oTrans.getMaster(30));
             if (isVchlBrandNew.equals("0")) {
                 radioBrandNew.setSelected(true);

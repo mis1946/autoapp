@@ -25,7 +25,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane id="AnchorPane" fx:id="AnchorMain" prefHeight="647.0" prefWidth="1151.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane id="AnchorPane" fx:id="AnchorMain" prefHeight="647.0" prefWidth="1151.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" >
     <children>
         <StackPane prefHeight="150.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
@@ -133,11 +133,6 @@
                                                                                                             </font>
                                                                                                         </Label>
                                                                                                         <Label alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="48.0" text="*" textAlignment="RIGHT" textFill="#fb0000" GridPane.columnSpan="2" GridPane.rowIndex="7">
-                                                                                                            <font>
-                                                                                                                <Font name="System Bold" size="12.0" />
-                                                                                                            </font>
-                                                                                                        </Label>
-                                                                                                        <Label alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="33.0" text="*" textAlignment="RIGHT" textFill="#fb0000" GridPane.rowIndex="1">
                                                                                                             <font>
                                                                                                                 <Font name="System Bold" size="12.0" />
                                                                                                             </font>

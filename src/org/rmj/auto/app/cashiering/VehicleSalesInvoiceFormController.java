@@ -207,6 +207,21 @@ public class VehicleSalesInvoiceFormController implements Initializable, ScreenI
         addRequiredFieldListener(txtField05);
         addRequiredFieldListener(txtField06);
         
+        setCapsLockBehavior(txtField05);
+        setCapsLockBehavior(txtField06);
+        setCapsLockBehavior(txtField30);
+        setCapsLockBehavior(txtField31);
+        setCapsLockBehavior(txtField24);
+        setCapsLockBehavior(txtField19);
+        setCapsLockBehavior(txtField20);
+        setCapsLockBehavior(txtField21);
+        setCapsLockBehavior(txtField22);
+        setCapsLockBehavior(txtField23);
+        setCapsLockBehavior(txtField33);
+        setCapsLockBehavior(txtField36);
+        setCapsLockBehavior(textArea18);
+        setCapsLockBehavior(textArea34);
+        
         //Button Click Event
         btnAdd.setOnAction(this::cmdButton_Click);
         btnEdit.setOnAction(this::cmdButton_Click); 
@@ -807,5 +822,6 @@ public class VehicleSalesInvoiceFormController implements Initializable, ScreenI
             }
         });
     }
+    
     
 }

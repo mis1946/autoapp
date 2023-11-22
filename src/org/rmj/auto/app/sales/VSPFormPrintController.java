@@ -9,6 +9,8 @@ import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -202,14 +204,14 @@ public class VSPFormPrintController implements Initializable {
         }
     }
 
-    public static String formatName(String fullName) {
+    private static String formatName(String fullName) {
         String[] nameParts = fullName.split(" ");
         String firstNameInitial = nameParts[0].substring(0, 1);
         String lastName = nameParts[nameParts.length - 1];
         return firstNameInitial + ". " + lastName;
     }
 
-    public static String formatAmount(String amountString) {
+    private static String formatAmount(String amountString) {
         DecimalFormat numFormat = new DecimalFormat("#,##0.00");
         String formattedAmount = "";
         if (amountString.contains("0.00") || amountString.isEmpty()) {
@@ -235,10 +237,12 @@ public class VSPFormPrintController implements Initializable {
     private boolean loadReport() throws SQLException {
         vspMasterData.clear();
         if (oTrans.OpenRecord(psTransNox)) {
-            String deliveryDate = deliveryDate = CommonUtils.xsDateShort((Date) oTrans.getMaster("dDelvryDt"));;
-            if (deliveryDate.isEmpty()) {
-                deliveryDate = "";
-            }
+            String sDlvryDte = CommonUtils.xsDateShort((Date) oTrans.getMaster(4));
+            DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDate date = LocalDate.parse(sDlvryDte, inputFormatter);
+            DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+            sDlvryDte = date.format(outputFormatter);
+
             String salesExeFullName = formatName(oTrans.getMaster("sSalesExe").toString());
             String ownerOfficeAddress = "";
             if (oTrans.getMaster("cOfficexx").toString().equals("1")) {
@@ -477,7 +481,7 @@ public class VSPFormPrintController implements Initializable {
                     vsCode,
                     oTrans.getMaster("dTransact").toString(),
                     oTrans.getMaster("sVSPNOxxx").toString(), //vspNo
-                    deliveryDate, //dDelvryDt
+                    sDlvryDte, //dDelvryDt
                     oTrans.getMaster("sInqryIDx").toString(),
                     oTrans.getMaster("sClientID").toString(),
                     oTrans.getMaster("sSerialID").toString(),

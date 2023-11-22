@@ -28,7 +28,7 @@ public class CancelForm {
     private double xOffset = 0;
     private double yOffset = 0;
     public boolean bState = false;
-    /*INQUIRY FOR LOST SALE*/
+    /*CANCELLATION FORM REMARKS*/
     public boolean loadCancelWindow(GRider oApp, String sSourceNox, String sTransNox, String sSourceCD ) throws SQLException{
        
         try {

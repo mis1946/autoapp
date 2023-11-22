@@ -651,7 +651,9 @@ public class VSPFormController implements Initializable, ScreenInterface {
         try {
             if (Double.parseDouble(newValue.replace(",", "")) <= 0.00) {
                 textField.setText("0.00");
-                oTrans.setMaster(masterIndex, Double.valueOf("0.00"));
+                if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
+                    oTrans.setMaster(masterIndex, Double.valueOf("0.00"));
+                }
                 textField.setDisable(true);
             } else {
                 textField.setDisable(false);
@@ -757,98 +759,94 @@ public class VSPFormController implements Initializable, ScreenInterface {
 
                 break;
         } //STD FLEET DISCOUNT
-        txtField29
-                .textProperty()
-                .addListener(new ChangeListener<String>() {
-                    @Override
-                    public void changed(ObservableValue<? extends String> observable, String oldValue,
-                            String newValue
-                    ) {
-                        handleTextPropertyChangeDiscount(newValue, 42, oTrans, txtField42);
-                        handleTextPropertyChangeDiscount(newValue, 43, oTrans, txtField43);
-                    }
-                }
-                );
+        txtField29.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue,
+                    String newValue
+            ) {
+                handleTextPropertyChangeDiscount(newValue, 42, oTrans, txtField42);
+                handleTextPropertyChangeDiscount(newValue, 43, oTrans, txtField43);
+            }
+        }
+        );
         //SPL FLEET DISCOUNT
-        txtField30.textProperty()
-                .addListener(new ChangeListener<String>() {
-                    @Override
-                    public void changed(ObservableValue<? extends String> observable, String oldValue,
-                            String newValue
-                    ) {
-                        handleTextPropertyChangeDiscount(newValue, 44, oTrans, txtField44);
-                        handleTextPropertyChangeDiscount(newValue, 45, oTrans, txtField45);
-                    }
-                }
-                );
+        txtField30.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue,
+                    String newValue
+            ) {
+                handleTextPropertyChangeDiscount(newValue, 44, oTrans, txtField44);
+                handleTextPropertyChangeDiscount(newValue, 45, oTrans, txtField45);
+            }
+        }
+        );
         //PROMO DISCOUNT
-        txtField28.textProperty()
-                .addListener(new ChangeListener<String>() {
-                    @Override
-                    public void changed(ObservableValue<? extends String> observable, String oldValue,
-                            String newValue
-                    ) {
-                        handleTextPropertyChangeDiscount(newValue, 46, oTrans, txtField46);
-                        handleTextPropertyChangeDiscount(newValue, 47, oTrans, txtField47);
-                    }
-                }
-                );
+        txtField28.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue,
+                    String newValue
+            ) {
+                handleTextPropertyChangeDiscount(newValue, 46, oTrans, txtField46);
+                handleTextPropertyChangeDiscount(newValue, 47, oTrans, txtField47);
+            }
+        }
+        );
         //MISC CHARGES
-        txtField12.textProperty()
-                .addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
-                    try {
-                        if (Double.parseDouble(newValue.replace(",", "")) <= 0.00) {
-                            txtField11.setText("");
-                            oTrans.setMaster(11, "");
-                            txtField11.setDisable(true);
-                        } else {
-                            txtField11.setDisable(false);
-                        }
-                    } catch (NumberFormatException ex) {
-                        ex.printStackTrace();
-
-                    } catch (SQLException ex) {
-                        Logger.getLogger(VSPFormController.class
-                                .getName()).log(Level.SEVERE, null, ex);
+        txtField12.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+            try {
+                if (Double.parseDouble(newValue.replace(",", "")) <= 0.00) {
+                    txtField11.setText("");
+                    if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
+                        oTrans.setMaster(11, "");
                     }
+                    txtField11.setDisable(true);
+                } else {
+                    txtField11.setDisable(false);
                 }
-                );
+            } catch (NumberFormatException ex) {
+                ex.printStackTrace();
+
+            } catch (SQLException ex) {
+                Logger.getLogger(VSPFormController.class
+                        .getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        );
         //COMPRE TYPE
-        comboBox24.getSelectionModel()
-                .selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-                    try {
-                        switch (newValue) {
-                            case "NONE":
-                                comboBox25.setDisable(true);
-                                oTrans.setMaster(25, "0");
-                                loadVSPField();
-                                break;
-                            case "FREE":
-                            case "REGULAR RATE":
-                            case "DISCOUNTED RATE":
-                            case "FROM PROMO DISC":
-                                comboBox25.setDisable(false);
-                                break;
-                            default:
-                                break;
-                        }
+        comboBox24.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            try {
+                switch (newValue) {
+                    case "NONE":
+                        comboBox25.setDisable(true);
+                        oTrans.setMaster(25, "0");
+                        loadVSPField();
+                        break;
+                    case "FREE":
+                    case "REGULAR RATE":
+                    case "DISCOUNTED RATE":
+                    case "FROM PROMO DISC":
+                        comboBox25.setDisable(false);
+                        break;
+                    default:
+                        break;
+                }
 
-                        // If comboBox24 value is not "NONE," remove "0" from comboBox25's items
-                        if (!"NONE".equals(newValue)) {
-                            comboBox25.getItems().remove("0");
-                        } else {
-                            // If comboBox24 value is "NONE," ensure "0" is in comboBox25's items
-                            if (!comboBox25.getItems().contains("0")) {
-                                comboBox25.getItems().add("0");
+                // If comboBox24 value is not "NONE," remove "0" from comboBox25's items
+                if (!"NONE".equals(newValue)) {
+                    comboBox25.getItems().remove("0");
+                } else {
+                    // If comboBox24 value is "NONE," ensure "0" is in comboBox25's items
+                    if (!comboBox25.getItems().contains("0")) {
+                        comboBox25.getItems().add("0");
 
-                            }
-                        }
-                    } catch (SQLException ex) {
-                        Logger.getLogger(VSPFormController.class
-                                .getName()).log(Level.SEVERE, null, ex);
                     }
                 }
-                );
+            } catch (SQLException ex) {
+                Logger.getLogger(VSPFormController.class
+                        .getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        );
 
     }
 
@@ -2268,8 +2266,9 @@ public class VSPFormController implements Initializable, ScreenInterface {
     /*Set Date Value to Master Class*/
     public void getDate(ActionEvent event) {
         try {
-            oTrans.setMaster(4, SQLUtil.toDate(date04.getValue().toString(), SQLUtil.FORMAT_SHORT_DATE));
-
+            if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
+                oTrans.setMaster(4, SQLUtil.toDate(date04.getValue().toString(), SQLUtil.FORMAT_SHORT_DATE));
+            }
         } catch (SQLException ex) {
             Logger.getLogger(VSPFormController.class
                     .getName()).log(Level.SEVERE, null, ex);
@@ -2823,6 +2822,11 @@ public class VSPFormController implements Initializable, ScreenInterface {
         txtField27.setDisable(true);
         txtField18.setDisable(true);
         txtField19.setDisable(true);
+
+        if (chckBoxSpecialAccount.isSelected()) {
+            txtField30.setDisable(!lbShow);
+            txtField29.setDisable(!lbShow);
+        }
         if (lbShow) {
             try {
                 try {

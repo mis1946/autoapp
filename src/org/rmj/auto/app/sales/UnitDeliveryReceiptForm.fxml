@@ -25,7 +25,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane id="AnchorPane" fx:id="AnchorMain" prefHeight="647.0" prefWidth="1151.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane id="AnchorPane" fx:id="AnchorMain" prefHeight="647.0" prefWidth="1151.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" >
     <children>
         <StackPane prefHeight="150.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
@@ -64,7 +64,7 @@
                                         </AnchorPane>
                                     </top>
                                     <center>
-                                        <AnchorPane style="-fx-border-radius: 5; -fx-background-color: white; -fx-border-color: orange;" BorderPane.alignment="CENTER">
+                                        <AnchorPane style="-fx-border-radius: 5; -fx-background-color: white;" BorderPane.alignment="CENTER">
                                             <BorderPane.margin>
                                                 <Insets top="3.0" />
                                             </BorderPane.margin>
@@ -76,7 +76,7 @@
                                                     <center>
                                                         <AnchorPane prefHeight="520.0" prefWidth="916.0" BorderPane.alignment="CENTER">
                                                             <children>
-                                                                <AnchorPane prefHeight="505.0" prefWidth="805.0" style="-fx-border-color: #B2B2B2; -fx-border-radius: 10; -fx-background-color: white;" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0">
+                                                                <AnchorPane prefHeight="505.0" prefWidth="805.0" style="-fx-border-radius: 10;">
                                                                     <children>
                                                                         <VBox layoutX="7.0" layoutY="12.0" prefHeight="471.0" prefWidth="856.0" spacing="5.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="11.0">
                                                                             <children>
@@ -111,17 +111,12 @@
                                                                                                                 <Font name="Arial Bold" size="12.0" />
                                                                                                             </font>
                                                                                                         </Label>
-                                                                                                        <TextField fx:id="txtField03" style="-fx-border-radius: 4;" GridPane.columnSpan="3" GridPane.rowIndex="2" />
+                                                                                                        <TextField fx:id="txtField03" disable="true" editable="false" style="-fx-border-radius: 4;" GridPane.columnSpan="3" GridPane.rowIndex="2" />
                                                                                                         <Label id="LabelDesc" prefHeight="15.0" prefWidth="143.0" text="Delivery Receipt No." GridPane.columnSpan="3" GridPane.rowIndex="3">
                                                                                                             <font>
                                                                                                                 <Font name="Arial Bold" size="12.0" />
                                                                                                             </font>
                                                                                                         </Label>
-                                                                                                        <ComboBox fx:id="comboBox30" prefHeight="24.0" prefWidth="288.0" style="-fx-border-radius: 4;" GridPane.columnSpan="3" GridPane.rowIndex="4">
-                                                                                                            <tooltip>
-                                                                                                                <Tooltip text="Please choose Customer/Form Type." />
-                                                                                                            </tooltip>
-                                                                                                        </ComboBox>
                                                                                                         <Label id="LabelDesc" prefHeight="17.0" prefWidth="155.0" text="Customer /Form Type" GridPane.columnSpan="3" GridPane.rowIndex="5">
                                                                                                             <font>
                                                                                                                 <Font name="Arial Bold" size="12.0" />
@@ -142,16 +137,12 @@
                                                                                                                 <Font name="System Bold" size="12.0" />
                                                                                                             </font>
                                                                                                         </Label>
-                                                                                                        <Label alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="33.0" text="*" textAlignment="RIGHT" textFill="#fb0000" GridPane.rowIndex="1">
-                                                                                                            <font>
-                                                                                                                <Font name="System Bold" size="12.0" />
-                                                                                                            </font>
-                                                                                                        </Label>
                                                                                                         <Label alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="121.0" text="*" textAlignment="RIGHT" textFill="#fb0000" GridPane.columnSpan="3" GridPane.rowIndex="5">
                                                                                                             <font>
                                                                                                                 <Font name="System Bold" size="12.0" />
                                                                                                             </font>
                                                                                                         </Label>
+                                                                                                        <ComboBox fx:id="comboBox32" prefHeight="24.0" prefWidth="213.0" GridPane.columnSpan="3" GridPane.rowIndex="4" />
                                                                                                     </children>
                                                                                                 </GridPane>
                                                                                             </children>
@@ -166,7 +157,7 @@
                                                                                         </AnchorPane>
                                                                                         <AnchorPane id="release-form-container2" prefHeight="181.0" prefWidth="534.0" style="-fx-border-radius: 5; -fx-background-color: white; -fx-border-color: orange; -fx-background-radius: 5;" styleClass="unity-container" stylesheets="@../css/FrameStyle.css">
                                                                                             <children>
-                                                                                                <GridPane hgap="5.0" layoutX="29.0" layoutY="13.0" prefHeight="128.0" prefWidth="527.0" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="28.0" AnchorPane.rightAnchor="23.0" AnchorPane.topAnchor="30.0">
+                                                                                                <GridPane hgap="5.0" layoutX="29.0" layoutY="13.0" prefHeight="128.0" prefWidth="527.0" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="28.0" AnchorPane.rightAnchor="23.0" AnchorPane.topAnchor="20.0">
                                                                                                     <columnConstraints>
                                                                                                         <ColumnConstraints hgrow="SOMETIMES" minWidth="100.0" prefWidth="100.0" />
                                                                                                         <ColumnConstraints hgrow="SOMETIMES" minWidth="100.0" prefWidth="100.0" />
@@ -176,13 +167,15 @@
                                                                                                     </columnConstraints>
                                                                                                     <rowConstraints>
                                                                                                         <RowConstraints minHeight="-Infinity" prefHeight="20.0" vgrow="SOMETIMES" />
+                                                                                                        <RowConstraints minHeight="-Infinity" prefHeight="30.0" vgrow="SOMETIMES" />
                                                                                                         <RowConstraints minHeight="-Infinity" prefHeight="20.0" vgrow="SOMETIMES" />
-                                                                                                        <RowConstraints minHeight="-Infinity" prefHeight="20.0" vgrow="SOMETIMES" />
-                                                                                                        <RowConstraints minHeight="-Infinity" prefHeight="20.0" vgrow="SOMETIMES" />
+                                                                                                        <RowConstraints minHeight="-Infinity" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                                                                                     </rowConstraints>
                                                                                                     <children>
                                                                                                         <TextField fx:id="txtField22" style="-fx-border-radius: 4;" GridPane.columnSpan="5" />
-                                                                                                        <Label id="LabelDesc" prefHeight="14.0" prefWidth="117.0" text="Customer Name" GridPane.rowIndex="1">
+                                                                                                        <Label id="LabelDesc" prefHeight="14.0" prefWidth="143.0" text="Buying Customer Name" GridPane.columnSpan="2" GridPane.rowIndex="1">
                                                                                                             <font>
                                                                                                                 <Font name="Arial Bold" size="12.0" />
                                                                                                             </font>
@@ -198,8 +191,23 @@
                                                                                                                 <Font name="Arial Bold" size="12.0" />
                                                                                                             </font>
                                                                                                         </Label>
+                                                                                                        <TextField fx:id="txtField34" style="-fx-border-radius: 4;" GridPane.columnSpan="5" GridPane.rowIndex="4" />
+                                                                                                        <Label id="LabelDesc" text="Co-Buyer" GridPane.rowIndex="5">
+                                                                                                            <font>
+                                                                                                                <Font name="Arial Bold" size="12.0" />
+                                                                                                            </font>
+                                                                                                        </Label>
                                                                                                     </children>
                                                                                                 </GridPane>
+                                                                                                <AnchorPane layoutX="14.0" layoutY="-8.0" prefHeight="16.0" prefWidth="140.0" style="-fx-background-color: white;" stylesheets="@../css/FrameStyle.css">
+                                                                                                    <children>
+                                                                                                        <Text layoutX="7.0" layoutY="11.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Customer Information">
+                                                                                                            <font>
+                                                                                                                <Font name="System Bold" size="12.0" />
+                                                                                                            </font>
+                                                                                                        </Text>
+                                                                                                    </children>
+                                                                                                </AnchorPane>
                                                                                             </children>
                                                                                         </AnchorPane>
                                                                                     </children>
@@ -324,7 +332,7 @@
                                                                                                                 <Font name="Arial Bold" size="12.0" />
                                                                                                             </font>
                                                                                                         </Label>
-                                                                                                        <TextField fx:id="txtField14" style="-fx-border-radius: 4;" GridPane.columnIndex="1" GridPane.columnSpan="3" />
+                                                                                                        <TextField fx:id="txtField35" disable="true" style="-fx-border-radius: 4;" GridPane.columnIndex="1" GridPane.columnSpan="3" />
                                                                                                         <Label id="LabelDesc" prefHeight="14.0" prefWidth="129.0" text="Approved By" GridPane.rowIndex="1">
                                                                                                             <font>
                                                                                                                 <Font name="Arial Bold" size="12.0" />
@@ -335,7 +343,7 @@
                                                                                                                 <Font name="Arial Bold" size="12.0" />
                                                                                                             </font>
                                                                                                         </Label>
-                                                                                                        <TextField fx:id="txtField15" style="-fx-border-radius: 4;" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="1" />
+                                                                                                        <TextField fx:id="txtField15" disable="true" style="-fx-border-radius: 4;" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="1" />
                                                                                                         <Label prefHeight="14.0" prefWidth="129.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                                                                                                             <font>
                                                                                                                 <Font name="Arial Bold" size="12.0" />
@@ -364,12 +372,6 @@
                                                                         </VBox>
                                                                     </children>
                                                                 </AnchorPane>
-                                                                <AnchorPane layoutX="32.0" layoutY="1.0" prefHeight="19.0" prefWidth="136.0" style="-fx-background-color: white;" />
-                                                                <Text layoutX="40.0" layoutY="15.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Unit Delivery Receipt">
-                                                                    <font>
-                                                                        <Font name="System Bold" size="12.0" />
-                                                                    </font>
-                                                                </Text>
                                                             </children>
                                                             <BorderPane.margin>
                                                                 <Insets />
@@ -439,6 +441,14 @@
                                                         <FontAwesomeIconView glyphName="PRINT" size="20" />
                                                     </graphic>
                                                 </Button>
+                                                <Button fx:id="btnCancelUDR" contentDisplay="TOP" mnemonicParsing="false" prefHeight="47.0" prefWidth="96.0" text="UDR Cancel">
+                                                    <effect>
+                                                        <Blend />
+                                                    </effect>
+                                                    <graphic>
+                                                        <FontAwesomeIconView glyphName="TIMES" size="20" />
+                                                    </graphic>
+                                                </Button>
                                             </children>
                                         </HBox>
                                         <AnchorPane layoutX="694.0" layoutY="5.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="405.0" AnchorPane.topAnchor="5.0" />
@@ -450,6 +460,23 @@
                                                 <FontAwesomeIconView glyphName="POWER_OFF" size="20" />
                                             </graphic>
                                         </Button>
+                                        <GridPane prefHeight="46.0" prefWidth="144.0" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="5.0">
+                                            <columnConstraints>
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                            </columnConstraints>
+                                            <rowConstraints>
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                            </rowConstraints>
+                                            <children>
+                                                <Label fx:id="lblUDRStatus" prefHeight="17.0" prefWidth="103.0" textFill="WHITE" GridPane.columnIndex="1">
+                                                    <font>
+                                                        <Font name="System Bold" size="12.0" />
+                                                    </font>
+                                                </Label>
+                                                <Label text="UDR Status:" textFill="WHITE" />
+                                            </children>
+                                        </GridPane>
                                     </children>
                                 </AnchorPane>
                             </children>

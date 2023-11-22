@@ -9,6 +9,8 @@ import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -202,14 +204,14 @@ public class VSPFormPrintController implements Initializable {
         }
     }
 
-    public static String formatName(String fullName) {
+    private static String formatName(String fullName) {
         String[] nameParts = fullName.split(" ");
         String firstNameInitial = nameParts[0].substring(0, 1);
         String lastName = nameParts[nameParts.length - 1];
         return firstNameInitial + ". " + lastName;
     }
 
-    public static String formatAmount(String amountString) {
+    private static String formatAmount(String amountString) {
         DecimalFormat numFormat = new DecimalFormat("#,##0.00");
         String formattedAmount = "";
         if (amountString.contains("0.00") || amountString.isEmpty()) {
@@ -235,20 +237,18 @@ public class VSPFormPrintController implements Initializable {
     private boolean loadReport() throws SQLException {
         vspMasterData.clear();
         if (oTrans.OpenRecord(psTransNox)) {
-            String deliveryDate = deliveryDate = CommonUtils.xsDateShort((Date) oTrans.getMaster("dDelvryDt"));;
-            if (deliveryDate.isEmpty()) {
-                deliveryDate = "";
-            } else {
-                deliveryDate = CommonUtils.xsDateShort((Date) oTrans.getMaster("dDelvryDt"));
-            }
+            String sDlvryDte = CommonUtils.xsDateShort((Date) oTrans.getMaster(4));
+            DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDate date = LocalDate.parse(sDlvryDte, inputFormatter);
+            DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+            sDlvryDte = date.format(outputFormatter);
 
-            String salesExe = oTrans.getMaster("sSalesExe").toString();
-            String salesExeFullName = formatName(salesExe);
-            String ownerHomeAddress = "";
+            String salesExeFullName = formatName(oTrans.getMaster("sSalesExe").toString());
             String ownerOfficeAddress = "";
             if (oTrans.getMaster("cOfficexx").toString().equals("1")) {
                 ownerOfficeAddress = oTrans.getMaster("sAddressx").toString().toUpperCase();
             }
+            String ownerHomeAddress = "";
             if (oTrans.getMaster("cOfficexx").toString().equals("0")) {
                 ownerHomeAddress = oTrans.getMaster("sAddressx").toString().toUpperCase();
             }
@@ -267,8 +267,7 @@ public class VSPFormPrintController implements Initializable {
                 platOrCsNo = oTrans.getMaster("sPlateNox").toString();
             }
             String paymentMethodDisplay = "";
-            String paymentMethod = oTrans.getMaster("cPayModex").toString();
-            switch (paymentMethod) {
+            switch (oTrans.getMaster("cPayModex").toString()) {
                 case "0":
                     paymentMethodDisplay = "CASH";
                     break;
@@ -288,7 +287,6 @@ public class VSPFormPrintController implements Initializable {
                     paymentMethodDisplay = "";
                     break;
             }
-
             String unitPrice = "";
             String dnPyment = "";
             String nUPrice = formatAmount(oTrans.getMaster("nUnitPrce").toString());
@@ -319,10 +317,10 @@ public class VSPFormPrintController implements Initializable {
             String chmoDocStamps = "";
             switch (oTrans.getMaster("sChmoStat").toString()) {
                 case "0":
-                    LtoAmount = "";
+                    chmoDocStamps = "";
                     break;
                 case "1":
-                    LtoAmount = "FREE";
+                    chmoDocStamps = "FREE";
                     break;
                 case "2":
                 case "3":
@@ -366,9 +364,6 @@ public class VSPFormPrintController implements Initializable {
                     break;
                 case "10":
                     inqTypDisplay = "UIO";
-                    break;
-                default:
-                    inqTypDisplay = "";
                     break;
             }
             String nAccessAmount = formatAmount(oTrans.getMaster("nAccesAmt").toString());
@@ -460,13 +455,9 @@ public class VSPFormPrintController implements Initializable {
                 }
 
             }
-            String promoValue = oTrans.getMaster(28).toString();
-            String cashValue = oTrans.getMaster(32).toString();
-            String bundleValue = oTrans.getMaster(31).toString();
-
-            String promoDiscount = generateDiscountLabel(promoValue, "pRomo", "Promo disc:");
-            String cashDiscount = generateDiscountLabel(cashValue, "caSh", "Cash disc:");
-            String bundleDiscount = generateDiscountLabel(bundleValue, "bundle", "Bundle disc:");
+            String promoDiscount = generateDiscountLabel(oTrans.getMaster(28).toString(), "pRomo", "Promo disc:");
+            String cashDiscount = generateDiscountLabel(oTrans.getMaster(32).toString(), "caSh", "Cash disc:");
+            String bundleDiscount = generateDiscountLabel(oTrans.getMaster(31).toString(), "bundle", "Bundle disc:");
 
             String branchName_1 = oTrans.getMaster("sBranchNm").toString().toUpperCase();
             String branchName_1_Display = "3. Deposit is good for 30 days(except in cases where stock is not available), and does not guarantee the buyer protection from sudden price increases. "
@@ -480,7 +471,6 @@ public class VSPFormPrintController implements Initializable {
             String vsCode = "<" + oTrans.getMaster(1).toString() + ">";
 
             String buyersName = "";
-
             if (!oTrans.getMaster("sCoBuyrNm").toString().isEmpty()) {
                 buyersName = oTrans.getMaster("sCompnyNm").toString() + " / " + oTrans.getMaster("sCoBuyrNm").toString();
             } else {
@@ -491,7 +481,7 @@ public class VSPFormPrintController implements Initializable {
                     vsCode,
                     oTrans.getMaster("dTransact").toString(),
                     oTrans.getMaster("sVSPNOxxx").toString(), //vspNo
-                    deliveryDate, //dDelvryDt
+                    sDlvryDte, //dDelvryDt
                     oTrans.getMaster("sInqryIDx").toString(),
                     oTrans.getMaster("sClientID").toString(),
                     oTrans.getMaster("sSerialID").toString(),

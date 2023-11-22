@@ -32,6 +32,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -50,6 +51,7 @@ import org.rmj.appdriver.agentfx.CommonUtils;
 import org.rmj.appdriver.agentfx.ShowMessageFX;
 import org.rmj.appdriver.callback.MasterCallback;
 import org.rmj.appdriver.constants.EditMode;
+import org.rmj.auto.app.views.CancelForm;
 import org.rmj.auto.app.views.DateCellDisabler;
 import org.rmj.auto.app.views.InputTextFormatter;
 import org.rmj.auto.app.views.ScreenInterface;
@@ -71,6 +73,7 @@ public class UnitDeliveryReceiptFormController implements Initializable, ScreenI
     private int pnEditMode;//Modifying fields
     private double xOffset = 0;
     private double yOffset = 0;
+    private int daysToDisable = 30;
     @FXML
     private AnchorPane AnchorMain;
     @FXML
@@ -119,13 +122,16 @@ public class UnitDeliveryReceiptFormController implements Initializable, ScreenI
     @FXML
     private TextField txtField15;
 
-    private int daysToDisable = 30;
     @FXML
     private TextField txtField34;
     @FXML
     private TextField txtField35;
     @FXML
     private ComboBox<String> comboBox32;
+    @FXML
+    private Label lblUDRStatus;
+    @FXML
+    private Button btnCancelUDR;
 
     /**
      * Initializes the controller class.
@@ -164,17 +170,13 @@ public class UnitDeliveryReceiptFormController implements Initializable, ScreenI
         comboBox32.setItems(cFormItems);
         pnEditMode = EditMode.UNKNOWN;
         initButton(pnEditMode);
+
     }
 
     private void initMonitoringProperty() {
         txtField29.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
             if (newValue.isEmpty()) {
-                try {
-                    clearFields();
-                    clearVSPFieldsMaster();
-                } catch (SQLException ex) {
-                    Logger.getLogger(UnitDeliveryReceiptFormController.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                clearVSPFields();
             }
         });
 
@@ -200,6 +202,7 @@ public class UnitDeliveryReceiptFormController implements Initializable, ScreenI
         btnEdit.setOnAction(this::cmdButton_Click);
         btnCancel.setOnAction(this::cmdButton_Click);
         btnPrint.setOnAction(this::cmdButton_Click);
+        btnCancelUDR.setOnAction(this::cmdButton_Click);
     }
 
     private void cmdButton_Click(ActionEvent event) {
@@ -227,6 +230,28 @@ public class UnitDeliveryReceiptFormController implements Initializable, ScreenI
                     break;
                 case "btnClose":
                     closeForm();
+                    break;
+                case "btnCancelUDR":
+                    String sTransNox = oTrans.getMaster(1).toString();
+                    String sReferNox = oTrans.getMaster(3).toString();
+                    CancelForm cancelform = new CancelForm();
+
+                    if (cancelform.loadCancelWindow(oApp, sTransNox, sReferNox, "UDR")) {
+                        if (oTrans.cancelUDR()) {
+                            ShowMessageFX.Information(null, pxeModuleName, "UDR Successfully Cancelled.");
+                            if (oTrans.OpenRecord(sTransNox)) {
+                                loadCustomerField();
+                            }
+                            pnEditMode = oTrans.getEditMode();
+                        } else {
+                            ShowMessageFX.Warning(null, pxeModuleName, oTrans.getMessage());
+                            return;
+                        }
+                    } else {
+                        ShowMessageFX.Warning(null, pxeModuleName, "Error while cancelling UDR.");
+                        return;
+                    }
+
                     break;
             }
             initButton(pnEditMode);
@@ -452,25 +477,27 @@ public class UnitDeliveryReceiptFormController implements Initializable, ScreenI
                 if (selectedType >= 0) {
                     switch (fieldNumber) {
                         case 32:
-                            if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
-                                if (selectedType == 0) {
-                                    oTrans.setMaster(fieldNumber, String.valueOf(selectedType));
-                                    txtField29.setDisable(false);
-                                } else {
-                                    txtField29.setDisable(true);
-                                    removeRequiredField();
-                                    clearVSPFieldsMaster();
-                                    clearVSPFields();
-                                    ShowMessageFX.Warning(getStage(), "Supplier is Under Development, Please select Customer.", "Warning", null);
+                            if (pnEditMode == EditMode.ADDNEW) {
+                                oTrans.setMaster(fieldNumber, String.valueOf(selectedType));
+                                switch (selectedType) {
+                                    case 1:
+                                        clearVSPFieldsMaster();
+                                        ShowMessageFX.Warning(getStage(), null, pxeModuleName, "Supplier is Under Development, please choose customer to proceed.");
+                                        break;
                                 }
-                            }
 
+                                loadCustomerField();
+                            }
                             break;
+                        default:
+                            oTrans.setMaster(fieldNumber, String.valueOf(selectedType));
+                            break;
+
                     }
+                    initButton(pnEditMode);
                 }
             } catch (SQLException ex) {
-                Logger.getLogger(UnitDeliveryReceiptFormController.class
-                        .getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(UnitDeliveryReceiptFormController.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         );
@@ -489,16 +516,24 @@ public class UnitDeliveryReceiptFormController implements Initializable, ScreenI
         txtField34.setText("");
     }
 
-    private void clearVSPFieldsMaster() throws SQLException {
-        oTrans.setMaster(11, "");
-        oTrans.setMaster(12, "");
-        oTrans.setMaster(22, "");
-        oTrans.setMaster(23, "");
-        oTrans.setMaster(24, "");
-        oTrans.setMaster(25, "");
-        oTrans.setMaster(28, "");
-        oTrans.setMaster(27, "");
-        oTrans.setMaster(29, "");
+    private void clearVSPFieldsMaster() {
+        try {
+            oTrans.setMaster(11, "");
+            oTrans.setMaster(12, "");
+            oTrans.setMaster(22, "");
+            oTrans.setMaster(23, "");
+            oTrans.setMaster(24, "");
+            oTrans.setMaster(25, "");
+            oTrans.setMaster(26, "");
+            oTrans.setMaster(28, "");
+            oTrans.setMaster(27, "");
+            oTrans.setMaster(29, "");
+            oTrans.setMaster(34, "");
+
+        } catch (SQLException ex) {
+            Logger.getLogger(UnitDeliveryReceiptFormController.class
+                    .getName()).log(Level.SEVERE, null, ex);
+        }
 
     }
 
@@ -510,19 +545,23 @@ public class UnitDeliveryReceiptFormController implements Initializable, ScreenI
     private void loadCustomerField() {
         try {
             date02.setValue(strToDate(CommonUtils.xsDateShort((Date) oTrans.getMaster(2))));
-            txtField03.setText((String) oTrans.getMaster(3).toString().toUpperCase());
-            textArea06.setText((String) oTrans.getMaster(6).toString().toUpperCase());
-            txtField35.setText((String) oTrans.getMaster(35).toString().toUpperCase());
-            txtField22.setText((String) oTrans.getMaster(22).toString().toUpperCase());
-            txtField23.setText((String) oTrans.getMaster(23).toString().toUpperCase());
-            txtField24.setText((String) oTrans.getMaster(24).toString().toUpperCase());
-            txtField25.setText((String) oTrans.getMaster(25).toString().toUpperCase());
-            txtField26.setText((String) oTrans.getMaster(26).toString().toUpperCase());
-            txtField27.setText((String) oTrans.getMaster(27).toString().toUpperCase());
-            txtField28.setText((String) oTrans.getMaster(28).toString().toUpperCase());
-            txtField29.setText((String) oTrans.getMaster(29).toString().toUpperCase());
-            txtField34.setText((String) oTrans.getMaster(34).toString().toUpperCase());
+            txtField03.setText(oTrans.getMaster(3).toString().toUpperCase());
+            textArea06.setText(oTrans.getMaster(6).toString().toUpperCase());
+            txtField35.setText(oTrans.getMaster(35).toString().toUpperCase());
+            txtField22.setText(oTrans.getMaster(22).toString().toUpperCase());
+            txtField23.setText(oTrans.getMaster(23).toString().toUpperCase());
+            txtField24.setText(oTrans.getMaster(24).toString().toUpperCase());
+            txtField25.setText(oTrans.getMaster(25).toString().toUpperCase());
+            txtField26.setText(oTrans.getMaster(26).toString().toUpperCase());
+            txtField27.setText(oTrans.getMaster(27).toString().toUpperCase());
+            txtField28.setText(oTrans.getMaster(28).toString().toUpperCase());
+            txtField29.setText(oTrans.getMaster(29).toString().toUpperCase());
+            if (((String) oTrans.getMaster(17)).equals("0")) {
+                lblUDRStatus.setText("Cancelled");
+            } else {
+                lblUDRStatus.setText("Active");
 
+            }
             String selectedItem32 = oTrans.getMaster(32).toString();
             switch (selectedItem32) {
                 case "0":
@@ -531,10 +570,8 @@ public class UnitDeliveryReceiptFormController implements Initializable, ScreenI
                 case "1":
                     selectedItem32 = "SUPPLIER";
                     break;
-
             }
             comboBox32.setValue(selectedItem32);
-//            comboBox32.getSelectionModel().select(Integer.parseInt(oTrans.getMaster(30).toString()));
             String isVchlBrandNew = ((String) oTrans.getMaster(30));
             if (isVchlBrandNew.equals("0")) {
                 radioBrandNew.setSelected(true);
@@ -556,9 +593,11 @@ public class UnitDeliveryReceiptFormController implements Initializable, ScreenI
             if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
                 Date setDate = SQLUtil.toDate(date02.getValue().toString(), SQLUtil.FORMAT_SHORT_DATE);
                 oTrans.setMaster(2, setDate);
+
             }
         } catch (SQLException ex) {
-            Logger.getLogger(UnitDeliveryReceiptFormController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(UnitDeliveryReceiptFormController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -594,10 +633,23 @@ public class UnitDeliveryReceiptFormController implements Initializable, ScreenI
         txtField29.setDisable(!lbShow);
         comboBox32.setDisable(!lbShow);
         txtField34.setDisable(true);
+        btnCancelUDR.setManaged(false);
+        btnCancelUDR.setVisible(false);
 
         radioBrandNew.setDisable(true);
         radioPreOwned.setDisable(true);
 
+        if (fnValue == EditMode.ADDNEW) {
+            switch (comboBox32.getSelectionModel().getSelectedIndex()) {
+                case 0:
+                    txtField29.setDisable(false);
+                    break;
+                case 1:
+                    removeRequiredField();
+                    txtField29.setDisable(true);
+                    break;
+            }
+        }
         if (fnValue == EditMode.READY) {
             btnEdit.setVisible(true);
             btnEdit.setManaged(true);
@@ -607,6 +659,24 @@ public class UnitDeliveryReceiptFormController implements Initializable, ScreenI
         if (fnValue == EditMode.UPDATE) {
             txtField29.setDisable(true);
             comboBox32.setDisable(true);
+        }
+
+        if (fnValue == EditMode.READY) {
+            if (lblUDRStatus.getText().equals("Cancelled")) {
+                btnCancelUDR.setVisible(false);
+                btnCancelUDR.setManaged(false);
+                btnEdit.setVisible(false);
+                btnEdit.setManaged(false);
+                btnPrint.setVisible(false);
+                btnPrint.setManaged(false);
+            } else {
+                btnCancelUDR.setVisible(true);
+                btnCancelUDR.setManaged(true);
+                btnEdit.setVisible(true);
+                btnEdit.setManaged(true);
+                btnPrint.setVisible(true);
+                btnPrint.setManaged(true);
+            }
         }
     }
 
@@ -666,6 +736,7 @@ public class UnitDeliveryReceiptFormController implements Initializable, ScreenI
         txtField28.setText("");
         txtField29.setText("");
         txtField34.setText("");
+        lblUDRStatus.setText("");
         comboBox32.setValue(null);
     }
 

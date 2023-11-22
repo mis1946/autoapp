@@ -156,10 +156,6 @@ public class UnitDeliveryReceiptFormController implements Initializable, ScreenI
 
         initTextKeyPressed();
 
-        initPatternField();
-
-        initTextLimiter();
-
         initSetComboBoxMaster();
 
         initRequiredFieldListener();
@@ -288,11 +284,6 @@ public class UnitDeliveryReceiptFormController implements Initializable, ScreenI
                     return;
                 }
             }
-            if (txtField03.getText().trim().equals("")) {
-                ShowMessageFX.Warning(getStage(), "Please enter a value for Unit Delivery Receipt No.", "Warning", null);
-                txtField03.requestFocus();
-                return;
-            }
             switch (comboBox32.getSelectionModel().getSelectedIndex()) {
                 case 0:
                     if (txtField29.getText().trim().equals("")) {
@@ -359,7 +350,6 @@ public class UnitDeliveryReceiptFormController implements Initializable, ScreenI
     }
 
     private void initTextFieldFocus() {
-        txtField03.focusedProperty().addListener(txtField_Focus);
         txtField29.focusedProperty().addListener(txtField_Focus);
     }
     final ChangeListener<? super Boolean> txtField_Focus = (o, ov, nv) -> {
@@ -375,7 +365,6 @@ public class UnitDeliveryReceiptFormController implements Initializable, ScreenI
             if (!nv) {
                 /* Lost Focus */
                 switch (lnIndex) {
-                    case 3:
                     case 14:
                     case 29:
                         oTrans.setMaster(lnIndex, lsValue); // Handle Encoded Value
@@ -425,7 +414,6 @@ public class UnitDeliveryReceiptFormController implements Initializable, ScreenI
 
     private void initTextKeyPressed() {
         txtField29.setOnKeyPressed(this::txtField_KeyPressed);
-        txtField03.setOnKeyPressed(this::txtField_KeyPressed);
     }
 
     private void txtField_KeyPressed(KeyEvent event) {
@@ -451,16 +439,6 @@ public class UnitDeliveryReceiptFormController implements Initializable, ScreenI
         } catch (SQLException e) {
             ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
         }
-    }
-
-    private void initPatternField() {
-        Pattern pattern;
-        pattern = Pattern.compile("[0-9]*");
-        txtField03.setTextFormatter(new InputTextFormatter(pattern));
-    }
-
-    private void initTextLimiter() {
-        CommonUtils.addTextLimiter(txtField03, 12);
     }
 
     private void initSetComboBoxMaster() {
@@ -538,7 +516,6 @@ public class UnitDeliveryReceiptFormController implements Initializable, ScreenI
     }
 
     private void initRequiredFieldListener() {
-        addRequiredFieldListener(txtField03);
         addRequiredFieldListener(txtField29);
     }
 
@@ -621,7 +598,6 @@ public class UnitDeliveryReceiptFormController implements Initializable, ScreenI
         btnCancel.setVisible(lbShow);
         btnCancel.setManaged(lbShow);
         date02.setDisable(!lbShow);
-        txtField03.setDisable(!lbShow);
         textArea06.setDisable(!lbShow);
         txtField22.setDisable(true);
         txtField23.setDisable(true);
@@ -681,7 +657,6 @@ public class UnitDeliveryReceiptFormController implements Initializable, ScreenI
     }
 
     private void removeRequiredField() {
-        txtField03.getStyleClass().remove("required-field");
         txtField29.getStyleClass().remove("required-field");
     }
 

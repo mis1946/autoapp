@@ -55,6 +55,7 @@ import org.rmj.appdriver.agentfx.CommonUtils;
 import org.rmj.appdriver.agentfx.ShowMessageFX;
 import org.rmj.appdriver.callback.MasterCallback;
 import org.rmj.appdriver.constants.EditMode;
+import org.rmj.auto.app.views.CancelForm;
 import org.rmj.auto.app.views.InputTextFormatter;
 import org.rmj.auto.app.views.ScreenInterface;
 import org.rmj.auto.app.views.unloadForm;
@@ -71,6 +72,7 @@ public class VehicleSalesInvoiceFormController implements Initializable, ScreenI
     private GRider oApp;
     private UnitSalesInvoice oTrans;
     private MasterCallback oListener;
+    CancelForm cancelform = new CancelForm(); //Object for cancellation remarks
     unloadForm unload = new unloadForm(); //Used in Close Button
     private String pxeModuleName = "Vehicle Sales Invoice";
     private int pnEditMode;//Modifying fields
@@ -253,6 +255,7 @@ public class VehicleSalesInvoiceFormController implements Initializable, ScreenI
                     //Validate before saving
                     if (((String)oTrans.getMaster(5)).isEmpty()){
                         ShowMessageFX.Information(getStage(), "Invalid SI Number.", pxeModuleName, null);
+                        txtField05.requestFocus();
                         return;
                     }
                     //Proceed Saving
@@ -296,13 +299,18 @@ public class VehicleSalesInvoiceFormController implements Initializable, ScreenI
                         return;
                     }
                     
-                    if (oTrans.CancelInvoice((String) oTrans.getMaster(1))){
-                        if (!oTrans.OpenRecord((String) oTrans.getMaster(1))){
-                            ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", "");
+                    if (cancelform.loadCancelWindow(oApp, (String) oTrans.getMaster(1), (String) oTrans.getMaster(5), "VSI")) {
+                        if (oTrans.CancelInvoice((String) oTrans.getMaster(1))){
+                            if (!oTrans.OpenRecord((String) oTrans.getMaster(1))){
+                                ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", "");
+                            }
+                            loadFields();
+                            ShowMessageFX.Information(getStage(), "Invoice Successfully Cancelled.", "Success", "");
+                            pnEditMode = EditMode.UNKNOWN;
+                        } else {
+                            ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", "Error while cancelling " + pxeModuleName);
+                            return;
                         }
-                        loadFields();
-                        ShowMessageFX.Information(getStage(), "Invoice Successfully Cancelled.", "Success", "");
-                        pnEditMode = EditMode.UNKNOWN;
                     } else {
                         ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", "Error while cancelling " + pxeModuleName);
                         return;

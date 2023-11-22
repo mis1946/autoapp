@@ -7,6 +7,8 @@ package org.rmj.auto.app.sales;
 import java.awt.Component;
 import java.net.URL;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -214,11 +216,12 @@ public class UnitDeliveryReceiptPrintController implements Initializable {
     private boolean loadReport() throws SQLException {
         udrMasterData.clear();
         if (oTrans.OpenRecord(psTransNox)) {
-            String deliveryDate = CommonUtils.xsDateShort((Date) oTrans.getMaster(2));;
-            if (deliveryDate.isEmpty()) {
-                deliveryDate = "";
-            }
 
+            String sDlvryDte = CommonUtils.xsDateShort((Date) oTrans.getMaster(2));
+            DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDate date = LocalDate.parse(sDlvryDte, inputFormatter);
+            DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+            sDlvryDte = date.format(outputFormatter);
             String branchName = processAndUpperCase(oTrans, 37);
             String approvedBy = processAndUpperCase(oTrans, 15);
             String branchAdd = processAndUpperCase(oTrans, 36);
@@ -267,7 +270,7 @@ public class UnitDeliveryReceiptPrintController implements Initializable {
             udrMasterData.add(new UnitDeliveryReceiptMasterList(
                     "",
                     "",
-                    deliveryDate,
+                    sDlvryDte,
                     purchasedNo,
                     "",
                     "",

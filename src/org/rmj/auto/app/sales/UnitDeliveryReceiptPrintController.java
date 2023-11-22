@@ -216,7 +216,6 @@ public class UnitDeliveryReceiptPrintController implements Initializable {
     private boolean loadReport() throws SQLException {
         udrMasterData.clear();
         if (oTrans.OpenRecord(psTransNox)) {
-
             String sDlvryDte = CommonUtils.xsDateShort((Date) oTrans.getMaster(2));
             DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             LocalDate date = LocalDate.parse(sDlvryDte, inputFormatter);
@@ -261,7 +260,7 @@ public class UnitDeliveryReceiptPrintController implements Initializable {
             String engineNo = processAndUpperCase(oTrans, 27);
             String description = processAndUpperCase(oTrans, 24);
             String frameNo = processAndUpperCase(oTrans, 28);
-            String purchasedNo = processAndUpperCase(oTrans, 3);
+            String udrNo = oTrans.getMaster(3).toString();
             String color = processAndUpperCase(oTrans, 39);
 
             String sRegex = "";
@@ -271,7 +270,7 @@ public class UnitDeliveryReceiptPrintController implements Initializable {
                     "",
                     "",
                     sDlvryDte,
-                    purchasedNo,
+                    udrNo,
                     "",
                     "",
                     remarks,

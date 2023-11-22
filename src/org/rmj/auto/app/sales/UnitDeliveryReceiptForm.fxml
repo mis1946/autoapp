@@ -111,7 +111,7 @@
                                                                                                                 <Font name="Arial Bold" size="12.0" />
                                                                                                             </font>
                                                                                                         </Label>
-                                                                                                        <TextField fx:id="txtField03" style="-fx-border-radius: 4;" GridPane.columnSpan="3" GridPane.rowIndex="2" />
+                                                                                                        <TextField fx:id="txtField03" disable="true" editable="false" style="-fx-border-radius: 4;" GridPane.columnSpan="3" GridPane.rowIndex="2" />
                                                                                                         <Label id="LabelDesc" prefHeight="15.0" prefWidth="143.0" text="Delivery Receipt No." GridPane.columnSpan="3" GridPane.rowIndex="3">
                                                                                                             <font>
                                                                                                                 <Font name="Arial Bold" size="12.0" />

@@ -257,14 +257,15 @@ public class InquiryLostSaleFormController implements Initializable {
                     oTransFollowUp.setTransNox(sSourceNo);
                     oTransFollowUp.setVSPNox(sVSPNox);
                     oTransFollowUp.setisFollowUp(false);
-                    if (oTransFollowUp.SaveRecord()){
-                        if (!state){
-                            if(!oTransVSP.cancelVSP()) {
-                                ShowMessageFX.Warning(null, pxeModuleName, oTransVSP.getMessage());
-                                return;
-                            }
+                    
+                    if (!state){
+                        if(!oTransVSP.cancelVSP()) {
+                            ShowMessageFX.Warning(null, pxeModuleName, oTransVSP.getMessage());
+                            return;
                         }
-                        
+                    }
+                    
+                    if (oTransFollowUp.SaveRecord()){
                         if(oTransFollowUp.LostSale(bisLostSale,state)){
                         }else {
                             ShowMessageFX.Warning(null, pxeModuleName, oTransFollowUp.getMessage());

@@ -39,7 +39,6 @@ import org.rmj.appdriver.GRider;
 import org.rmj.appdriver.agentfx.CommonUtils;
 import org.rmj.appdriver.agentfx.ShowMessageFX;
 import org.rmj.appdriver.callback.MasterCallback;
-import static org.rmj.auto.app.sales.VSPFormPrintController.formatAmount;
 import org.rmj.auto.app.views.unloadForm;
 import org.rmj.auto.cashiering.base.UnitSalesInvoice;
 

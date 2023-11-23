@@ -136,7 +136,7 @@
                                  <center>
                                     <AnchorPane BorderPane.alignment="CENTER">
                                        <BorderPane.margin>
-                                          <Insets top="3.0" />
+                                          <Insets />
                                        </BorderPane.margin>
                                        <children>
                                           <TabPane fx:id="tabPaneMain" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">

@@ -186,7 +186,8 @@ public class VehicleSalesInvoiceFormController implements Initializable, ScreenI
         txtField06.textProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue.isEmpty()) {
                 //clearFields();
-                clearClassFields();
+                clearClass();
+                //clearClassFields();
                 loadFields();
             }
         });
@@ -252,7 +253,6 @@ public class VehicleSalesInvoiceFormController implements Initializable, ScreenI
                     /*Clear Fields*/
                     if (oTrans.NewRecord()) {
                     clearFields();
-                    //clearClassFields();
                     loadFields();
                     pnEditMode = oTrans.getEditMode();
                     } else {
@@ -475,8 +475,11 @@ public class VehicleSalesInvoiceFormController implements Initializable, ScreenI
             txtField20.setText((String) oTrans.getMaster(20)); //sPlateNox
             txtField21.setText((String) oTrans.getMaster(21)); //sFrameNox
             txtField22.setText((String) oTrans.getMaster(22)); //sEngineNo
-            textArea18.setText((String) oTrans.getMaster(18)); //sDescript
-            txtField23.setText((String) oTrans.getMaster(23)); //sColorDsc
+            String sColor = (String) oTrans.getMaster(23);
+            String sRegex = "\\s*\\b" + sColor + "\\b\\s*";
+            String sDescrpt = ((String) oTrans.getMaster(18)).replaceAll(sRegex, " ");
+            textArea18.setText(sDescrpt); //sDescript
+            txtField23.setText(sColor); //sColorDsc
             cmbType032.getSelectionModel().select(Integer.parseInt(oTrans.getMaster(32).toString())); //Customer Type
             
             textArea34.setText((String) oTrans.getMaster(34)); //Remarks
@@ -552,52 +555,52 @@ public class VehicleSalesInvoiceFormController implements Initializable, ScreenI
         return true;
     }
     
-    private void clearClassFields(){
-        try {
-            //Class Master
-            for (lnCtr = 1; lnCtr <= 34; lnCtr++) {
-                switch (lnCtr) {
-                    case 3:
-                        oTrans.setMaster(lnCtr, oApp.getServerDate()); 
-                        break;
-                    case 5: //sReferNox
-                    case 6: //sSourceNo
-                    case 7: //sSourceCd
-                    case 30: //sCompnyNm
-                    case 31: //sAddressx
-                    case 33: //tin
-                    case 34: //remarks
-                    case 24: //sSalesExe
-                    case 19: //sCSNoxxxx
-                    case 20: //sPlateNox
-                    case 21: //sFrameNox
-                    case 22: //sEngineNo
-                    case 18: //sDescript
-                    case 23: //sColorDsc
-                        oTrans.setMaster(lnCtr, ""); 
-                        break;
-//                    case 32: //customerType
-//                        oTrans.setMaster(lnCtr, "0"); 
+//    private void clearClassFields(){
+//        try {
+//            //Class Master
+//            for (lnCtr = 1; lnCtr <= 34; lnCtr++) {
+//                switch (lnCtr) {
+//                    case 3:
+//                        oTrans.setMaster(lnCtr, oApp.getServerDate()); 
 //                        break;
-                    case 29: //nUnitPrce
-                    case 11: //nVatRatex
-                    case 12: //nVatAmtxx
-                    case 10: //nDiscount
-                    case 9: //nTranTotl
-                        oTrans.setMaster(lnCtr, 0.00); 
-                        break;
-                        
-                }
-            } 
-        } catch (SQLException ex) {
-            Logger.getLogger(VehicleSalesInvoiceFormController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
+//                    case 5: //sReferNox
+//                    case 6: //sSourceNo
+//                    case 7: //sSourceCd
+//                    case 30: //sCompnyNm
+//                    case 31: //sAddressx
+//                    case 33: //tin
+//                    case 34: //remarks
+//                    case 24: //sSalesExe
+//                    case 19: //sCSNoxxxx
+//                    case 20: //sPlateNox
+//                    case 21: //sFrameNox
+//                    case 22: //sEngineNo
+//                    case 18: //sDescript
+//                    case 23: //sColorDsc
+//                        oTrans.setMaster(lnCtr, ""); 
+//                        break;
+////                    case 32: //customerType
+////                        oTrans.setMaster(lnCtr, "0"); 
+////                        break;
+//                    case 29: //nUnitPrce
+//                    case 11: //nVatRatex
+//                    case 12: //nVatAmtxx
+//                    case 10: //nDiscount
+//                    case 9: //nTranTotl
+//                        oTrans.setMaster(lnCtr, 0.00); 
+//                        break;
+//                        
+//                }
+//            } 
+//        } catch (SQLException ex) {
+//            Logger.getLogger(VehicleSalesInvoiceFormController.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//    }
     
     /*Clear Class*/
     public void clearClass(){
         try {
-            for (int lnCtr = 1; lnCtr <= 36; lnCtr++){
+            for (int lnCtr = 1; lnCtr <= 39; lnCtr++){
                 switch(lnCtr) {                      
                     case 6: //a.sSourceNo             
                     case 7: //a.sSourceCd
@@ -616,6 +619,9 @@ public class VehicleSalesInvoiceFormController implements Initializable, ScreenI
                     case 34: //sRemarksx
                     case 35: //sCoCltIDx
                     case 36: //sCoCltNmx
+                    case 37: //cPayModex
+                    case 38: //sBankname
+                    case 39: //cTrStatus
                         oTrans.setMaster(lnCtr, "");
                         break;
                     case 9: //a.nTranTotl

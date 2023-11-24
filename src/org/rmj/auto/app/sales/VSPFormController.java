@@ -691,7 +691,15 @@ public class VSPFormController implements Initializable, ScreenInterface {
 
         txtField68.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
             if (newValue.isEmpty()) {
-                textArea69.setText("");
+                try {
+                    textArea69.setText("");
+                    oTrans.setMaster(69, "");
+                    oTrans.setMaster(6, "");
+                    oTrans.setMaster(68, "");
+
+                } catch (SQLException ex) {
+                    Logger.getLogger(VSPFormController.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         }
         );
@@ -1015,7 +1023,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
             }
             if (txtField68.getText().trim().equals("")) {
                 ShowMessageFX.Warning(getStage(), "Please enter a value for Buying Customer", "Warning", null);
-                txtField03.requestFocus();
+                txtField68.requestFocus();
                 return;
             }
             if (!validateDoubleInput(txtField08, "Unit SRP")) {
@@ -1405,14 +1413,24 @@ public class VSPFormController implements Initializable, ScreenInterface {
                         break;
                     case "txtField68":
                         if (oTrans.searchBuyingCustomer(txtField.getText(), true)) {
-                            loadVSPField();
+                            if (oTrans.getMaster(97).toString().equalsIgnoreCase(oTrans.getMaster(68).toString())) {
+                                ShowMessageFX.Warning(getStage(), "Buyer Customer is the same with Co-Buyer, please choose other name.", "Warning", null);
+                                return;
+                            } else {
+                                loadVSPField();
+                            }
                         } else {
                             ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
                         }
                         break;
                     case "txtField97":
                         if (oTrans.searchBuyingCustomer(txtField.getText(), false)) {
-                            loadVSPField();
+                            if (oTrans.getMaster(97).toString().equalsIgnoreCase(oTrans.getMaster(68).toString())) {
+                                ShowMessageFX.Warning(getStage(), "Co-Buyer is the same with Buyer Customer, please choose other name.", "Warning", null);
+                                return;
+                            } else {
+                                loadVSPField();
+                            }
                         } else {
                             ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
                         }

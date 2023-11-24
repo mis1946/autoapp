@@ -531,6 +531,7 @@ public class UnitDeliveryReceiptFormController implements Initializable, ScreenI
             txtField27.setText(oTrans.getMaster(27).toString().toUpperCase());
             txtField28.setText(oTrans.getMaster(28).toString().toUpperCase());
             txtField29.setText(oTrans.getMaster(29).toString().toUpperCase());
+            txtField34.setText(oTrans.getMaster(34).toString().toUpperCase());
             if (((String) oTrans.getMaster(17)).equals("0")) {
                 lblUDRStatus.setText("Cancelled");
             } else {

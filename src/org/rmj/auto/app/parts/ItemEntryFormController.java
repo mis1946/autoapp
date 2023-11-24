@@ -233,15 +233,35 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
         oTrans.setCallback(oListener);
         oTrans.setWithUI(true);
         loadItemList();
+
         comboFilter.setItems(cItems);
+
+        initButton();
+
+        setUpperCaseTextField();
+
+        initTextFieldFocus();
+
+        initTextFieldKeyPressed();
+
+        initRequiredField();
+
+        initCombo();
+
+        initMonitorProperty();
+
+        tblItemList.setOnMouseClicked(this::tblItemEntry_Clicked);
+        pagination.setPageFactory(this::createPage);
+        pnEditMode = EditMode.UNKNOWN;
+        initButton(pnEditMode);
+    }
+
+    private void initButton() {
         btnClose.setOnAction(this::cmdButton_Click);
         btnAdd.setOnAction(this::cmdButton_Click);
         btnEdit.setOnAction(this::cmdButton_Click);
         btnCancel.setOnAction(this::cmdButton_Click);
         btnSave.setOnAction(this::cmdButton_Click);
-
-        tblItemList.setOnMouseClicked(this::tblItemEntry_Clicked);
-
         btnBrandName.setOnAction(this::cmdButton_Click);
         btnCategory.setOnAction(this::cmdButton_Click);
         btnInvType.setOnAction(this::cmdButton_Click);
@@ -255,131 +275,6 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
         btnUpload.setOnAction(this::cmdButton_Click);
         btnLoadPhoto.setOnAction(this::cmdButton_Click);
         btnRemoveImage.setOnAction(this::cmdButton_Click);
-        setCapsLockBehavior(txtField01);
-        setCapsLockBehavior(txtField02);
-        setCapsLockBehavior(txtField32);
-        setCapsLockBehavior(txtField03);
-        setCapsLockBehavior(txtField04);
-        setCapsLockBehavior(txtField13);
-        setCapsLockBehavior(txtField12);
-        setCapsLockBehavior(txtField33);
-        setCapsLockBehavior(txtField34);
-
-        txtField01.focusedProperty().addListener(txtField_Focus);
-        txtField02.focusedProperty().addListener(txtField_Focus);
-        txtField32.focusedProperty().addListener(txtField_Focus);
-        txtField03.focusedProperty().addListener(txtField_Focus);
-        txtField04.focusedProperty().addListener(txtField_Focus);
-        txtField13.focusedProperty().addListener(txtField_Focus);
-        txtField12.focusedProperty().addListener(txtField_Focus);
-        txtField33.focusedProperty().addListener(txtField_Focus);
-        txtField34.focusedProperty().addListener(txtField_Focus);
-
-        txtField32.setOnKeyPressed(this::txtField_KeyPressed);
-        txtField12.setOnKeyPressed(this::txtField_KeyPressed);
-        txtField33.setOnKeyPressed(this::txtField_KeyPressed);
-        txtField34.setOnKeyPressed(this::txtField_KeyPressed);
-        pnEditMode = EditMode.UNKNOWN;
-        initButton(pnEditMode);
-        addRequiredFieldListener(txtField02);
-        addRequiredFieldListener(txtField32);
-        addRequiredFieldListener(txtField03);
-        addRequiredFieldListener(txtField12);
-        addRequiredFieldListener(txtField33);
-        addRequiredFieldListener(txtField34);
-        txtField12.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue.isEmpty()) {
-                txtField33.clear();
-            }
-        });
-
-        pagination.setPageFactory(this::createPage);
-        initCombo();
-
-    }
-
-    private void addRequiredFieldListener(TextField textField) {
-        textField.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue && textField.getText().isEmpty()) {
-                shakeTextField(textField);
-                textField.getStyleClass().add("required-field");
-            } else {
-                textField.getStyleClass().remove("required-field");
-            }
-        });
-    }
-
-    private void shakeTextField(TextField textField) {
-        Timeline timeline = new Timeline();
-        double originalX = textField.getTranslateX();
-
-        // Add keyframes for the animation
-        KeyFrame keyFrame1 = new KeyFrame(Duration.millis(0), new KeyValue(textField.translateXProperty(), 0));
-        KeyFrame keyFrame2 = new KeyFrame(Duration.millis(100), new KeyValue(textField.translateXProperty(), -5));
-        KeyFrame keyFrame3 = new KeyFrame(Duration.millis(200), new KeyValue(textField.translateXProperty(), 5));
-        KeyFrame keyFrame4 = new KeyFrame(Duration.millis(300), new KeyValue(textField.translateXProperty(), -5));
-        KeyFrame keyFrame5 = new KeyFrame(Duration.millis(400), new KeyValue(textField.translateXProperty(), 5));
-        KeyFrame keyFrame6 = new KeyFrame(Duration.millis(500), new KeyValue(textField.translateXProperty(), -5));
-        KeyFrame keyFrame7 = new KeyFrame(Duration.millis(600), new KeyValue(textField.translateXProperty(), 5));
-        KeyFrame keyFrame8 = new KeyFrame(Duration.millis(700), new KeyValue(textField.translateXProperty(), originalX));
-
-        // Add keyframes to the timeline
-        timeline.getKeyFrames().addAll(
-                keyFrame1, keyFrame2, keyFrame3, keyFrame4, keyFrame5, keyFrame6, keyFrame7, keyFrame8
-        );
-
-        // Play the animation
-        timeline.play();
-    }
-
-    public void initCombo() {
-        comboFilter.setOnAction(e -> {
-            String selectedFilter = comboFilter.getSelectionModel().getSelectedItem();
-            txtSeeks01.setVisible(false);
-            txtSeeks01.setManaged(false);
-            txtSeeks02.setVisible(false);
-            txtSeeks02.setManaged(false);
-            switch (selectedFilter) {
-                case "PART NUMBER":
-                    txtSeeks01.setText("");
-                    txtSeeks01.setVisible(true);
-                    txtSeeks01.setManaged(true);
-                    tblItemList.setItems(itemdata);
-                    break;
-                case "DESCRIPTION":
-                    txtSeeks02.setText("");
-                    txtSeeks02.setVisible(true);
-                    txtSeeks02.setManaged(true);
-                    tblItemList.setItems(itemdata);
-                    break;
-                default:
-                    System.out.println("INVALID OPERATOR!");
-                    break;
-            }
-        });
-    }
-
-    @Override
-    public void setGRider(GRider foValue) {
-        oApp = foValue;
-    }
-
-    private static void setCapsLockBehavior(TextField textField) {
-        textField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (textField.getText() != null) {
-                textField.setText(newValue.toUpperCase());
-            }
-        });
-    }
-
-    //use for creating new page on pagination
-    private Node createPage(int pageIndex) {
-        int fromIndex = pageIndex * ROWS_PER_PAGE;
-        int toIndex = Math.min(fromIndex + ROWS_PER_PAGE, itemdata.size());
-        if (itemdata.size() > 0) {
-            tblItemList.setItems(FXCollections.observableArrayList(itemdata.subList(fromIndex, toIndex)));
-        }
-        return tblItemList;
 
     }
 
@@ -444,7 +339,7 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
                 loadItemModelExpandDialog();
                 break;
             case "btnCapture":
-                loadWebScreen();
+                loadWebCamScreen();
                 break;
             case "btnUpload":
                 if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
@@ -607,6 +502,237 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
         initButton(pnEditMode);
     }
 
+    private void setUpperCaseTextField() {
+        setCapsLockBehavior(txtField01);
+        setCapsLockBehavior(txtField02);
+        setCapsLockBehavior(txtField32);
+        setCapsLockBehavior(txtField03);
+        setCapsLockBehavior(txtField04);
+        setCapsLockBehavior(txtField13);
+        setCapsLockBehavior(txtField12);
+        setCapsLockBehavior(txtField33);
+        setCapsLockBehavior(txtField34);
+
+    }
+
+    private static void setCapsLockBehavior(TextField textField) {
+        textField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (textField.getText() != null) {
+                textField.setText(newValue.toUpperCase());
+            }
+        });
+    }
+
+    private void initTextFieldFocus() {
+
+        txtField01.focusedProperty().addListener(txtField_Focus);
+        txtField02.focusedProperty().addListener(txtField_Focus);
+        txtField32.focusedProperty().addListener(txtField_Focus);
+        txtField03.focusedProperty().addListener(txtField_Focus);
+        txtField04.focusedProperty().addListener(txtField_Focus);
+        txtField13.focusedProperty().addListener(txtField_Focus);
+        txtField12.focusedProperty().addListener(txtField_Focus);
+        txtField33.focusedProperty().addListener(txtField_Focus);
+        txtField34.focusedProperty().addListener(txtField_Focus);
+
+    }
+
+    /*Set TextField Value to Master Class*/
+    final ChangeListener<? super Boolean> txtField_Focus = (o, ov, nv) -> {
+        try {
+            TextField txtField = (TextField) ((ReadOnlyBooleanPropertyBase) o).getBean();
+            int lnIndex = Integer.parseInt(txtField.getId().substring(8, 10));
+            String lsValue = txtField.getText();
+
+            if (lsValue == null) {
+                return;
+            }
+            if (!nv) {
+                /*Lost Focus*/
+                switch (lnIndex) {
+                    case 2:
+                    case 32:
+                    case 3:
+                    case 4:
+                    case 12:
+                    case 33:
+                    case 34:
+                        oTrans.setMaster(lnIndex, lsValue); //Handle Encoded Value
+                        break;
+                }
+
+            } else {
+                txtField.selectAll();
+
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ItemEntryFormController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    };
+
+    private void initTextFieldKeyPressed() {
+        txtField02.setOnKeyPressed(this::txtField_KeyPressed);
+        txtField32.setOnKeyPressed(this::txtField_KeyPressed);
+        txtField03.setOnKeyPressed(this::txtField_KeyPressed);
+        txtField04.setOnKeyPressed(this::txtField_KeyPressed);
+        txtField13.setOnKeyPressed(this::txtField_KeyPressed);
+        txtField37.setOnKeyPressed(this::txtField_KeyPressed);
+        txtField12.setOnKeyPressed(this::txtField_KeyPressed);
+        txtField33.setOnKeyPressed(this::txtField_KeyPressed);
+        txtField34.setOnKeyPressed(this::txtField_KeyPressed);
+
+    }
+
+    private void txtField_KeyPressed(KeyEvent event) {
+        TextField txtField = (TextField) event.getSource();
+        int lnIndex = Integer.parseInt(txtField.getId().substring(8, 10));
+        String lsValue = txtField.getText();
+        try {
+            if (event.getCode() == KeyCode.TAB || event.getCode() == KeyCode.ENTER || event.getCode() == KeyCode.F3) {
+                switch (lnIndex) {
+                    case 32:
+                        if (oTrans.searchBrand(lsValue)) {
+                            txtField32.setText((String) oTrans.getMaster(32));
+                        } else {
+                            ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                        }
+                        break;
+                    case 12:
+                        if (oTrans.searchInvType(lsValue)) {
+                            txtField12.setText((String) oTrans.getMaster(12));
+                            txtField33.clear();
+                        } else {
+                            txtField12.clear();
+                            txtField12.requestFocus();
+                            ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                        }
+                        break;
+                    case 33:
+                        if (oTrans.getMaster(12).toString().isEmpty()) {
+                            ShowMessageFX.Warning(getStage(), "Please select inventory type first", "Warning", null);
+                            return;
+                        }
+                        if (oTrans.searchInvCategory(lsValue, oTrans.getMaster(12).toString())) {
+                            txtField33.setText((String) oTrans.getMaster(33));
+                        } else {
+                            ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                        }
+                        break;
+                    case 34:
+                        if (oTrans.searchMeasure(lsValue)) {
+                            txtField34.setText((String) oTrans.getMaster(34));
+                        } else {
+                            ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                        }
+                        break;
+                }
+                event.consume();
+                CommonUtils.SetNextFocus((TextField) event.getSource());
+            } else if (event.getCode() == KeyCode.UP) {
+                event.consume();
+                CommonUtils.SetPreviousFocus((TextField) event.getSource());
+            }
+        } catch (SQLException e) {
+            ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
+        }
+    }
+
+    private void initRequiredField() {
+
+        addRequiredFieldListener(txtField02);
+        addRequiredFieldListener(txtField32);
+        addRequiredFieldListener(txtField03);
+        addRequiredFieldListener(txtField12);
+        addRequiredFieldListener(txtField33);
+        addRequiredFieldListener(txtField34);
+    }
+
+    private void addRequiredFieldListener(TextField textField) {
+        textField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue && textField.getText().isEmpty()) {
+                shakeTextField(textField);
+                textField.getStyleClass().add("required-field");
+            } else {
+                textField.getStyleClass().remove("required-field");
+            }
+        });
+    }
+
+    private void shakeTextField(TextField textField) {
+        Timeline timeline = new Timeline();
+        double originalX = textField.getTranslateX();
+
+        // Add keyframes for the animation
+        KeyFrame keyFrame1 = new KeyFrame(Duration.millis(0), new KeyValue(textField.translateXProperty(), 0));
+        KeyFrame keyFrame2 = new KeyFrame(Duration.millis(100), new KeyValue(textField.translateXProperty(), -5));
+        KeyFrame keyFrame3 = new KeyFrame(Duration.millis(200), new KeyValue(textField.translateXProperty(), 5));
+        KeyFrame keyFrame4 = new KeyFrame(Duration.millis(300), new KeyValue(textField.translateXProperty(), -5));
+        KeyFrame keyFrame5 = new KeyFrame(Duration.millis(400), new KeyValue(textField.translateXProperty(), 5));
+        KeyFrame keyFrame6 = new KeyFrame(Duration.millis(500), new KeyValue(textField.translateXProperty(), -5));
+        KeyFrame keyFrame7 = new KeyFrame(Duration.millis(600), new KeyValue(textField.translateXProperty(), 5));
+        KeyFrame keyFrame8 = new KeyFrame(Duration.millis(700), new KeyValue(textField.translateXProperty(), originalX));
+
+        // Add keyframes to the timeline
+        timeline.getKeyFrames().addAll(
+                keyFrame1, keyFrame2, keyFrame3, keyFrame4, keyFrame5, keyFrame6, keyFrame7, keyFrame8
+        );
+
+        // Play the animation
+        timeline.play();
+    }
+
+    private void initMonitorProperty() {
+        txtField12.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.isEmpty()) {
+                txtField33.clear();
+            }
+        });
+
+    }
+
+    private void initCombo() {
+        comboFilter.setOnAction(e -> {
+            String selectedFilter = comboFilter.getSelectionModel().getSelectedItem();
+            txtSeeks01.setVisible(false);
+            txtSeeks01.setManaged(false);
+            txtSeeks02.setVisible(false);
+            txtSeeks02.setManaged(false);
+            switch (selectedFilter) {
+                case "PART NUMBER":
+                    txtSeeks01.setText("");
+                    txtSeeks01.setVisible(true);
+                    txtSeeks01.setManaged(true);
+                    tblItemList.setItems(itemdata);
+                    break;
+                case "DESCRIPTION":
+                    txtSeeks02.setText("");
+                    txtSeeks02.setVisible(true);
+                    txtSeeks02.setManaged(true);
+                    tblItemList.setItems(itemdata);
+                    break;
+                default:
+                    System.out.println("INVALID OPERATOR!");
+                    break;
+            }
+        });
+    }
+
+    @Override
+    public void setGRider(GRider foValue) {
+        oApp = foValue;
+    }
+
+    //use for creating new page on pagination
+    private Node createPage(int pageIndex) {
+        int fromIndex = pageIndex * ROWS_PER_PAGE;
+        int toIndex = Math.min(fromIndex + ROWS_PER_PAGE, itemdata.size());
+        if (itemdata.size() > 0) {
+            tblItemList.setItems(FXCollections.observableArrayList(itemdata.subList(fromIndex, toIndex)));
+        }
+        return tblItemList;
+
+    }
+
     /*OPEN PHOTO WINDOW*/
     private void loadPhotoWindow() {
         try {
@@ -709,7 +835,6 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
         try {
             /*Populate table*/
             itemdata.clear();
-            String sRecStat = "";
             if (oTrans.LoadMasterList()) {
                 for (lnCtr = 1; lnCtr <= oTrans.getMasterDetailCount(); lnCtr++) {
                     itemdata.add(new ItemEntryTableList(
@@ -760,7 +885,7 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
         tblItemList.setItems(itemdata);
     }
 
-    public void loadSupersedeList() {
+    private void loadSupersedeList() {
 //        try {
 //            /*Populate table*/
 //            supersededata.clear();
@@ -901,72 +1026,6 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
                 FXCollections.observableArrayList(filteredData.subList(Math.min(fromIndex, minIndex), minIndex)));
         sortedData.comparatorProperty().bind(tblItemList.comparatorProperty());
         tblItemList.setItems(sortedData);
-    }
-
-    private void txtField_KeyPressed(KeyEvent event) {
-        TextField txtField = (TextField) event.getSource();
-        int lnIndex = Integer.parseInt(((TextField) event.getSource()).getId().substring(8, 10));
-        String txtFieldID = ((TextField) event.getSource()).getId();
-        String lsValue = txtField.getText();
-
-        try {
-            switch (event.getCode()) {
-                case F3:
-                case TAB:
-                case ENTER:
-                    switch (txtFieldID) {
-                        case "txtField32":
-                            if (oTrans.searchBrand(lsValue)) {
-                                txtField32.setText((String) oTrans.getMaster(32));
-                            } else {
-                                ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
-                            }
-                            break;
-                        case "txtField12":
-                            if (oTrans.searchInvType(lsValue)) {
-                                txtField12.setText((String) oTrans.getMaster(12));
-                                txtField33.clear();
-                            } else {
-                                txtField12.clear();
-                                txtField12.requestFocus();
-                                ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
-                            }
-                            break;
-                        case "txtField33":
-                            if (oTrans.getMaster(12).toString().isEmpty()) {
-                                ShowMessageFX.Warning(getStage(), "Please select inventory type first", "Warning", null);
-                                return;
-                            }
-                            if (oTrans.searchInvCategory(lsValue, oTrans.getMaster(12).toString())) {
-                                txtField33.setText((String) oTrans.getMaster(33));
-                            } else {
-                                ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
-                            }
-                            break;
-                        case "txtField34":
-                            if (oTrans.searchMeasure(lsValue)) {
-                                txtField34.setText((String) oTrans.getMaster(34));
-                            } else {
-                                ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
-                            }
-                            break;
-                    }
-
-                    break;
-
-            }
-        } catch (SQLException e) {
-            ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
-        }
-        switch (event.getCode()) {
-            case ENTER:
-            case DOWN:
-                CommonUtils.SetNextFocus(txtField);
-                break;
-            case UP:
-                CommonUtils.SetPreviousFocus(txtField);
-        }
-
     }
 
     //parameter
@@ -1196,7 +1255,7 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
 
     }
 
-    private void loadWebScreen() {
+    private void loadWebCamScreen() {
         try {
             Stage stage = new Stage();
 
@@ -1392,46 +1451,17 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
         }
     }
 
-    /*Set TextField Value to Master Class*/
-    final ChangeListener<? super Boolean> txtField_Focus = (o, ov, nv) -> {
-        try {
-            TextField txtField = (TextField) ((ReadOnlyBooleanPropertyBase) o).getBean();
-            int lnIndex = Integer.parseInt(txtField.getId().substring(8, 10));
-            String lsValue = txtField.getText();
-
-            if (lsValue == null) {
-                return;
-            }
-            if (!nv) {
-                /*Lost Focus*/
-                switch (lnIndex) {
-                    case 2:
-                    case 32:
-                    case 3:
-                    case 4:
-                    case 12:
-                    case 33:
-                    case 34:
-                        oTrans.setMaster(lnIndex, lsValue); //Handle Encoded Value
-                        break;
-                }
-
-            } else {
-                txtField.selectAll();
-
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(ItemEntryFormController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    };
-
-    private void clearFields() {
+    private void removeRequiredFields() {
         txtField02.getStyleClass().remove("required-field");
         txtField03.getStyleClass().remove("required-field");
         txtField32.getStyleClass().remove("required-field");
         txtField12.getStyleClass().remove("required-field");
         txtField33.getStyleClass().remove("required-field");
         txtField34.getStyleClass().remove("required-field");
+    }
+
+    private void clearFields() {
+        removeRequiredFields();
         Image imageError = new Image("file:D:/GGC_SEG_Folder-Java/autoapp/src/org/rmj/auto/app/images/no-image-available.png");
         imgPartsPic.setImage(imageError);
         txtField01.setText("");

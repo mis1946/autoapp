@@ -717,7 +717,7 @@ public class InquiryFormController implements Initializable, ScreenInterface {
                                 if((lnPayMode != Integer.valueOf(lsPayMode))){
 //                                    cmbInqpr01.getSelectionModel().select(Integer.valueOf(lsPayMode));
 //                                    cmbInqpr02.getSelectionModel().select(Integer.parseInt(oTransProcess.getInqReq(oTransProcess.getInqReqCount(), "cCustGrpx").toString()));
-                                    ShowMessageFX.Warning(getStage(), "Invalid Payment Mode: Please cancle on-going or approved bank application with different payment mode.", "Warning", null);
+                                    ShowMessageFX.Warning(getStage(), "Invalid Payment Mode: Please cancel on-going or approved bank application with different payment mode.", "Warning", null);
                                     return false;
                                 }
                             }

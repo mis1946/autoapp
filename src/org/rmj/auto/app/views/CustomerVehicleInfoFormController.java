@@ -259,30 +259,34 @@ public class CustomerVehicleInfoFormController implements Initializable, ScreenI
         });
         
         //Owner
-        txtField35V.textProperty().addListener((observable, oldValue, newValue) -> {            
-            if (newValue.isEmpty() ){
-                try {
-                    oTransVehicle.setMaster(6, "");
-                    oTransVehicle.setMaster(35, "");
-                    oTransVehicle.setMaster(37, "");
-                    textArea37V.setText("");
-                } catch (SQLException ex) {
-                    Logger.getLogger(CustomerVehicleInfoFormController.class.getName()).log(Level.SEVERE, null, ex);
+        txtField35V.textProperty().addListener((observable, oldValue, newValue) -> {    
+            if(pnEditMode == EditMode.ADDNEW){
+                if (newValue.isEmpty() ){
+                    try {
+                        oTransVehicle.setMaster(6, "");
+                        oTransVehicle.setMaster(35, "");
+                        oTransVehicle.setMaster(37, "");
+                        textArea37V.setText("");
+                    } catch (SQLException ex) {
+                        Logger.getLogger(CustomerVehicleInfoFormController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
             }
         });
         //Co-Owner
         txtField36V.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue.isEmpty()){
-                try {
-                    oTransVehicle.setMaster(7, "");
-                    oTransVehicle.setMaster(36, "");
-                    oTransVehicle.setMaster(38, "");
-                    textArea38V.setText("");
-                } catch (SQLException ex) {
-                    Logger.getLogger(CustomerVehicleInfoFormController.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            } 
+            if(pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE){
+                if (newValue.isEmpty()){
+                    try {
+                        oTransVehicle.setMaster(7, "");
+                        oTransVehicle.setMaster(36, "");
+                        oTransVehicle.setMaster(38, "");
+                        textArea38V.setText("");
+                    } catch (SQLException ex) {
+                        Logger.getLogger(CustomerVehicleInfoFormController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                } 
+            }
         });
         
         setCapsLockBehavior(txtField03V);

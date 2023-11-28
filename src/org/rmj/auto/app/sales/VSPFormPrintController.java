@@ -458,6 +458,8 @@ public class VSPFormPrintController implements Initializable {
             String promoDiscount = generateDiscountLabel(oTrans.getMaster(28).toString(), "pRomo", "Promo disc:");
             String cashDiscount = generateDiscountLabel(oTrans.getMaster(32).toString(), "caSh", "Cash disc:");
             String bundleDiscount = generateDiscountLabel(oTrans.getMaster(31).toString(), "bundle", "Bundle disc:");
+            String stdDiscount = generateDiscountLabel(oTrans.getMaster(29).toString(), "stdFleet", "STD Fleet disc:");
+            String stlDiscount = generateDiscountLabel(oTrans.getMaster(30).toString(), "stlFleet", "STL Fleet disc:");
 
             String branchName_1 = oTrans.getMaster("sBranchNm").toString().toUpperCase();
             String branchName_1_Display = "3. Deposit is good for 30 days(except in cases where stock is not available), and does not guarantee the buyer protection from sudden price increases. "
@@ -516,8 +518,8 @@ public class VSPFormPrintController implements Initializable {
                     oTrans.getMaster("sInsTplCd").toString(),
                     oTrans.getMaster("sInsCodex").toString(),
                     promoDiscount,
-                    oTrans.getMaster("nFleetDsc").toString(),
-                    oTrans.getMaster("nSPFltDsc").toString(),
+                    stdDiscount,
+                    stlDiscount,
                     bundleDiscount,
                     cashDiscount,
                     oTrans.getMaster("nDealrInc").toString(),

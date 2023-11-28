@@ -82,22 +82,6 @@
                                     <FontAwesomeIconView glyphName="FOLDER_OPEN" size="20" />
                                  </graphic>
                               </Button>
-                              <Button fx:id="btnVSave" contentDisplay="TOP" layoutX="152.0" layoutY="10.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="280.0" text="Attach INSERTED Vehicle Record to Customer">
-                                 <effect>
-                                    <Blend />
-                                 </effect>
-                                 <graphic>
-                                    <FontAwesomeIconView glyphName="TAG" size="20" />
-                                 </graphic>
-                              </Button>
-                              <Button fx:id="btnTransfer" contentDisplay="TOP" layoutX="223.0" layoutY="10.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="150.0" text="Transfer Ownership">
-                                 <effect>
-                                    <Blend />
-                                 </effect>
-                                 <graphic>
-                                    <FontAwesomeIconView glyphName="EXCHANGE" size="20" />
-                                 </graphic>
-                              </Button>
                            </children>
                         </HBox>
                         <Button fx:id="btnClose" contentDisplay="TOP" mnemonicParsing="false" prefHeight="50.0" prefWidth="70.0" text="Close" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
@@ -495,267 +479,60 @@
                                                    <content>
                                                       <AnchorPane>
                                                          <children>
-                                                            <AnchorPane maxWidth="-Infinity" minWidth="-Infinity" prefWidth="977.0" style="-fx-border-color: orange; -fx-border-radius: 5;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="3.0">
+                                                            <AnchorPane maxWidth="-Infinity" minWidth="-Infinity" prefWidth="977.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="3.0">
                                                                <children>
                                                                   <StackPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                                      <children>
-                                                                        <VBox>
+                                                                        <GridPane>
+                                                                           <columnConstraints>
+                                                                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="10.0" />
+                                                                              <ColumnConstraints hgrow="ALWAYS" minWidth="-Infinity" prefWidth="870.0" />
+                                                                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="10.0" />
+                                                                           </columnConstraints>
+                                                                           <rowConstraints>
+                                                                              <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="5.0" vgrow="SOMETIMES" />
+                                                                              <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
+                                                                              <RowConstraints minHeight="10.0" prefHeight="100.0" vgrow="SOMETIMES" />
+                                                                              <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="10.0" vgrow="SOMETIMES" />
+                                                                              <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
+                                                                              <RowConstraints minHeight="-Infinity" prefHeight="100.0" vgrow="SOMETIMES" />
+                                                                              <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="5.0" vgrow="SOMETIMES" />
+                                                                           </rowConstraints>
                                                                            <children>
-                                                                              <TabPane tabClosingPolicy="UNAVAILABLE">
-                                                                                 <tabs>
-                                                                                    <Tab style="-fx-font-weight: bold; -fx-font-family: Arial; -fx-font-size: 11.5;" text="List of Unit/s Owned by Customer">
-                                                                                       <content>
-                                                                                          <GridPane>
-                                                                                             <columnConstraints>
-                                                                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="50.0" />
-                                                                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="870.0" />
-                                                                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="50.0" />
-                                                                                             </columnConstraints>
-                                                                                             <rowConstraints>
-                                                                                                <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="5.0" vgrow="SOMETIMES" />
-                                                                                                <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="100.0" vgrow="SOMETIMES" />
-                                                                                                <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="5.0" vgrow="SOMETIMES" />
-                                                                                             </rowConstraints>
-                                                                                             <children>
-                                                                                                <TableView fx:id="tblViewVhclInfo" onMouseClicked="#tblViewVhclInfo_Clicked" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                                                                                                   <columns>
-                                                                                                      <TableColumn fx:id="tblVhcllist01" editable="false" minWidth="-Infinity" prefWidth="35.0" sortable="false" text="Row" />
-                                                                                                      <TableColumn fx:id="tblVhcllist02" editable="false" minWidth="-Infinity" sortable="false" text="CS No" />
-                                                                                                      <TableColumn fx:id="tblVhcllist03" editable="false" sortable="false" text="Plate No" />
-                                                                                                      <TableColumn fx:id="tblVhcllist04" editable="false" minWidth="-Infinity" prefWidth="300.0" sortable="false" text="Description" />
-                                                                                                      <TableColumn fx:id="tblVhcllist05" editable="false" minWidth="-Infinity" prefWidth="280.0" sortable="false" text="Selling Dealer" />
-                                                                                                   </columns>
-                                                                                                </TableView>
-                                                                                             </children>
-                                                                                          </GridPane>
-                                                                                       </content>
-                                                                                    </Tab>
-                                                                                    <Tab style="-fx-font-weight: bold; -fx-font-family: Arial; -fx-font-size: 11.5;" text="Vehicle Ownership History">
-                                                                                       <content>
-                                                                                          <GridPane>
-                                                                                             <columnConstraints>
-                                                                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="50.0" />
-                                                                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="870.0" />
-                                                                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="50.0" />
-                                                                                             </columnConstraints>
-                                                                                             <rowConstraints>
-                                                                                                <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="5.0" vgrow="SOMETIMES" />
-                                                                                                <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="100.0" vgrow="SOMETIMES" />
-                                                                                                <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="5.0" vgrow="SOMETIMES" />
-                                                                                             </rowConstraints>
-                                                                                             <children>
-                                                                                                <TableView fx:id="tblViewVhclHsty" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                                                                                                   <columns>
-                                                                                                      <TableColumn fx:id="tblVhcllHsty01" editable="false" minWidth="-Infinity" prefWidth="35.0" sortable="false" text="Row" />
-                                                                                                      <TableColumn fx:id="tblVhcllHsty02" editable="false" minWidth="-Infinity" prefWidth="110.0" sortable="false" text="Transeferred Date" />
-                                                                                                      <TableColumn fx:id="tblVhcllHsty03" editable="false" minWidth="-Infinity" prefWidth="300.0" sortable="false" text="Previous Owner" />
-                                                                                                      <TableColumn fx:id="tblVhcllHsty04" editable="false" minWidth="-Infinity" prefWidth="110.0" sortable="false" text="Transferred By" />
-                                                                                                      <TableColumn fx:id="tblVhcllHsty05" editable="false" minWidth="-Infinity" prefWidth="300.0" sortable="false" text="Remarks" />
-                                                                                                   </columns>
-                                                                                                </TableView>
-                                                                                             </children>
-                                                                                          </GridPane>
-                                                                                       </content>
-                                                                                    </Tab>
-                                                                                 </tabs>
-                                                                              </TabPane>
-                                                                              <AnchorPane prefHeight="18.0" style="-fx-background-color: #FACEA1;">
-                                                                                 <children>
-                                                                                    <Label alignment="CENTER" text="Vehicle Information" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                                                                       <font>
-                                                                                          <Font name="Arial Bold" size="12.0" />
-                                                                                       </font>
-                                                                                    </Label>
-                                                                                 </children>
-                                                                              </AnchorPane>
-                                                                              <GridPane vgap="4.0">
-                                                                                 <columnConstraints>
-                                                                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="60.0" />
-                                                                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="40.0" />
-                                                                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="80.0" />
-                                                                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="150.0" />
-                                                                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="10.0" />
-                                                                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="90.0" />
-                                                                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="190.0" />
-                                                                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="10.0" />
-                                                                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="80.0" />
-                                                                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="200.0" />
-                                                                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="65.0" />
-                                                                                 </columnConstraints>
-                                                                                 <rowConstraints>
-                                                                                    <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="5.0" vgrow="SOMETIMES" />
-                                                                                    <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
-                                                                                    <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
-                                                                                    <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="15.0" vgrow="SOMETIMES" />
-                                                                                    <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
-                                                                                    <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
-                                                                                    <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="5.0" vgrow="SOMETIMES" />
-                                                                                 </rowConstraints>
-                                                                                 <children>
-                                                                                    <Button fx:id="btnVhclMnl" mnemonicParsing="false" prefHeight="25.0" prefWidth="30.0" GridPane.columnIndex="1" GridPane.rowIndex="5">
-                                                                                       <graphic>
-                                                                                          <FontAwesomeIconView glyphName="TH" />
-                                                                                       </graphic>
-                                                                                       <tooltip>
-                                                                                          <Tooltip text="Manually Fill Vehicle Description" />
-                                                                                       </tooltip>
-                                                                                    </Button>
-                                                                                    <Button fx:id="btnVhclAvl" mnemonicParsing="false" prefHeight="25.0" prefWidth="30.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
-                                                                                       <graphic>
-                                                                                          <FontAwesomeIconView glyphName="CAR" />
-                                                                                       </graphic>
-                                                                                       <tooltip>
-                                                                                          <Tooltip text="Select Vehicle that already exist" />
-                                                                                       </tooltip>
-                                                                                    </Button>
-                                                                                    <Button fx:id="btnVhclDesc" mnemonicParsing="false" prefHeight="25.0" prefWidth="30.0" text="..." GridPane.columnIndex="1" GridPane.rowIndex="1">
-                                                                                       <tooltip>
-                                                                                          <Tooltip text="Open Vehicle Description Entry" />
-                                                                                       </tooltip></Button>
-                                                                                    <TextField fx:id="txtField24V" promptText="Search F3" GridPane.columnIndex="3" GridPane.rowIndex="1">
-                                                                                       <tooltip>
-                                                                                          <Tooltip text="Please choose Vehicle Make" />
-                                                                                       </tooltip></TextField>
-                                                                                    <TextField fx:id="txtField26V" promptText="Search F3" GridPane.columnIndex="6" GridPane.rowIndex="1">
-                                                                                       <tooltip>
-                                                                                          <Tooltip text="Please choose Vehicle Model" />
-                                                                                       </tooltip></TextField>
-                                                                                    <TextField fx:id="txtField28V" promptText="Search F3" GridPane.columnIndex="9" GridPane.rowIndex="1">
-                                                                                       <tooltip>
-                                                                                          <Tooltip text="Please choose Vehicle Type" />
-                                                                                       </tooltip></TextField>
-                                                                                    <TextField fx:id="txtField31V" promptText="Search F3" GridPane.columnIndex="3" GridPane.rowIndex="2">
-                                                                                       <tooltip>
-                                                                                          <Tooltip text="Please choose Vehicle Transmission" />
-                                                                                       </tooltip></TextField>
-                                                                                    <TextField fx:id="txtField30V" promptText="Search F3" GridPane.columnIndex="6" GridPane.rowIndex="2">
-                                                                                       <tooltip>
-                                                                                          <Tooltip text="Please choose Vehicle Color" />
-                                                                                       </tooltip></TextField>
-                                                                                    <TextField fx:id="txtField32V" promptText="Search F3" GridPane.columnIndex="9" GridPane.rowIndex="2">
-                                                                                       <tooltip>
-                                                                                          <Tooltip text="Please choose Vehicle Year" />
-                                                                                       </tooltip></TextField>
-                                                                                    <Label id="LabelDesc" text="Make" GridPane.columnIndex="2" GridPane.rowIndex="1">
-                                                                                       <font>
-                                                                                          <Font name="Arial" size="12.0" />
-                                                                                       </font>
-                                                                                    </Label>
-                                                                                    <Label id="LabelDesc" text="Transmission" GridPane.columnIndex="2" GridPane.rowIndex="2">
-                                                                                       <font>
-                                                                                          <Font name="Arial" size="12.0" />
-                                                                                       </font>
-                                                                                    </Label>
-                                                                                    <Label id="LabelDesc" text="Model" GridPane.columnIndex="5" GridPane.rowIndex="1">
-                                                                                       <font>
-                                                                                          <Font name="Arial" size="12.0" />
-                                                                                       </font>
-                                                                                    </Label>
-                                                                                    <Label id="LabelDesc" text="Year" GridPane.columnIndex="8" GridPane.rowIndex="2">
-                                                                                       <font>
-                                                                                          <Font name="Arial" size="12.0" />
-                                                                                       </font>
-                                                                                    </Label>
-                                                                                    <Label id="LabelDesc" text="Type" GridPane.columnIndex="8" GridPane.rowIndex="1">
-                                                                                       <font>
-                                                                                          <Font name="Arial" size="12.0" />
-                                                                                       </font>
-                                                                                    </Label>
-                                                                                    <Label id="LabelDesc" text="Color" GridPane.columnIndex="5" GridPane.rowIndex="2">
-                                                                                       <font>
-                                                                                          <Font name="Arial" size="12.0" />
-                                                                                       </font>
-                                                                                    </Label>
-                                                                                    <Separator prefWidth="200.0" style="-fx-background-color: orange;" GridPane.columnSpan="11" GridPane.rowIndex="3" />
-                                                                                    <Label id="LabelDesc" text="Plate Number" GridPane.columnIndex="2" GridPane.rowIndex="4" />
-                                                                                    <TextField fx:id="txtField20V" GridPane.columnIndex="3" GridPane.rowIndex="4">
-                                                                                       <tooltip>
-                                                                                          <Tooltip text="Please Fill in the Plate Number" />
-                                                                                       </tooltip></TextField>
-                                                                                    <Label id="LabelDesc" text="Frame Number" GridPane.columnIndex="5" GridPane.rowIndex="4" />
-                                                                                    <TextField fx:id="txtField03V" GridPane.columnIndex="6" GridPane.rowIndex="4">
-                                                                                       <tooltip>
-                                                                                          <Tooltip text="Please Fill in the Frame Number" />
-                                                                                       </tooltip></TextField>
-                                                                                    <Label id="LabelDesc" text="Key Number" GridPane.columnIndex="8" GridPane.rowIndex="4" />
-                                                                                    <TextField fx:id="txtField11V" GridPane.columnIndex="9" GridPane.rowIndex="4" />
-                                                                                    <Label id="LabelDesc" text="CS Number" GridPane.columnIndex="2" GridPane.rowIndex="5" />
-                                                                                    <TextField fx:id="txtField08V" GridPane.columnIndex="3" GridPane.rowIndex="5">
-                                                                                       <tooltip>
-                                                                                          <Tooltip text="Please Fill in the CS Number" />
-                                                                                       </tooltip></TextField>
-                                                                                    <Label id="LabelDesc" text="Engine Number" GridPane.columnIndex="5" GridPane.rowIndex="5" />
-                                                                                    <TextField fx:id="txtField04V" GridPane.columnIndex="6" GridPane.rowIndex="5">
-                                                                                       <tooltip>
-                                                                                          <Tooltip text="Please Fill in the Engine Number" />
-                                                                                       </tooltip></TextField>
-                                                                                    <Button fx:id="btnEngFrm" mnemonicParsing="false" prefHeight="25.0" prefWidth="30.0" text="..." GridPane.columnIndex="8" GridPane.rowIndex="5">
-                                                                                       <tooltip>
-                                                                                          <Tooltip text="Add Engine and Frame Number" />
-                                                                                       </tooltip></Button>
-                                                                                    <Label fx:id="lbl_LName1" alignment="BOTTOM_RIGHT" prefHeight="17.0" prefWidth="78.0" text="*" textFill="#fb0000" GridPane.columnIndex="2" GridPane.rowIndex="4">
-                                                                                       <font>
-                                                                                          <Font name="Arial" size="12.0" />
-                                                                                       </font>
-                                                                                    </Label>
-                                                                                    <Label fx:id="lbl_LName2" alignment="BOTTOM_RIGHT" prefHeight="17.0" prefWidth="68.0" text="*" textFill="#fb0000" GridPane.columnIndex="2" GridPane.rowIndex="5">
-                                                                                       <font>
-                                                                                          <Font name="Arial" size="12.0" />
-                                                                                       </font>
-                                                                                    </Label>
-                                                                                    <Label fx:id="lbl_LName21" alignment="BOTTOM_RIGHT" prefHeight="17.0" prefWidth="85.0" text="*" textFill="#fb0000" GridPane.columnIndex="5" GridPane.rowIndex="4">
-                                                                                       <font>
-                                                                                          <Font name="Arial" size="12.0" />
-                                                                                       </font>
-                                                                                    </Label>
-                                                                                    <Label fx:id="lbl_LName22" alignment="BOTTOM_RIGHT" prefHeight="17.0" prefWidth="87.0" text="*" textFill="#fb0000" GridPane.columnIndex="5" GridPane.rowIndex="5">
-                                                                                       <font>
-                                                                                          <Font name="Arial" size="12.0" />
-                                                                                       </font>
-                                                                                    </Label>
-                                                                                 </children>
-                                                                              </GridPane>
-                                                                              <Separator style="-fx-background-color: orange;" />
-                                                                              <AnchorPane prefHeight="17.0" style="-fx-background-color: #FACEA1;">
-                                                                                 <children>
-                                                                                    <Label alignment="CENTER" text="Miscellaneous" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                                                                       <font>
-                                                                                          <Font name="Arial Bold" size="12.0" />
-                                                                                       </font>
-                                                                                    </Label>
-                                                                                 </children>
-                                                                              </AnchorPane>
-                                                                              <GridPane vgap="4.0" VBox.vgrow="SOMETIMES">
-                                                                                 <columnConstraints>
-                                                                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="60.0" />
-                                                                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="120.0" />
-                                                                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="300.0" />
-                                                                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="10.0" />
-                                                                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="85.0" />
-                                                                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="120.0" />
-                                                                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="60.0" />
-                                                                                 </columnConstraints>
-                                                                                 <rowConstraints>
-                                                                                    <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="5.0" vgrow="SOMETIMES" />
-                                                                                    <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
-                                                                                    <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
-                                                                                    <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="20.0" vgrow="SOMETIMES" />
-                                                                                    <RowConstraints minHeight="-Infinity" prefHeight="10.0" vgrow="SOMETIMES" />
-                                                                                    <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="5.0" vgrow="SOMETIMES" />
-                                                                                 </rowConstraints>
-                                                                                 <children>
-                                                                                    <Label id="LabelDesc" text="Selling Dealer" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                                                                    <Label id="LabelDesc" text="Place of Registration" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2" />
-                                                                                    <Label id="LabelDesc" text="Remarks" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                                                                                    <TextField fx:id="txtField09V" promptText="Search F3" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                                                                                    <DatePicker fx:id="txtField21V" GridPane.columnIndex="5" GridPane.rowIndex="1" />
-                                                                                    <Label id="LabelDesc" text="Register Date" GridPane.columnIndex="4" GridPane.rowIndex="1" />
-                                                                                    <TextField fx:id="txtField22V" promptText="Search F3" GridPane.columnIndex="2" GridPane.columnSpan="4" GridPane.rowIndex="2" />
-                                                                                    <TextArea fx:id="textArea34V" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.columnSpan="4" GridPane.rowIndex="3" GridPane.rowSpan="2" />
-                                                                                 </children>
-                                                                              </GridPane>
+                                                                              <TableView fx:id="tblViewVhclInfo" onMouseClicked="#tblViewVhclInfo_Clicked" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                                                                 <columns>
+                                                                                    <TableColumn fx:id="tblVhcllist01" editable="false" minWidth="-Infinity" prefWidth="35.0" sortable="false" text="Row" />
+                                                                                    <TableColumn fx:id="tblVhcllist02" editable="false" minWidth="-Infinity" prefWidth="75.0" sortable="false" text="CS No" />
+                                                                                    <TableColumn fx:id="tblVhcllist03" editable="false" prefWidth="75.0" sortable="false" text="Plate No" />
+                                                                                    <TableColumn fx:id="tblVhcllist04" editable="false" minWidth="-Infinity" prefWidth="280.0" sortable="false" text="Description" />
+                                                                                    <TableColumn fx:id="tblVhcllist06" editable="false" minWidth="-Infinity" prefWidth="250.0" sortable="false" text="Owner Name" visible="false" />
+                                                                                    <TableColumn fx:id="tblVhcllist07" editable="false" minWidth="-Infinity" prefWidth="250.0" sortable="false" text="Co-Owner Name" />
+                                                                                    <TableColumn fx:id="tblVhcllist05" editable="false" minWidth="-Infinity" prefWidth="250.0" sortable="false" text="Selling Dealer" />
+                                                                                 </columns>
+                                                                              </TableView>
+                                                                              <Label text="Vehicle/s Owned" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                                                                 <font>
+                                                                                    <Font name="Arial Bold" size="12.0" />
+                                                                                 </font>
+                                                                              </Label>
+                                                                              <TableView fx:id="tblViewCoVhclInfo" layoutX="20.0" layoutY="254.0" onMouseClicked="#tblViewVhclInfo_Clicked" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                                                                                 <columns>
+                                                                                    <TableColumn fx:id="tblCoVhcllist01" editable="false" minWidth="-Infinity" prefWidth="35.0" sortable="false" text="Row" />
+                                                                                    <TableColumn fx:id="tblCoVhcllist02" editable="false" minWidth="-Infinity" prefWidth="75.0" sortable="false" text="CS No" />
+                                                                                    <TableColumn fx:id="tblCoVhcllist03" editable="false" prefWidth="75.0" sortable="false" text="Plate No" />
+                                                                                    <TableColumn fx:id="tblCoVhcllist04" editable="false" minWidth="-Infinity" prefWidth="280.0" sortable="false" text="Description" />
+                                                                                    <TableColumn fx:id="tblCoVhcllist06" editable="false" minWidth="-Infinity" prefWidth="250.0" sortable="false" text="Owner Name" />
+                                                                                    <TableColumn fx:id="tblCoVhcllist07" editable="false" minWidth="-Infinity" prefWidth="250.0" sortable="false" text="Co-Owner Name" visible="false" />
+                                                                                    <TableColumn fx:id="tblCoVhcllist05" editable="false" minWidth="-Infinity" prefWidth="250.0" sortable="false" text="Selling Dealer" />
+                                                                                 </columns>
+                                                                              </TableView>
+                                                                              <Label text="Vehicle/s Co - Owned" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                                                                                 <font>
+                                                                                    <Font name="Arial Bold" size="12.0" />
+                                                                                 </font>
+                                                                              </Label>
                                                                            </children>
-                                                                        </VBox>
+                                                                        </GridPane>
                                                                      </children>
                                                                   </StackPane>
                                                                </children>

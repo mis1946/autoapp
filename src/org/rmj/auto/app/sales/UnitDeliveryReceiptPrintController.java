@@ -2,17 +2,15 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/javafx/FXMLController.java to edit this template
  */
-package org.rmj.auto.app.views;
+package org.rmj.auto.app.sales;
 
 import java.awt.Component;
 import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -35,62 +33,71 @@ import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperPrintManager;
-import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.swing.JRViewer;
 import org.rmj.appdriver.GRider;
 import org.rmj.appdriver.agentfx.CommonUtils;
 import org.rmj.appdriver.agentfx.ShowMessageFX;
 import org.rmj.appdriver.callback.MasterCallback;
-import org.rmj.auto.app.views.ScreenInterface;
-import org.rmj.auto.app.views.unloadForm;
-import org.rmj.auto.clients.base.Activity;
+import org.rmj.auto.sales.base.VehicleDeliveryReceipt;
 
 /**
- * Activity Print FXML Controller class
+ * FXML Controller class
  *
- * @author John Dave
+ * @author User
  */
-public class ActivityPrintController implements Initializable, ScreenInterface {
+public class UnitDeliveryReceiptPrintController implements Initializable {
 
-    private Activity oTrans;
+    private VehicleDeliveryReceipt oTrans;
+    private final String pxeModuleName = "Unit Delivery Receipt Print";
+    private String psTransNox;
     private GRider oApp;
     private MasterCallback oListener;
     private JasperPrint jasperPrint; //Jasper Libraries
     private JRViewer jrViewer;
-    private ObservableList<ActivityTableList> actMasterData = FXCollections.observableArrayList();
-    private List<ActivityMemberTable> actMembersData = new ArrayList<ActivityMemberTable>();
-    private List<ActivityTownEntryTableList> townCitydata = new ArrayList<ActivityTownEntryTableList>();
-    private List<ActivityVchlEntryTable> actVhclModelData = new ArrayList<ActivityVchlEntryTable>();
+    private ObservableList<UnitDeliveryReceiptMasterList> udrMasterData = FXCollections.observableArrayList();
     private boolean running = false;
     final static int interval = 100;
     private Timeline timeline;
     private Integer timeSeconds = 3;
+    private Map<String, Object> params = new HashMap<>();
     @FXML
     private AnchorPane AnchorMain;
     @FXML
-    private Button btnClose;
-    private final String pxeModuleName = "ActivityPrint";
-    unloadForm unload = new unloadForm(); //Used in Close Button
+    private Button btnPrint;
     @FXML
-    private AnchorPane reportPane;
+    private Button btnClose;
     @FXML
     private VBox vbProgress;
-    private String psTransNox;
     @FXML
-    private Button btnPrint;
+    private AnchorPane reportPane;
 
+    public void setGRider(GRider foValue) {
+        oApp = foValue;
+    }
+
+    private Stage getStage() {
+        return (Stage) btnClose.getScene().getWindow();
+    }
+
+    public void setTransNox(String fsValue) {
+        psTransNox = fsValue;
+    }
+
+    /**
+     * Initializes the controller class.
+     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        oTrans = new Activity(oApp, oApp.getBranchCode(), true); //Initialize ClientMaster
+        oTrans = new VehicleDeliveryReceipt(oApp, oApp.getBranchCode(), true);
         oTrans.setCallback(oListener);
         oTrans.setWithUI(true);
+
         vbProgress.setVisible(true);
-        btnPrint.setVisible(false);
-        btnPrint.setDisable(true);
         timeline = new Timeline();
         generateReport();
-
+        btnPrint.setVisible(false);
+        btnPrint.setDisable(true);
         btnClose.setOnAction(this::cmdButton_Click);
         btnPrint.setOnAction(this::cmdButton_Click);
     }
@@ -105,8 +112,6 @@ public class ActivityPrintController implements Initializable, ScreenInterface {
                 try {
                 if (JasperPrintManager.printReport(jasperPrint, true)) {
                     ShowMessageFX.Information(null, pxeModuleName, "Printed Successfully");
-                    //Set Value to Refunded amount
-                    //oTrans.setMaster(0, dRefundAmt);
                     CommonUtils.closeStage(btnClose);
                 } else {
                     ShowMessageFX.Warning(null, pxeModuleName, "Print Aborted");
@@ -122,24 +127,6 @@ public class ActivityPrintController implements Initializable, ScreenInterface {
         }
     }
 
-    @Override
-    public void setGRider(GRider foValue) {
-        oApp = foValue;
-    }
-
-    private Stage getStage() {
-        return (Stage) btnClose.getScene().getWindow();
-    }
-
-    private void hideReport() {
-        jrViewer = new JRViewer(null);
-        reportPane.getChildren().clear();
-        jrViewer.setVisible(false);
-        running = false;
-        reportPane.setVisible(false);
-        timeline.stop();
-    }
-
     private void generateReport() {
         hideReport();
         if (!running) {
@@ -152,17 +139,25 @@ public class ActivityPrintController implements Initializable, ScreenInterface {
                             timeSeconds = 0;
                         }
                         if (timeSeconds == 0) {
-
                             try {
                                 loadReport();
                             } catch (SQLException ex) {
-                                Logger.getLogger(ActivityPrintController.class.getName()).log(Level.SEVERE, null, ex);
+                                Logger.getLogger(UnitDeliveryReceiptPrintController.class.getName()).log(Level.SEVERE, null, ex);
                             }
                         }
                     } // KeyFrame event handler
                     ));
             timeline.playFromStart();
         }
+    }
+
+    private void hideReport() {
+        jrViewer = new JRViewer(null);
+        reportPane.getChildren().clear();
+        jrViewer.setVisible(false);
+        running = false;
+        reportPane.setVisible(false);
+        timeline.stop();
     }
 
     private void showReport() {
@@ -210,96 +205,121 @@ public class ActivityPrintController implements Initializable, ScreenInterface {
         }
     }
 
-    public void setTransNox(String fsValue) {
-        psTransNox = fsValue;
+    private static String processAndUpperCase(VehicleDeliveryReceipt oTrans, int indexMaster) throws SQLException {
+        String fieldValue = "";
+        if (oTrans != null && !oTrans.getMaster(indexMaster).toString().isEmpty()) {
+            fieldValue = oTrans.getMaster(indexMaster).toString().toUpperCase();
+        }
+        return fieldValue;
     }
 
     private boolean loadReport() throws SQLException {
-        //Create the parameter
-        int lnCtr = 1;
-        Map<String, Object> params = new HashMap<>();
-        actMasterData.clear();
+        udrMasterData.clear();
         if (oTrans.OpenRecord(psTransNox)) {
-            for (lnCtr = 1; lnCtr <= oTrans.getItemCount(); lnCtr++) {
-                String dApproved = " ";
-                if (!((String) oTrans.getDetail(lnCtr, "sApproved")).isEmpty()) {
-                    dApproved = CommonUtils.xsDateShort((Date) oTrans.getDetail(lnCtr, "dApproved"));
-                }
-                String dEntry = dEntry = CommonUtils.xsDateShort((Date) oTrans.getDetail(lnCtr, "dEntryDte"));
-                if (dEntry.isEmpty()) {
-                    dEntry = " ";
-                } else {
-                    dEntry = dEntry = CommonUtils.xsDateShort((Date) oTrans.getDetail(lnCtr, "dEntryDte"));
-                }
-                String from = CommonUtils.xsDateLong((Date) oTrans.getDetail(lnCtr, "dDateFrom"));
-                String to = CommonUtils.xsDateLong((Date) oTrans.getDetail(lnCtr, "dDateThru"));
-                String duration = from + " - " + to;
-                actMasterData.add(new ActivityTableList(
-                        oTrans.getDetail(lnCtr, "sActvtyID").toString(),
-                        oTrans.getDetail(lnCtr, "sActTitle").toString(),
-                        oTrans.getDetail(lnCtr, "sActDescx").toString(),
-                        oTrans.getDetail(lnCtr, "sActTypDs").toString(),
-                        duration,
-                        "",
-                        oTrans.getDetail(lnCtr, "sLocation").toString(),
-                        oTrans.getDetail(lnCtr, "sCompnynx").toString(),
-                        oTrans.getDetail(lnCtr, "nPropBdgt").toString(),
-                        oTrans.getDetail(lnCtr, "nTrgtClnt").toString(),
-                        oTrans.getDetail(lnCtr, "sLogRemrk").toString(),
-                        oTrans.getDetail(lnCtr, "sRemarksx").toString(),
-                        dEntry,
-                        dApproved,
-                        oTrans.getDetail(lnCtr, "sDeptName").toString(),
-                        oTrans.getDetail(lnCtr, "sCompnyNm").toString(),
-                        oTrans.getDetail(lnCtr, "sBranchNm").toString(),
-                        oTrans.getDetail(lnCtr, "sProvName").toString()));
+            String sDlvryDte = CommonUtils.xsDateShort((Date) oTrans.getMaster(2));
+            DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDate date = LocalDate.parse(sDlvryDte, inputFormatter);
+            DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+            sDlvryDte = date.format(outputFormatter);
+            String branchName = processAndUpperCase(oTrans, 37);
+            String approvedBy = processAndUpperCase(oTrans, 15);
+            String branchAdd = processAndUpperCase(oTrans, 36);
+            String buyerName = "";
+            if (!oTrans.getMaster("sCoCltNmx").toString().isEmpty()) {
+                buyerName = oTrans.getMaster("sCompnyNm").toString() + " / " + oTrans.getMaster("sCoCltNmx").toString();
+            } else {
+                buyerName = oTrans.getMaster("sCompnyNm").toString();
             }
-            townCitydata.clear();
-            String town = "";
-            for (lnCtr = 1; lnCtr <= oTrans.getActTownCount(); lnCtr++) {
-                if (town.isEmpty()) {
-                    town = oTrans.getActTown(lnCtr, "sTownName").toString();
-                } else {
-                    town = town + " , " + oTrans.getActTown(lnCtr, "sTownName").toString();
-
-                }
-
+            String pymntMode = "";
+            switch (oTrans.getMaster("cPayModex").toString()) {
+                case "0":
+                    pymntMode = "CASH";
+                    break;
+                case "1":
+                    pymntMode = "BANK PURCHASE ORDER";
+                    break;
+                case "2":
+                    pymntMode = "BANK FINANCING";
+                    break;
+                case "3":
+                    pymntMode = "COMPANY PURCHASE ORDER";
+                    break;
+                case "4":
+                    pymntMode = "COMPANY FINANCING";
+                    break;
             }
+            String buyerAddress = processAndUpperCase(oTrans, 23);
+            String preparedBy = processAndUpperCase(oTrans, 35);
+            String remarks = processAndUpperCase(oTrans, 6);
+            String csNo = "";
+            if (!oTrans.getMaster(26).toString().isEmpty()) {
+                csNo = oTrans.getMaster(26).toString();
+            } else {
+                csNo = oTrans.getMaster(25).toString();
+            }
+            String engineNo = processAndUpperCase(oTrans, 27);
+            String description = processAndUpperCase(oTrans, 24);
+            String frameNo = processAndUpperCase(oTrans, 28);
+            String udrNo = oTrans.getMaster(3).toString();
+            String color = processAndUpperCase(oTrans, 39);
 
-            townCitydata.add(new ActivityTownEntryTableList(
-                    "", //ROW
+            String sRegex = "";
+            sRegex = "\\s*\\b" + color + "\\b\\s*";
+            description = description.replaceAll(sRegex, " ");
+            udrMasterData.add(new UnitDeliveryReceiptMasterList(
                     "",
-                    town
+                    "",
+                    sDlvryDte,
+                    udrNo,
+                    "",
+                    "",
+                    remarks,
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    approvedBy,
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    buyerName.toUpperCase(),
+                    buyerAddress,
+                    description,
+                    csNo.toUpperCase(),
+                    "",
+                    engineNo,
+                    frameNo,
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    preparedBy,
+                    branchAdd,
+                    branchName,
+                    pymntMode,
+                    color
             ));
-            actMembersData.clear();
-            for (lnCtr = 1; lnCtr <= oTrans.getActMemberCount(); lnCtr++) {
-                if (oTrans.getActMember(lnCtr, "cOriginal").equals("1")) {
-                    actMembersData.add(new ActivityMemberTable(
-                            String.valueOf(lnCtr), //ROW
-                            oTrans.getActMember(lnCtr, "sDeptName").toString(),
-                            "",
-                            oTrans.getActMember(lnCtr, "sCompnyNm").toString(),
-                            oTrans.getActMember(lnCtr, "sEmployID").toString()));
-                }
-            }
-            actVhclModelData.clear();
-            for (lnCtr = 1; lnCtr <= oTrans.getActVehicleCount(); lnCtr++) {
-                actVhclModelData.add(new ActivityVchlEntryTable(
-                        String.valueOf(lnCtr), //ROW
-                        oTrans.getActVehicle(lnCtr, "sSerialID").toString(),
-                        oTrans.getActVehicle(lnCtr, "sDescript").toString(),
-                        oTrans.getActVehicle(lnCtr, "sCSNoxxxx").toString()));
-            }
         }
-        String sourceFileName = "D://GGC_Java_Systems/reports/autoapp/ActivityPrint.jasper";
+        String sReport = oTrans.getReport("udr");
+        if (sReport.isEmpty()) {
+            ShowMessageFX.Warning(null, pxeModuleName, oTrans.getMessage());
+            return false;
+        }
+
+        String sourceFileName = "D://GGC_Java_Systems/reports/autoapp/" + sReport;
         String printFileName = null;
-        JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(actMasterData);
-        JRBeanCollectionDataSource vehicle = new JRBeanCollectionDataSource(actVhclModelData);
-        JRBeanCollectionDataSource town = new JRBeanCollectionDataSource(townCitydata);
-        JRBeanCollectionDataSource member = new JRBeanCollectionDataSource(actMembersData);
-        params.put("vehicle", vehicle);
-        params.put("town", town);
-        params.put("member", member);
+        JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(udrMasterData);
+        params.put(
+                "quantity", "One(1)");
         try {
             jasperPrint = JasperFillManager.fillReport(sourceFileName, params, beanColDataSource);
             printFileName = jasperPrint.toString();

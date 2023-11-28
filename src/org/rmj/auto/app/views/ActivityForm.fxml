@@ -36,7 +36,7 @@
                         <AnchorPane prefHeight="0.0" prefWidth="1302.0" style="-fx-background-color: #515151; -fx-background-radius: 5;" BorderPane.alignment="CENTER">
                             <children>
                                 <Separator layoutY="20.0" prefHeight="5.0" prefWidth="1302.0" style="-fx-background-color: orange;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
-                                <Label alignment="CENTER" contentDisplay="CENTER" layoutY="1.0" prefHeight="30.0" prefWidth="1302.0" text="ACTIVITY DATA ENTRY" textAlignment="CENTER" textFill="WHITE" AnchorPane.bottomAnchor="4.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="1.0">
+                                <Label alignment="CENTER" contentDisplay="CENTER" layoutY="1.0" prefHeight="30.0" prefWidth="1302.0" text="ACTIVITY INFORMATION" textAlignment="CENTER" textFill="WHITE" AnchorPane.bottomAnchor="4.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="1.0">
                                     <font>
                                         <Font name="Arial Bold" size="13.0" />
                                     </font>
@@ -346,7 +346,7 @@
                                                                                                         <Insets left="5.0" />
                                                                                                     </GridPane.margin>
                                                                                                 </Label>
-                                                                                                <TextField fx:id="txtField01" editable="false" GridPane.columnIndex="1" GridPane.columnSpan="3" />
+                                                                                                <TextField fx:id="txtField01" disable="true" editable="false" GridPane.columnIndex="1" GridPane.columnSpan="3" />
                                                                                                 <Label alignment="CENTER_RIGHT" prefHeight="14.0" prefWidth="73.0" text="*" textFill="#fb0000" GridPane.rowIndex="2">
                                                                                                     <font>
                                                                                                         <Font name="Arial Bold" size="11.5" />
@@ -490,7 +490,7 @@
                                                                                                                 <CheckBox fx:id="selectAllCity" mnemonicParsing="false" prefHeight="22.0" prefWidth="23.0" textAlignment="CENTER" />
                                                                                                             </graphic>
                                                                                                         </TableColumn>
-                                                                                                        <TableColumn fx:id="tblTownCity" editable="false" prefWidth="274.5" text="Town/City" />
+                                                                                                        <TableColumn fx:id="tblTownCity" editable="false" prefWidth="274.5" sortable="false" text="Town/City" />
                                                                                                     </columns>
                                                                                                 </TableView>
                                                                                                 <Label text="Municipality" GridPane.columnIndex="6">
@@ -559,7 +559,7 @@
                                                                                         <TableView fx:id="tblViewActivityMembers" prefHeight="198.0" prefWidth="498.0">
                                                                                             <columns>
                                                                                                 <TableColumn fx:id="tblActvtyMembersRow" editable="false" prefWidth="36.33331298828125" sortable="false" text="Row" />
-                                                                                                <TableColumn fx:id="tblselected" editable="false" prefWidth="28.33331298828125">
+                                                                                                <TableColumn fx:id="tblselected" editable="false" prefWidth="28.33331298828125" sortable="false">
                                                                                                     <graphic>
                                                                                                         <CheckBox fx:id="selectAllCheckBoxEmployee" alignment="CENTER" mnemonicParsing="false" prefHeight="18.0" prefWidth="76.0" />
                                                                                                     </graphic>
@@ -611,7 +611,7 @@
                                                                                         </AnchorPane>
                                                                                         <TableView fx:id="tblViewVhclModels" prefHeight="198.0" prefWidth="498.0">
                                                                                             <columns>
-                                                                                                <TableColumn fx:id="tblindexVchlRow" editable="false" prefWidth="33.66668701171875" text="Row" />
+                                                                                                <TableColumn fx:id="tblindexVchlRow" editable="false" prefWidth="33.66668701171875" sortable="false" text="Row" />
                                                                                                 <TableColumn fx:id="tblVchlSelect" editable="false" prefWidth="33.6666259765625" sortable="false">
                                                                                                     <graphic>
                                                                                                         <CheckBox fx:id="selectAllVchlMode" mnemonicParsing="false" />
@@ -665,15 +665,15 @@
                                                                                 </AnchorPane>
                                                                                 <TableView fx:id="tblViewTasks" prefHeight="243.0" prefWidth="1079.0">
                                                                                     <columns>
-                                                                                        <TableColumn prefWidth="47.0" text="Row" />
-                                                                                        <TableColumn prefWidth="131.0" text="Task Start Date" />
-                                                                                        <TableColumn prefWidth="211.0" text="Task End Date" />
-                                                                                        <TableColumn prefWidth="443.0000305175781" text="Task Title" />
-                                                                                        <TableColumn maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="300.0" text="Remarks" />
-                                                                                        <TableColumn maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="150.0" text="Entered By" />
-                                                                                        <TableColumn maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="100.0" text="Entered Date" />
-                                                                                        <TableColumn minWidth="-Infinity" prefWidth="150.0" text="Edit By" />
-                                                                                        <TableColumn prefWidth="75.0" text="Edit Date" />
+                                                                                        <TableColumn editable="false" prefWidth="47.0" sortable="false" text="Row" />
+                                                                                        <TableColumn editable="false" prefWidth="131.0" sortable="false" text="Task Start Date" />
+                                                                                        <TableColumn editable="false" prefWidth="211.0" sortable="false" text="Task End Date" />
+                                                                                        <TableColumn editable="false" prefWidth="443.0000305175781" sortable="false" text="Task Title" />
+                                                                                        <TableColumn editable="false" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="300.0" sortable="false" text="Remarks" />
+                                                                                        <TableColumn editable="false" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="150.0" sortable="false" text="Entered By" />
+                                                                                        <TableColumn editable="false" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="100.0" sortable="false" text="Entered Date" />
+                                                                                        <TableColumn editable="false" minWidth="-Infinity" prefWidth="150.0" sortable="false" text="Edit By" />
+                                                                                        <TableColumn editable="false" prefWidth="75.0" sortable="false" text="Edit Date" />
                                                                                     </columns>
                                                                                 </TableView>
                                                                                 <AnchorPane prefHeight="26.0" prefWidth="1079.0" style="-fx-background-color: FACEA1;">
@@ -710,18 +710,18 @@
                                                                                 </AnchorPane>
                                                                                 <TableView fx:id="tblViewBudget" prefHeight="251.0" prefWidth="1079.0">
                                                                                     <columns>
-                                                                                        <TableColumn prefWidth="47.0" text="Row" />
-                                                                                        <TableColumn prefWidth="245.6666717529297" text="Budget  Title" />
-                                                                                        <TableColumn prefWidth="162.33331298828125" text="Proposed Amt" />
-                                                                                        <TableColumn prefWidth="378.66668701171875" text="Remarks" />
-                                                                                        <TableColumn maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="150.0" text="Entered By" />
-                                                                                        <TableColumn maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="100.0" text="Entered Date" />
-                                                                                        <TableColumn minWidth="-Infinity" prefWidth="150.0" text="Edit By" />
-                                                                                        <TableColumn prefWidth="75.0" text="Edit Date" />
-                                                                                        <TableColumn maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="50.0" text="Status" />
-                                                                                        <TableColumn maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="150.0" text="Approved By" />
-                                                                                        <TableColumn maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="100.0" text="Approved Date" />
-                                                                                        <TableColumn maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="50.0" text="Addl" />
+                                                                                        <TableColumn editable="false" prefWidth="47.0" sortable="false" text="Row" />
+                                                                                        <TableColumn editable="false" prefWidth="245.6666717529297" sortable="false" text="Budget  Title" />
+                                                                                        <TableColumn editable="false" prefWidth="162.33331298828125" sortable="false" text="Proposed Amt" />
+                                                                                        <TableColumn editable="false" prefWidth="378.66668701171875" sortable="false" text="Remarks" />
+                                                                                        <TableColumn editable="false" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="150.0" sortable="false" text="Entered By" />
+                                                                                        <TableColumn editable="false" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="100.0" sortable="false" text="Entered Date" />
+                                                                                        <TableColumn editable="false" minWidth="-Infinity" prefWidth="150.0" sortable="false" text="Edit By" />
+                                                                                        <TableColumn editable="false" prefWidth="75.0" sortable="false" text="Edit Date" />
+                                                                                        <TableColumn editable="false" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="50.0" sortable="false" text="Status" />
+                                                                                        <TableColumn editable="false" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="150.0" sortable="false" text="Approved By" />
+                                                                                        <TableColumn editable="false" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="100.0" sortable="false" text="Approved Date" />
+                                                                                        <TableColumn editable="false" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="50.0" sortable="false" text="Addl" />
                                                                                     </columns>
                                                                                 </TableView>
                                                                             </children>

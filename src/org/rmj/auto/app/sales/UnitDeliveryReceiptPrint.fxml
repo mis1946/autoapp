@@ -27,7 +27,7 @@
                     <top>
                         <AnchorPane prefHeight="33.0" prefWidth="626.0" style="-fx-background-color: #515151; -fx-background-radius: 5;" BorderPane.alignment="CENTER">
                             <children>
-                                <Label alignment="CENTER" contentDisplay="CENTER" text="ACTIVITY PRINT" textAlignment="CENTER" textFill="WHITE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                <Label alignment="CENTER" contentDisplay="CENTER" text="UNIT DELIVERY RECEIPT PRINT" textAlignment="CENTER" textFill="WHITE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                     <font>
                                         <Font name="Arial Bold" size="13.0" />
                                     </font>
@@ -44,12 +44,12 @@
                             <children>
                                 <VBox fx:id="vbProgress" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                     <children>
-                                        <Label text="Loading activity plan please wait...">
+                                        <Label text="Loading unit delivery receipt please wait...">
                                             <font>
                                                 <Font size="16.0" />
                                             </font>
                                         </Label>
-                                        <Label text="(Note: Please don't do anything while loading activity plan!!!)" textFill="#d30909">
+                                        <Label text="(Note: Please don't do anything while loadingl unit delivery receipt!!!)" textFill="#d30909">
                                             <font>
                                                 <Font size="14.0" />
                                             </font>
@@ -71,10 +71,9 @@
                     <bottom>
                         <AnchorPane prefHeight="51.0" prefWidth="626.0" style="-fx-background-color: #515151; -fx-background-radius: 5;" BorderPane.alignment="CENTER">
                             <children>
-                                <HBox prefHeight="100.0" prefWidth="200.0" spacing="5.0" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
+                                <HBox prefHeight="51.0" prefWidth="151.0" spacing="5.0" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="8.0" AnchorPane.topAnchor="5.0">
                                     <children>
-                                        <AnchorPane prefHeight="47.0" prefWidth="46.0" />
-                                        <Button fx:id="btnPrint" contentDisplay="TOP" mnemonicParsing="false" prefHeight="50.0" prefWidth="70.0" text="Print">
+                                        <Button fx:id="btnPrint" contentDisplay="TOP" mnemonicParsing="false" prefHeight="50.0" prefWidth="80.0" text="Print">
                                             <effect>
                                                 <Blend />
                                             </effect>

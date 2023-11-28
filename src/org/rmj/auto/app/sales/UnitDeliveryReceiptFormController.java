@@ -4,6 +4,7 @@
  */
 package org.rmj.auto.app.sales;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -12,32 +13,36 @@ import java.util.Date;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Pattern;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.beans.property.ReadOnlyBooleanPropertyBase;
 import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
-import static javafx.scene.input.KeyCode.DOWN;
-import static javafx.scene.input.KeyCode.ENTER;
-import static javafx.scene.input.KeyCode.F3;
-import static javafx.scene.input.KeyCode.TAB;
-import static javafx.scene.input.KeyCode.UP;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import org.rmj.appdriver.GRider;
 import org.rmj.appdriver.SQLUtil;
@@ -45,8 +50,8 @@ import org.rmj.appdriver.agentfx.CommonUtils;
 import org.rmj.appdriver.agentfx.ShowMessageFX;
 import org.rmj.appdriver.callback.MasterCallback;
 import org.rmj.appdriver.constants.EditMode;
+import org.rmj.auto.app.views.CancelForm;
 import org.rmj.auto.app.views.DateCellDisabler;
-import org.rmj.auto.app.views.InputTextFormatter;
 import org.rmj.auto.app.views.ScreenInterface;
 import org.rmj.auto.app.views.unloadForm;
 import org.rmj.auto.sales.base.VehicleDeliveryReceipt;
@@ -54,7 +59,7 @@ import org.rmj.auto.sales.base.VehicleDeliveryReceipt;
 /**
  * Unit Delivery Receipt Form Controller class
  *
- * @author John Dave
+ * @author
  */
 public class UnitDeliveryReceiptFormController implements Initializable, ScreenInterface {
 
@@ -64,6 +69,9 @@ public class UnitDeliveryReceiptFormController implements Initializable, ScreenI
     unloadForm unload = new unloadForm();
     private final String pxeModuleName = "Unit Delivery Receipt"; //Form Title
     private int pnEditMode;//Modifying fields
+    private double xOffset = 0;
+    private double yOffset = 0;
+    private int daysToDisable = 30;
     @FXML
     private AnchorPane AnchorMain;
     @FXML
@@ -110,13 +118,18 @@ public class UnitDeliveryReceiptFormController implements Initializable, ScreenI
     @FXML
     private RadioButton radioPreOwned;
     @FXML
-    private ComboBox<String> comboBox30;
-    @FXML
-    private TextField txtField14;
-    @FXML
     private TextField txtField15;
 
-    private int daysToDisable = 30;
+    @FXML
+    private TextField txtField34;
+    @FXML
+    private TextField txtField35;
+    @FXML
+    private ComboBox<String> comboBox32;
+    @FXML
+    private Label lblUDRStatus;
+    @FXML
+    private Button btnCancelUDR;
 
     /**
      * Initializes the controller class.
@@ -128,6 +141,54 @@ public class UnitDeliveryReceiptFormController implements Initializable, ScreenI
         oTrans = new VehicleDeliveryReceipt(oApp, oApp.getBranchCode(), true);
         oTrans.setCallback(oListener);
         oTrans.setWithUI(true);
+
+        initMonitoringProperty();
+
+        initCapitalizationFields();
+
+        initButtonClick();
+
+        initTextFieldFocus();
+
+        initTextAreaFocus();
+
+        initTextKeyPressed();
+
+        initSetComboBoxMaster();
+
+        initRequiredFieldListener();
+
+        date02.setOnAction(this::getDate);
+        date02.setDayCellFactory(DateCellDisabler.createDisableDateCallback(daysToDisable));
+
+        comboBox32.setItems(cFormItems);
+        pnEditMode = EditMode.UNKNOWN;
+        initButton(pnEditMode);
+
+    }
+
+    private void initMonitoringProperty() {
+        txtField29.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+            if (newValue.isEmpty()) {
+                clearVSPFields();
+            }
+        });
+
+    }
+
+    private void initCapitalizationFields() {
+        setTextAreaCapital(textArea06);
+    }
+
+    private static void setTextAreaCapital(TextArea textArea) {
+        textArea.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (textArea.getText() != null) {
+                textArea.setText(newValue.toUpperCase());
+            }
+        });
+    }
+
+    private void initButtonClick() {
         btnBrowse.setOnAction(this::cmdButton_Click);
         btnClose.setOnAction(this::cmdButton_Click);
         btnAdd.setOnAction(this::cmdButton_Click);
@@ -135,68 +196,7 @@ public class UnitDeliveryReceiptFormController implements Initializable, ScreenI
         btnEdit.setOnAction(this::cmdButton_Click);
         btnCancel.setOnAction(this::cmdButton_Click);
         btnPrint.setOnAction(this::cmdButton_Click);
-
-        Pattern pattern;
-        pattern = Pattern.compile("[0-9]*");
-        txtField03.setTextFormatter(new InputTextFormatter(pattern));
-        CommonUtils.addTextLimiter(txtField03, 12);
-        txtField29.setOnKeyPressed(this::txtField_KeyPressed);
-
-        textArea06.focusedProperty().addListener(txtArea_Focus);
-
-        addRequiredFieldListener(txtField03);
-        addRequiredFieldListener(txtField29);
-
-        txtField03.focusedProperty().addListener(txtField_Focus);
-        txtField29.focusedProperty().addListener(txtField_Focus);
-
-        date02.setOnAction(this::getDate);
-        date02.setDayCellFactory(DateCellDisabler.createDisableDateCallback(daysToDisable));
-
-        comboBox30.setItems(cFormItems);
-        pnEditMode = EditMode.UNKNOWN;
-        initButton(pnEditMode);
-    }
-
-    @Override
-    public void setGRider(GRider foValue) {
-        oApp = foValue;
-    }
-
-    //Animation
-    private void shakeTextField(TextField textField) {
-        Timeline timeline = new Timeline();
-        double originalX = textField.getTranslateX();
-
-        // Add keyframes for the animation
-        KeyFrame keyFrame1 = new KeyFrame(Duration.millis(0), new KeyValue(textField.translateXProperty(), 0));
-        KeyFrame keyFrame2 = new KeyFrame(Duration.millis(100), new KeyValue(textField.translateXProperty(), -5));
-        KeyFrame keyFrame3 = new KeyFrame(Duration.millis(200), new KeyValue(textField.translateXProperty(), 5));
-        KeyFrame keyFrame4 = new KeyFrame(Duration.millis(300), new KeyValue(textField.translateXProperty(), -5));
-        KeyFrame keyFrame5 = new KeyFrame(Duration.millis(400), new KeyValue(textField.translateXProperty(), 5));
-        KeyFrame keyFrame6 = new KeyFrame(Duration.millis(500), new KeyValue(textField.translateXProperty(), -5));
-        KeyFrame keyFrame7 = new KeyFrame(Duration.millis(600), new KeyValue(textField.translateXProperty(), 5));
-        KeyFrame keyFrame8 = new KeyFrame(Duration.millis(700), new KeyValue(textField.translateXProperty(), originalX));
-
-        // Add keyframes to the timeline
-        timeline.getKeyFrames().addAll(
-                keyFrame1, keyFrame2, keyFrame3, keyFrame4, keyFrame5, keyFrame6, keyFrame7, keyFrame8
-        );
-
-        // Play the animation
-        timeline.play();
-    }
-
-    //Validation
-    private void addRequiredFieldListener(TextField textField) {
-        textField.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue && textField.getText().isEmpty()) {
-                shakeTextField(textField);
-                textField.getStyleClass().add("required-field");
-            } else {
-                textField.getStyleClass().remove("required-field");
-            }
-        });
+        btnCancelUDR.setOnAction(this::cmdButton_Click);
     }
 
     private void cmdButton_Click(ActionEvent event) {
@@ -219,9 +219,33 @@ public class UnitDeliveryReceiptFormController implements Initializable, ScreenI
                     browseRecord();
                     break;
                 case "btnPrint":
+                    String srowdata = oTrans.getMaster(1).toString();
+                    loadUDRPrint(srowdata);
                     break;
                 case "btnClose":
                     closeForm();
+                    break;
+                case "btnCancelUDR":
+                    String sTransNox = oTrans.getMaster(1).toString();
+                    String sReferNox = oTrans.getMaster(3).toString();
+                    CancelForm cancelform = new CancelForm();
+
+                    if (cancelform.loadCancelWindow(oApp, sTransNox, sReferNox, "UDR")) {
+                        if (oTrans.cancelUDR()) {
+                            ShowMessageFX.Information(null, pxeModuleName, "UDR Successfully Cancelled.");
+                            if (oTrans.OpenRecord(sTransNox)) {
+                                loadCustomerField();
+                            }
+                            pnEditMode = oTrans.getEditMode();
+                        } else {
+                            ShowMessageFX.Warning(null, pxeModuleName, oTrans.getMessage());
+                            return;
+                        }
+                    } else {
+                        ShowMessageFX.Warning(null, pxeModuleName, "Error while cancelling UDR.");
+                        return;
+                    }
+
                     break;
             }
             initButton(pnEditMode);
@@ -252,19 +276,20 @@ public class UnitDeliveryReceiptFormController implements Initializable, ScreenI
 
     private void saveRecord() throws SQLException {
         if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure, do you want to save?") == true) {
-            if (comboBox30.getSelectionModel().isEmpty()) {
-                ShowMessageFX.Warning(getStage(), "Please choose a value for Customer Type", "Warning", null);
-                return;
+            if (pnEditMode == EditMode.ADDNEW) {
+                if (comboBox32.getSelectionModel().isEmpty()) {
+                    ShowMessageFX.Warning(getStage(), "Please choose a value for Customer Type", "Warning", null);
+                    return;
+                }
             }
-            if (txtField03.getText().trim().equals("")) {
-                ShowMessageFX.Warning(getStage(), "Please enter a value for Unit Delivery Receipt No.", "Warning", null);
-                txtField03.requestFocus();
-                return;
-            }
-            if (txtField29.getText().trim().equals("")) {
-                ShowMessageFX.Warning(getStage(), "Please enter a value for VSP No.", "Warning", null);
-                txtField29.requestFocus();
-                return;
+            switch (comboBox32.getSelectionModel().getSelectedIndex()) {
+                case 0:
+                    if (txtField29.getText().trim().equals("")) {
+                        ShowMessageFX.Warning(getStage(), "Please enter a value for VSP No.", "Warning", null);
+                        txtField29.requestFocus();
+                        return;
+                    }
+                    break;
             }
 
             //Proceed to saving record
@@ -322,57 +347,9 @@ public class UnitDeliveryReceiptFormController implements Initializable, ScreenI
 
     }
 
-    private void txtField_KeyPressed(KeyEvent event) {
-        TextField txtField = (TextField) event.getSource();
-        String txtFieldID = ((TextField) event.getSource()).getId();
-        try {
-            switch (event.getCode()) {
-                case F3:
-                case TAB:
-                case ENTER:
-                    switch (txtFieldID) {
-                        case "txtField29":
-                            if (oTrans.searchVSP(txtField.getText())) {
-                                loadCustomerField();
-                            } else {
-                                ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
-                            }
-                            break;
-                    }
-                    break;
-
-            }
-        } catch (SQLException e) {
-            ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
-        }
-
-        switch (event.getCode()) {
-            case ENTER:
-            case DOWN:
-                CommonUtils.SetNextFocus(txtField);
-                break;
-            case UP:
-                CommonUtils.SetPreviousFocus(txtField);
-        }
-
+    private void initTextFieldFocus() {
+        txtField29.focusedProperty().addListener(txtField_Focus);
     }
-
-    public void getDate(ActionEvent event) {
-        try {
-            Date setDate = SQLUtil.toDate(date02.getValue().toString(), SQLUtil.FORMAT_SHORT_DATE);
-            oTrans.setMaster(2, setDate);
-        } catch (SQLException ex) {
-            Logger.getLogger(UnitDeliveryReceiptFormController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    /*Convert Date to String*/
-    private LocalDate strToDate(String val) {
-        DateTimeFormatter date_formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate localDate = LocalDate.parse(val, date_formatter);
-        return localDate;
-    }
-
     final ChangeListener<? super Boolean> txtField_Focus = (o, ov, nv) -> {
         try {
             TextField txtField = (TextField) ((ReadOnlyBooleanPropertyBase) o).getBean();
@@ -386,7 +363,6 @@ public class UnitDeliveryReceiptFormController implements Initializable, ScreenI
             if (!nv) {
                 /* Lost Focus */
                 switch (lnIndex) {
-                    case 3:
                     case 14:
                     case 29:
                         oTrans.setMaster(lnIndex, lsValue); // Handle Encoded Value
@@ -403,6 +379,10 @@ public class UnitDeliveryReceiptFormController implements Initializable, ScreenI
                     .getName()).log(Level.SEVERE, null, ex);
         }
     };
+
+    private void initTextAreaFocus() {
+        textArea06.focusedProperty().addListener(txtArea_Focus);
+    }
     /*Set TextArea to Master Class*/
     final ChangeListener<? super Boolean> txtArea_Focus = (o, ov, nv) -> {
 
@@ -430,24 +410,145 @@ public class UnitDeliveryReceiptFormController implements Initializable, ScreenI
         }
     };
 
+    private void initTextKeyPressed() {
+        txtField29.setOnKeyPressed(this::txtField_KeyPressed);
+    }
+
+    private void txtField_KeyPressed(KeyEvent event) {
+        TextField txtField = (TextField) event.getSource();
+        String txtFieldID = ((TextField) event.getSource()).getId();
+        try {
+            if (event.getCode() == KeyCode.TAB || event.getCode() == KeyCode.ENTER || event.getCode() == KeyCode.F3) {
+                switch (txtFieldID) {
+                    case "txtField29":
+                        if (oTrans.searchVSP(txtField.getText())) {
+                            loadCustomerField();
+                        } else {
+                            ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                        }
+                        break;
+                }
+                event.consume();
+                CommonUtils.SetNextFocus((TextField) event.getSource());
+            } else if (event.getCode() == KeyCode.UP) {
+                event.consume();
+                CommonUtils.SetPreviousFocus((TextField) event.getSource());
+            }
+        } catch (SQLException e) {
+            ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
+        }
+    }
+
+    private void initSetComboBoxMaster() {
+
+        /* SET TO MASTER */
+        handleComboBoxSelectionMaster(comboBox32, 32);
+
+    }
+
+    private void handleComboBoxSelectionMaster(ComboBox<String> comboBox, int fieldNumber) {
+        comboBox.setOnAction(e -> {
+            try {
+                int selectedType = comboBox.getSelectionModel().getSelectedIndex(); // Retrieve the selected type
+                if (selectedType >= 0) {
+                    switch (fieldNumber) {
+                        case 32:
+                            if (pnEditMode == EditMode.ADDNEW) {
+                                oTrans.setMaster(fieldNumber, String.valueOf(selectedType));
+                                switch (selectedType) {
+                                    case 1:
+                                        clearVSPFieldsMaster();
+                                        ShowMessageFX.Warning(getStage(), null, pxeModuleName, "Supplier is Under Development, please choose customer to proceed.");
+                                        break;
+                                }
+
+                                loadCustomerField();
+                            }
+                            break;
+                        default:
+                            oTrans.setMaster(fieldNumber, String.valueOf(selectedType));
+                            break;
+
+                    }
+                    initButton(pnEditMode);
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(UnitDeliveryReceiptFormController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        );
+    }
+
+    private void clearVSPFields() {
+        carCategory.selectToggle(null);
+        txtField22.setText("");
+        txtField23.setText("");
+        txtField24.setText("");
+        txtField25.setText("");
+        txtField26.setText("");
+        txtField27.setText("");
+        txtField28.setText("");
+        txtField29.setText("");
+        txtField34.setText("");
+    }
+
+    private void clearVSPFieldsMaster() {
+        try {
+            oTrans.setMaster(11, "");
+            oTrans.setMaster(12, "");
+            oTrans.setMaster(22, "");
+            oTrans.setMaster(23, "");
+            oTrans.setMaster(24, "");
+            oTrans.setMaster(25, "");
+            oTrans.setMaster(26, "");
+            oTrans.setMaster(28, "");
+            oTrans.setMaster(27, "");
+            oTrans.setMaster(29, "");
+            oTrans.setMaster(34, "");
+
+        } catch (SQLException ex) {
+            Logger.getLogger(UnitDeliveryReceiptFormController.class
+                    .getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
+    private void initRequiredFieldListener() {
+        addRequiredFieldListener(txtField29);
+    }
+
     private void loadCustomerField() {
         try {
             date02.setValue(strToDate(CommonUtils.xsDateShort((Date) oTrans.getMaster(2))));
-            txtField03.setText((String) oTrans.getMaster(3));
-            textArea06.setText((String) oTrans.getMaster(6));
-            txtField14.setText((String) oTrans.getMaster(14));
-            txtField22.setText((String) oTrans.getMaster(22));
-            txtField23.setText((String) oTrans.getMaster(23));
-            txtField24.setText((String) oTrans.getMaster(24));
-            txtField25.setText((String) oTrans.getMaster(25));
-            txtField26.setText((String) oTrans.getMaster(26));
-            txtField27.setText((String) oTrans.getMaster(27));
-            txtField28.setText((String) oTrans.getMaster(28));
-            txtField29.setText((String) oTrans.getMaster(29));
+            txtField03.setText(oTrans.getMaster(3).toString().toUpperCase());
+            textArea06.setText(oTrans.getMaster(6).toString().toUpperCase());
+            txtField35.setText(oTrans.getMaster(35).toString().toUpperCase());
+            txtField22.setText(oTrans.getMaster(22).toString().toUpperCase());
+            txtField23.setText(oTrans.getMaster(23).toString().toUpperCase());
+            txtField24.setText(oTrans.getMaster(24).toString().toUpperCase());
+            txtField25.setText(oTrans.getMaster(25).toString().toUpperCase());
+            txtField26.setText(oTrans.getMaster(26).toString().toUpperCase());
+            txtField27.setText(oTrans.getMaster(27).toString().toUpperCase());
+            txtField28.setText(oTrans.getMaster(28).toString().toUpperCase());
+            txtField29.setText(oTrans.getMaster(29).toString().toUpperCase());
+            txtField34.setText(oTrans.getMaster(34).toString().toUpperCase());
+            if (((String) oTrans.getMaster(17)).equals("0")) {
+                lblUDRStatus.setText("Cancelled");
+            } else {
+                lblUDRStatus.setText("Active");
 
+            }
+            String selectedItem32 = oTrans.getMaster(32).toString();
+            switch (selectedItem32) {
+                case "0":
+                    selectedItem32 = "CUSTOMER";
+                    break;
+                case "1":
+                    selectedItem32 = "SUPPLIER";
+                    break;
+            }
+            comboBox32.setValue(selectedItem32);
             String isVchlBrandNew = ((String) oTrans.getMaster(30));
-
-            System.out.println(isVchlBrandNew);
             if (isVchlBrandNew.equals("0")) {
                 radioBrandNew.setSelected(true);
             } else if (isVchlBrandNew.equals("1")) {
@@ -463,6 +564,26 @@ public class UnitDeliveryReceiptFormController implements Initializable, ScreenI
 
     }
 
+    public void getDate(ActionEvent event) {
+        try {
+            if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
+                Date setDate = SQLUtil.toDate(date02.getValue().toString(), SQLUtil.FORMAT_SHORT_DATE);
+                oTrans.setMaster(2, setDate);
+
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(UnitDeliveryReceiptFormController.class
+                    .getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    /*Convert Date to String*/
+    private LocalDate strToDate(String val) {
+        DateTimeFormatter date_formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate localDate = LocalDate.parse(val, date_formatter);
+        return localDate;
+    }
+
     private void initButton(int fnValue) {
         boolean lbShow = (fnValue == EditMode.ADDNEW || fnValue == EditMode.UPDATE);
         btnAdd.setVisible(!lbShow);
@@ -476,10 +597,7 @@ public class UnitDeliveryReceiptFormController implements Initializable, ScreenI
         btnCancel.setVisible(lbShow);
         btnCancel.setManaged(lbShow);
         date02.setDisable(!lbShow);
-        txtField03.setDisable(!lbShow);
         textArea06.setDisable(!lbShow);
-        txtField14.setDisable(!lbShow);
-        txtField15.setDisable(true);
         txtField22.setDisable(true);
         txtField23.setDisable(true);
         txtField24.setDisable(true);
@@ -488,11 +606,25 @@ public class UnitDeliveryReceiptFormController implements Initializable, ScreenI
         txtField27.setDisable(true);
         txtField28.setDisable(true);
         txtField29.setDisable(!lbShow);
-        comboBox30.setDisable(!lbShow);
+        comboBox32.setDisable(!lbShow);
+        txtField34.setDisable(true);
+        btnCancelUDR.setManaged(false);
+        btnCancelUDR.setVisible(false);
 
         radioBrandNew.setDisable(true);
         radioPreOwned.setDisable(true);
 
+        if (fnValue == EditMode.ADDNEW) {
+            switch (comboBox32.getSelectionModel().getSelectedIndex()) {
+                case 0:
+                    txtField29.setDisable(false);
+                    break;
+                case 1:
+                    removeRequiredField();
+                    txtField29.setDisable(true);
+                    break;
+            }
+        }
         if (fnValue == EditMode.READY) {
             btnEdit.setVisible(true);
             btnEdit.setManaged(true);
@@ -501,15 +633,66 @@ public class UnitDeliveryReceiptFormController implements Initializable, ScreenI
         }
         if (fnValue == EditMode.UPDATE) {
             txtField29.setDisable(true);
-            txtField14.setDisable(true);
-            txtField15.setDisable(true);
-            comboBox30.setDisable(true);
+            comboBox32.setDisable(true);
+        }
+
+        if (fnValue == EditMode.READY) {
+            if (lblUDRStatus.getText().equals("Cancelled")) {
+                btnCancelUDR.setVisible(false);
+                btnCancelUDR.setManaged(false);
+                btnEdit.setVisible(false);
+                btnEdit.setManaged(false);
+                btnPrint.setVisible(false);
+                btnPrint.setManaged(false);
+            } else {
+                btnCancelUDR.setVisible(true);
+                btnCancelUDR.setManaged(true);
+                btnEdit.setVisible(true);
+                btnEdit.setManaged(true);
+                btnPrint.setVisible(true);
+                btnPrint.setManaged(true);
+            }
         }
     }
 
     private void removeRequiredField() {
-        txtField03.getStyleClass().remove("required-field");
         txtField29.getStyleClass().remove("required-field");
+    }
+
+    //Validation
+    private void addRequiredFieldListener(TextField textField) {
+        textField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue && textField.getText().isEmpty()) {
+                shakeTextField(textField);
+                textField.getStyleClass().add("required-field");
+            } else {
+                textField.getStyleClass().remove("required-field");
+            }
+        });
+    }
+
+    //Animation
+    private void shakeTextField(TextField textField) {
+        Timeline timeline = new Timeline();
+        double originalX = textField.getTranslateX();
+
+        // Add keyframes for the animation
+        KeyFrame keyFrame1 = new KeyFrame(Duration.millis(0), new KeyValue(textField.translateXProperty(), 0));
+        KeyFrame keyFrame2 = new KeyFrame(Duration.millis(100), new KeyValue(textField.translateXProperty(), -5));
+        KeyFrame keyFrame3 = new KeyFrame(Duration.millis(200), new KeyValue(textField.translateXProperty(), 5));
+        KeyFrame keyFrame4 = new KeyFrame(Duration.millis(300), new KeyValue(textField.translateXProperty(), -5));
+        KeyFrame keyFrame5 = new KeyFrame(Duration.millis(400), new KeyValue(textField.translateXProperty(), 5));
+        KeyFrame keyFrame6 = new KeyFrame(Duration.millis(500), new KeyValue(textField.translateXProperty(), -5));
+        KeyFrame keyFrame7 = new KeyFrame(Duration.millis(600), new KeyValue(textField.translateXProperty(), 5));
+        KeyFrame keyFrame8 = new KeyFrame(Duration.millis(700), new KeyValue(textField.translateXProperty(), originalX));
+
+        // Add keyframes to the timeline
+        timeline.getKeyFrames().addAll(
+                keyFrame1, keyFrame2, keyFrame3, keyFrame4, keyFrame5, keyFrame6, keyFrame7, keyFrame8
+        );
+
+        // Play the animation
+        timeline.play();
     }
 
     private void clearFields() {
@@ -526,10 +709,64 @@ public class UnitDeliveryReceiptFormController implements Initializable, ScreenI
         txtField27.setText("");
         txtField28.setText("");
         txtField29.setText("");
-        comboBox30.setValue(null);
+        txtField34.setText("");
+        lblUDRStatus.setText("");
+        comboBox32.setValue(null);
+    }
+
+    @Override
+    public void setGRider(GRider foValue) {
+        oApp = foValue;
     }
 
     private Stage getStage() {
         return null;
     }
+
+    private void loadUDRPrint(String sTransno) throws SQLException {
+        try {
+            Stage stage = new Stage();
+
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            fxmlLoader.setLocation(getClass().getResource("UnitDeliveryReceiptPrint.fxml"));
+
+            UnitDeliveryReceiptPrintController loControl = new UnitDeliveryReceiptPrintController();
+            loControl.setGRider(oApp);
+            loControl.setTransNox(sTransno);
+
+            fxmlLoader.setController(loControl);
+            //load the main interface
+            Parent parent = fxmlLoader.load();
+
+            parent.setOnMousePressed(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    xOffset = event.getSceneX();
+                    yOffset = event.getSceneY();
+                }
+            });
+
+            parent.setOnMouseDragged(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    stage.setX(event.getScreenX() - xOffset);
+                    stage.setY(event.getScreenY() - yOffset);
+
+                }
+            });
+
+            //set the main interface as the scene
+            Scene scene = new Scene(parent);
+            stage.setScene(scene);
+            stage.initStyle(StageStyle.TRANSPARENT);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle("");
+            stage.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+            ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
+            System.exit(1);
+        }
+    }
+
 }

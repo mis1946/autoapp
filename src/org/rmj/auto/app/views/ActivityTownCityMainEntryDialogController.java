@@ -4,9 +4,11 @@
  */
 package org.rmj.auto.app.views;
 
+import com.sun.javafx.scene.control.skin.TableHeaderRow;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -63,6 +65,13 @@ public class ActivityTownCityMainEntryDialogController implements Initializable,
         btnClose.setOnAction(this::cmdButton_Click);
         btnAddTown.setOnAction(this::cmdButton_Click);
         loadTownTable();
+        tblViewTown.widthProperty().addListener((ObservableValue<? extends Number> source, Number oldWidth, Number newWidth) -> {
+            TableHeaderRow header = (TableHeaderRow) tblViewTown.lookup("TableHeaderRow");
+            header.reorderingProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+                header.setReordering(false);
+            });
+        });
+
     }
 
     public void setObject(Activity foValue) {

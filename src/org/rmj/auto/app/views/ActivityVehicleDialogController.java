@@ -4,9 +4,11 @@
  */
 package org.rmj.auto.app.views;
 
+import com.sun.javafx.scene.control.skin.TableHeaderRow;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -18,7 +20,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import org.rmj.appdriver.GRider;
 import org.rmj.appdriver.agentfx.CommonUtils;
@@ -28,33 +29,31 @@ import org.rmj.auto.clients.base.Activity;
 /**
  * FXML Controller class
  *
- * @author John Dave
+ * @author John Dave Aquino
  */
-public class ActivityVehicleEntryDialogController implements Initializable, ScreenInterface {
+public class ActivityVehicleDialogController implements Initializable, ScreenInterface {
 
     private Activity oTrans;
     private GRider oApp;
-    @FXML
-    private Button btnAdd;
-    @FXML
-    private Button btnClose;
     unloadForm unload = new unloadForm(); //Used in Close Button
     private ObservableList<ActivityVchlEntryTable> actVhclModelData = FXCollections.observableArrayList();
     private final String pxeModuleName = "Activity Vehicle Entry"; //Form Title
     @FXML
-    private AnchorPane AnchorMain;
+    private Button btnAdd;
     @FXML
-    private TableColumn<ActivityVchlEntryTable, String> tblindexRow;
+    private Button btnClose;
+    @FXML
+    private Label SelectedCount;
     @FXML
     private TableColumn<ActivityVchlEntryTable, Boolean> tblSelectActVhcl;
     @FXML
-    private TableColumn<ActivityVchlEntryTable, String> tblDescript;
-    @FXML
     private CheckBox selectAllCheckBox;
     @FXML
-    private TableView<ActivityVchlEntryTable> tblViewActVchl;
+    private TableColumn<ActivityVchlEntryTable, String> tblDescript;
     @FXML
-    private Label SelectedCount;
+    private TableColumn<ActivityVchlEntryTable, String> tblindexRow;
+    @FXML
+    private TableView<ActivityVchlEntryTable> tblViewActVchl;
 
     /**
      * Initializes the controller class.
@@ -65,6 +64,17 @@ public class ActivityVehicleEntryDialogController implements Initializable, Scre
         btnClose.setOnAction(this::cmdButton_Click);
         btnAdd.setOnAction(this::cmdButton_Click);
         loadActVhclModelTable();
+        tblViewActVchl.widthProperty().addListener((ObservableValue<? extends Number> source, Number oldWidth, Number newWidth) -> {
+            TableHeaderRow header = (TableHeaderRow) tblViewActVchl.lookup("TableHeaderRow");
+            header.reorderingProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+                header.setReordering(false);
+            });
+        });
+
+    }
+
+    private Stage getStage() {
+        return (Stage) tblViewActVchl.getScene().getWindow();
     }
 
     public void setObject(Activity foValue) {
@@ -137,8 +147,8 @@ public class ActivityVehicleEntryDialogController implements Initializable, Scre
             /*Populate table*/
             actVhclModelData.clear();
             if (oTrans.loadActVehicle("", false)) {
+                System.out.println("copunt" + oTrans.getVehicleCount());
                 for (int lnCtr = 1; lnCtr <= oTrans.getVehicleCount(); lnCtr++) {
-
                     actVhclModelData.add(new ActivityVchlEntryTable(
                             String.valueOf(lnCtr), //ROW
                             oTrans.getVehicle(lnCtr, "sSerialID").toString(),
@@ -152,10 +162,6 @@ public class ActivityVehicleEntryDialogController implements Initializable, Scre
         } catch (SQLException e) {
             ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
         }
-    }
-
-    private Stage getStage() {
-        return (Stage) tblViewActVchl.getScene().getWindow();
     }
 
     private void updateSelectedCount() {

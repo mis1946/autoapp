@@ -29,9 +29,9 @@ public class CustomerTableVehicleInfo {
                                         String tblindex04,
                                         String tblindex05,
                                         String tblindex06,
-                                        String tblindex07
-                                        //String tblindex08,
-                                        //String tblindex09
+                                        String tblindex07,
+                                        String tblindex08,
+                                        String tblindex09
                                     ){
 
         this.tblindex01 = new SimpleStringProperty(tblindex01);
@@ -41,8 +41,8 @@ public class CustomerTableVehicleInfo {
         this.tblindex05 = new SimpleStringProperty(tblindex05);
         this.tblindex06 = new SimpleStringProperty(tblindex06);
         this.tblindex07 = new SimpleStringProperty(tblindex07);
-//        this.tblindex08 = new SimpleStringProperty(tblindex08);
-//        this.tblindex09 = new SimpleStringProperty(tblindex09);
+        this.tblindex08 = new SimpleStringProperty(tblindex08);
+        this.tblindex09 = new SimpleStringProperty(tblindex09);
     }
 
     //
@@ -68,10 +68,10 @@ public class CustomerTableVehicleInfo {
     public String getTblindex07(){return tblindex07.get();}
     public void setTblindex07(String tblindex07){this.tblindex07.set(tblindex07);}
     //
-//    public String getTblindex08(){return tblindex08.get();}
-//    public void setTblindex08(String tblindex08){this.tblindex08.set(tblindex08);}
-//    //
-//    public String getTblindex09(){return tblindex09.get();}
-//    public void setTblindex09(String tblindex09){this.tblindex09.set(tblindex09);}
+    public String getTblindex08(){return tblindex08.get();}
+    public void setTblindex08(String tblindex08){this.tblindex08.set(tblindex08);}
+    //
+    public String getTblindex09(){return tblindex09.get();}
+    public void setTblindex09(String tblindex09){this.tblindex09.set(tblindex09);}
 
 }

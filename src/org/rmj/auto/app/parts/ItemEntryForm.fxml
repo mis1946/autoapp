@@ -357,9 +357,8 @@
                                                                                                                                 </Label>
                                                                                                                             </children>
                                                                                                                         </AnchorPane>
-                                                                                                                        <TextField disable="true" editable="false" promptText="Search F3" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+                                                                                                                        <TextField disable="true" editable="false" GridPane.columnIndex="3" GridPane.rowIndex="3" />
                                                                                                                         <TextField disable="true" editable="false" GridPane.columnIndex="3" GridPane.rowIndex="4" />
-                                                                                                                        <ComboBox disable="true" prefWidth="150.0" GridPane.columnIndex="6" GridPane.rowIndex="3" />
                                                                                                                         <TextField disable="true" GridPane.columnIndex="6" GridPane.rowIndex="4" />
                                                                                                                         <Label id="LabelDesc" text="Unit" GridPane.columnIndex="5" GridPane.rowIndex="3" />
                                                                                                                         <Label id="LabelDesc" text="Qty" GridPane.columnIndex="5" GridPane.rowIndex="4" />
@@ -375,6 +374,7 @@
                                                                                                                                 <Font name="Arial Bold" size="12.0" />
                                                                                                                             </font>
                                                                                                                         </Label>
+                                                                                                                        <TextField disable="true" editable="false" promptText="Search F3" GridPane.columnIndex="6" GridPane.rowIndex="3" />
                                                                                                                     </children>
                                                                                                                 </GridPane>
                                                                                                             </children>

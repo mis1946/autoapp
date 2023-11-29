@@ -208,7 +208,7 @@
                                                                                                                                                         <Font name="Arial Bold" size="11.5" />
                                                                                                                                                     </font>
                                                                                                                                                 </Label>
-                                                                                                                                                <TextArea fx:id="textArea69" editable="false" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                                                                                                                                                <TextArea fx:id="textArea69" editable="false" prefHeight="200.0" prefWidth="200.0" wrapText="true" GridPane.columnIndex="2" GridPane.rowIndex="3" />
                                                                                                                                                 <TextField fx:id="txtField97" promptText="Search F3" GridPane.columnIndex="2" GridPane.rowIndex="4">
                                                                                                                                                     <tooltip>
                                                                                                                                                         <Tooltip text="Please fill in the Buying Customer." />

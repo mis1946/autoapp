@@ -880,12 +880,13 @@ public class VSPFormController implements Initializable, ScreenInterface {
                     txtField29.setDisable(false);
                     txtField30.setDisable(false);
                 } else {
-                    oTrans.setMaster(29, Double.valueOf(0.00));
-                    oTrans.setMaster(42, Double.valueOf(0.00));
-                    oTrans.setMaster(43, Double.valueOf(0.00));
-                    oTrans.setMaster(30, Double.valueOf(0.00));
-                    oTrans.setMaster(44, Double.valueOf(0.00));
-                    oTrans.setMaster(45, Double.valueOf(0.00));
+
+                    oTrans.setMaster(29, Double.valueOf("0.00"));
+                    oTrans.setMaster(42, Double.valueOf("0.00"));
+                    oTrans.setMaster(43, Double.valueOf("0.00"));
+                    oTrans.setMaster(30, Double.valueOf("0.00"));
+                    oTrans.setMaster(44, Double.valueOf("0.00"));
+                    oTrans.setMaster(45, Double.valueOf("0.00"));
                     txtField29.setDisable(true);
                     txtField30.setDisable(true);
                     oTrans.setMaster(55, "0");

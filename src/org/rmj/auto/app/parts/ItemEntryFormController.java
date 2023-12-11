@@ -5,11 +5,7 @@
  */
 package org.rmj.auto.app.parts;
 
-import com.github.sarxos.webcam.Webcam;
-import com.github.sarxos.webcam.WebcamPanel;
-import com.github.sarxos.webcam.WebcamResolution;
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -27,8 +23,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
-import javafx.embed.swing.SwingFXUtils;
-import javafx.embed.swing.SwingNode;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -49,21 +43,15 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import static javafx.scene.input.KeyCode.DOWN;
-import static javafx.scene.input.KeyCode.ENTER;
-import static javafx.scene.input.KeyCode.F3;
-import static javafx.scene.input.KeyCode.TAB;
 import static javafx.scene.input.KeyCode.UP;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
-import javax.imageio.ImageIO;
-import javax.swing.JOptionPane;
 import org.rmj.appdriver.GRider;
 import org.rmj.appdriver.agentfx.CommonUtils;
 import org.rmj.appdriver.agentfx.ShowMessageFX;
@@ -104,7 +92,6 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
     private int pagecounter;
     private double xOffset = 0;
     private double yOffset = 0;
-    private Webcam webcam = Webcam.getDefault();
     private ObservableList<ItemEntryTableList> itemdata = FXCollections.observableArrayList();
     private ObservableList<ItemEntryModelTable> itemModeldata = FXCollections.observableArrayList();
     private ObservableList<ItemEntryTableList> supersededata = FXCollections.observableArrayList();
@@ -236,7 +223,7 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
 
         comboFilter.setItems(cItems);
 
-        initButton();
+        initButtonClick();
 
         setUpperCaseTextField();
 
@@ -256,7 +243,7 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
         initButton(pnEditMode);
     }
 
-    private void initButton() {
+    private void initButtonClick() {
         btnClose.setOnAction(this::cmdButton_Click);
         btnAdd.setOnAction(this::cmdButton_Click);
         btnEdit.setOnAction(this::cmdButton_Click);
@@ -339,7 +326,6 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
                 loadItemModelExpandDialog();
                 break;
             case "btnCapture":
-                loadWebCamScreen();
                 break;
             case "btnUpload":
                 if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
@@ -551,12 +537,8 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
                 /*Lost Focus*/
                 switch (lnIndex) {
                     case 2:
-                    case 32:
                     case 3:
                     case 4:
-                    case 12:
-                    case 33:
-                    case 34:
                         oTrans.setMaster(lnIndex, lsValue); //Handle Encoded Value
                         break;
                 }
@@ -580,7 +562,6 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
         txtField12.setOnKeyPressed(this::txtField_KeyPressed);
         txtField33.setOnKeyPressed(this::txtField_KeyPressed);
         txtField34.setOnKeyPressed(this::txtField_KeyPressed);
-
     }
 
     private void txtField_KeyPressed(KeyEvent event) {
@@ -594,7 +575,10 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
                         if (oTrans.searchBrand(lsValue)) {
                             txtField32.setText((String) oTrans.getMaster(32));
                         } else {
+                            txtField32.clear();
+                            txtField32.requestFocus();
                             ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                            return;
                         }
                         break;
                     case 12:
@@ -605,6 +589,7 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
                             txtField12.clear();
                             txtField12.requestFocus();
                             ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                            return;
                         }
                         break;
                     case 33:
@@ -616,6 +601,9 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
                             txtField33.setText((String) oTrans.getMaster(33));
                         } else {
                             ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                            txtField33.clear();
+                            txtField33.requestFocus();
+                            return;
                         }
                         break;
                     case 34:
@@ -623,6 +611,9 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
                             txtField34.setText((String) oTrans.getMaster(34));
                         } else {
                             ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                            txtField34.clear();
+                            txtField34.requestFocus();
+                            return;
                         }
                         break;
                 }
@@ -783,54 +774,53 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
     }
 
     /*TODO*/
- /*OPEN CAMERA*/
-    private void captureImage(Stage primaryStage) {
-//        if (webcam.isOpen()) {
-//            try {
-//                // Capture image from webcam
-//                BufferedImage bufferedImage = webcam.getImage();
+// /*OPEN CAMERA*/
+//    private void captureImage(Stage primaryStage) {
+////        if (webcam.isOpen()) {
+////            try {
+////                // Capture image from webcam
+////                BufferedImage bufferedImage = webcam.getImage();
+////
+////                // Convert BufferedImage to JavaFX Image
+////                Image image = SwingFXUtils.toFXImage(bufferedImage, null);
+////
+////                // Display the captured image in ImageView
+////                imgPartsPic.setImage(image);
+////
+////                // Save the captured image to a file (optional)
+////                // File outputFile = new File("captured_image.png");
+////                // ImageIO.write(bufferedImage, "png", outputFile);
+////            } catch (Exception e) {
+////                e.printStackTrace();
+////            }
+////        }
+//        SwingNode swingNode = new SwingNode();
+//        if (webcam != null) {
+//            // Initialize the webcam
+//            webcam.setViewSize(WebcamResolution.VGA.getSize());
+//            WebcamPanel webcamPanel = new WebcamPanel(webcam);
+//            webcamPanel.setFPSDisplayed(true);
+//            webcamPanel.setDisplayDebugInfo(true);
+//            webcamPanel.setImageSizeDisplayed(true);
+//            webcamPanel.setMirrored(false); // Flip the video horizontally if needed
 //
-//                // Convert BufferedImage to JavaFX Image
-//                Image image = SwingFXUtils.toFXImage(bufferedImage, null);
+//            // Set the WebcamPanel to the SwingNode
+//            swingNode.setContent(webcamPanel);
 //
-//                // Display the captured image in ImageView
-//                imgPartsPic.setImage(image);
-//
-//                // Save the captured image to a file (optional)
-//                // File outputFile = new File("captured_image.png");
-//                // ImageIO.write(bufferedImage, "png", outputFile);
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
+//            // Start the webcam
+//            webcam.open();
+//        } else {
+//            // Handle case when no webcam is detected
+//            JOptionPane.showMessageDialog(null, "No webcam detected!");
 //        }
-        SwingNode swingNode = new SwingNode();
-        if (webcam != null) {
-            // Initialize the webcam
-            webcam.setViewSize(WebcamResolution.VGA.getSize());
-            WebcamPanel webcamPanel = new WebcamPanel(webcam);
-            webcamPanel.setFPSDisplayed(true);
-            webcamPanel.setDisplayDebugInfo(true);
-            webcamPanel.setImageSizeDisplayed(true);
-            webcamPanel.setMirrored(false); // Flip the video horizontally if needed
-
-            // Set the WebcamPanel to the SwingNode
-            swingNode.setContent(webcamPanel);
-
-            // Start the webcam
-            webcam.open();
-        } else {
-            // Handle case when no webcam is detected
-            JOptionPane.showMessageDialog(null, "No webcam detected!");
-        }
-        StackPane root = new StackPane();
-        root.getChildren().add(swingNode);
-
-        Scene scene = new Scene(root, 640, 480);
-        primaryStage.setTitle("Webcam Viewer");
-        primaryStage.setScene(scene);
-        primaryStage.show();
-    }
-
+//        StackPane root = new StackPane();
+//        root.getChildren().add(swingNode);
+//
+//        Scene scene = new Scene(root, 640, 480);
+//        primaryStage.setTitle("Webcam Viewer");
+//        primaryStage.setScene(scene);
+//        primaryStage.show();
+//    }
     public void loadItemList() {
         try {
             /*Populate table*/
@@ -1255,53 +1245,52 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
 
     }
 
-    private void loadWebCamScreen() {
-        try {
-            Stage stage = new Stage();
-
-            FXMLLoader fxmlLoader = new FXMLLoader();
-            fxmlLoader.setLocation(getClass().getResource("ItemEntryWebCam.fxml"));
-            ItemEntryWebCamController loControl = new ItemEntryWebCamController();
-            loControl.setGRider(oApp);
-            loControl.setObject(oTrans);
-            loControl.setPicUrl(psFileUrl);
-            fxmlLoader.setController(loControl);
-
-            //load the main interface
-            Parent parent = fxmlLoader.load();
-
-            parent.setOnMousePressed(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent event) {
-                    xOffset = event.getSceneX();
-                    yOffset = event.getSceneY();
-                }
-            });
-
-            parent.setOnMouseDragged(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent event) {
-                    stage.setX(event.getScreenX() - xOffset);
-                    stage.setY(event.getScreenY() - yOffset);
-                }
-            });
-
-            //set the main interface as the scene/*
-            Scene scene = new Scene(parent);
-            stage.setScene(scene);
-            stage.initStyle(StageStyle.TRANSPARENT);
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.setTitle("");
-            stage.showAndWait();
-
-//            imgPartsPic.setImage(psFileUrl);
-        } catch (IOException e) {
-            ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
-            System.exit(1);
-        }
-
-    }
-
+//    private void loadWebCamScreen() {
+//        try {
+//            Stage stage = new Stage();
+//
+//            FXMLLoader fxmlLoader = new FXMLLoader();
+//            fxmlLoader.setLocation(getClass().getResource("ItemEntryWebCam.fxml"));
+//            ItemEntryWebCamController loControl = new ItemEntryWebCamController();
+//            loControl.setGRider(oApp);
+//            loControl.setObject(oTrans);
+//            loControl.setPicUrl(psFileUrl);
+//            fxmlLoader.setController(loControl);
+//
+//            //load the main interface
+//            Parent parent = fxmlLoader.load();
+//
+//            parent.setOnMousePressed(new EventHandler<MouseEvent>() {
+//                @Override
+//                public void handle(MouseEvent event) {
+//                    xOffset = event.getSceneX();
+//                    yOffset = event.getSceneY();
+//                }
+//            });
+//
+//            parent.setOnMouseDragged(new EventHandler<MouseEvent>() {
+//                @Override
+//                public void handle(MouseEvent event) {
+//                    stage.setX(event.getScreenX() - xOffset);
+//                    stage.setY(event.getScreenY() - yOffset);
+//                }
+//            });
+//
+//            //set the main interface as the scene/*
+//            Scene scene = new Scene(parent);
+//            stage.setScene(scene);
+//            stage.initStyle(StageStyle.TRANSPARENT);
+//            stage.initModality(Modality.APPLICATION_MODAL);
+//            stage.setTitle("");
+//            stage.showAndWait();
+//
+////            imgPartsPic.setImage(psFileUrl);
+//        } catch (IOException e) {
+//            ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
+//            System.exit(1);
+//        }
+//
+//    }
     private void loadItemModelDialog() {
         try {
             Stage stage = new Stage();
@@ -1511,7 +1500,6 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
         btnSave.setVisible(lbShow);
         btnSave.setManaged(lbShow);
         tblModelSelect.setVisible(lbShow);
-
         if (fnValue == EditMode.READY) {
             btnEdit.setVisible(true);
             btnEdit.setManaged(true);

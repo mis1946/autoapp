@@ -336,7 +336,7 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
                 break;
             case "btnLoadCamera":
 
-                captureImage(getStage());
+                loadCameraWindow();
                 break;
             case "btnUpload":
                 if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {

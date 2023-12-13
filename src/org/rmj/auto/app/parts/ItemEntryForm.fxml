@@ -500,14 +500,17 @@
                                                                                                                 </GridPane>
                                                                                                                 <AnchorPane VBox.vgrow="SOMETIMES">
                                                                                                                     <children>
-                                                                                                                        <GridPane alignment="CENTER_LEFT" maxWidth="300.0" style="-fx-border-color: #dddddd; -fx-border-radius: 5;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                                                                                        <GridPane alignment="CENTER_LEFT" maxWidth="300.0" style="-fx-border-color: #dddddd; -fx-border-radius: 5;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                                                                                             <columnConstraints>
                                                                                                                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="10.0" />
+                                                                                                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="190.0" prefWidth="300.0" />
                                                                                                                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="190.0" prefWidth="300.0" />
                                                                                                                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="25.0" />
                                                                                                                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="25.0" />
                                                                                                                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="25.0" />
                                                                                                                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="10.0" />
+                                                                                                                                <ColumnConstraints />
+                                                                                                                                <ColumnConstraints />
                                                                                                                             </columnConstraints>
                                                                                                                             <rowConstraints>
                                                                                                                                 <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="21.0" vgrow="SOMETIMES" />
@@ -515,7 +518,7 @@
                                                                                                                                 <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="5.0" vgrow="SOMETIMES" />
                                                                                                                             </rowConstraints>
                                                                                                                             <children>
-                                                                                                                                <AnchorPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #FACEA1;" GridPane.columnSpan="6">
+                                                                                                                                <AnchorPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #FACEA1;" GridPane.columnSpan="7">
                                                                                                                                     <children>
                                                                                                                                         <Label layoutX="8.0" layoutY="2.0" text="Image">
                                                                                                                                             <font>
@@ -524,12 +527,12 @@
                                                                                                                                         </Label>
                                                                                                                                     </children>
                                                                                                                                 </AnchorPane>
-                                                                                                                                <Button fx:id="btnLoadCamera" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="18.0" prefWidth="24.0" GridPane.columnIndex="3">
+                                                                                                                                <Button fx:id="btnLoadCamera" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="18.0" prefWidth="24.0" GridPane.columnIndex="4">
                                                                                                                                     <graphic>
                                                                                                                                         <FontAwesomeIconView glyphName="CAMERA" size="10" />
                                                                                                                                     </graphic>
                                                                                                                                 </Button>
-                                                                                                                                <Button fx:id="btnUpload" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="18.0" prefWidth="24.0" GridPane.columnIndex="4">
+                                                                                                                                <Button fx:id="btnUpload" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="18.0" prefWidth="24.0" GridPane.columnIndex="5">
                                                                                                                                     <graphic>
                                                                                                                                         <FontAwesomeIconView glyphName="UPLOAD" size="10" />
                                                                                                                                     </graphic>
@@ -537,7 +540,7 @@
                                                                                                                                         <Tooltip text="Click to upload image." />
                                                                                                                                     </tooltip>
                                                                                                                                 </Button>
-                                                                                                                                <ImageView fx:id="imgPartsPic" fitHeight="150.0" fitWidth="220.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                                                                                                                                <ImageView fx:id="imgPartsPic" fitHeight="171.0" fitWidth="177.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                                                                                                                                     <image>
                                                                                                                                         <Image url="@../images/no-image-available.png" />
                                                                                                                                     </image>
@@ -545,8 +548,8 @@
                                                                                                                                         <Rectangle2D />
                                                                                                                                     </viewport>
                                                                                                                                 </ImageView>
-                                                                                                                                <Button fx:id="btnLoadPhoto" mnemonicParsing="false" opacity="0.0" prefHeight="173.0" prefWidth="286.0" text="Button" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="1" />
-                                                                                                                                <Button fx:id="btnRemoveImage" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="18.0" prefWidth="24.0" GridPane.columnIndex="2">
+                                                                                                                                <Button fx:id="btnLoadPhoto" mnemonicParsing="false" opacity="0.0" prefHeight="173.0" prefWidth="494.0" text="Button" GridPane.columnIndex="1" GridPane.columnSpan="8" GridPane.rowIndex="1" />
+                                                                                                                                <Button fx:id="btnRemoveImage" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="18.0" prefWidth="24.0" GridPane.columnIndex="3">
                                                                                                                                     <tooltip>
                                                                                                                                         <Tooltip text="Click to upload image." />
                                                                                                                                     </tooltip>

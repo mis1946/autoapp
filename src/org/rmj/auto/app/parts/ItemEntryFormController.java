@@ -243,6 +243,18 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
 
         initMonitorProperty();
 
+        txtField12.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+            try {
+                if (newValue.isEmpty()) {
+                    oTrans.setMaster(33, "");
+                    txtField33.setDisable(true);
+                    txtField33.getStyleClass().remove("required-field");
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(ItemEntryFormController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
+
         tblItemList.setOnMouseClicked(this::tblItemEntry_Clicked);
         pagination.setPageFactory(this::createPage);
         pnEditMode = EditMode.UNKNOWN;
@@ -600,6 +612,7 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
                         if (oTrans.searchInvType(lsValue)) {
                             txtField12.setText((String) oTrans.getMaster(12));
                             txtField33.clear();
+                            initButton(pnEditMode);
                         } else {
                             txtField12.clear();
                             txtField12.requestFocus();
@@ -1498,7 +1511,7 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
         txtField04.setDisable(!lbShow);
         txtField13.setDisable(true);
         txtField12.setDisable(!lbShow);
-        txtField33.setDisable(!lbShow);
+        txtField33.setDisable(!(lbShow && !txtField12.getText().isEmpty()));
         txtField34.setDisable(!lbShow);
         txtField37.setDisable(true);
         btnSupsAdd.setDisable(!lbShow);

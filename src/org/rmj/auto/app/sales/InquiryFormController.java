@@ -438,7 +438,29 @@ public class InquiryFormController implements Initializable, ScreenInterface {
         cmbType012.setItems(cInquiryType); //Inquiry Type
         //cmbOnstr13.setItems(cOnlineStore); //Web Inquiry
         //("WALK-IN", "WEB INQUIRY", "PHONE-IN", "REFERRAL", "SALES CALL", "EVENT", "SERVICE", "OFFICE ACCOUNT", "CAREMITTANCE", "DATABASE", "UIO"); //Inquiry Type values
-   
+        
+        txtField07.textProperty().addListener((observable, oldValue, newValue) -> {
+            try {
+                if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
+                    if (newValue.isEmpty() ){
+                        txtField29.clear();
+                        textArea33.clear();
+                        txtField30.clear();
+                        txtField31.clear();
+                        txtField32.clear();
+                        oTrans.setMaster(7,"");
+                        oTrans.setMaster(29,"");
+                        oTrans.setMaster(33,"");
+                        oTrans.setMaster(30,"");
+                        oTrans.setMaster(31,"");
+                        oTrans.setMaster(32,"");
+                    }
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(InquiryFormController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
+        
         cmbType012.setOnAction(event -> {
             try {
                 txtField13.setDisable(true); //online store
@@ -535,13 +557,13 @@ public class InquiryFormController implements Initializable, ScreenInterface {
         addRequiredFieldListener(txtField07);
         addRequiredFieldListener(txtField04);
 
-        txtField04.focusedProperty().addListener(txtField_Focus);  // Sales Executive
-        txtField07.focusedProperty().addListener(txtField_Focus);  //Customer ID 
-        txtField29.focusedProperty().addListener(txtField_Focus);  //Company ID 
-        txtField09.focusedProperty().addListener(txtField_Focus);  //Agent ID
+        //txtField04.focusedProperty().addListener(txtField_Focus);  // Sales Executive
+        //txtField07.focusedProperty().addListener(txtField_Focus);  //Customer ID 
+        //txtField29.focusedProperty().addListener(txtField_Focus);  //Company ID 
+        //txtField09.focusedProperty().addListener(txtField_Focus);  //Agent ID
         textArea08.focusedProperty().addListener(txtArea_Focus);  //Remarks
-        txtField15.focusedProperty().addListener(txtField_Focus);  //Activity ID
-        txtField14.focusedProperty().addListener(txtField_Focus);  //Test Model  
+        //txtField15.focusedProperty().addListener(txtField_Focus);  //Activity ID
+        //txtField14.focusedProperty().addListener(txtField_Focus);  //Test Model  
         txtField10.setOnAction(this::getDate);
         txtField10.setDayCellFactory(callB);
         
@@ -2047,7 +2069,11 @@ public class InquiryFormController implements Initializable, ScreenInterface {
         try {            
             txtField03.setText(CommonUtils.xsDateMedium((Date) oTrans.getMaster(3)));  //Inquiry Date               
             txtField07.setText((String) oTrans.getMaster(29)); //Custmer Name ***
-            txtField29.setText((String) oTrans.getMaster(29)); //Company Name
+            if(((String) oTrans.getMaster(39)).equals("1")){
+                txtField29.setText((String) oTrans.getMaster(29)); //Company Name
+            } else {
+                txtField29.setText("");
+            }
             txtField04.setText((String) oTrans.getMaster(34)); //Sales Executive ID //Employee ID
             txtField30.setText((String) oTrans.getMaster(30)); //Contact No
             txtField32.setText((String) oTrans.getMaster(32)); //Email Address

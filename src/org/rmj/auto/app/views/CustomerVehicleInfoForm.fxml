@@ -96,7 +96,7 @@
                                                                   <Label id="LabelDesc" text="Owner Name" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                                                   <TextField fx:id="txtField35V" promptText="Seachr F3" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                                                                   <Label id="LabelDesc" text="Owner Address" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                                                                  <TextArea fx:id="textArea37V" disable="true" editable="false" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="3" GridPane.rowSpan="2" />
+                                                                  <TextArea fx:id="textArea37V" disable="true" editable="false" prefHeight="200.0" prefWidth="200.0" wrapText="true" GridPane.columnIndex="2" GridPane.rowIndex="3" GridPane.rowSpan="2" />
                                                                </children>
                                                             </GridPane>
                                                             <AnchorPane maxWidth="-Infinity" minWidth="-Infinity" prefWidth="10.0" />
@@ -118,7 +118,7 @@
                                                                   <Label id="LabelDesc" text="Co-Owner Address" GridPane.rowIndex="3" />
                                                                   <Label id="LabelDesc" text="Co-Owner Name" GridPane.rowIndex="1" />
                                                                   <TextField fx:id="txtField36V" promptText="Seachr F3" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                                                  <TextArea fx:id="textArea38V" disable="true" editable="false" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.rowSpan="2" />
+                                                                  <TextArea fx:id="textArea38V" disable="true" editable="false" prefHeight="200.0" prefWidth="200.0" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.rowSpan="2" />
                                                                </children>
                                                             </GridPane>
                                                          </children>
@@ -332,7 +332,6 @@
                                                                            <children>
                                                                               <Label id="LabelDesc" text="Category" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                                                               <Label id="LabelDesc" text="Date Received From Supplier" GridPane.columnIndex="4" GridPane.rowIndex="1" />
-                                                                              <DatePicker disable="true" editable="false" GridPane.columnIndex="5" GridPane.rowIndex="1" />
                                                                               <Label id="LabelDesc" text="Delivery Instruction / DR No." GridPane.columnIndex="4" GridPane.rowIndex="2" />
                                                                               <TextField disable="true" editable="false" GridPane.columnIndex="5" GridPane.rowIndex="2" />
                                                                               <Label id="LabelDesc" text="Location" GridPane.columnIndex="7" GridPane.rowIndex="2" />
@@ -340,6 +339,7 @@
                                                                               <Label id="LabelDesc" text="Vehicle Status" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                                                                               <ComboBox fx:id="comboBox14" disable="true" prefWidth="185.0" GridPane.columnIndex="2" GridPane.rowIndex="2" />
                                                                               <ComboBox fx:id="comboBox15" prefWidth="185.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                                                              <TextField disable="true" editable="false" GridPane.columnIndex="5" GridPane.rowIndex="1" />
                                                                            </children>
                                                                         </GridPane>
                                                                         <AnchorPane fx:id="anchorSold" prefHeight="17.0" style="-fx-background-color: #FACEA1;">
@@ -355,10 +355,10 @@
                                                                            <columnConstraints>
                                                                               <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="60.0" />
                                                                               <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="60.0" />
-                                                                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="100.0" prefWidth="150.0" />
+                                                                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="100.0" prefWidth="160.0" />
                                                                               <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="50.0" />
-                                                                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="50.0" />
-                                                                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="100.0" prefWidth="150.0" />
+                                                                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="60.0" />
+                                                                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="100.0" prefWidth="160.0" />
                                                                               <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="60.0" />
                                                                            </columnConstraints>
                                                                            <rowConstraints>
@@ -368,12 +368,12 @@
                                                                               <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="5.0" vgrow="SOMETIMES" />
                                                                            </rowConstraints>
                                                                            <children>
-                                                                              <Label id="LabelDesc" text="Date Sold" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                                                              <DatePicker disable="true" editable="false" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                                                              <Label id="LabelDesc" text="Date Sold" GridPane.columnIndex="4" GridPane.rowIndex="1" />
                                                                               <Label id="LabelDesc" text="Sold To" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                                                                              <TextField disable="true" editable="false" GridPane.columnIndex="2" GridPane.columnSpan="4" GridPane.rowIndex="2" />
-                                                                              <Label id="LabelDesc" text="DR No." GridPane.columnIndex="4" GridPane.rowIndex="1" />
-                                                                              <TextField disable="true" editable="false" GridPane.columnIndex="5" GridPane.rowIndex="1" />
+                                                                              <TextField fx:id="txtField42V" disable="true" editable="false" GridPane.columnIndex="2" GridPane.columnSpan="4" GridPane.rowIndex="2" />
+                                                                              <Label id="LabelDesc" text="DR No." GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                                                              <TextField fx:id="txtField41V" disable="true" editable="false" GridPane.columnIndex="5" GridPane.rowIndex="1" />
+                                                                              <TextField fx:id="txtField40V" disable="true" editable="false" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                                                                            </children>
                                                                         </GridPane>
                                                                      </children>

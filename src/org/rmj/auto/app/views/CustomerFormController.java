@@ -490,36 +490,123 @@ public class CustomerFormController implements Initializable, ScreenInterface {
         btnBrowse.setOnAction(this::cmdButton_Click);
         //Update Class master
         comboBox18.setOnAction(e -> {
-            comboChange();
-            try {
-                oTrans.setMaster(18, String.valueOf(comboBox18.getSelectionModel().getSelectedIndex()));
-            } catch (SQLException ex) {
-                Logger.getLogger(CustomerFormController.class.getName()).log(Level.SEVERE, null, ex);
+            if(pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE){
+                comboChange();
+                try {
+                    oTrans.setMaster(18, String.valueOf(comboBox18.getSelectionModel().getSelectedIndex()));
+                    
+                    if(oTrans.getMaster(18).toString().equals("0")){
+                        oTrans.setMaster(16, ""); //sCompnyNm
+                        oTrans.setMaster(7, "0"); //sTitlexxx
+                        oTrans.setMaster(8, "0"); //cGenderCd
+                        oTrans.setMaster(9, "0"); //cCvilStat
+                        oTrans.setMaster(16, ""); //sCompnyNm
+                        oTrans.setMaster(11, oApp.getServerDate());
+                    } else {
+                        oTrans.setMaster(2, ""); //sLastName
+                        oTrans.setMaster(3, ""); //sFrstName
+                        oTrans.setMaster(4, ""); //sMiddName
+                        oTrans.setMaster(5, ""); //sMaidenNm
+                        oTrans.setMaster(6, ""); //sSuffixNm
+                        oTrans.setMaster(10, ""); //sCitizenx
+                        oTrans.setMaster(12, ""); //sBirthPlc
+                        oTrans.setMaster(24, ""); //sCntryNme
+                        oTrans.setMaster(25, ""); //sTownName
+                        oTrans.setMaster(27, ""); //sSpouseID
+                        oTrans.setMaster(28, ""); //sSpouseNm
+                        oTrans.setMaster(16, ""); //sCompnyNm
+                        
+                        oTrans.setMaster(7, ""); //sTitlexxx
+                        oTrans.setMaster(8, ""); //cGenderCd
+                        oTrans.setMaster(9, ""); //cCvilStat
+                        oTrans.setMaster(11, LocalDate.of(1900, Month.JANUARY, 1));
+                    }
+                    loadClientMaster();
+                
+                } catch (SQLException ex) {
+                    Logger.getLogger(CustomerFormController.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
 
         });
-        comboBox09.setOnAction(e -> {
-            try {
-                oTrans.setMaster(9, String.valueOf(comboBox09.getSelectionModel().getSelectedIndex()));
-            } catch (SQLException ex) {
-                Logger.getLogger(CustomerFormController.class.getName()).log(Level.SEVERE, null, ex);
+        
+        comboBox07.setOnAction(e -> {
+            if(pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE){
+                try {
+                    oTrans.setMaster(7, String.valueOf(comboBox07.getSelectionModel().getSelectedIndex()));
+                } catch (SQLException ex) {
+                    Logger.getLogger(CustomerFormController.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
         comboBox08.setOnAction(e -> {
-            try {
-                oTrans.setMaster(8, String.valueOf(comboBox08.getSelectionModel().getSelectedIndex()));
-            } catch (SQLException ex) {
-                Logger.getLogger(CustomerFormController.class.getName()).log(Level.SEVERE, null, ex);
+            if(pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE){
+                try {
+                    oTrans.setMaster(8, String.valueOf(comboBox08.getSelectionModel().getSelectedIndex()));
+                } catch (SQLException ex) {
+                    Logger.getLogger(CustomerFormController.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
-        comboBox07.setOnAction(e -> {
-            try {
-                oTrans.setMaster(7, String.valueOf(comboBox07.getSelectionModel().getSelectedIndex()));
-            } catch (SQLException ex) {
-                Logger.getLogger(CustomerFormController.class.getName()).log(Level.SEVERE, null, ex);
+        comboBox09.setOnAction(e -> {
+            if(pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE){
+                try {
+                    if(comboBox09.getSelectionModel().getSelectedIndex() == 0){
+                        txtField25.setText("");
+                        txtField25.setDisable(true);
+                        oTrans.setMaster(27, "");
+                        oTrans.setMaster(28, "");
+                    } else {
+                        txtField25.setDisable(false);
+                    }
+
+                    oTrans.setMaster(9, String.valueOf(comboBox09.getSelectionModel().getSelectedIndex()));
+                } catch (SQLException ex) {
+                    Logger.getLogger(CustomerFormController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+        
+        
+        txtField12.textProperty().addListener((observable, oldValue, newValue) -> {
+            if(pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE){
+                if (newValue.isEmpty()) {
+                    try {
+                        oTrans.setMaster(12,"");
+                        oTrans.setMaster(25,"");
+                    } catch (SQLException ex) {
+                        Logger.getLogger(CustomerFormController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
             }
         });
 
+        txtField25.textProperty().addListener((observable, oldValue, newValue) -> {
+            if(pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE){
+                if (newValue.isEmpty()) {
+                    try {
+                        oTrans.setMaster(27, "");
+                        oTrans.setMaster(28, "");
+                    } catch (SQLException ex) {
+                        Logger.getLogger(CustomerFormController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        });
+        
+        txtField10.textProperty().addListener((observable, oldValue, newValue) -> {
+            if(pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE){
+                if (newValue.isEmpty()) {
+                    try {
+                        oTrans.setMaster(10, "");
+                        oTrans.setMaster(24, "");
+                    } catch (SQLException ex) {
+                        Logger.getLogger(CustomerFormController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        });
+        
         //Tab Process
         tabPCustCont.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Tab>() {
             @Override
@@ -819,6 +906,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                             pnEditMode = oTrans.getEditMode();
                         } else {
                             ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", "Error while saving Client Information");
+                            return;
                         }
                     }
 //                    clearContactInfo();
@@ -1105,6 +1193,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                         txtValue = txtField01.getText();
                     }
                     
+                    clearFields();
                     if (oTrans.SearchRecord(txtValue, byClientID)) {
                         if (oTransAddress.OpenRecord(oTrans.getMaster("sClientID").toString(), false)
                                 && oTransMobile.OpenRecord(oTrans.getMaster("sClientID").toString(), false)
@@ -1668,24 +1757,29 @@ public class CustomerFormController implements Initializable, ScreenInterface {
     private void loadClientMaster() {
         try {
             txtField01.setText((String) oTrans.getMaster(1));
-            txtField02.setText((String) oTrans.getMaster(2));
-            txtField03.setText((String) oTrans.getMaster(3));
-            txtField04.setText((String) oTrans.getMaster(4));
-            txtField05.setText((String) oTrans.getMaster(5));
-            txtField06.setText((String) oTrans.getMaster(6));
-            txtField10.setText((String) oTrans.getMaster(24));
-            txtField11.setValue(strToDate(CommonUtils.xsDateShort((Date) oTrans.getMaster(11))));
-            txtField12.setText((String) oTrans.getMaster(25));
             txtField13.setText((String) oTrans.getMaster(13));
             txtField14.setText((String) oTrans.getMaster(14));
             textArea15.setText((String) oTrans.getMaster(15));
-
-            txtField25.setText((String) oTrans.getMaster(28));
-            comboBox07.getSelectionModel().select(Integer.parseInt((String) oTrans.getMaster(7)));
-            comboBox08.getSelectionModel().select(Integer.parseInt((String) oTrans.getMaster(8)));
-            comboBox09.getSelectionModel().select(Integer.parseInt((String) oTrans.getMaster(9)));
             comboBox18.getSelectionModel().select(Integer.parseInt((String) oTrans.getMaster(18)));
-            if (Integer.parseInt((String) oTrans.getMaster(18)) == 1) {
+            
+            if(comboBox18.getSelectionModel().getSelectedIndex() == 0){
+                txtField02.setText((String) oTrans.getMaster(2));
+                txtField03.setText((String) oTrans.getMaster(3));
+                txtField04.setText((String) oTrans.getMaster(4));
+                txtField05.setText((String) oTrans.getMaster(5));
+                txtField06.setText((String) oTrans.getMaster(6));
+                txtField10.setText((String) oTrans.getMaster(24));
+                txtField11.setValue(strToDate(CommonUtils.xsDateShort((Date) oTrans.getMaster(11))));
+                txtField12.setText((String) oTrans.getMaster(25));
+                txtField25.setText((String) oTrans.getMaster(28));
+                comboBox07.getSelectionModel().select(Integer.parseInt((String) oTrans.getMaster(7)));
+                comboBox08.getSelectionModel().select(Integer.parseInt((String) oTrans.getMaster(8)));
+                comboBox09.getSelectionModel().select(Integer.parseInt((String) oTrans.getMaster(9)));
+            } else {
+                comboBox07.setValue("");
+                comboBox08.setValue("");
+                comboBox09.setValue("");
+                txtField11.setValue(LocalDate.of(1900, Month.JANUARY, 1)); //birthdate
                 txtField16.setText((String) oTrans.getMaster(16));
             }
 
@@ -1828,8 +1922,9 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                     sStatus = "INACTIVE";
                 }
                 //if (!sAddress.isEmpty() && !sAddress.trim().equals("")) {
-                if ((!sAddress.isEmpty() && !sAddress.trim().equals("")) &&
-                        !oTransAddress.getAddress(lnCtr, "sHouseNox").toString().isEmpty())
+                if ((!sAddress.isEmpty() && !sAddress.trim().equals("")) 
+                        //&& !oTransAddress.getAddress(lnCtr, "sHouseNox").toString().isEmpty()
+                        )
                     {
                     addressdata.add(new CustomerTableAddress(
                             String.valueOf(lnCtr), //ROW
@@ -2924,36 +3019,39 @@ public class CustomerFormController implements Initializable, ScreenInterface {
     @SuppressWarnings("ResultOfMethodCallIgnored")
     private boolean setSelection() {
         try {
-            if (comboBox07.getSelectionModel().getSelectedIndex() < 0) {
-                ShowMessageFX.Warning("No `Title` selected.", pxeModuleName, "Please select `Title` value.");
-                comboBox07.requestFocus();
-                return false;
-            } else {
-                oTrans.setMaster(7, String.valueOf(comboBox07.getSelectionModel().getSelectedIndex()));
-            }
-
-            if (comboBox08.getSelectionModel().getSelectedIndex() < 0) {
-                ShowMessageFX.Warning("No `Gender` selected.", pxeModuleName, "Please select `Gender` value.");
-                comboBox08.requestFocus();
-                return false;
-            } else {
-                oTrans.setMaster(8, String.valueOf(comboBox08.getSelectionModel().getSelectedIndex()));
-            }
-
-            if (comboBox09.getSelectionModel().getSelectedIndex() < 0) {
-                ShowMessageFX.Warning("No `Civil Status` selected.", pxeModuleName, "Please select `Civil Status` value.");
-                comboBox09.requestFocus();
-                return false;
-            } else {
-                oTrans.setMaster(9, String.valueOf(comboBox09.getSelectionModel().getSelectedIndex()));
-            }
-
             if (comboBox18.getSelectionModel().getSelectedIndex() < 0) {
                 ShowMessageFX.Warning("No `Client Type` selected.", pxeModuleName, "Please select `Client Type` value.");
                 comboBox18.requestFocus();
                 return false;
             } else {
                 oTrans.setMaster(18, String.valueOf(comboBox18.getSelectionModel().getSelectedIndex()));
+            
+                if(comboBox18.getSelectionModel().getSelectedIndex() == 0){
+                    if (comboBox07.getSelectionModel().getSelectedIndex() < 0) {
+                        ShowMessageFX.Warning("No `Title` selected.", pxeModuleName, "Please select `Title` value.");
+                        comboBox07.requestFocus();
+                        return false;
+                    } else {
+                        oTrans.setMaster(7, String.valueOf(comboBox07.getSelectionModel().getSelectedIndex()));
+                    }
+
+                    if (comboBox08.getSelectionModel().getSelectedIndex() < 0) {
+                        ShowMessageFX.Warning("No `Gender` selected.", pxeModuleName, "Please select `Gender` value.");
+                        comboBox08.requestFocus();
+                        return false;
+                    } else {
+                        oTrans.setMaster(8, String.valueOf(comboBox08.getSelectionModel().getSelectedIndex()));
+                    }
+
+                    if (comboBox09.getSelectionModel().getSelectedIndex() < 0) {
+                        ShowMessageFX.Warning("No `Civil Status` selected.", pxeModuleName, "Please select `Civil Status` value.");
+                        comboBox09.requestFocus();
+                        return false;
+                    } else {
+                        oTrans.setMaster(9, String.valueOf(comboBox09.getSelectionModel().getSelectedIndex()));
+                    }
+                }
+
             }
 
         } catch (SQLException ex) {
@@ -3223,7 +3321,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                                     return;
                                 }
                             }
-                            
+                            clearFields();
                             if (oTrans.SearchRecord(txtValue, byClientID)) {
                                 if (oTransAddress.OpenRecord(oTrans.getMaster("sClientID").toString(), false)
                                         && oTransMobile.OpenRecord(oTrans.getMaster("sClientID").toString(), false)
@@ -3755,6 +3853,13 @@ public class CustomerFormController implements Initializable, ScreenInterface {
         txtField25.setDisable(!lbShow); // Spouse
         txtField16.setDisable(!lbShow); //company name
         cmdCLIENTType(lbShow);
+        
+        if(comboBox09.getSelectionModel().getSelectedIndex() == 0){
+            txtField25.setText("");
+            txtField25.setDisable(true);
+        } else {
+            txtField25.setDisable(!lbShow);
+        }
 
         /*Address*/
 //        txtField03Addr.setDisable(!lbShow); //House No

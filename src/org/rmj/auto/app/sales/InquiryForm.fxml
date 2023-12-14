@@ -227,7 +227,7 @@
                                                                            <tooltip>
                                                                               <Tooltip text="Please choose Customer" />
                                                                            </tooltip></TextField>
-                                                                        <TextField fx:id="txtField29" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                                                                        <TextField fx:id="txtField29" editable="false" GridPane.columnIndex="2" GridPane.rowIndex="1">
                                                                            <GridPane.margin>
                                                                               <Insets />
                                                                            </GridPane.margin>

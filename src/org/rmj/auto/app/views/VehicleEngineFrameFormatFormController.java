@@ -185,6 +185,8 @@ public class VehicleEngineFrameFormatFormController implements Initializable, Sc
         setCapsLockBehavior(txtField02_make);
         setCapsLockBehavior(txtField02_frame);
         setCapsLockBehavior(txtField02);
+        setCapsLockBehavior(txtField07);
+        setCapsLockBehavior(txtField09);
         
         addRequiredFieldListener(txtField07);
         addRequiredFieldListener(txtField09);

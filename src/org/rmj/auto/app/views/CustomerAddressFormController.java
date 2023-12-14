@@ -115,7 +115,8 @@ public class CustomerAddressFormController implements Initializable, ScreenInter
             System.out.println("Set Class Value "  + fnIndex + "-->" + foValue);
         };
         
-        addRequiredFieldListener(txtField03Addr);
+        //addRequiredFieldListener(txtField03Addr);
+        addRequiredFieldListener(txtField04Addr);
         addRequiredFieldListener(txtField05Addr);
         addRequiredFieldListener(txtField06Addr);
         
@@ -289,12 +290,10 @@ public class CustomerAddressFormController implements Initializable, ScreenInter
             }
             
             //Validate Before adding to tables
-            if ((txtField03Addr.getText().isEmpty() || txtField04Addr.getText().isEmpty()
-                    || txtField07Addr.getText().isEmpty() || txtField05Addr.getText().isEmpty()
-                    || txtField06Addr.getText().isEmpty())
-                    || txtField03Addr.getText().trim().equals("") || txtField04Addr.getText().trim().equals("")
-                    || txtField07Addr.getText().trim().equals("") || txtField05Addr.getText().trim().equals("")
-                    || txtField06Addr.getText().trim().equals("")) {
+            if ((   //txtField03Addr.getText().isEmpty() ||
+                    txtField04Addr.getText().isEmpty() || txtField07Addr.getText().isEmpty() || txtField05Addr.getText().isEmpty() || txtField06Addr.getText().isEmpty()) ||
+                    //txtField03Addr.getText().trim().equals("") || 
+                    txtField04Addr.getText().trim().equals("") || txtField07Addr.getText().trim().equals("") || txtField05Addr.getText().trim().equals("") || txtField06Addr.getText().trim().equals("")) {
                 ShowMessageFX.Warning(getStage(), "Invalid Address. Insert to table Aborted!", "Warning", null);
                 return false;
             }
@@ -309,8 +308,11 @@ public class CustomerAddressFormController implements Initializable, ScreenInter
                 ShowMessageFX.Warning(getStage(), "Please select Address Type. Insert to table Aborted!", "Warning", null);
                 return false;
             }
-
-            oTransAddress.setAddressTable(pnRow, 3, txtField03Addr.getText());
+            String sHouseNox = "";
+            if (!txtField03Addr.getText().isEmpty()){
+                sHouseNox = txtField03Addr.getText();
+            }
+            oTransAddress.setAddressTable(pnRow, 3, sHouseNox);
             oTransAddress.setAddressTable(pnRow, 4, txtField04Addr.getText());
             oTransAddress.setAddressTable(pnRow, 7, txtField07Addr.getText());
             oTransAddress.setAddressTable(pnRow, 11, textArea11Addr.getText());

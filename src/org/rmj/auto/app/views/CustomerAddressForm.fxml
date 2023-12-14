@@ -23,7 +23,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" >
+<AnchorPane id="AnchorPane" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <StackPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -133,7 +133,7 @@
                                     </RadioButton>
                                     <RadioButton fx:id="radiobtn18AddN" mnemonicParsing="false" text="No" toggleGroup="$add_active" GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.rowIndex="4" />
                                     <Label id="LabelDesc" layoutX="18.0" layoutY="23.0" stylesheets="@../css/FrameStyle.css" text="Street Name" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                    <Label alignment="BOTTOM_RIGHT" prefHeight="16.0" prefWidth="62.0" text="*" textFill="#fb0000" GridPane.columnIndex="1">
+                                    <Label alignment="BOTTOM_RIGHT" prefHeight="16.0" prefWidth="72.0" text="*" textFill="#fb0000" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                        <font>
                                           <Font name="Arial" size="12.0" />
                                        </font>

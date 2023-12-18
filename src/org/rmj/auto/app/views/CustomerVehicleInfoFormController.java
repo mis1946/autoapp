@@ -143,6 +143,24 @@ public class CustomerVehicleInfoFormController implements Initializable, ScreenI
     @FXML
     private TextField txtField04V;
     @FXML
+    private TextField txtField09V;
+    @FXML
+    private DatePicker txtField21V;
+    @FXML
+    private TextField txtField22V;
+    @FXML
+    private TextArea textArea34V;
+    @FXML
+    private TextField txtField35V;
+    @FXML
+    private TextField txtField36V;
+    @FXML
+    private TextArea textArea37V;
+    @FXML
+    private TextArea textArea38V;
+    @FXML
+    private TextField txtField13; //location
+    @FXML
     private Button btnEngFrm;
     @FXML
     private Label lbl_LName1;
@@ -153,23 +171,7 @@ public class CustomerVehicleInfoFormController implements Initializable, ScreenI
     @FXML
     private Label lbl_LName22;
     @FXML
-    private TextField txtField09V;
-    @FXML
-    private DatePicker txtField21V;
-    @FXML
-    private TextField txtField22V;
-    @FXML
-    private TextArea textArea34V;
-    @FXML
     private Button btnTransfer;
-    @FXML
-    private TextField txtField35V;
-    @FXML
-    private TextField txtField36V;
-    @FXML
-    private TextArea textArea37V;
-    @FXML
-    private TextArea textArea38V;
     @FXML
     private Button btnVhclMnl;
     @FXML
@@ -188,8 +190,6 @@ public class CustomerVehicleInfoFormController implements Initializable, ScreenI
     private VBox vboxSales;
     @FXML
     private GridPane gridSold;
-    @FXML
-    private TextField txtField13; //location
     ObservableList<String> cSoldStats = FXCollections.observableArrayList("NON SALES CUSTOMER", "AVAILABLE FOR SALE", "VSP", "SOLD"); 
     ObservableList<String> cIsVhclnew = FXCollections.observableArrayList("BRAND NEW", "PRE-OWNED"); 
 
@@ -197,6 +197,12 @@ public class CustomerVehicleInfoFormController implements Initializable, ScreenI
     private ComboBox comboBox14; //soldstat
     @FXML
     private ComboBox comboBox15; //isvhclnew
+    @FXML
+    private TextField txtField42V;
+    @FXML
+    private TextField txtField41V;
+    @FXML
+    private TextField txtField40V;
     
     private Stage getStage() {
         return (Stage) btnAdd.getScene().getWindow();
@@ -230,6 +236,26 @@ public class CustomerVehicleInfoFormController implements Initializable, ScreenI
         
         comboBox14.setItems(cSoldStats); 
         comboBox15.setItems(cIsVhclnew); 
+        
+        setCapsLockBehavior(txtField24V);
+        setCapsLockBehavior(txtField26V);
+        setCapsLockBehavior(txtField28V);
+        setCapsLockBehavior(txtField31V);
+        setCapsLockBehavior(txtField30V);
+        setCapsLockBehavior(txtField32V);
+        setCapsLockBehavior(txtField20V);
+        setCapsLockBehavior(txtField03V);
+        setCapsLockBehavior(txtField11V);
+        setCapsLockBehavior(txtField08V);
+        setCapsLockBehavior(txtField04V);
+        setCapsLockBehavior(txtField09V);
+        setCapsLockBehavior(txtField22V);
+        setCapsLockBehavior(textArea34V);
+        setCapsLockBehavior(txtField35V);
+        setCapsLockBehavior(txtField36V);
+        setCapsLockBehavior(textArea37V);
+        setCapsLockBehavior(textArea38V);
+        setCapsLockBehavior(txtField13); //location
         
         //Vehicle Info
         addRequiredFieldListener(txtField24V);
@@ -348,6 +374,7 @@ public class CustomerVehicleInfoFormController implements Initializable, ScreenI
         btnBrowse.setOnAction(this::cmdButton_Click_vhcl);
         btnSave.setOnAction(this::cmdButton_Click_vhcl);
         btnTransfer.setOnAction(this::cmdButton_Click_vhcl);
+        btnClose.setOnAction(this::cmdButton_Click_vhcl);
         
         clearFields();
         pnEditMode = EditMode.UNKNOWN;
@@ -467,6 +494,7 @@ public class CustomerVehicleInfoFormController implements Initializable, ScreenI
                     }
                     break;
                 case "btnBrowse":
+                    oTransVehicle.setFormType(pbisVhclSales);
                     if(oTransVehicle.searchRecord()){
                         clearFields();
                         loadClientVehicleInfo();
@@ -528,7 +556,9 @@ public class CustomerVehicleInfoFormController implements Initializable, ScreenI
                     
                     break;
                 case "btnTransfer":
-                    loadTransferOwnershipWindow();
+                    if (oTransVehicle.UpdateRecord()) {
+                        loadTransferOwnershipWindow();
+                    }
                     break;
                 
                 case "btnCancel":
@@ -536,6 +566,17 @@ public class CustomerVehicleInfoFormController implements Initializable, ScreenI
                     bBtnVhclAvl = false;
                     pnEditMode = EditMode.UNKNOWN;
                     break;
+                case "btnClose":
+                    if (ShowMessageFX.OkayCancel(null, "Close Tab", "Are you sure you want to close this Tab?") == true) {
+                        if (unload != null) {
+                            unload.unloadForm(AnchorMain, oApp, pxeModuleName);
+                        } else {
+                            ShowMessageFX.Warning(getStage(), "Please notify the system administrator to configure the null value at the close button.", "Warning", pxeModuleName);
+                        }
+                        break;
+                    } else {
+                        return;
+                    }
             }
             
             initVhclInfoButton(pnEditMode);
@@ -716,14 +757,14 @@ public class CustomerVehicleInfoFormController implements Initializable, ScreenI
                             }
                             break;
                         case 35:
-                            if (oTransVehicle.searchCustomer(txtField35V.getText(), true)) {
+                            if (oTransVehicle.searchCustomer(txtField35V.getText(), true, false)) {
                                 loadClientVehicleInfo();
                             } else {
                                 ShowMessageFX.Warning(getStage(), oTransVehicle.getMessage(), "Warning", null);
                             }
                             break;
                         case 36:
-                            if (oTransVehicle.searchCustomer(txtField36V.getText(), false)) {
+                            if (oTransVehicle.searchCustomer(txtField36V.getText(), false, false)) {
                                 loadClientVehicleInfo();
                             } else {
                                 ShowMessageFX.Warning(getStage(), oTransVehicle.getMessage(), "Warning", null);
@@ -764,6 +805,13 @@ public class CustomerVehicleInfoFormController implements Initializable, ScreenI
     /*LOAD CLIENT VEHICLE INFORMATION*/
     private void loadClientVehicleInfo() {
         try {
+            
+            if(pbisVhclSales){
+                txtField40V.setText((String) oTransVehicle.getMaster(40));
+                txtField41V.setText(CommonUtils.xsDateMedium(SQLUtil.toDate((String) oTransVehicle.getMaster(41), SQLUtil.FORMAT_SHORT_DATE)));
+                //System.out.println(CommonUtils.xsDateMedium(SQLUtil.toDate((String) oTransVehicle.getMaster(41), SQLUtil.FORMAT_SHORT_DATE)));
+                txtField42V.setText((String) oTransVehicle.getMaster(42));
+            }
             
             txtField35V.setText((String) oTransVehicle.getMaster(35));
             txtField36V.setText((String) oTransVehicle.getMaster(36));
@@ -1101,6 +1149,7 @@ public class CustomerVehicleInfoFormController implements Initializable, ScreenI
 
             VehicleNewOwnerFormController loControl = new VehicleNewOwnerFormController();
             loControl.setGRider(oApp);
+            loControl.setObject(oTransVehicle);
             fxmlLoader.setController(loControl);
 
             //load the main interface
@@ -1129,7 +1178,18 @@ public class CustomerVehicleInfoFormController implements Initializable, ScreenI
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setTitle("");
             stage.showAndWait();
-
+            
+            try {
+                if (oTransVehicle.OpenRecord((String) oTransVehicle.getMaster(1))){
+                    loadClientVehicleInfo();
+                }
+           
+                loadVehicleHtryTable();
+                pnEditMode = oTransVehicle.getEditMode();
+                initVhclInfoButton(pnEditMode);
+            } catch (SQLException ex) {
+               Logger.getLogger(CustomerVehicleInfoFormController.class.getName()).log(Level.SEVERE, null, ex);
+            }
         } catch (IOException e) {
             e.printStackTrace();
             ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
@@ -1384,6 +1444,12 @@ public class CustomerVehicleInfoFormController implements Initializable, ScreenI
         txtField35V.clear();
         txtField36V.clear();
         
+        if(pbisVhclSales){
+            txtField40V.clear();
+            txtField41V.clear();
+            txtField42V.clear();
+        }
+
         txtField03V.clear();
         txtField04V.clear();
         txtField08V.clear();

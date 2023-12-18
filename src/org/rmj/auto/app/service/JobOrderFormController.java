@@ -80,21 +80,13 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
     @FXML
     private Button btnCancelJobOrder;
     @FXML
-    private Tab laborTab;
-    @FXML
     private TableView<?> tblViewLabor;
     @FXML
-    private Tab partsTab;
+    private TableView<?> tblViewLabor1;
     @FXML
-    private TableView<?> tblViewParts;
+    private TableView<?> tblViewLabor2;
     @FXML
-    private Tab paintingTabs;
-    @FXML
-    private TableView<?> tblViewPainting;
-    @FXML
-    private Tab recommenTab;
-    @FXML
-    private TableView<?> tblViewRecommend;
+    private TableView<?> tblViewLabor3;
 
     /**
      * Initializes the controller class.

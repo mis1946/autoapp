@@ -7,9 +7,12 @@ package org.rmj.auto.app.service;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.property.ReadOnlyBooleanPropertyBase;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -17,10 +20,15 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import org.rmj.appdriver.GRider;
+import org.rmj.appdriver.agentfx.CommonUtils;
 import org.rmj.appdriver.agentfx.ShowMessageFX;
 import org.rmj.appdriver.callback.MasterCallback;
 import org.rmj.appdriver.constants.EditMode;
@@ -39,7 +47,7 @@ import org.rmj.auto.clients.base.Activity;
 public class JobOrderFormController implements Initializable, ScreenInterface {
 
     private GRider oApp;
-    private Activity oTrans;
+//    private Activity oTrans;
     private MasterCallback oListener;
     CancelForm cancelform = new CancelForm(); //Object for closing form
     private final String pxeModuleName = "Job Order Information"; //Form Title
@@ -70,9 +78,23 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
     @FXML
     private TextField txtField37;
     @FXML
-    private TextField txtField39;
-    @FXML
     private Button btnCancelJobOrder;
+    @FXML
+    private Tab laborTab;
+    @FXML
+    private TableView<?> tblViewLabor;
+    @FXML
+    private Tab partsTab;
+    @FXML
+    private TableView<?> tblViewParts;
+    @FXML
+    private Tab paintingTabs;
+    @FXML
+    private TableView<?> tblViewPainting;
+    @FXML
+    private Tab recommenTab;
+    @FXML
+    private TableView<?> tblViewRecommend;
 
     /**
      * Initializes the controller class.
@@ -170,18 +192,32 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
         String lsButton = ((Button) event.getSource()).getId();
         switch (lsButton) {
             case "btnAdd":
+//                if (oTrans.NewRecord()) {
+//                    clearFields();
+//                    pnEditMode = oTrans.getEditMode();
+//                    try {
+//                        oTrans.clearActMember();
+//                        oTrans.clearActVehicle();
+//                        oTrans.clearActTown();
+//                    } catch (SQLException ex) {
+////                            Logger.getLogger(JobOrderFormController.class.getName()).log(Level.SEVERE, null, ex);
+//                    }
+//                } else {
+//                    ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+//                }
                 break;
             case "btnEdit":
                 break;
             case "btnSave":
                 break;
             case "btnCancel":
+                if (ShowMessageFX.OkayCancel(getStage(), "Are you sure you want to cancel?", pxeModuleName, null) == true) {
+                    clearFields();
+//                    switchToTab(tabMain, ImTabPane);// Load fields, clear them, and set edit mode
+                    pnEditMode = EditMode.UNKNOWN;
+                }
                 break;
             case "btnBrowse":
-                break;
-            case "btnAdditionalLabor":
-                break;
-            case "btnAddParts":
                 break;
             case "btnPrint":
                 break;
@@ -202,11 +238,45 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
     }
 
     private void initTextKeyPressed() {
+        /* TxtField KeyPressed */
+//        txtField05.setOnKeyPressed(this::txtField_KeyPressed);
+    }
+
+    private void txtField_KeyPressed(KeyEvent event) {
+        String txtFieldID = ((TextField) event.getSource()).getId();
+        if (event.getCode() == KeyCode.TAB || event.getCode() == KeyCode.ENTER || event.getCode() == KeyCode.F3) {
+            switch (txtFieldID) {
+                case "textSeek01":
+                    break;
+            }
+            event.consume();
+            CommonUtils.SetNextFocus((TextField) event.getSource());
+        } else if (event.getCode() == KeyCode.UP) {
+            event.consume();
+            CommonUtils.SetPreviousFocus((TextField) event.getSource());
+        }
 
     }
 
     private void initTextFieldFocus() {
+//        txtField19.focusedProperty().addListener(txtField_Focus);
     }
+    final ChangeListener<? super Boolean> txtField_Focus = (o, ov, nv) -> {
+
+        TextField txtField = (TextField) ((ReadOnlyBooleanPropertyBase) o).getBean();
+        int lnIndex = Integer.parseInt(txtField.getId().substring(8, 10));
+        String lsValue = txtField.getText();
+        if (lsValue == null) {
+            return;
+        }
+        if (!nv) {
+            switch (lnIndex) {
+
+            }
+        } else {
+            txtField.selectAll();
+        }
+    };
 
     private void initNumberFormatterFields() {
     }

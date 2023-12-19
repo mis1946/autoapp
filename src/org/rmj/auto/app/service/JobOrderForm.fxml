@@ -24,7 +24,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" fx:id="AnchorMain" prefWidth="1304.0" stylesheets="@../css/FrameStyle.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" >
+<AnchorPane id="AnchorPane" fx:id="AnchorMain" prefWidth="1304.0" stylesheets="@../css/FrameStyle.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <StackPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
@@ -35,7 +35,7 @@
                     <top>
                         <AnchorPane prefHeight="25.0" style="-fx-background-color: #515151; -fx-background-radius: 5;" BorderPane.alignment="CENTER">
                             <children>
-                                <Label alignment="CENTER" contentDisplay="CENTER" text="JOB ORDER INFORMATION" textAlignment="CENTER" textFill="WHITE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                <Label fx:id="lblFormTitle" alignment="CENTER" contentDisplay="CENTER" text="SERVICE JOB ORDER INFORMATION" textAlignment="CENTER" textFill="WHITE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                     <font>
                                         <Font name="Arial Bold" size="13.0" />
                                     </font>
@@ -124,7 +124,7 @@
                                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                     </rowConstraints>
                                     <children>
-                                        <Label fx:id="lblVSPStatus" prefHeight="17.0" prefWidth="103.0" textFill="WHITE" GridPane.columnIndex="1">
+                                        <Label fx:id="lblJobOrderStatus" prefHeight="17.0" prefWidth="103.0" textFill="WHITE" GridPane.columnIndex="1">
                                             <font>
                                                 <Font name="System Bold" size="12.0" />
                                             </font>
@@ -159,9 +159,9 @@
                                             <center>
                                                 <AnchorPane BorderPane.alignment="CENTER">
                                                     <children>
-                                                        <TabPane style="-fx-pref-width: 100;" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                        <TabPane fx:id="ImTabPane" style="-fx-pref-width: 100;" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                             <tabs>
-                                                                <Tab style="-fx-pref-width: 130; -fx-font-weight: bold; -fx-font-family: arial;" text="Main">
+                                                                <Tab fx:id="mainTab" style="-fx-pref-width: 130; -fx-font-weight: bold; -fx-font-family: arial;" text="Main">
                                                                     <content>
                                                                         <AnchorPane>
                                                                             <children>
@@ -197,26 +197,31 @@
                                                                                                                         <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="10.0" vgrow="SOMETIMES" />
                                                                                                                     </rowConstraints>
                                                                                                                     <children>
-                                                                                                                        <Label id="LabelDesc" text="VSP  / Intake No." GridPane.rowIndex="1" />
-                                                                                                                        <TextField promptText="Search F3" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="1" />
+                                                                                                                        <Label id="LabelDesc" fx:id="lblVSPorIntake" prefHeight="14.0" prefWidth="129.0" text="Intake No." GridPane.rowIndex="1" />
+                                                                                                                        <TextField fx:id="txtField13" promptText="Search F3" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="1" />
                                                                                                                         <Label id="LabelDesc" text="Job Order No." GridPane.rowIndex="2" />
-                                                                                                                        <TextField prefHeight="22.0" prefWidth="174.0" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="2" />
+                                                                                                                        <TextField fx:id="txtField03" disable="true" editable="false" prefHeight="22.0" prefWidth="174.0" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="2" />
                                                                                                                         <Label id="LabelDesc" text="Job Order Date" GridPane.rowIndex="3" />
-                                                                                                                        <DatePicker prefHeight="24.0" prefWidth="120.0" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="3" />
+                                                                                                                        <DatePicker fx:id="date02" disable="true" prefHeight="24.0" prefWidth="120.0" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="3" />
                                                                                                                         <Label id="LabelDesc" text="Work Category" GridPane.rowIndex="4" />
                                                                                                                         <Label id="LabelDesc" text="Labor Type" GridPane.rowIndex="5" />
-                                                                                                                        <ComboBox prefHeight="24.0" prefWidth="250.0" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="5" />
-                                                                                                                        <Label id="LabelDesc" text="SE / SA" GridPane.rowIndex="6" />
+                                                                                                                        <ComboBox fx:id="comboBox08" prefHeight="24.0" prefWidth="250.0" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="5" />
+                                                                                                                        <Label id="LabelDesc" fx:id="lblSEorSA" text="Service Advisor" GridPane.rowIndex="6" />
                                                                                                                         <Label id="LabelDesc" text="Insurance" GridPane.rowIndex="7" />
                                                                                                                         <Label id="LabelDesc" text="Km Reading" GridPane.rowIndex="8" />
                                                                                                                         <Label id="LabelDesc" text="Trans Source" GridPane.rowIndex="9" />
                                                                                                                         <Label id="LabelDesc" text="Reception" GridPane.rowIndex="10" />
-                                                                                                                        <TextField prefHeight="22.0" prefWidth="136.0" GridPane.columnIndex="2" GridPane.rowIndex="8" />
+                                                                                                                        <TextField fx:id="txtField09" prefHeight="22.0" prefWidth="136.0" GridPane.columnIndex="2" GridPane.rowIndex="8" />
                                                                                                                         <ComboBox prefHeight="24.0" prefWidth="250.0" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="10" />
-                                                                                                                        <ComboBox prefHeight="24.0" prefWidth="250.0" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="9" />
-                                                                                                                        <ComboBox prefHeight="24.0" prefWidth="250.0" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="4" />
-                                                                                                                        <TextField GridPane.columnIndex="2" GridPane.columnSpan="3" GridPane.rowIndex="6" />
-                                                                                                                        <TextField GridPane.columnIndex="2" GridPane.columnSpan="3" GridPane.rowIndex="7" />
+                                                                                                                        <ComboBox fx:id="comboBox12" prefHeight="24.0" prefWidth="250.0" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="9" />
+                                                                                                                        <ComboBox fx:id="comboBox06" disable="true" prefHeight="24.0" prefWidth="250.0" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="4" />
+                                                                                                                        <TextField fx:id="txtField40" GridPane.columnIndex="2" GridPane.columnSpan="3" GridPane.rowIndex="6" />
+                                                                                                                        <TextField fx:id="txtField16" promptText="Search: F3" GridPane.columnIndex="2" GridPane.columnSpan="3" GridPane.rowIndex="7" />
+                                                                                          <Label fx:id="lbl_LName1" alignment="BOTTOM_RIGHT" prefHeight="17.0" prefWidth="60.0" text="*" textFill="#fb0000" GridPane.rowIndex="1">
+                                                                                             <font>
+                                                                                                <Font name="Arial" size="12.0" />
+                                                                                             </font>
+                                                                                          </Label>
                                                                                                                     </children>
                                                                                                                 </GridPane>
                                                                                                             </children>
@@ -244,10 +249,10 @@
                                                                                                                             <children>
                                                                                                                                 <Label id="LabelDesc" text="Buying Customer Name" GridPane.rowIndex="1" />
                                                                                                                                 <Label id="LabelDesc" text="Customer Address" GridPane.rowIndex="2" />
-                                                                                                                                <Label id="LabelDesc" text="Co-Buyer Name" GridPane.rowIndex="4" />
-                                                                                                                                <TextField disable="true" editable="false" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1" />
-                                                                                                                                <TextArea disable="true" editable="false" prefHeight="200.0" prefWidth="200.0" wrapText="true" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2" GridPane.rowSpan="2" />
-                                                                                                                                <TextField disable="true" editable="false" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="4" />
+                                                                                                                                <Label id="LabelDesc" fx:id="lblCoBuyerOrCoOwner" prefHeight="14.0" prefWidth="154.0" text="Co-Buyer Name" GridPane.rowIndex="4" />
+                                                                                                                                <TextField fx:id="txtField31" disable="true" editable="false" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1" />
+                                                                                                                                <TextArea fx:id="textArea32" disable="true" editable="false" prefHeight="200.0" prefWidth="200.0" wrapText="true" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2" GridPane.rowSpan="2" />
+                                                                                                                                <TextField fx:id="txtField33" disable="true" editable="false" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="4" />
                                                                                                                                 <Label style="-fx-background-color: white;" text=" Customer Information " GridPane.rowIndex="1">
                                                                                                                                     <font>
                                                                                                                                         <Font name="Arial Bold" size="12.0" />
@@ -286,13 +291,13 @@
                                                                                                                                 <Label id="LabelDesc" text="Plate No." GridPane.rowIndex="1" />
                                                                                                                                 <Label id="LabelDesc" text="Cs No." GridPane.rowIndex="2" />
                                                                                                                                 <Label id="LabelDesc" text="Engine No." GridPane.columnIndex="3" GridPane.rowIndex="1" />
-                                                                                                                                <TextField disable="true" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                                                                                                                <TextField disable="true" editable="false" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                                                                                                                                <TextField fx:id="txtField37" disable="true" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                                                                                                                <TextField fx:id="txtField39" disable="true" editable="false" GridPane.columnIndex="4" GridPane.rowIndex="1" />
                                                                                                                                 <Label id="LabelDesc" text="Frame No." GridPane.columnIndex="3" GridPane.rowIndex="2" />
-                                                                                                                                <TextField disable="true" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                                                                                                                                <TextField disable="true" editable="false" GridPane.columnIndex="4" GridPane.rowIndex="2" />
+                                                                                                                                <TextField fx:id="txtField36" disable="true" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                                                                                                                <TextField fx:id="txtField38" disable="true" editable="false" GridPane.columnIndex="4" GridPane.rowIndex="2" />
                                                                                                                                 <Label id="LabelDesc" text="Vehicle Description" GridPane.rowIndex="3" />
-                                                                                                                                <TextArea disable="true" editable="false" prefHeight="56.0" prefWidth="463.0" wrapText="true" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="3" GridPane.rowSpan="2" />
+                                                                                                                                <TextArea fx:id="textArea35" disable="true" editable="false" prefHeight="56.0" prefWidth="463.0" wrapText="true" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="3" GridPane.rowSpan="2" />
                                                                                                                             </children>
                                                                                                                         </GridPane>
                                                                                                                     </children>
@@ -322,7 +327,7 @@
                                                                                                                         <RowConstraints minHeight="-Infinity" prefHeight="10.0" />
                                                                                                                     </rowConstraints>
                                                                                                                     <children>
-                                                                                                                        <TextArea disable="true" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.rowSpan="2">
+                                                                                                                        <TextArea fx:id="textArea11" disable="true" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.rowSpan="2">
                                                                                                                             <GridPane.margin>
                                                                                                                                 <Insets />
                                                                                                                             </GridPane.margin>
@@ -362,17 +367,17 @@
                                                                                                                                         <Insets />
                                                                                                                                     </GridPane.margin>
                                                                                                                                 </Label>
-                                                                                                                                <TextField fx:id="txtField36" alignment="CENTER_RIGHT" disable="true" editable="false" promptText="0.0" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowIndex="1">
+                                                                                                                                <TextField fx:id="txtField19" alignment="CENTER_RIGHT" disable="true" editable="false" promptText="0.0" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowIndex="1">
                                                                                                                                     <GridPane.margin>
                                                                                                                                         <Insets right="5.0" />
                                                                                                                                     </GridPane.margin>
                                                                                                                                 </TextField>
-                                                                                                                                <TextField fx:id="txtField37" alignment="CENTER_RIGHT" disable="true" editable="false" promptText="0.0" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowIndex="2">
+                                                                                                                                <TextField fx:id="txtField20" alignment="CENTER_RIGHT" disable="true" editable="false" promptText="0.0" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowIndex="2">
                                                                                                                                     <GridPane.margin>
                                                                                                                                         <Insets right="5.0" />
                                                                                                                                     </GridPane.margin>
                                                                                                                                 </TextField>
-                                                                                                                                <TextField alignment="CENTER_RIGHT" disable="true" editable="false" promptText="0.0" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowIndex="3">
+                                                                                                                                <TextField fx:id="txtField21" alignment="CENTER_RIGHT" disable="true" editable="false" promptText="0.0" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowIndex="3">
                                                                                                                                     <GridPane.margin>
                                                                                                                                         <Insets right="5.0" />
                                                                                                                                     </GridPane.margin>
@@ -411,7 +416,7 @@
                                                                         </AnchorPane>
                                                                     </content>
                                                                 </Tab>
-                                                                <Tab style="-fx-font-family: arial; -fx-font-weight: bold; -fx-pref-width: 130;" text="Labor">
+                                                                <Tab fx:id="laborTab" style="-fx-font-family: arial; -fx-font-weight: bold; -fx-pref-width: 130;" text="Labor">
                                                                     <content>
                                                                         <AnchorPane>
                                                                             <children>
@@ -438,7 +443,7 @@
                                                                         </AnchorPane>
                                                                     </content>
                                                                 </Tab>
-                                                                <Tab style="-fx-font-weight: bold; -fx-font-family: arial; -fx-pref-width: 130;" text="Parts">
+                                                                <Tab fx:id="partsTab" style="-fx-font-weight: bold; -fx-font-family: arial; -fx-pref-width: 130;" text="Parts">
                                                                     <content>
                                                                         <AnchorPane>
                                                                             <children>
@@ -450,7 +455,7 @@
                                                                                         <RowConstraints minHeight="-Infinity" prefHeight="100.0" vgrow="ALWAYS" />
                                                                                     </rowConstraints>
                                                                                     <children>
-                                                                                        <TableView fx:id="tblViewLabor1" prefHeight="196.0">
+                                                                                        <TableView fx:id="tblViewParts" prefHeight="196.0">
                                                                                             <columns>
                                                                                                 <TableColumn prefWidth="75.0" text="C1" />
                                                                                                 <TableColumn prefWidth="75.0" text="C2" />
@@ -465,7 +470,7 @@
                                                                         </AnchorPane>
                                                                     </content>
                                                                 </Tab>
-                                                                <Tab style="-fx-pref-width: 130; -fx-font-weight: bold; -fx-font-family: arial;" text="Paintings Materials">
+                                                                <Tab fx:id="paintingsTab" style="-fx-pref-width: 130; -fx-font-weight: bold; -fx-font-family: arial;" text="Paintings Materials">
                                                                     <content>
                                                                         <AnchorPane>
                                                                             <children>
@@ -477,7 +482,7 @@
                                                                                         <RowConstraints minHeight="-Infinity" prefHeight="100.0" vgrow="ALWAYS" />
                                                                                     </rowConstraints>
                                                                                     <children>
-                                                                                        <TableView fx:id="tblViewLabor2" prefHeight="196.0">
+                                                                                        <TableView fx:id="tblViewPaintings" prefHeight="196.0">
                                                                                             <columns>
                                                                                                 <TableColumn prefWidth="75.0" text="C1" />
                                                                                                 <TableColumn prefWidth="75.0" text="C2" />
@@ -492,7 +497,7 @@
                                                                         </AnchorPane>
                                                                     </content>
                                                                 </Tab>
-                                                                <Tab style="-fx-pref-width: 130; -fx-font-weight: bold; -fx-font-family: arial;" text="Recommendations">
+                                                                <Tab fx:id="recommendationTab" style="-fx-pref-width: 130; -fx-font-weight: bold; -fx-font-family: arial;" text="Recommendations">
                                                                     <content>
                                                                         <AnchorPane>
                                                                             <children>
@@ -504,7 +509,7 @@
                                                                                         <RowConstraints minHeight="-Infinity" prefHeight="100.0" vgrow="ALWAYS" />
                                                                                     </rowConstraints>
                                                                                     <children>
-                                                                                        <TableView fx:id="tblViewLabor3" prefHeight="196.0">
+                                                                                        <TableView fx:id="tblViewRecommendation" prefHeight="196.0">
                                                                                             <columns>
                                                                                                 <TableColumn prefWidth="75.0" text="C1" />
                                                                                                 <TableColumn prefWidth="75.0" text="C2" />

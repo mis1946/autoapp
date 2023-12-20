@@ -146,7 +146,6 @@
                                                     <children>
                                                         <GridPane prefHeight="30.0" prefWidth="279.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="0.0">
                                                             <columnConstraints>
-                                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="180.0" />
                                                                 <ColumnConstraints hgrow="SOMETIMES" minWidth="5.0" />
                                                             </columnConstraints>
                                                             <rowConstraints>
@@ -217,11 +216,11 @@
                                                                                                                         <ComboBox fx:id="comboBox06" disable="true" prefHeight="24.0" prefWidth="250.0" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="4" />
                                                                                                                         <TextField fx:id="txtField40" GridPane.columnIndex="2" GridPane.columnSpan="3" GridPane.rowIndex="6" />
                                                                                                                         <TextField fx:id="txtField16" promptText="Search: F3" GridPane.columnIndex="2" GridPane.columnSpan="3" GridPane.rowIndex="7" />
-                                                                                          <Label fx:id="lbl_LName1" alignment="BOTTOM_RIGHT" prefHeight="17.0" prefWidth="60.0" text="*" textFill="#fb0000" GridPane.rowIndex="1">
-                                                                                             <font>
-                                                                                                <Font name="Arial" size="12.0" />
-                                                                                             </font>
-                                                                                          </Label>
+                                                                                                                        <Label fx:id="lbl_LName1" alignment="BOTTOM_RIGHT" prefHeight="17.0" prefWidth="60.0" text="*" textFill="#fb0000" GridPane.rowIndex="1">
+                                                                                                                            <font>
+                                                                                                                                <Font name="Arial" size="12.0" />
+                                                                                                                            </font>
+                                                                                                                        </Label>
                                                                                                                     </children>
                                                                                                                 </GridPane>
                                                                                                             </children>
@@ -425,15 +424,27 @@
                                                                                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
                                                                                     </columnConstraints>
                                                                                     <rowConstraints>
+                                                                                        <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="30.0" vgrow="ALWAYS" />
                                                                                         <RowConstraints minHeight="-Infinity" prefHeight="100.0" vgrow="ALWAYS" />
                                                                                     </rowConstraints>
                                                                                     <children>
-                                                                                        <TableView fx:id="tblViewLabor" prefHeight="196.0">
+                                                                                        <TableView fx:id="tblViewLabor" prefHeight="175.0" prefWidth="1077.0" GridPane.rowIndex="1">
                                                                                             <columns>
-                                                                                                <TableColumn prefWidth="75.0" text="C1" />
-                                                                                                <TableColumn prefWidth="75.0" text="C2" />
+                                                                                                <TableColumn fx:id="tblLaborRow" editable="false" prefWidth="41.666664123535156" sortable="false" text="Row" />
+                                                                                                <TableColumn fx:id="tblindex10_Labor" editable="false" prefWidth="365.33333587646484" sortable="false" text="Labor Description" />
+                                                                                                <TableColumn fx:id="tblindex03_Labor" editable="false" prefWidth="205.66668701171875" sortable="false" text="Transaction Type" />
+                                                                                                <TableColumn fx:id="tblindex06_Labor" editable="false" prefWidth="160.3333740234375" sortable="false" text="Amount" />
                                                                                             </columns>
                                                                                         </TableView>
+                                                                                        <HBox prefHeight="100.0" prefWidth="200.0" spacing="5.0">
+                                                                                            <children>
+                                                                                                <Button fx:id="btnAddLabor" mnemonicParsing="false" text="Add Labor">
+                                                                                                    <graphic>
+                                                                                                        <FontAwesomeIconView glyphName="PLUS" />
+                                                                                                    </graphic>
+                                                                                                </Button>
+                                                                                            </children>
+                                                                                        </HBox>
                                                                                     </children>
                                                                                 </GridPane>
                                                                             </children>
@@ -446,27 +457,41 @@
                                                                 <Tab fx:id="partsTab" style="-fx-font-weight: bold; -fx-font-family: arial; -fx-pref-width: 130;" text="Parts">
                                                                     <content>
                                                                         <AnchorPane>
+                                                                            <padding>
+                                                                                <Insets bottom="5.0" />
+                                                                            </padding>
                                                                             <children>
-                                                                                <GridPane layoutX="10.0" layoutY="5.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="5.0">
+                                                                                <GridPane AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="5.0">
                                                                                     <columnConstraints>
                                                                                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
                                                                                     </columnConstraints>
                                                                                     <rowConstraints>
+                                                                                        <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="30.0" vgrow="ALWAYS" />
                                                                                         <RowConstraints minHeight="-Infinity" prefHeight="100.0" vgrow="ALWAYS" />
                                                                                     </rowConstraints>
                                                                                     <children>
-                                                                                        <TableView fx:id="tblViewParts" prefHeight="196.0">
+                                                                                        <HBox prefHeight="100.0" prefWidth="200.0" spacing="5.0">
+                                                                                            <children>
+                                                                                                <Button fx:id="btnAddParts" mnemonicParsing="false" text="Add Parts">
+                                                                                                    <graphic>
+                                                                                                        <FontAwesomeIconView glyphName="PLUS" />
+                                                                                                    </graphic>
+                                                                                                </Button>
+                                                                                            </children>
+                                                                                        </HBox>
+                                                                                        <TableView fx:id="tblViewParts" prefHeight="240.0" GridPane.rowIndex="1">
                                                                                             <columns>
-                                                                                                <TableColumn prefWidth="75.0" text="C1" />
-                                                                                                <TableColumn prefWidth="75.0" text="C2" />
+                                                                                                <TableColumn fx:id="tblPartsRow" editable="false" prefWidth="48.0" sortable="false" text="Row" />
+                                                                                                <TableColumn fx:id="tblindex14_Part" editable="false" minWidth="100.0" prefWidth="206.0" sortable="false" text="Part Number" />
+                                                                                                <TableColumn fx:id="tblindex04_Part" editable="false" minWidth="100.0" prefWidth="300.0" sortable="false" text="Part Description" />
+                                                                                                <TableColumn fx:id="tblindex11_Part" editable="false" prefWidth="184.66668701171875" sortable="false" text="Transaction Type" />
+                                                                                                <TableColumn fx:id="tblindex06_Part" editable="false" prefWidth="110.0" sortable="false" text="Quantity" />
+                                                                                                <TableColumn fx:id="tblindex10_Part" editable="false" prefWidth="150.0" sortable="false" text="Amount" />
                                                                                             </columns>
                                                                                         </TableView>
                                                                                     </children>
                                                                                 </GridPane>
                                                                             </children>
-                                                                            <padding>
-                                                                                <Insets bottom="5.0" />
-                                                                            </padding>
                                                                         </AnchorPane>
                                                                     </content>
                                                                 </Tab>

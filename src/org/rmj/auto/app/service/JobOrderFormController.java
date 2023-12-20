@@ -24,10 +24,13 @@ import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DateCell;
@@ -35,13 +38,18 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Callback;
 import javafx.util.Duration;
 import org.rmj.appdriver.GRider;
@@ -73,9 +81,12 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
     private String pxeModuleName = "Job Order Information"; //Form Title
     private int pnEditMode;//Modifying fields
     private boolean pbisJobOrderSales = false;
+    private double xOffset = 0;
+    private double yOffset = 0;
     unloadForm unload = new unloadForm(); //Used in Close Button
     ObservableList<String> cType = FXCollections.observableArrayList("EVENT", "SALES CALL", "PROMO");
-
+    private ObservableList<JobOrderLaborTableList> laborData = FXCollections.observableArrayList();
+    private ObservableList<JobOrderPartsTableList> partData = FXCollections.observableArrayList();
     @FXML
     private AnchorPane AnchorMain;
     @FXML
@@ -99,7 +110,7 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
     @FXML
     private Button btnCancelJobOrder;
     @FXML
-    private TableView<?> tblViewLabor;
+    private TableView<JobOrderLaborTableList> tblViewLabor;
     @FXML
     private Tab mainTab;
     @FXML
@@ -111,7 +122,7 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
     @FXML
     private Tab recommendationTab;
     @FXML
-    private TableView<?> tblViewParts;
+    private TableView<JobOrderPartsTableList> tblViewParts;
     @FXML
     private TableView<?> tblViewPaintings;
     @FXML
@@ -166,6 +177,32 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
     private TextField txtField13;
     @FXML
     private TextField txtField21;
+    @FXML
+    private Label lbl_LName1;
+    @FXML
+    private TableColumn<JobOrderLaborTableList, String> tblLaborRow;
+    @FXML
+    private TableColumn<JobOrderLaborTableList, String> tblindex10_Labor;
+    @FXML
+    private TableColumn<JobOrderLaborTableList, String> tblindex03_Labor;
+    @FXML
+    private TableColumn<JobOrderLaborTableList, String> tblindex06_Labor;
+    @FXML
+    private TableColumn<JobOrderPartsTableList, String> tblPartsRow;
+    @FXML
+    private TableColumn<JobOrderPartsTableList, String> tblindex14_Part;
+    @FXML
+    private TableColumn<JobOrderPartsTableList, String> tblindex04_Part;
+    @FXML
+    private TableColumn<JobOrderPartsTableList, String> tblindex11_Part;
+    @FXML
+    private TableColumn<JobOrderPartsTableList, String> tblindex06_Part;
+    @FXML
+    private TableColumn<JobOrderPartsTableList, String> tblindex10_Part;
+    @FXML
+    private Button btnAddLabor;
+    @FXML
+    private Button btnAddParts;
 
     /**
      * Initializes the controller class.
@@ -364,115 +401,140 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
         btnClose.setOnAction(this::cmdButton_Click);
         btnBrowse.setOnAction(this::cmdButton_Click);
         btnPrint.setOnAction(this::cmdButton_Click);
+        btnAddLabor.setOnAction(this::cmdButton_Click);
+        btnAddParts.setOnAction(this::cmdButton_Click);
     }
 
     private void cmdButton_Click(ActionEvent event) {
-        String lsButton = ((Button) event.getSource()).getId();
-        switch (lsButton) {
-            case "btnAdd":
-                if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
-                    if (ShowMessageFX.OkayCancel(null, "Confirmation", "You have unsaved data. Are you sure you want to create a new record?") == true) {
+        try {
+            String lsButton = ((Button) event.getSource()).getId();
+            switch (lsButton) {
+                case "btnAdd":
+                    if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
+                        if (ShowMessageFX.OkayCancel(null, "Confirmation", "You have unsaved data. Are you sure you want to create a new record?") == true) {
+                            clearFields();
+                        } else {
+                            return;
+                        }
+                    }
+                    clearFields();
+                    oTrans.setFormType(pbisJobOrderSales);
+                    if (oTrans.NewRecord()) {
+                        switchToTab(mainTab, ImTabPane);
                         clearFields();
+                        laborData.clear();
+                        partData.clear();
+                        pnEditMode = oTrans.getEditMode();
                     } else {
-                        return;
+                        ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
                     }
-                }
-                clearFields();
-                oTrans.setFormType(pbisJobOrderSales);
-                if (oTrans.NewRecord()) {
-                    switchToTab(mainTab, ImTabPane);
-                    clearFields();
-                    pnEditMode = oTrans.getEditMode();
-                } else {
-                    ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
-                }
-                break;
-            case "btnEdit":
-                if (oTrans.UpdateRecord()) {
-                    pnEditMode = oTrans.getEditMode();
-                    loadJobOrderFields();
-                    initButton(pnEditMode);
-                } else {
-                    ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
-                }
-                break;
-            case "btnSave":
-                if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure, do you want to save?") == true) {
-                    if (pbisJobOrderSales) {
-                        if (txtField13.getText().isEmpty()) {
-                            ShowMessageFX.Warning(getStage(), "Please choose a value for VSP No.", "Warning", null);
-                            txtField13.requestFocus();
-                            return;
-                        }
-                    } else {
-                        if (txtField13.getText().isEmpty()) {
-                            ShowMessageFX.Warning(getStage(), "Please choose a value for Intake No.", "Warning", null);
-                            txtField13.requestFocus();
-                            return;
-                        }
-                    }
-                }
-                oTrans.setFormType(pbisJobOrderSales);
-                if (oTrans.SaveRecord()) {
-                    ShowMessageFX.Information(getStage(), "Transaction save successfully.", pxeModuleName, null);
-                    loadJobOrderFields();
-                    pnEditMode = EditMode.READY;
-                    initButton(pnEditMode);
-                } else {
-                    ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", "Error while saving " + pxeModuleName + ".");
-                }
-                break;
-            case "btnCancel":
-                if (ShowMessageFX.OkayCancel(getStage(), "Are you sure you want to cancel?", pxeModuleName, null) == true) {
-                    clearFields();
-                    switchToTab(mainTab, ImTabPane);// Load fields, clear them, and set edit mode
-                    pnEditMode = EditMode.UNKNOWN;
-                }
-                break;
-            case "btnBrowse":
-                if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
-                    if (ShowMessageFX.OkayCancel(null, "Confirmation", "You have unsaved data. Are you sure you want to browse a new record?")) {
-                        switchToTab(mainTab, ImTabPane);
-                        pnEditMode = EditMode.READY;
-                    } else {
-                        return;
-                    }
-                }
-                try {
-                    clearFields();
-                    switchToTab(mainTab, ImTabPane);
-                    if (oTrans.SearchRecord()) {
+                    break;
+                case "btnEdit":
+                    if (oTrans.UpdateRecord()) {
+                        pnEditMode = oTrans.getEditMode();
                         loadJobOrderFields();
-                        switchToTab(mainTab, ImTabPane);
-                        pnEditMode = EditMode.READY;
+                        loadTableLabor();
+                        loadTableParts();
                         initButton(pnEditMode);
                     } else {
                         ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                    }
+                    break;
+                case "btnSave":
+                    if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure, do you want to save?") == true) {
+                        if (pbisJobOrderSales) {
+                            if (txtField13.getText().isEmpty()) {
+                                ShowMessageFX.Warning(getStage(), "Please choose a value for VSP No.", "Warning", null);
+                                txtField13.requestFocus();
+                                return;
+                            }
+                        } else {
+                            if (txtField13.getText().isEmpty()) {
+                                ShowMessageFX.Warning(getStage(), "Please choose a value for Intake No.", "Warning", null);
+                                txtField13.requestFocus();
+                                return;
+                            }
+                        }
+                    }
+                    oTrans.setFormType(pbisJobOrderSales);
+                    if (oTrans.SaveRecord()) {
+                        ShowMessageFX.Information(getStage(), "Transaction save successfully.", pxeModuleName, null);
+                        loadJobOrderFields();
+                        loadTableLabor();
+                        loadTableParts();
+                        pnEditMode = EditMode.READY;
+                        initButton(pnEditMode);
+                    } else {
+                        ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", "Error while saving " + pxeModuleName + ".");
+                    }
+                    break;
+                case "btnCancel":
+                    if (ShowMessageFX.OkayCancel(getStage(), "Are you sure you want to cancel?", pxeModuleName, null) == true) {
+                        clearFields();
+                        laborData.clear();
+                        partData.clear();
+                        switchToTab(mainTab, ImTabPane);// Load fields, clear them, and set edit mode
+                        pnEditMode = EditMode.UNKNOWN;
+                    }
+                    break;
+                case "btnBrowse":
+                    if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
+                        if (ShowMessageFX.OkayCancel(null, "Confirmation", "You have unsaved data. Are you sure you want to browse a new record?")) {
+                            switchToTab(mainTab, ImTabPane);
+                            pnEditMode = EditMode.READY;
+                        } else {
+                            return;
+                        }
+                    }
+                    try {
                         clearFields();
                         switchToTab(mainTab, ImTabPane);
-                        pnEditMode = EditMode.UNKNOWN;
+                        if (oTrans.SearchRecord()) {
+                            loadJobOrderFields();
+                            loadTableLabor();
+                            loadTableParts();
+                            switchToTab(mainTab, ImTabPane);
+                            pnEditMode = EditMode.READY;
+                            initButton(pnEditMode);
+                        } else {
+                            ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                            clearFields();
+                            laborData.clear();
+                            partData.clear();
+                            switchToTab(mainTab, ImTabPane);
+                            pnEditMode = EditMode.UNKNOWN;
 
+                        }
+                    } catch (SQLException ex) {
+                        Logger.getLogger(VSPFormController.class
+                                .getName()).log(Level.SEVERE, null, ex);
                     }
-                } catch (SQLException ex) {
-                    Logger.getLogger(VSPFormController.class
-                            .getName()).log(Level.SEVERE, null, ex);
-                }
-                break;
-            case "btnPrint":
-                break;
-            case "btnClose":
-                if (ShowMessageFX.OkayCancel(null, "Close Tab", "Are you sure you want to close this Tab?")) {
-                    if (unload != null) {
-                        unload.unloadForm(AnchorMain, oApp, pxeModuleName);
-                    } else {
-                        ShowMessageFX.Warning(null, "Warning", "Please notify the system administrator to configure the null value at the close button.");
+                    break;
+                case "btnPrint":
+                    break;
+                case "btnClose":
+                    if (ShowMessageFX.OkayCancel(null, "Close Tab", "Are you sure you want to close this Tab?")) {
+                        if (unload != null) {
+                            unload.unloadForm(AnchorMain, oApp, pxeModuleName);
+                        } else {
+                            ShowMessageFX.Warning(null, "Warning", "Please notify the system administrator to configure the null value at the close button.");
+                        }
                     }
-                }
-                break;
-            case "btnCancelJobOrder":
-                break;
+                    break;
+                case "btnCancelJobOrder":
+                    break;
+                case "btnAddLabor":
+                    loadVSPLaborDialog();
+                    break;
+
+                case "btnAddParts":
+                    loadVSPPartsDialog();
+                    break;
+            }
+            initButton(pnEditMode);
+        } catch (IOException ex) {
+            Logger.getLogger(JobOrderFormController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        initButton(pnEditMode);
 
     }
 
@@ -578,8 +640,58 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
         txtField09.setTextFormatter(new InputTextFormatter(numberOnlyPattern));
     }
 
+    //TableView KeyPressed
     private void initTableKeyPressed() {
+        tblViewLabor.setOnKeyPressed(event -> {
+            if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
+                if (event.getCode().equals(KeyCode.DELETE)) {
+                    JobOrderLaborTableList selectedVSPLabor = getLaborSelectedItem();
+                    if (selectedVSPLabor != null) {
+                        try {
+                            String fsRow = selectedVSPLabor.getTblLaborRow();
+                            int fnRow = Integer.parseInt(fsRow);
+                            oTrans.removeJOLabor(fnRow);
+                            loadJobOrderFields();
+                            loadTableLabor();
+                        } catch (SQLException ex) {
+                            Logger.getLogger(VSPFormController.class
+                                    .getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
 
+                }
+            }
+        }
+        );
+        tblViewParts.setOnKeyPressed(event -> {
+            if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
+                if (event.getCode().equals(KeyCode.DELETE)) {
+                    JobOrderPartsTableList selectedVSPParts = getPartSelectedItem();
+                    if (selectedVSPParts != null) {
+                        try {
+                            String fsRow = selectedVSPParts.getTblPartsRow();
+                            int fnRow = Integer.parseInt(fsRow);
+                            oTrans.removeJOParts(fnRow);
+                            loadJobOrderFields();
+                            loadTableParts();
+                        } catch (SQLException ex) {
+                            Logger.getLogger(VSPFormController.class
+                                    .getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+
+                }
+            }
+        }
+        );
+    }
+
+    private JobOrderLaborTableList getLaborSelectedItem() {
+        return tblViewLabor.getSelectionModel().getSelectedItem();
+    }
+
+    private JobOrderPartsTableList getPartSelectedItem() {
+        return tblViewParts.getSelectionModel().getSelectedItem();
     }
 
     private boolean loadJobOrderFields() {
@@ -626,6 +738,187 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
         return true;
     }
 
+    private void loadTableLabor() {
+        try {
+
+            /*Populate table*/
+            laborData.clear();
+            for (int lnCtr = 1; lnCtr <= oTrans.getJOLaborCount(); lnCtr++) {
+                String amountString = oTrans.getJOLaborDetail(lnCtr, "nUnitPrce").toString();
+                // Convert the amount to a decimal value
+                double amount = Double.parseDouble(amountString);
+                DecimalFormat decimalFormat = new DecimalFormat("#,##0.00");
+                String formattedAmount = decimalFormat.format(amount);
+
+                laborData.add(new JobOrderLaborTableList(
+                        String.valueOf(lnCtr), //ROW
+                        oTrans.getJOLaborDetail(lnCtr, "sLaborCde").toString(),
+                        oTrans.getJOLaborDetail(lnCtr, "sLaborDsc").toString().toUpperCase(),
+                        oTrans.getJOLaborDetail(lnCtr, "sPayChrge").toString(),
+                        formattedAmount
+                ));
+
+            }
+            tblViewLabor.setItems(laborData);
+            initTableLabor();
+        } catch (SQLException e) {
+            ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
+        }
+    }
+
+    private void initTableLabor() {
+        if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
+            tblViewLabor.setEditable(true);
+        } else {
+            tblViewLabor.setEditable(false);
+        }
+
+        tblLaborRow.setCellValueFactory(new PropertyValueFactory<JobOrderLaborTableList, String>("tblLaborRow"));
+        tblindex10_Labor.setCellValueFactory(new PropertyValueFactory<JobOrderLaborTableList, String>("tblindex10_Labor"));
+        tblindex03_Labor.setCellValueFactory(new PropertyValueFactory<JobOrderLaborTableList, String>("tblindex03_Labor"));
+        tblindex06_Labor.setCellValueFactory(new PropertyValueFactory<JobOrderLaborTableList, String>("tblindex06_Labor"));
+    }
+
+    private void loadVSPLaborDialog() throws IOException {
+        /**
+         * if state = true : ADD else if state = false : UPDATE *
+         */
+        try {
+            Stage stage = new Stage();
+
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            fxmlLoader.setLocation(getClass().getResource("JobOrderVSPDialog.fxml"));
+
+            JobOrderVSPDialogController loControl = new JobOrderVSPDialogController();
+            loControl.setGRider(oApp);
+            loControl.setObject(oTrans);
+            fxmlLoader.setController(loControl);
+            //load the main interface
+            Parent parent = fxmlLoader.load();
+
+            parent.setOnMousePressed(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    xOffset = event.getSceneX();
+                    yOffset = event.getSceneY();
+                }
+            });
+
+            parent.setOnMouseDragged(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    stage.setX(event.getScreenX() - xOffset);
+                    stage.setY(event.getScreenY() - yOffset);
+                }
+            });
+
+            //set the main interface as the scene/*
+            Scene scene = new Scene(parent);
+            stage.setScene(scene);
+            stage.initStyle(StageStyle.TRANSPARENT);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle("");
+            stage.showAndWait();
+            loadTableLabor();
+        } catch (IOException e) {
+            e.printStackTrace();
+            ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
+            System.exit(1);
+        }
+    }
+
+    private void loadTableParts() {
+        try {
+
+            /*Populate table*/
+            partData.clear();
+            for (int lnCtr = 1; lnCtr <= oTrans.getJOPartsCount(); lnCtr++) {
+                String amountString = oTrans.getJOPartsDetail(lnCtr, "nUnitPrce").toString();
+                // Convert the amount to a decimal value
+
+                double amount = Double.parseDouble(amountString);
+                DecimalFormat decimalFormat = new DecimalFormat("#,##0.00");
+                String formattedAmount = decimalFormat.format(amount);
+                partData.add(new JobOrderPartsTableList(
+                        String.valueOf(lnCtr), //ROW
+                        oTrans.getJOPartsDetail(lnCtr, "sBarCodex").toString(),
+                        oTrans.getJOPartsDetail(lnCtr, "sDescript").toString().toUpperCase(),
+                        oTrans.getJOPartsDetail(lnCtr, "sPayChrge").toString(),
+                        oTrans.getJOPartsDetail(lnCtr, "nQtyEstmt").toString(),
+                        formattedAmount
+                ));
+
+            }
+            tblViewParts.setItems(partData);
+            initTableParts();
+        } catch (SQLException e) {
+            ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
+        }
+    }
+
+    private void initTableParts() {
+        if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
+            tblViewParts.setEditable(true);
+        } else {
+            tblViewParts.setEditable(false);
+        }
+        tblPartsRow.setCellValueFactory(new PropertyValueFactory<JobOrderPartsTableList, String>("tblPartsRow"));
+        tblindex14_Part.setCellValueFactory(new PropertyValueFactory<JobOrderPartsTableList, String>("tblindex14_Part"));
+        tblindex04_Part.setCellValueFactory(new PropertyValueFactory<JobOrderPartsTableList, String>("tblindex04_Part"));
+        tblindex11_Part.setCellValueFactory(new PropertyValueFactory<JobOrderPartsTableList, String>("tblindex11_Part"));
+        tblindex06_Part.setCellValueFactory(new PropertyValueFactory<JobOrderPartsTableList, String>("tblindex06_Part"));
+        tblindex10_Part.setCellValueFactory(new PropertyValueFactory<JobOrderPartsTableList, String>("tblindex10_Part"));
+
+    }
+
+    private void loadVSPPartsDialog() throws IOException {
+        /**
+         * if state = true : ADD else if state = false : UPDATE *
+         */
+        try {
+            Stage stage = new Stage();
+
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            fxmlLoader.setLocation(getClass().getResource("JobOrderVSPPartsDialog.fxml"));
+
+            JobOrderVSPPartsDialogController loControl = new JobOrderVSPPartsDialogController();
+            loControl.setGRider(oApp);
+            loControl.setObject(oTrans);
+            fxmlLoader.setController(loControl);
+            //load the main interface
+            Parent parent = fxmlLoader.load();
+
+            parent.setOnMousePressed(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    xOffset = event.getSceneX();
+                    yOffset = event.getSceneY();
+                }
+            });
+
+            parent.setOnMouseDragged(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    stage.setX(event.getScreenX() - xOffset);
+                    stage.setY(event.getScreenY() - yOffset);
+                }
+            });
+
+            //set the main interface as the scene/*
+            Scene scene = new Scene(parent);
+            stage.setScene(scene);
+            stage.initStyle(StageStyle.TRANSPARENT);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle("");
+            stage.showAndWait();
+            loadTableParts();
+        } catch (IOException e) {
+            e.printStackTrace();
+            ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
+            System.exit(1);
+        }
+    }
+
     private void clearFields() {
         removeRequired();
         txtField13.setText("");
@@ -664,7 +957,8 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
         btnPrint.setManaged(false);
         btnCancelJobOrder.setManaged(false);
         btnCancelJobOrder.setVisible(false);
-
+        btnAddLabor.setDisable(!lbShow);
+        btnAddParts.setDisable(!lbShow);
         txtField13.setDisable(!lbShow);
         txtField40.setDisable(!lbShow);
         txtField16.setDisable(!lbShow);

@@ -4,6 +4,7 @@
  */
 package org.rmj.auto.app.service;
 
+import com.sun.javafx.scene.control.skin.TableHeaderRow;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
@@ -21,6 +22,7 @@ import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyBooleanPropertyBase;
 import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -58,13 +60,11 @@ import org.rmj.appdriver.agentfx.CommonUtils;
 import org.rmj.appdriver.agentfx.ShowMessageFX;
 import org.rmj.appdriver.callback.MasterCallback;
 import org.rmj.appdriver.constants.EditMode;
-import org.rmj.auto.app.sales.UnitDeliveryReceiptFormController;
 import org.rmj.auto.app.sales.VSPFormController;
 import org.rmj.auto.app.views.CancelForm;
 import org.rmj.auto.app.views.InputTextFormatter;
 import org.rmj.auto.app.views.ScreenInterface;
 import org.rmj.auto.app.views.unloadForm;
-import org.rmj.auto.clients.base.Activity;
 import org.rmj.auto.service.base.JobOrderMaster;
 
 /**
@@ -77,6 +77,7 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
     private GRider oApp;
     private JobOrderMaster oTrans;
     private MasterCallback oListener;
+    private String fsValue;
     CancelForm cancelform = new CancelForm(); //Object for closing form
     private String pxeModuleName = "Job Order Information"; //Form Title
     private int pnEditMode;//Modifying fields
@@ -263,22 +264,23 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
         /*Set TextField Required*/
         initAddRequiredField();
 
-        changeDisplayComponents();
-//        tblViewLabor.setOnMouseClicked(this::tblLabor_Clicked);
-//        tblViewParts.setOnMouseClicked(this::tblParts_Clicked);
+        tblViewLabor.widthProperty().addListener((ObservableValue<? extends Number> source, Number oldWidth, Number newWidth) -> {
+            TableHeaderRow header = (TableHeaderRow) tblViewLabor.lookup("TableHeaderRow");
+            header.reorderingProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+                header.setReordering(false);
+            });
+        });
+
+        tblViewParts.widthProperty().addListener((ObservableValue<? extends Number> source, Number oldWidth, Number newWidth) -> {
+            TableHeaderRow header = (TableHeaderRow) tblViewParts.lookup("TableHeaderRow");
+            header.reorderingProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+                header.setReordering(false);
+            });
+        });
         date02.setOnAction(this::getDate);
         date02.setDayCellFactory(DateFormatCell);
         pnEditMode = EditMode.UNKNOWN;
         initButton(pnEditMode);
-    }
-
-    private void changeDisplayComponents() {
-        if (pbisJobOrderSales) {
-
-        } else {
-
-        }
-
     }
 
     private String getParentTabTitle() {
@@ -293,7 +295,6 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
                 return tab.getText().toUpperCase();
             }
         }
-
         return null; // No parent Tab found
     }
 
@@ -390,7 +391,16 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
     }
 
     private void initMonitoringProperty() {
-
+        txtField13.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+            if (newValue.isEmpty()) {
+                clearFields();
+                btnAddLabor.setDisable(true);
+                btnAddParts.setDisable(true);
+            } else {
+                btnAddLabor.setDisable(false);
+                btnAddParts.setDisable(false);
+            }
+        });
     }
 
     private void initCmdButton() {
@@ -403,6 +413,7 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
         btnPrint.setOnAction(this::cmdButton_Click);
         btnAddLabor.setOnAction(this::cmdButton_Click);
         btnAddParts.setOnAction(this::cmdButton_Click);
+        btnCancelJobOrder.setOnAction(this::cmdButton_Click);
     }
 
     private void cmdButton_Click(ActionEvent event) {
@@ -489,6 +500,7 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
                     try {
                         clearFields();
                         switchToTab(mainTab, ImTabPane);
+                        oTrans.setFormType(pbisJobOrderSales);
                         if (oTrans.SearchRecord()) {
                             loadJobOrderFields();
                             loadTableLabor();
@@ -522,6 +534,30 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
                     }
                     break;
                 case "btnCancelJobOrder":
+                    String fsValueCancelJo = oTrans.getMaster(1).toString();
+                    if (cancelform.loadCancelWindow(oApp, fsValueCancelJo, oTrans.getMaster(3).toString(), "JO")) {
+                        if (oTrans.CancelJO()) {
+                            loadJobOrderFields();
+                            pnEditMode = EditMode.READY;
+                            if (oTrans.OpenRecord(fsValueCancelJo)) {
+                                loadJobOrderFields();
+                                pnEditMode = EditMode.READY;
+                            } else {
+                                ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                                laborData.clear();
+                                partData.clear();
+                                clearFields();
+                                pnEditMode = EditMode.UNKNOWN;
+
+                            }
+                        } else {
+                            ShowMessageFX.Information(getStage(), "Failed to cancel Job Order.", pxeModuleName, null);
+                            return;
+                        }
+                    } else {
+                        return;
+                    }
+
                     break;
                 case "btnAddLabor":
                     loadVSPLaborDialog();
@@ -533,6 +569,8 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
             }
             initButton(pnEditMode);
         } catch (IOException ex) {
+            Logger.getLogger(JobOrderFormController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
             Logger.getLogger(JobOrderFormController.class.getName()).log(Level.SEVERE, null, ex);
         }
 
@@ -743,6 +781,7 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
 
             /*Populate table*/
             laborData.clear();
+            //if (oTrans.loadJOLabor()) {
             for (int lnCtr = 1; lnCtr <= oTrans.getJOLaborCount(); lnCtr++) {
                 String amountString = oTrans.getJOLaborDetail(lnCtr, "nUnitPrce").toString();
                 // Convert the amount to a decimal value
@@ -759,6 +798,7 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
                 ));
 
             }
+            //}
             tblViewLabor.setItems(laborData);
             initTableLabor();
         } catch (SQLException e) {
@@ -787,11 +827,12 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
             Stage stage = new Stage();
 
             FXMLLoader fxmlLoader = new FXMLLoader();
-            fxmlLoader.setLocation(getClass().getResource("JobOrderVSPDialog.fxml"));
+            fxmlLoader.setLocation(getClass().getResource("JobOrderVSPLaborDialog.fxml"));
 
-            JobOrderVSPDialogController loControl = new JobOrderVSPDialogController();
+            JobOrderVSPLaborDialogController loControl = new JobOrderVSPLaborDialogController();
             loControl.setGRider(oApp);
             loControl.setObject(oTrans);
+            loControl.setTrans((String) oTrans.getMaster(1));
             fxmlLoader.setController(loControl);
             //load the main interface
             Parent parent = fxmlLoader.load();
@@ -824,6 +865,8 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
             e.printStackTrace();
             ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
             System.exit(1);
+        } catch (SQLException ex) {
+            Logger.getLogger(JobOrderFormController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -832,6 +875,7 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
 
             /*Populate table*/
             partData.clear();
+            //if (oTrans.loadJOParts()) {
             for (int lnCtr = 1; lnCtr <= oTrans.getJOPartsCount(); lnCtr++) {
                 String amountString = oTrans.getJOPartsDetail(lnCtr, "nUnitPrce").toString();
                 // Convert the amount to a decimal value
@@ -849,6 +893,10 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
                 ));
 
             }
+//            } else {
+//                ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+//                return;
+//            }
             tblViewParts.setItems(partData);
             initTableParts();
         } catch (SQLException e) {
@@ -884,6 +932,7 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
             JobOrderVSPPartsDialogController loControl = new JobOrderVSPPartsDialogController();
             loControl.setGRider(oApp);
             loControl.setObject(oTrans);
+            loControl.setTrans((String) oTrans.getMaster(1));
             fxmlLoader.setController(loControl);
             //load the main interface
             Parent parent = fxmlLoader.load();
@@ -916,6 +965,8 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
             e.printStackTrace();
             ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
             System.exit(1);
+        } catch (SQLException ex) {
+            Logger.getLogger(JobOrderFormController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -957,8 +1008,9 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
         btnPrint.setManaged(false);
         btnCancelJobOrder.setManaged(false);
         btnCancelJobOrder.setVisible(false);
-        btnAddLabor.setDisable(!lbShow);
-        btnAddParts.setDisable(!lbShow);
+
+        btnAddLabor.setDisable(!(lbShow && !txtField13.getText().isEmpty()));
+        btnAddParts.setDisable(!(lbShow && !txtField13.getText().isEmpty()));
         txtField13.setDisable(!lbShow);
         txtField40.setDisable(!lbShow);
         txtField16.setDisable(!lbShow);
@@ -967,11 +1019,15 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
 
         if (fnValue == EditMode.READY) {
             if (lblJobOrderStatus.getText().equals("Cancelled")) {
+                btnCancelJobOrder.setVisible(false);
+                btnCancelJobOrder.setManaged(false);
                 btnEdit.setVisible(false);
                 btnEdit.setManaged(false);
                 btnPrint.setVisible(false);
                 btnPrint.setManaged(false);
             } else {
+                btnCancelJobOrder.setVisible(true);
+                btnCancelJobOrder.setManaged(true);
                 btnEdit.setVisible(true);
                 btnEdit.setManaged(true);
                 btnPrint.setVisible(true);

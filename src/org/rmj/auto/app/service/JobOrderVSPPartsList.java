@@ -20,8 +20,10 @@ public class JobOrderVSPPartsList {
     private SimpleStringProperty tblindex08; // sChrgeTyp
     private SimpleStringProperty tblindex06; // nQuantity
     private SimpleStringProperty tblindex04; //nUnitPrce
+    private SimpleStringProperty tblindex03; //sStockIDx
 
     private SimpleStringProperty tblindex14; //sDSNoxxxx
+    private SimpleStringProperty tblindex15; //sDSCodexx
 
     public JobOrderVSPPartsList(String tblindexRow,
             String tblindex13,
@@ -29,15 +31,19 @@ public class JobOrderVSPPartsList {
             String tblindex08,
             String tblindex06,
             String tblindex04,
-            String tblindex14) {
+            String tblindex14,
+            String tblindex03,
+            String tblindex15) {
         this.tblindexRow = new SimpleStringProperty(tblindexRow);
         this.select = new CheckBox();
+        this.tblindex15 = new SimpleStringProperty(tblindex15);
         this.tblindex13 = new SimpleStringProperty(tblindex13);
         this.tblindex09 = new SimpleStringProperty(tblindex09);
         this.tblindex08 = new SimpleStringProperty(tblindex08);
         this.tblindex06 = new SimpleStringProperty(tblindex06);
         this.tblindex04 = new SimpleStringProperty(tblindex04);
         this.tblindex14 = new SimpleStringProperty(tblindex14);
+        this.tblindex03 = new SimpleStringProperty(tblindex03);
     }
 
     public String getTblindexRow() {
@@ -54,6 +60,14 @@ public class JobOrderVSPPartsList {
 
     public void setSelect(CheckBox select) {
         this.select = select;
+    }
+
+    public String getTblindex15() {
+        return tblindex15.get();
+    }
+
+    public void setTblindex15(String tblindex15) {
+        this.tblindex15.set(tblindex15);
     }
 
     public String getTblindex13() {
@@ -102,5 +116,13 @@ public class JobOrderVSPPartsList {
 
     public void setTblindex14(String tblindex14) {
         this.tblindex14.set(tblindex14);
+    }
+
+    public String getTblindex03() {
+        return tblindex03.get();
+    }
+
+    public void setTblindex03(String tblindex03) {
+        this.tblindex03.set(tblindex03);
     }
 }

@@ -15,6 +15,7 @@ public class JobOrderVSPLaborList {
 
     private SimpleStringProperty tblindexRow;
     private CheckBox select;
+    private SimpleStringProperty tblindex12; //sTransNox
     private SimpleStringProperty tblindex03; // LaborCd
     private SimpleStringProperty tblindex07; // sLaborDsc
     private SimpleStringProperty tblindex05; // sChrgeTyp
@@ -26,9 +27,11 @@ public class JobOrderVSPLaborList {
             String tblindex07,
             String tblindex05,
             String tblindex04,
-            String tblindex11) {
+            String tblindex11,
+            String tblindex12) {
         this.tblindexRow = new SimpleStringProperty(tblindexRow);
         this.select = new CheckBox();
+        this.tblindex12 = new SimpleStringProperty(tblindex12);
         this.tblindex03 = new SimpleStringProperty(tblindex03);
         this.tblindex07 = new SimpleStringProperty(tblindex07);
         this.tblindex05 = new SimpleStringProperty(tblindex05);
@@ -52,12 +55,12 @@ public class JobOrderVSPLaborList {
         this.select = select;
     }
 
-    public String getTblindex07() {
-        return tblindex07.get();
+    public String getTblindex12() {
+        return tblindex12.get();
     }
 
-    public void setTblindex07(String tblindex07) {
-        this.tblindex07.set(tblindex07);
+    public void setTblindex12(String tblindex12) {
+        this.tblindex12.set(tblindex12);
     }
 
     public String getTblindex03() {
@@ -66,6 +69,14 @@ public class JobOrderVSPLaborList {
 
     public void setTblindex03(String tblindex03) {
         this.tblindex03.set(tblindex03);
+    }
+
+    public String getTblindex07() {
+        return tblindex07.get();
+    }
+
+    public void setTblindex07(String tblindex07) {
+        this.tblindex07.set(tblindex07);
     }
 
     public String getTblindex05() {

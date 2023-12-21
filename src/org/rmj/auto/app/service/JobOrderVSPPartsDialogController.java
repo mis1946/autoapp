@@ -42,12 +42,11 @@ public class JobOrderVSPPartsDialogController implements Initializable, ScreenIn
     private ObservableList<JobOrderVSPPartsList> partData = FXCollections.observableArrayList();
     private final String pxeModuleName = "Job Order VSP Parts Entry"; //Form Title {
     private int pnRow = 0;
+    private String sTrans = "";
     @FXML
     private Button btnAdd;
     @FXML
     private Button btnClose;
-    @FXML
-    private Label SelectedCount;
     @FXML
     private TableColumn<JobOrderVSPPartsList, String> tblindexRow;
     @FXML
@@ -69,6 +68,10 @@ public class JobOrderVSPPartsDialogController implements Initializable, ScreenIn
     private TableColumn<JobOrderVSPPartsList, String> tblindex06;
     @FXML
     private TableColumn<JobOrderVSPPartsList, String> tblindex14;
+
+    public void setTrans(String fsValue) {
+        sTrans = fsValue;
+    }
 
     /**
      * Initializes the controller class.
@@ -107,12 +110,20 @@ public class JobOrderVSPPartsDialogController implements Initializable, ScreenIn
                     if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure you want to add?")) {
                         // Call the addTown here
                         for (JobOrderVSPPartsList item : selectedItems) {
-
+                            String fsDSCode = item.getTblindex15();
+                            String fsStockID = item.getTblindex03();
                             String fsCd = item.getTblindex13();
                             String fsDescript = item.getTblindex09();
                             String fsType = item.getTblindex08();
                             String fsQuantity = item.getTblindex06();
                             String fsAmount = item.getTblindex04();
+
+                            String fsJONox = item.getTblindex14();
+
+                            if (!fsDSCode.isEmpty() && !fsDSCode.equals(sTrans)) {
+                                ShowMessageFX.Error(null, pxeModuleName, "VSP Parts " + fsDescript + " already exist in JO No. " + fsJONox + ". Insert Aborted. ");
+                                return;
+                            }
 
                             // Assuming there is a method to retrieve the transaction number
                             try {
@@ -128,6 +139,7 @@ public class JobOrderVSPPartsDialogController implements Initializable, ScreenIn
                                 if (!fsDest) {
                                     lnfind++;
                                     if (oTrans.AddJOParts()) {
+                                        oTrans.setJOPartsDetail(oTrans.getJOPartsCount(), 3, fsStockID);
                                         oTrans.setJOPartsDetail(oTrans.getJOPartsCount(), 14, fsCd);
                                         oTrans.setJOPartsDetail(oTrans.getJOPartsCount(), 4, fsDescript);
                                         oTrans.setJOPartsDetail(oTrans.getJOPartsCount(), 11, fsType);
@@ -187,7 +199,9 @@ public class JobOrderVSPPartsDialogController implements Initializable, ScreenIn
                             oTrans.getVSPPartsDetail(lnCtr, "sChrgeTyp").toString(),
                             oTrans.getVSPPartsDetail(lnCtr, "nQuantity").toString(),
                             formattedAmount,
-                            oTrans.getVSPPartsDetail(lnCtr, "sDSNoxxxx").toString()
+                            oTrans.getVSPPartsDetail(lnCtr, "sDSNoxxxx").toString(),
+                            oTrans.getVSPPartsDetail(lnCtr, "sStockIDx").toString(),
+                            oTrans.getVSPPartsDetail(lnCtr, "sDSCodexx").toString()
                     ));
                 }
                 tblViewVSPParts.setItems(partData);

@@ -18,7 +18,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="322.0" prefWidth="676.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane id="AnchorPane" prefHeight="370.0" prefWidth="774.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <StackPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
@@ -57,7 +57,6 @@
                                         <FontAwesomeIconView glyphName="POWER_OFF" size="20" />
                                     </graphic>
                                 </Button>
-                                <Label fx:id="SelectedCount" prefHeight="50.0" prefWidth="42.0" textFill="WHITE" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="90.0" AnchorPane.topAnchor="5.0" />
                             </children>
                         </AnchorPane>
                     </bottom>
@@ -70,23 +69,23 @@
                                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                     </columnConstraints>
                                     <rowConstraints>
-                                        <RowConstraints minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                                        <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="20.0" vgrow="SOMETIMES" />
                                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                     </rowConstraints>
                                     <children>
                                         <TableView fx:id="tblViewVSPLabor" prefHeight="199.0" prefWidth="652.0" GridPane.columnSpan="2" GridPane.rowIndex="1" GridPane.rowSpan="2">
                                             <columns>
-                                                <TableColumn fx:id="tblindexRow" editable="false" prefWidth="42.0" sortable="false" text="Row" />
-                                                <TableColumn fx:id="tblSelectVSPLabor" editable="false" prefWidth="30.0" sortable="false">
+                                                <TableColumn fx:id="tblindexRow" editable="false" prefWidth="42.0" resizable="false" sortable="false" text="Row" />
+                                                <TableColumn fx:id="tblSelectVSPLabor" editable="false" prefWidth="30.0" resizable="false" sortable="false">
                                                     <graphic>
                                                         <CheckBox fx:id="selectAllCheckBox" mnemonicParsing="false" />
                                                     </graphic>
                                                 </TableColumn>
-                                                <TableColumn fx:id="tblindex07" editable="false" prefWidth="293.0" sortable="false" text="Labor Description" />
-                                                <TableColumn fx:id="tblindex05" editable="false" prefWidth="293.0" sortable="false" text="Transaction Type" />
-                                                <TableColumn fx:id="tblindex04" editable="false" prefWidth="293.0" sortable="false" text="Amount" />
-                                                <TableColumn fx:id="tblindex11" editable="false" prefWidth="293.0" sortable="false" text="JO Number" />
+                                                <TableColumn fx:id="tblindex07" editable="false" prefWidth="293.0" resizable="false" sortable="false" text="Labor Description" />
+                                                <TableColumn fx:id="tblindex05" editable="false" prefWidth="179.0" resizable="false" sortable="false" text="Transaction Type" />
+                                                <TableColumn fx:id="tblindex04" editable="false" prefWidth="189.0" resizable="false" sortable="false" text="Amount" />
+                                                <TableColumn fx:id="tblindex11" editable="false" prefWidth="511.0" sortable="false" text="JO Number" />
                                             </columns>
                                         </TableView>
                                         <Label text="VSP Labor List">

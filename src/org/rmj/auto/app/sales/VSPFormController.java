@@ -32,6 +32,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -64,6 +65,7 @@ import org.rmj.appdriver.agentfx.CommonUtils;
 import org.rmj.appdriver.agentfx.ShowMessageFX;
 import org.rmj.appdriver.callback.MasterCallback;
 import org.rmj.appdriver.constants.EditMode;
+import org.rmj.auto.app.service.JobOrderFormController;
 import org.rmj.auto.app.views.InputTextFormatter;
 import org.rmj.auto.app.views.ScreenInterface;
 import org.rmj.auto.app.views.unloadForm;
@@ -319,11 +321,15 @@ public class VSPFormController implements Initializable, ScreenInterface {
     @FXML
     private CheckBox chckBoxSpecialAccount;
     @FXML
-    private TableColumn<VSPTableLaborList, String> tblLaborJobNo;
-    @FXML
     private Label lblVSPStatus;
     @FXML
     private TextField txtField97;
+    @FXML
+    private TableColumn<VSPTableLaborList, String> tblindex11_Labor;
+    @FXML
+    private Button btnJobOrderAdd;
+    @FXML
+    private TextField txtField88;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -402,7 +408,6 @@ public class VSPFormController implements Initializable, ScreenInterface {
 
     public void setAddMode(String fsValue) {
         btnAdd.fire();
-
         try {
             if (oTrans.searchInquiry(fsValue, true)) {
                 clearClassMasterField();
@@ -870,6 +875,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
         btnAdditionalLabor.setOnAction(this::cmdButton_Click);
         btnAddParts.setOnAction(this::cmdButton_Click);
         btnCancelVSP.setOnAction(this::cmdButton_Click);
+        btnJobOrderAdd.setOnAction(this::cmdButton_Click);
     }
 
     private void initcheckBoxes() {
@@ -971,6 +977,13 @@ public class VSPFormController implements Initializable, ScreenInterface {
                     if (!cancelVSP()) {
                         return;
                     }
+                    break;
+                case "btnJobOrderAdd":
+                    if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure you want to convert this vsp for a new job order record?") == true) {
+                    } else {
+                        return;
+                    }
+                    loadJobOrderWindow();
                     break;
             }
             initButton(pnEditMode);
@@ -1848,7 +1861,6 @@ public class VSPFormController implements Initializable, ScreenInterface {
                                 oTrans.setMaster(lnIndex, enteredValue47);
                                 txtField47.setText(String.format("%.2f", enteredValue47));
                             }
-
                             break;
 
                     }
@@ -1857,7 +1869,6 @@ public class VSPFormController implements Initializable, ScreenInterface {
 
             } else {
                 txtField.selectAll();
-
             }
         } catch (SQLException ex) {
             Logger.getLogger(VSPFormController.class
@@ -2258,7 +2269,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
                 default:
                     break;
             }
-
+            txtField88.setText((String) oTrans.getMaster(88));
             txtField13.setText(String.valueOf(decimalFormat.format(Double.parseDouble(String.valueOf(oTrans.getMaster(13))))));
             txtField14.setText(String.valueOf(decimalFormat.format(Double.parseDouble(String.valueOf(oTrans.getMaster(14))))));
             txtField12.setText(String.valueOf(decimalFormat.format(Double.parseDouble(String.valueOf(oTrans.getMaster(12))))));
@@ -2398,6 +2409,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
                         "",
                         "",
                         "",
+                        oTrans.getVSPLaborDetail(lnCtr, "sDSNoxxxx").toString().toUpperCase(),
                         bAdditional
                 ));
                 bAdditional = false;
@@ -2421,6 +2433,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
         tblindex07_Labor.setCellValueFactory(new PropertyValueFactory<VSPTableLaborList, String>("tblindex07_Labor"));
         tblindex05_Labor.setCellValueFactory(new PropertyValueFactory<VSPTableLaborList, String>("tblindex05_Labor"));
         tblindex04_Labor.setCellValueFactory(new PropertyValueFactory<VSPTableLaborList, String>("tblindex04_Labor"));
+        tblindex11_Labor.setCellValueFactory(new PropertyValueFactory<VSPTableLaborList, String>("tblindex11_Labor"));
         tblindex08_Labor.setCellValueFactory(new PropertyValueFactory<>("addOrNot"));
 
     }
@@ -2649,7 +2662,8 @@ public class VSPFormController implements Initializable, ScreenInterface {
                         partDesc,
                         cType,
                         oTrans.getVSPPartsDetail(lnCtr, "nQuantity").toString(),
-                        formattedAmount
+                        formattedAmount,
+                        oTrans.getVSPPartsDetail(lnCtr, "sDSNoxxxx").toString()
                 ));
 
             }
@@ -2675,12 +2689,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
         tblindex08_Part.setCellValueFactory(new PropertyValueFactory<VSPTablePartList, String>("tblindex08_Part"));
         tblindex06_Part.setCellValueFactory(new PropertyValueFactory<VSPTablePartList, String>("tblindex06_Part"));
         tblindex05_Part.setCellValueFactory(new PropertyValueFactory<VSPTablePartList, String>("tblindex05_Part"));
-        tblViewParts.widthProperty().addListener((ObservableValue<? extends Number> source, Number oldWidth, Number newWidth) -> {
-            TableHeaderRow header = (TableHeaderRow) tblViewParts.lookup("TableHeaderRow");
-            header.reorderingProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
-                header.setReordering(false);
-            });
-        });
+        tblindex11_Part.setCellValueFactory(new PropertyValueFactory<VSPTablePartList, String>("tblindex11_Part"));
     }
 
     //TableView KeyPressed
@@ -3239,7 +3248,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
         txtField83.setText("");
         txtField73.setText("");
         txtField74.setText("");
-
+        txtField88.setText("");
         textArea09.setText("");
 
         txtField36.setText("0.00");
@@ -3363,5 +3372,73 @@ public class VSPFormController implements Initializable, ScreenInterface {
         txtField77.getStyleClass().remove("required-field");
         txtField68.getStyleClass().remove("required-field");
 
+    }
+
+    /*OPEN WINDOW FOR */
+    private void loadJobOrderWindow() {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader();
+
+            JobOrderFormController loControl = new JobOrderFormController();
+            loControl.setGRider(oApp);
+            fxmlLoader.setLocation(getClass().getResource("/org/rmj/auto/app/service/JobOrderForm.fxml"));
+            fxmlLoader.setController(loControl);
+            Parent parent = fxmlLoader.load();
+            loControl.setAddMode((String) oTrans.getMaster(3));
+            AnchorPane otherAnchorPane = loControl.AnchorMain;
+
+            // Get the parent of the TabContent node
+            Node tabContent = AnchorMain.getParent();
+            Parent tabContentParent = tabContent.getParent();
+
+            // If the parent is a TabPane, you can work with it directly
+            if (tabContentParent instanceof TabPane) {
+                TabPane tabpane = (TabPane) tabContentParent;
+
+                for (Tab tab : tabpane.getTabs()) {
+                    if (tab.getText().equals("Sales Job Order Information")) {
+//                        if (ShowMessageFX.OkayCancel(null, pxeModuleName, "You have unsaved data on Sales Job Order Information. Are you sure you want to convert this inquiry for a new vsp record?") == true) {
+//                        } else {
+//                            return;
+//                        }
+
+                        if (ShowMessageFX.OkayCancel(null, pxeModuleName, "You have opened Vehicle Sales Proposal Form. Are you sure you want to convert this inquiry for a new vsp record?") == true) {
+                        } else {
+                            return;
+                        }
+                        tabpane.getSelectionModel().select(tab);
+                        unload.unloadForm(AnchorMain, oApp, "Sales Job Order Information");
+                        loadJobOrderWindow();
+                        return;
+                    }
+                }
+
+                Tab newTab = new Tab("Sales Job Order Information", parent);
+                newTab.setStyle("-fx-font-weight: bold; -fx-pref-width: 180; -fx-font-size: 10.5px; -fx-font-family: arial;");
+
+                tabpane.getTabs().add(newTab);
+                tabpane.getSelectionModel().select(newTab);
+                newTab.setOnCloseRequest(event -> {
+                    if (ShowMessageFX.YesNo(null, "Close Tab", "Are you sure, do you want to close tab?") == true) {
+                        if (unload != null) {
+                            unload.unloadForm(otherAnchorPane, oApp, "Sales Job Order Information");
+                        } else {
+                            ShowMessageFX.Warning(getStage(), "Please notify the system administrator to configure the null value at the close button.", "Warning", pxeModuleName);
+                        }
+                    } else {
+                        // Cancel the close request
+                        event.consume();
+                    }
+
+                });
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
+            System.exit(1);
+        } catch (SQLException ex) {
+            Logger.getLogger(VSPFormController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

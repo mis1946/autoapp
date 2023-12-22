@@ -560,11 +560,24 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
 
                     break;
                 case "btnAddLabor":
-                    loadVSPLaborDialog();
+                    if (oTrans.loadVSPLabor()) {
+                        if (oTrans.getVSPLaborCount() > 0) {
+                            loadVSPLaborDialog();
+                        } else {
+                            ShowMessageFX.Warning(getStage(), "No labor available", "Warning", null);
+                            return;
+                        }
+                    }
                     break;
-
                 case "btnAddParts":
-                    loadVSPPartsDialog();
+                    if (oTrans.loadVSPParts()) {
+                        if (oTrans.getVSPPartsCount() > 0) {
+                            loadVSPPartsDialog();
+                        } else {
+                            ShowMessageFX.Warning(getStage(), "No parts available", "Warning", null);
+                            return;
+                        }
+                    }
                     break;
             }
             initButton(pnEditMode);

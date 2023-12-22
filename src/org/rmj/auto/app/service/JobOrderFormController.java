@@ -89,7 +89,7 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
     private ObservableList<JobOrderLaborTableList> laborData = FXCollections.observableArrayList();
     private ObservableList<JobOrderPartsTableList> partData = FXCollections.observableArrayList();
     @FXML
-    private AnchorPane AnchorMain;
+    public AnchorPane AnchorMain;
     @FXML
     private Button btnClose;
     @FXML
@@ -208,6 +208,22 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
     /**
      * Initializes the controller class.
      */
+    public void setAddMode(String fsValue) {
+        btnAdd.fire();
+        try {
+            if (oTrans.searchVSP(fsValue)) {
+                clearFields();
+                loadJobOrderFields();
+                initButton(pnEditMode);
+            } else {
+                clearFields();
+                ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(VSPFormController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         oListener = (int fnIndex, Object foValue) -> {
@@ -223,13 +239,13 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
             lblFormTitle.setText(getParentTabTitle());
             if (getParentTabTitle().contains("SALES")) {
                 pbisJobOrderSales = true;
-                lblCoBuyerOrCoOwner.setText("Co-Owner Name");
+                lblCoBuyerOrCoOwner.setText("Co-Buyer Name");
                 lblVSPorIntake.setText("VSP No.");
                 lblSEorSA.setText("Sales Executive");
                 initButton(pnEditMode);
             } else {
                 pbisJobOrderSales = false;
-                lblCoBuyerOrCoOwner.setText("Co-Buyer Name");
+                lblCoBuyerOrCoOwner.setText("Co-Owner Name");
                 lblVSPorIntake.setText("Intake No.");
                 lblSEorSA.setText("Service Advisor");
 
@@ -286,7 +302,6 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
     private String getParentTabTitle() {
         Node parent = AnchorMain.getParent();
         Parent tabContentParent = parent.getParent();
-
         if (tabContentParent instanceof TabPane) {
             TabPane tabPane = (TabPane) tabContentParent;
             Tab tab = findTabByContent(tabPane, AnchorMain);
@@ -760,10 +775,11 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
             txtField09.setText(String.valueOf(decimalFormat.format(Double.parseDouble(String.valueOf(oTrans.getMaster(9))))));
             txtField31.setText((String) oTrans.getMaster(31));
             textArea32.setText((String) oTrans.getMaster(32));
+
             if (pbisJobOrderSales) {
-                txtField33.setText((String) oTrans.getMaster(33));
-            } else {
                 txtField33.setText((String) oTrans.getMaster(34));
+            } else {
+                txtField33.setText((String) oTrans.getMaster(33));
             }
 
             if (((String) oTrans.getMaster(25)).equals("0")) {

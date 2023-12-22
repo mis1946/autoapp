@@ -16,6 +16,7 @@ public class VSPTablePartList {
     private SimpleStringProperty tblindex08_Part;
     private SimpleStringProperty tblindex05_Part;
     private SimpleStringProperty tblindex06_Part;
+    private SimpleStringProperty tblindex11_Part;
 
     VSPTablePartList(String tblPartsRow,
             String tblindex01_Part,
@@ -24,7 +25,8 @@ public class VSPTablePartList {
             String tblindex09_Part,
             String tblindex08_Part,
             String tblindex06_Part,
-            String tblindex05_Part
+            String tblindex05_Part,
+            String tblindex11_Part
     ) {
         this.tblPartsRow = new SimpleStringProperty(tblPartsRow);
         this.tblindex01_Part = new SimpleStringProperty(tblindex01_Part);
@@ -32,8 +34,9 @@ public class VSPTablePartList {
         this.tblindex14_Part = new SimpleStringProperty(tblindex14_Part);
         this.tblindex09_Part = new SimpleStringProperty(tblindex09_Part);
         this.tblindex08_Part = new SimpleStringProperty(tblindex08_Part);
-        this.tblindex05_Part = new SimpleStringProperty(tblindex05_Part);
         this.tblindex06_Part = new SimpleStringProperty(tblindex06_Part);
+        this.tblindex05_Part = new SimpleStringProperty(tblindex05_Part);
+        this.tblindex11_Part = new SimpleStringProperty(tblindex11_Part);
     }
 
     public String getTblPartsRow() {
@@ -98,6 +101,14 @@ public class VSPTablePartList {
 
     public void setTblindex05_Part(String tblindex05_Part) {
         this.tblindex05_Part.set(tblindex05_Part);
+    }
+
+    public String getTblindex11_Part() {
+        return tblindex11_Part.get();
+    }
+
+    public void setTblindex11_Part(String tblindex11_Part) {
+        this.tblindex11_Part.set(tblindex11_Part);
     }
 
 }

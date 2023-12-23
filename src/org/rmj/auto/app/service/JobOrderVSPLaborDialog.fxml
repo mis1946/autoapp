@@ -18,7 +18,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="370.0" prefWidth="774.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane id="AnchorPane" prefHeight="384.0" prefWidth="926.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <StackPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
@@ -82,10 +82,10 @@
                                                         <CheckBox fx:id="selectAllCheckBox" mnemonicParsing="false" />
                                                     </graphic>
                                                 </TableColumn>
-                                                <TableColumn fx:id="tblindex07" editable="false" prefWidth="293.0" resizable="false" sortable="false" text="Labor Description" />
-                                                <TableColumn fx:id="tblindex05" editable="false" prefWidth="179.0" resizable="false" sortable="false" text="Transaction Type" />
-                                                <TableColumn fx:id="tblindex04" editable="false" prefWidth="189.0" resizable="false" sortable="false" text="Amount" />
-                                                <TableColumn fx:id="tblindex11" editable="false" prefWidth="511.0" sortable="false" text="JO Number" />
+                                                <TableColumn fx:id="tblindex07" editable="false" prefWidth="270.33331298828125" resizable="false" sortable="false" text="Labor Description" />
+                                                <TableColumn fx:id="tblindex05" editable="false" prefWidth="179.66668701171875" resizable="false" sortable="false" text="Purchase Type" />
+                                                <TableColumn fx:id="tblindex04" editable="false" prefWidth="179.66668701171875" resizable="false" sortable="false" text="Amount" />
+                                                <TableColumn fx:id="tblindex11" editable="false" maxWidth="200.0" minWidth="100.0" prefWidth="200.0" sortable="false" text="JO Number" />
                                             </columns>
                                         </TableView>
                                         <Label text="VSP Labor List">

@@ -21,9 +21,10 @@ public class JobOrderVSPPartsList {
     private SimpleStringProperty tblindex06; // nQuantity
     private SimpleStringProperty tblindex04; //nUnitPrce
     private SimpleStringProperty tblindex03; //sStockIDx
-
     private SimpleStringProperty tblindex14; //sDSNoxxxx
     private SimpleStringProperty tblindex15; //sDSCodexx
+    private SimpleStringProperty tblindexType;
+    private SimpleStringProperty tblindex16;
 
     public JobOrderVSPPartsList(String tblindexRow,
             String tblindex13,
@@ -33,10 +34,12 @@ public class JobOrderVSPPartsList {
             String tblindex04,
             String tblindex14,
             String tblindex03,
-            String tblindex15) {
+            String tblindex15,
+            String tblindexType,
+            String tblindex16) {
         this.tblindexRow = new SimpleStringProperty(tblindexRow);
         this.select = new CheckBox();
-        this.tblindex15 = new SimpleStringProperty(tblindex15);
+
         this.tblindex13 = new SimpleStringProperty(tblindex13);
         this.tblindex09 = new SimpleStringProperty(tblindex09);
         this.tblindex08 = new SimpleStringProperty(tblindex08);
@@ -44,6 +47,9 @@ public class JobOrderVSPPartsList {
         this.tblindex04 = new SimpleStringProperty(tblindex04);
         this.tblindex14 = new SimpleStringProperty(tblindex14);
         this.tblindex03 = new SimpleStringProperty(tblindex03);
+        this.tblindex15 = new SimpleStringProperty(tblindex15);
+        this.tblindexType = new SimpleStringProperty(tblindexType);
+        this.tblindex16 = new SimpleStringProperty(tblindex16);
     }
 
     public String getTblindexRow() {
@@ -125,4 +131,21 @@ public class JobOrderVSPPartsList {
     public void setTblindex03(String tblindex03) {
         this.tblindex03.set(tblindex03);
     }
+
+    public String getTblindexType() {
+        return tblindexType.get();
+    }
+
+    public void setTblindexType(String tblindexType) {
+        this.tblindexType.set(tblindexType);
+    }
+
+    public String getTblindex16() {
+        return tblindex16.get();
+    }
+
+    public void setTblindex16(String tblindex16) {
+        this.tblindex16.set(tblindex16);
+    }
+
 }

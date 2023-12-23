@@ -84,6 +84,7 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
     private boolean pbisJobOrderSales = false;
     private double xOffset = 0;
     private double yOffset = 0;
+    private int pnRow = -1;
     unloadForm unload = new unloadForm(); //Used in Close Button
     ObservableList<String> cType = FXCollections.observableArrayList("EVENT", "SALES CALL", "PROMO");
     private ObservableList<JobOrderLaborTableList> laborData = FXCollections.observableArrayList();
@@ -204,6 +205,8 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
     private Button btnAddLabor;
     @FXML
     private Button btnAddParts;
+    @FXML
+    private TableColumn<JobOrderPartsTableList, String> tblindex15_Part;
 
     /**
      * Initializes the controller class.
@@ -294,6 +297,8 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
                 header.setReordering(false);
             });
         });
+//        tblViewLabor.setOnMouseClicked(this::tblLabor_Clicked);
+        tblViewParts.setOnMouseClicked(this::tblParts_Clicked);
         date02.setOnAction(this::getDate);
         date02.setDayCellFactory(DateFormatCell);
         pnEditMode = EditMode.UNKNOWN;
@@ -813,17 +818,26 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
             laborData.clear();
             //if (oTrans.loadJOLabor()) {
             for (int lnCtr = 1; lnCtr <= oTrans.getJOLaborCount(); lnCtr++) {
-                String amountString = oTrans.getJOLaborDetail(lnCtr, "nUnitPrce").toString();
+                DecimalFormat decimalFormat = new DecimalFormat("#,##0.00");
+                String amountString = oTrans.getJOLaborDetail(lnCtr, 6).toString();
                 // Convert the amount to a decimal value
                 double amount = Double.parseDouble(amountString);
-                DecimalFormat decimalFormat = new DecimalFormat("#,##0.00");
-                String formattedAmount = decimalFormat.format(amount);
 
+                String formattedAmount = decimalFormat.format(amount);
+                String cType = "";
+                switch (oTrans.getJOLaborDetail(lnCtr, "sPayChrge").toString()) {
+                    case "0":
+                        cType = "FREE OF CHARGE";
+                        break;
+                    case "1":
+                        cType = "CHARGE";
+                        break;
+                }
                 laborData.add(new JobOrderLaborTableList(
                         String.valueOf(lnCtr), //ROW
                         oTrans.getJOLaborDetail(lnCtr, "sLaborCde").toString(),
                         oTrans.getJOLaborDetail(lnCtr, "sLaborDsc").toString().toUpperCase(),
-                        oTrans.getJOLaborDetail(lnCtr, "sPayChrge").toString(),
+                        cType,
                         formattedAmount
                 ));
 
@@ -900,33 +914,117 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
         }
     }
 
+    private void loadPartsAdditionalDialog(Integer fnRow, boolean isWithLbDsc, boolean isAdd) throws IOException {
+        /**
+         * if state = true : ADD else if state = false : UPDATE *
+         */
+        try {
+            Stage stage = new Stage();
+
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            fxmlLoader.setLocation(getClass().getResource("PartsInformation.fxml"));
+
+            PartsInformationController loControl = new PartsInformationController();
+            loControl.setGRider(oApp);
+            loControl.setObject(oTrans);
+            loControl.setState(isAdd);
+            fxmlLoader.setController(loControl);
+            loControl.setRow(fnRow);
+            loControl.setOrigDsc((String) oTrans.getJOPartsDetail(fnRow, 4));
+            loControl.setLbrDsc(isWithLbDsc);
+            //load the main interface
+            Parent parent = fxmlLoader.load();
+
+            parent.setOnMousePressed(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    xOffset = event.getSceneX();
+                    yOffset = event.getSceneY();
+                }
+            });
+
+            parent.setOnMouseDragged(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    stage.setX(event.getScreenX() - xOffset);
+                    stage.setY(event.getScreenY() - yOffset);
+                }
+            });
+
+            //set the main interface as the scene/*
+            Scene scene = new Scene(parent);
+            stage.setScene(scene);
+            stage.initStyle(StageStyle.TRANSPARENT);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle("");
+            stage.showAndWait();
+            loadTableParts();
+            loadJobOrderFields();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
+            System.exit(1);
+
+        } catch (SQLException ex) {
+            Logger.getLogger(VSPFormController.class
+                    .getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void tblParts_Clicked(MouseEvent event) {
+        if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
+            pnRow = tblViewParts.getSelectionModel().getSelectedIndex() + 1;
+            if (pnRow == 0) {
+                return;
+            }
+
+            if (event.getClickCount() == 2) {
+                try {
+                    loadPartsAdditionalDialog(pnRow, false, false);
+                } catch (IOException ex) {
+                    Logger.getLogger(JobOrderFormController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+
+        }
+    }
+
     private void loadTableParts() {
         try {
 
             /*Populate table*/
             partData.clear();
-            //if (oTrans.loadJOParts()) {
             for (int lnCtr = 1; lnCtr <= oTrans.getJOPartsCount(); lnCtr++) {
+                DecimalFormat getFormat = new DecimalFormat("#,##0.00");
                 String amountString = oTrans.getJOPartsDetail(lnCtr, "nUnitPrce").toString();
-                // Convert the amount to a decimal value
-
                 double amount = Double.parseDouble(amountString);
-                DecimalFormat decimalFormat = new DecimalFormat("#,##0.00");
-                String formattedAmount = decimalFormat.format(amount);
+
+                String formattedAmount = getFormat.format(amount);
+                String cType = "";
+                switch (oTrans.getJOPartsDetail(lnCtr, "sPayChrge").toString()) {
+                    case "0":
+                        cType = "FREE OF CHARGE";
+                        break;
+                    case "1":
+                        cType = "CHARGE";
+                        break;
+                }
+                int quant = Integer.parseInt(oTrans.getJOPartsDetail(lnCtr, "nQtyEstmt").toString());
+                double total = quant * amount;
+                String totalAmount = getFormat.format(total);
                 partData.add(new JobOrderPartsTableList(
                         String.valueOf(lnCtr), //ROW
                         oTrans.getJOPartsDetail(lnCtr, "sBarCodex").toString(),
                         oTrans.getJOPartsDetail(lnCtr, "sDescript").toString().toUpperCase(),
-                        oTrans.getJOPartsDetail(lnCtr, "sPayChrge").toString(),
+                        cType,
                         oTrans.getJOPartsDetail(lnCtr, "nQtyEstmt").toString(),
-                        formattedAmount
-                ));
+                        formattedAmount,
+                        totalAmount
+                )
+                );
 
             }
-//            } else {
-//                ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
-//                return;
-//            }
             tblViewParts.setItems(partData);
             initTableParts();
         } catch (SQLException e) {
@@ -946,7 +1044,7 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
         tblindex11_Part.setCellValueFactory(new PropertyValueFactory<JobOrderPartsTableList, String>("tblindex11_Part"));
         tblindex06_Part.setCellValueFactory(new PropertyValueFactory<JobOrderPartsTableList, String>("tblindex06_Part"));
         tblindex10_Part.setCellValueFactory(new PropertyValueFactory<JobOrderPartsTableList, String>("tblindex10_Part"));
-
+        tblindex15_Part.setCellValueFactory(new PropertyValueFactory<JobOrderPartsTableList, String>("tblindex15_Part"));
     }
 
     private void loadVSPPartsDialog() throws IOException {
@@ -990,6 +1088,7 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setTitle("");
             stage.showAndWait();
+
             loadTableParts();
         } catch (IOException e) {
             e.printStackTrace();

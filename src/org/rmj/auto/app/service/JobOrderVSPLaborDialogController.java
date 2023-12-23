@@ -150,12 +150,12 @@ public class JobOrderVSPLaborDialogController implements Initializable, ScreenIn
                                 }
                                 if (!fsDest) {
                                     lnfind++;
-
+                                    DecimalFormat setFormat = new DecimalFormat("###0.00");
                                     if (oTrans.addJOLabor()) {
                                         oTrans.setJOLaborDetail(oTrans.getJOLaborCount(), 4, fsCd);
                                         oTrans.setJOLaborDetail(oTrans.getJOLaborCount(), 10, fsDescript);
                                         oTrans.setJOLaborDetail(oTrans.getJOLaborCount(), 3, fsType);
-                                        oTrans.setJOLaborDetail(oTrans.getJOLaborCount(), 6, fsAmount);
+                                        oTrans.setJOLaborDetail(oTrans.getJOLaborCount(), 6, setFormat.format(Double.valueOf(fsAmount.replace(",", ""))));
                                     }
                                 }
                             } catch (SQLException e) {

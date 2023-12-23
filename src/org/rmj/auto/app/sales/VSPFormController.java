@@ -287,8 +287,6 @@ public class VSPFormController implements Initializable, ScreenInterface {
     @FXML
     private TableColumn<VSPTablePartList, String> tblindex08_Part;
     @FXML
-    private TableColumn<VSPTablePartList, String> tblindex05_Part;
-    @FXML
     private TableColumn<VSPTablePartList, String> tblindex14_Part;
     @FXML
     private TableColumn<VSPTablePartList, String> tblindex09_Part;
@@ -330,6 +328,10 @@ public class VSPFormController implements Initializable, ScreenInterface {
     private Button btnJobOrderAdd;
     @FXML
     private TextField txtField88;
+    @FXML
+    private TableColumn<VSPTablePartList, String> tblindex04_Part;
+    @FXML
+    private TableColumn<VSPTablePartList, String> tblindexTotAmnt;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -2637,6 +2639,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
             /*Populate table*/
             partData.clear();
             for (int lnCtr = 1; lnCtr <= oTrans.getVSPPartsCount(); lnCtr++) {
+                DecimalFormat decimalFormat = new DecimalFormat("#,##0.00");
                 String cType = "";
                 switch (oTrans.getVSPPartsDetail(lnCtr, "sChrgeTyp").toString()) {
                     case "0":
@@ -2646,14 +2649,14 @@ public class VSPFormController implements Initializable, ScreenInterface {
                         cType = "CHARGE";
                         break;
                 }
-                String amountString = oTrans.getVSPPartsDetail(lnCtr, "nSelPrice").toString();
-                // Convert the amount to a decimal value
+                String amountString = oTrans.getVSPPartsDetail(lnCtr, "nUnitPrce").toString();
                 double amount = Double.parseDouble(amountString);
-                DecimalFormat decimalFormat = new DecimalFormat("#,##0.00");
                 String formattedAmount = decimalFormat.format(amount);
-
                 String partDesc = (String) oTrans.getVSPPartsDetail(lnCtr, "sDescript");
-
+                int quant = Integer.parseInt(oTrans.getVSPPartsDetail(lnCtr, "nQuantity").toString());
+                double total = quant * amount;
+                String totalAmount = decimalFormat.format(total);
+                System.out.println("totalAmount " + totalAmount);
                 partData.add(new VSPTablePartList(
                         String.valueOf(lnCtr), //ROW
                         oTrans.getVSPPartsDetail(lnCtr, "sTransNox").toString(),
@@ -2663,7 +2666,8 @@ public class VSPFormController implements Initializable, ScreenInterface {
                         cType,
                         oTrans.getVSPPartsDetail(lnCtr, "nQuantity").toString(),
                         formattedAmount,
-                        oTrans.getVSPPartsDetail(lnCtr, "sDSNoxxxx").toString()
+                        oTrans.getVSPPartsDetail(lnCtr, "sDSNoxxxx").toString(),
+                        totalAmount
                 ));
 
             }
@@ -2688,8 +2692,9 @@ public class VSPFormController implements Initializable, ScreenInterface {
         tblindex09_Part.setCellValueFactory(new PropertyValueFactory<VSPTablePartList, String>("tblindex09_Part"));
         tblindex08_Part.setCellValueFactory(new PropertyValueFactory<VSPTablePartList, String>("tblindex08_Part"));
         tblindex06_Part.setCellValueFactory(new PropertyValueFactory<VSPTablePartList, String>("tblindex06_Part"));
-        tblindex05_Part.setCellValueFactory(new PropertyValueFactory<VSPTablePartList, String>("tblindex05_Part"));
+        tblindex04_Part.setCellValueFactory(new PropertyValueFactory<VSPTablePartList, String>("tblindex04_Part"));
         tblindex11_Part.setCellValueFactory(new PropertyValueFactory<VSPTablePartList, String>("tblindex11_Part"));
+        tblindexTotAmnt.setCellValueFactory(new PropertyValueFactory<VSPTablePartList, String>("tblindexTotAmnt"));
     }
 
     //TableView KeyPressed

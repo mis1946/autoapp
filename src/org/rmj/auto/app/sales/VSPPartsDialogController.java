@@ -46,8 +46,6 @@ public class VSPPartsDialogController implements Initializable, ScreenInterface 
     @FXML
     private ComboBox<String> comboBox8;
     @FXML
-    private TextField txtField05_Part;
-    @FXML
     private TextField txtField14_Part;
     @FXML
     private TextField txtField06_Part;
@@ -57,6 +55,8 @@ public class VSPPartsDialogController implements Initializable, ScreenInterface 
     private Button btnEdit;
     @FXML
     private Button btnClose;
+    @FXML
+    private TextField txtField04_Part;
 
     /**
      * Initializes the controller class.
@@ -66,7 +66,7 @@ public class VSPPartsDialogController implements Initializable, ScreenInterface 
         btnClose.setOnAction(this::cmdButton_Click);
         btnAdd.setOnAction(this::cmdButton_Click);
         btnEdit.setOnAction(this::cmdButton_Click);
-        txtField05_Part.setOnKeyPressed(this::txtField_KeyPressed);
+        txtField04_Part.setOnKeyPressed(this::txtField_KeyPressed);
         txtField06_Part.setOnKeyPressed(this::txtField_KeyPressed);
         txtField09_Part.setOnKeyPressed(this::txtField_KeyPressed);
         comboBox8.setItems(cChargeType);
@@ -74,7 +74,7 @@ public class VSPPartsDialogController implements Initializable, ScreenInterface 
         initNumberFormatterFields();
         initAlphabeticalFormatterFields();
         txtField09_Part.focusedProperty().addListener(txtField_Focus);
-        txtField05_Part.focusedProperty().addListener(txtField_Focus);
+        txtField04_Part.focusedProperty().addListener(txtField_Focus);
         txtField06_Part.focusedProperty().addListener(txtField_Focus);
         setCapsLockBehavior(txtField09_Part);
         loadVSPPartsField();
@@ -93,7 +93,7 @@ public class VSPPartsDialogController implements Initializable, ScreenInterface 
 
     private void initNumberFormatterFields() {
         Pattern pattern = Pattern.compile("[0-9,.]*");
-        txtField05_Part.setTextFormatter(new InputTextFormatter(pattern));
+        txtField04_Part.setTextFormatter(new InputTextFormatter(pattern));
         txtField06_Part.setTextFormatter(new InputTextFormatter(pattern));
     }
 
@@ -139,11 +139,11 @@ public class VSPPartsDialogController implements Initializable, ScreenInterface 
                     switch (fieldNumber) {
                         case 8:
                             if (selectedType == 0) {
-                                txtField05_Part.setText("0.00");
+                                txtField04_Part.setText("0.00");
                                 oTrans.setVSPPartsDetail(pnRow, 5, Double.valueOf("0.00"));
-                                txtField05_Part.setDisable(true);
+                                txtField04_Part.setDisable(true);
                             } else {
-                                txtField05_Part.setDisable(false);
+                                txtField04_Part.setDisable(false);
                             }
                             break;
                     }
@@ -175,12 +175,12 @@ public class VSPPartsDialogController implements Initializable, ScreenInterface 
         if (!nv) {
             /* Lost Focus */
             switch (lnIndex) {
-                case 5:
+                case 4:
                     DecimalFormat getFormat = new DecimalFormat("#,##0.00");
                     if (lsValue.isEmpty()) {
                         lsValue = "0.00";
                     }
-                    txtField05_Part.setText(String.valueOf(getFormat.format(Double.parseDouble(String.valueOf(txtField05_Part.getText().replace(",", ""))))));
+                    txtField04_Part.setText(String.valueOf(getFormat.format(Double.parseDouble(String.valueOf(txtField04_Part.getText().replace(",", ""))))));
                     break;
             }
         }
@@ -198,16 +198,16 @@ public class VSPPartsDialogController implements Initializable, ScreenInterface 
             switch (selectedItem8) {
                 case "0":
                     selectedItem8 = "FREE OF CHARGE";
-                    txtField05_Part.setDisable(true);
+                    txtField04_Part.setDisable(true);
                     break;
                 case "1":
                     selectedItem8 = "CHARGE";
-                    txtField05_Part.setDisable(false);
+                    txtField04_Part.setDisable(false);
                     break;
             }
             comboBox8.setValue(selectedItem8);
             txtField06_Part.setText(String.valueOf(oTrans.getVSPPartsDetail(pnRow, 6)));
-            txtField05_Part.setText(String.valueOf(getFormat.format(Double.parseDouble(String.valueOf(oTrans.getVSPPartsDetail(pnRow, 5))))));
+            txtField04_Part.setText(String.valueOf(getFormat.format(Double.parseDouble(String.valueOf(oTrans.getVSPPartsDetail(pnRow, 4))))));
 
         } catch (SQLException ex) {
             Logger.getLogger(VSPPartsDialogController.class
@@ -250,29 +250,29 @@ public class VSPPartsDialogController implements Initializable, ScreenInterface 
                 return false;
             }
             if (selectedType == 1) {
-                String laborAmount = txtField05_Part.getText().replace(",", ""); // Remove commas from the input string
+                String laborAmount = txtField04_Part.getText().replace(",", ""); // Remove commas from the input string
                 try {
                     double amount = Double.parseDouble(laborAmount);
                     if (amount == 0.00 || amount < 0.00) {
                         ShowMessageFX.Warning(getStage(), "Please input Parts Amount", "Warning", null);
-                        txtField05_Part.requestFocus();
+                        txtField04_Part.requestFocus();
                         return false;
                     }
                 } catch (NumberFormatException e) {
                     // Handle the case where laborAmount is not a valid number
                     ShowMessageFX.Warning(getStage(), "Invalid Parts Amount", "Warning", null);
-                    txtField05_Part.requestFocus();
+                    txtField04_Part.requestFocus();
                     return false;
                 }
             }
 
             oTrans.setVSPPartsDetail(pnRow, 9, txtField09_Part.getText());
 
-            int targetClients = Integer.parseInt(txtField06_Part.getText());
+            int quantity = Integer.parseInt(txtField06_Part.getText());
 
             oTrans.setVSPPartsDetail(pnRow, 8, String.valueOf(selectedType));
-            oTrans.setVSPPartsDetail(pnRow, 6, targetClients);
-            oTrans.setVSPPartsDetail(pnRow, 5, setFormat.format(Double.valueOf(txtField05_Part.getText().replace(",", ""))));
+            oTrans.setVSPPartsDetail(pnRow, 6, quantity);
+            oTrans.setVSPPartsDetail(pnRow, 4, setFormat.format(Double.valueOf(txtField04_Part.getText().replace(",", ""))));
         } catch (SQLException ex) {
             Logger.getLogger(VSPLaborEntryDialogController.class.getName()).log(Level.SEVERE, null, ex);
         }

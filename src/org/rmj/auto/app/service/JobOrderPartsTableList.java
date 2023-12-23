@@ -18,13 +18,15 @@ public class JobOrderPartsTableList {
     private SimpleStringProperty tblindex11_Part;
     private SimpleStringProperty tblindex06_Part;
     private SimpleStringProperty tblindex10_Part;
+    private SimpleStringProperty tblindex15_Part;
 
     JobOrderPartsTableList(String tblPartsRow,
             String tblindex14_Part,
             String tblindex04_Part,
             String tblindex11_Part,
             String tblindex06_Part,
-            String tblindex10_Part) {
+            String tblindex10_Part,
+            String tblindex15_Part) {
 
         this.tblPartsRow = new SimpleStringProperty(tblPartsRow);
         this.tblindex14_Part = new SimpleStringProperty(tblindex14_Part);
@@ -32,6 +34,7 @@ public class JobOrderPartsTableList {
         this.tblindex11_Part = new SimpleStringProperty(tblindex11_Part);
         this.tblindex06_Part = new SimpleStringProperty(tblindex06_Part);
         this.tblindex10_Part = new SimpleStringProperty(tblindex10_Part);
+        this.tblindex15_Part = new SimpleStringProperty(tblindex15_Part);
     }
 
     public String getTblPartsRow() {
@@ -80,6 +83,14 @@ public class JobOrderPartsTableList {
 
     public void setTblindex10_Part(String tblindex10_Part) {
         this.tblindex10_Part.set(tblindex10_Part);
+    }
+
+    public String getTblindex15_Part() {
+        return tblindex15_Part.get();
+    }
+
+    public void setTblindexPart(String tblindex15_Part) {
+        this.tblindex15_Part.set(tblindex15_Part);
     }
 
 }

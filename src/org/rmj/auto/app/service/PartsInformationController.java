@@ -220,12 +220,24 @@ public class PartsInformationController implements Initializable, ScreenInterfac
 //            double parts2 = Double.parseDouble(parts);
             String laborQuantity = txtField06_Part.getText(); // Remove commas from the input string
             try {
-                int amount = Integer.parseInt(laborQuantity);
-                if (amount == 0 || amount < 0) {
-                    ShowMessageFX.Warning(getStage(), "Please input Quantity amount", "Warning", null);
-                    txtField06_Part.requestFocus();
-                    return false;
+
+                for (int lnCtr = 1; lnCtr <= oTrans.getVSPPartsCount(); lnCtr++) {
+                    String quantY = oTrans.getVSPPartsDetail(oTrans.getVSPPartsCount(), "nQuantity").toString();
+                    int userQuants = Integer.parseInt(laborQuantity);
+                    int quants = Integer.parseInt(quantY);
+                    if (userQuants > quants) {
+                        ShowMessageFX.Warning(getStage(), "Invalid, please input quantity below value.", "Warning", null);
+                        txtField06_Part.requestFocus();
+                        return false;
+                    }
+                    int amount = Integer.parseInt(laborQuantity);
+                    if (amount == 0 || amount < 0) {
+                        ShowMessageFX.Warning(getStage(), "Please input Quantity amount", "Warning", null);
+                        txtField06_Part.requestFocus();
+                        return false;
+                    }
                 }
+
             } catch (NumberFormatException e) {
                 // Handle the case where laborAmount is not a valid number
                 ShowMessageFX.Warning(getStage(), "Invalid Quantity Amount", "Warning", null);

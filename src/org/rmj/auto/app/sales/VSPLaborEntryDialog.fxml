@@ -71,7 +71,7 @@
                                                 <Tooltip text="Please fill in the VSP Labor Description." />
                                             </tooltip>
                                         </TextField>
-                                        <Label text="Charge Type:" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                        <Label text="Charge Type" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                             <font>
                                                 <Font name="Arial Bold" size="12.0" />
                                             </font>
@@ -81,7 +81,7 @@
                                                 <Tooltip text="Please select VSP Labor Charge Type." />
                                             </tooltip>
                                         </ComboBox>
-                                        <Label text="Labor Amount:" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                        <Label text="Labor Amount" GridPane.columnIndex="1" GridPane.rowIndex="2">
                                             <font>
                                                 <Font name="Arial Bold" size="12.0" />
                                             </font>
@@ -91,7 +91,7 @@
                                                 <Tooltip text="Please fill in the VSP Labor Amount." />
                                             </tooltip>
                                         </TextField>
-                                        <Label text="Additional:" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                                        <Label text="Additional" GridPane.columnIndex="1" GridPane.rowIndex="3">
                                             <font>
                                                 <Font name="Arial Bold" size="12.0" />
                                             </font>

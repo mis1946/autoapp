@@ -71,7 +71,7 @@
                                                 <Tooltip text="Please fill in the VSP Parts Description." />
                                             </tooltip>
                                         </TextField>
-                                        <Label text="Charge Type:" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                                        <Label text="Purchase Type" GridPane.columnIndex="1" GridPane.rowIndex="3">
                                             <font>
                                                 <Font name="Arial Bold" size="12.0" />
                                             </font>
@@ -86,12 +86,12 @@
                                                 <Tooltip text="Please select VSP Parts Charge Type." />
                                             </tooltip>
                                         </ComboBox>
-                                        <Label text="Parts Amount:" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                                        <Label text="Parts Amount" GridPane.columnIndex="1" GridPane.rowIndex="4">
                                             <font>
                                                 <Font name="Arial Bold" size="12.0" />
                                             </font>
                                         </Label>
-                                        <TextField fx:id="txtField05_Part" promptText="0.00" style="-fx-font-weight: bold;" GridPane.columnIndex="2" GridPane.columnSpan="3" GridPane.rowIndex="4">
+                                        <TextField fx:id="txtField04_Part" promptText="0.00" style="-fx-font-weight: bold;" GridPane.columnIndex="2" GridPane.columnSpan="3" GridPane.rowIndex="4">
                                             <tooltip>
                                                 <Tooltip text="Please fill in the VSP Parts Amount." />
                                             </tooltip>

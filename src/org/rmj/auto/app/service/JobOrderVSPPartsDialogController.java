@@ -67,6 +67,8 @@ public class JobOrderVSPPartsDialogController implements Initializable, ScreenIn
     private TableColumn<JobOrderVSPPartsList, String> tblindex06;
     @FXML
     private TableColumn<JobOrderVSPPartsList, String> tblindex14;
+    @FXML
+    private TableColumn<?, ?> tblindex16;
 
     public void setTrans(String fsValue) {
         sTrans = fsValue;
@@ -114,10 +116,12 @@ public class JobOrderVSPPartsDialogController implements Initializable, ScreenIn
                             String fsCd = item.getTblindex13();
                             String fsDescript = item.getTblindex09();
                             String fsType = item.getTblindex08();
+
                             String fsQuantity = item.getTblindex06();
                             String fsAmount = item.getTblindex04();
-
                             String fsJONox = item.getTblindex14();
+                            String fsType2 = item.getTblindexType();
+                            String fsTotal = item.getTblindex16();
 
                             if (!fsDSCode.isEmpty() && !fsDSCode.equals(sTrans)) {
                                 ShowMessageFX.Error(null, pxeModuleName, "VSP Parts " + fsDescript + " already exist in JO No. " + fsJONox + ". Insert Aborted. ");
@@ -138,12 +142,14 @@ public class JobOrderVSPPartsDialogController implements Initializable, ScreenIn
                                 if (!fsDest) {
                                     lnfind++;
                                     if (oTrans.AddJOParts()) {
+                                        DecimalFormat setFormat = new DecimalFormat("###0.00");
                                         oTrans.setJOPartsDetail(oTrans.getJOPartsCount(), 3, fsStockID);
                                         oTrans.setJOPartsDetail(oTrans.getJOPartsCount(), 14, fsCd);
                                         oTrans.setJOPartsDetail(oTrans.getJOPartsCount(), 4, fsDescript);
-                                        oTrans.setJOPartsDetail(oTrans.getJOPartsCount(), 11, fsType);
+                                        oTrans.setJOPartsDetail(oTrans.getJOPartsCount(), 11, fsType2);
                                         oTrans.setJOPartsDetail(oTrans.getJOPartsCount(), 6, Integer.valueOf(fsQuantity));
-                                        oTrans.setJOPartsDetail(oTrans.getJOPartsCount(), 10, fsAmount);
+                                        oTrans.setJOPartsDetail(oTrans.getJOPartsCount(), 10, setFormat.format(Double.valueOf(fsAmount.replace(",", ""))));
+                                        oTrans.setJOPartsDetail(oTrans.getJOPartsCount(), 15, setFormat.format(Double.valueOf(fsTotal.replace(",", ""))));
                                     }
                                 }
                             } catch (SQLException e) {
@@ -186,21 +192,35 @@ public class JobOrderVSPPartsDialogController implements Initializable, ScreenIn
             partData.clear();
             if (oTrans.loadVSPParts()) {
                 for (int lnCtr = 1; lnCtr <= oTrans.getVSPPartsCount(); lnCtr++) {
-                    String amountString = oTrans.getVSPPartsDetail(lnCtr, "nQuantity").toString();
+                    String amountString = oTrans.getVSPPartsDetail(lnCtr, "nUnitPrce").toString();
                     // Convert the amount to a decimal value
-                    double amount = Double.parseDouble(amountString);
+                    String cType = "";
+                    switch (oTrans.getVSPPartsDetail(lnCtr, "sChrgeTyp").toString()) {
+                        case "0":
+                            cType = "FREE OF CHARGE";
+                            break;
+                        case "1":
+                            cType = "CHARGE";
+                            break;
+                    }
                     DecimalFormat decimalFormat = new DecimalFormat("#,##0.00");
+                    double amount = Double.parseDouble(amountString);
                     String formattedAmount = decimalFormat.format(amount);
+                    int quant = Integer.parseInt(oTrans.getVSPPartsDetail(lnCtr, "nQuantity").toString());
+                    double total = quant * amount;
+                    String totalAmount = decimalFormat.format(total);
                     partData.add(new JobOrderVSPPartsList(
                             String.valueOf(lnCtr), //ROW
                             oTrans.getVSPPartsDetail(lnCtr, "sBarCodex").toString(),
                             oTrans.getVSPPartsDetail(lnCtr, "sDescript").toString(),
-                            oTrans.getVSPPartsDetail(lnCtr, "sChrgeTyp").toString(),
+                            cType,
                             oTrans.getVSPPartsDetail(lnCtr, "nQuantity").toString(),
                             formattedAmount,
                             oTrans.getVSPPartsDetail(lnCtr, "sDSNoxxxx").toString(),
                             oTrans.getVSPPartsDetail(lnCtr, "sStockIDx").toString(),
-                            oTrans.getVSPPartsDetail(lnCtr, "sDSCodexx").toString()
+                            oTrans.getVSPPartsDetail(lnCtr, "sDSCodexx").toString(),
+                            oTrans.getVSPPartsDetail(lnCtr, "sChrgeTyp").toString(),
+                            totalAmount
                     ));
                 }
                 tblViewVSPParts.setItems(partData);
@@ -234,6 +254,7 @@ public class JobOrderVSPPartsDialogController implements Initializable, ScreenIn
         tblindex06.setCellValueFactory(new PropertyValueFactory<>("tblindex06"));
         tblindex04.setCellValueFactory(new PropertyValueFactory<>("tblindex04"));
         tblindex14.setCellValueFactory(new PropertyValueFactory<>("tblindex14"));
+        tblindex16.setCellValueFactory(new PropertyValueFactory<>("tblindex16"));
 
     }
 }

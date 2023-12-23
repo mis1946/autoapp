@@ -444,7 +444,7 @@
                                                                                             <columns>
                                                                                                 <TableColumn fx:id="tblLaborRow" editable="false" prefWidth="41.666664123535156" sortable="false" text="Row" />
                                                                                                 <TableColumn fx:id="tblindex10_Labor" editable="false" prefWidth="365.33333587646484" sortable="false" text="Labor Description" />
-                                                                                                <TableColumn fx:id="tblindex03_Labor" editable="false" prefWidth="205.66668701171875" sortable="false" text="Transaction Type" />
+                                                                                                <TableColumn fx:id="tblindex03_Labor" editable="false" prefWidth="205.66668701171875" sortable="false" text="Purchase Type" />
                                                                                                 <TableColumn fx:id="tblindex06_Labor" editable="false" prefWidth="160.3333740234375" sortable="false" text="Amount" />
                                                                                             </columns>
                                                                                         </TableView>
@@ -499,12 +499,13 @@
                                                                                         </HBox>
                                                                                         <TableView fx:id="tblViewParts" prefHeight="240.0" GridPane.rowIndex="1">
                                                                                             <columns>
-                                                                                                <TableColumn fx:id="tblPartsRow" editable="false" prefWidth="48.0" sortable="false" text="Row" />
-                                                                                                <TableColumn fx:id="tblindex14_Part" editable="false" minWidth="100.0" prefWidth="206.0" sortable="false" text="Part Number" />
-                                                                                                <TableColumn fx:id="tblindex04_Part" editable="false" minWidth="100.0" prefWidth="300.0" sortable="false" text="Part Description" />
-                                                                                                <TableColumn fx:id="tblindex11_Part" editable="false" prefWidth="184.66668701171875" sortable="false" text="Transaction Type" />
-                                                                                                <TableColumn fx:id="tblindex06_Part" editable="false" prefWidth="110.0" sortable="false" text="Quantity" />
-                                                                                                <TableColumn fx:id="tblindex10_Part" editable="false" prefWidth="150.0" sortable="false" text="Amount" />
+                                                                                                <TableColumn fx:id="tblPartsRow" editable="false" prefWidth="48.0" resizable="false" sortable="false" text="Row" />
+                                                                                                <TableColumn fx:id="tblindex14_Part" editable="false" minWidth="100.0" prefWidth="206.0" resizable="false" sortable="false" text="Part Number" />
+                                                                                                <TableColumn fx:id="tblindex04_Part" editable="false" minWidth="100.0" prefWidth="300.0" resizable="false" sortable="false" text="Part Description" />
+                                                                                                <TableColumn fx:id="tblindex11_Part" editable="false" prefWidth="184.66668701171875" resizable="false" sortable="false" text="Purchase Type" />
+                                                                                                <TableColumn fx:id="tblindex06_Part" editable="false" prefWidth="110.0" resizable="false" sortable="false" text="Quantity" />
+                                                                                                <TableColumn fx:id="tblindex10_Part" editable="false" prefWidth="150.0" resizable="false" sortable="false" text="Amount" />
+                                                                                                <TableColumn fx:id="tblindex15_Part" editable="false" prefWidth="150.0" resizable="false" sortable="false" text="Total Amount" />
                                                                                             </columns>
                                                                                         </TableView>
                                                                                     </children>

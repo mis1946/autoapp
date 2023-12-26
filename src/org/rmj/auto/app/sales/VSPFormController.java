@@ -2571,6 +2571,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
             fxmlLoader.setController(loControl);
             loControl.setRow(fnRow);
             loControl.setOrigDsc((String) oTrans.getVSPPartsDetail(fnRow, 9));
+            loControl.setStockID((String) oTrans.getVSPPartsDetail(fnRow, 3));
             loControl.setLbrDsc(isWithLbDsc);
             //load the main interface
             Parent parent = fxmlLoader.load();
@@ -2656,7 +2657,6 @@ public class VSPFormController implements Initializable, ScreenInterface {
                 int quant = Integer.parseInt(oTrans.getVSPPartsDetail(lnCtr, "nQuantity").toString());
                 double total = quant * amount;
                 String totalAmount = decimalFormat.format(total);
-                System.out.println("totalAmount " + totalAmount);
                 partData.add(new VSPTablePartList(
                         String.valueOf(lnCtr), //ROW
                         oTrans.getVSPPartsDetail(lnCtr, "sTransNox").toString(),
@@ -2707,7 +2707,10 @@ public class VSPFormController implements Initializable, ScreenInterface {
                         try {
                             String fsRow = selectedVSPLabor.getTblLaborRow();
                             int fnRow = Integer.parseInt(fsRow);
-                            oTrans.removeVSPLabor(fnRow);
+                            if (!oTrans.removeVSPLabor(fnRow)) {
+                                ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                                return;
+                            }
                             loadVSPField();
                             loadTableLabor();
 
@@ -2729,7 +2732,10 @@ public class VSPFormController implements Initializable, ScreenInterface {
                         try {
                             String fsRow = selectedVSPParts.getTblPartsRow();
                             int fnRow = Integer.parseInt(fsRow);
-                            oTrans.removeVSPParts(fnRow);
+                            if (!oTrans.removeVSPParts(fnRow)) {
+                                ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                                return;
+                            }
                             loadVSPField();
                             loadTableParts();
 

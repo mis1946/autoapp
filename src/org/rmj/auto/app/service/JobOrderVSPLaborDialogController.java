@@ -41,7 +41,7 @@ public class JobOrderVSPLaborDialogController implements Initializable, ScreenIn
     private GRider oApp;
     unloadForm unload = new unloadForm(); //Used in Close Button
     private ObservableList<JobOrderVSPLaborList> laborData = FXCollections.observableArrayList();
-    private final String pxeModuleName = "Job Order VSP Labor Entry"; //Form Title {
+    private final String pxeModuleName = "Job Order VSP Labor List"; //Form Title {
     private int pnRow = 0;
     @FXML
     private Button btnAdd;

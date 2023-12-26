@@ -905,6 +905,7 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
             stage.setTitle("");
             stage.showAndWait();
             loadTableLabor();
+            loadJobOrderFields();
         } catch (IOException e) {
             e.printStackTrace();
             ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
@@ -931,6 +932,8 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
             fxmlLoader.setController(loControl);
             loControl.setRow(fnRow);
             loControl.setOrigDsc((String) oTrans.getJOPartsDetail(fnRow, 4));
+            loControl.setStockID((String) oTrans.getJOPartsDetail(fnRow, 3));
+
             loControl.setLbrDsc(isWithLbDsc);
             //load the main interface
             Parent parent = fxmlLoader.load();
@@ -1015,6 +1018,7 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
                 String totalAmount = getFormat.format(total);
                 partData.add(new JobOrderPartsTableList(
                         String.valueOf(lnCtr), //ROW
+                        oTrans.getJOPartsDetail(lnCtr, "sStockIDx").toString(),
                         oTrans.getJOPartsDetail(lnCtr, "sBarCodex").toString(),
                         oTrans.getJOPartsDetail(lnCtr, "sDescript").toString().toUpperCase(),
                         cType,
@@ -1053,7 +1057,6 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
          */
         try {
             Stage stage = new Stage();
-
             FXMLLoader fxmlLoader = new FXMLLoader();
             fxmlLoader.setLocation(getClass().getResource("JobOrderVSPPartsDialog.fxml"));
 
@@ -1088,8 +1091,8 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setTitle("");
             stage.showAndWait();
-
             loadTableParts();
+            loadJobOrderFields();
         } catch (IOException e) {
             e.printStackTrace();
             ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);

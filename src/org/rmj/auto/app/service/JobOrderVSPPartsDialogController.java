@@ -39,7 +39,7 @@ public class JobOrderVSPPartsDialogController implements Initializable, ScreenIn
     private GRider oApp;
     unloadForm unload = new unloadForm(); //Used in Close Button
     private ObservableList<JobOrderVSPPartsList> partData = FXCollections.observableArrayList();
-    private final String pxeModuleName = "Job Order VSP Parts Entry"; //Form Title {
+    private final String pxeModuleName = "Job Order VSP Parts List"; //Form Title {
     private int pnRow = 0;
     private String sTrans = "";
     @FXML
@@ -50,7 +50,6 @@ public class JobOrderVSPPartsDialogController implements Initializable, ScreenIn
     private TableColumn<JobOrderVSPPartsList, String> tblindexRow;
     @FXML
     private CheckBox selectAllCheckBox;
-    private TableColumn<JobOrderVSPPartsList, String> tblindex07;
     @FXML
     private TableColumn<JobOrderVSPPartsList, String> tblindex04;
     @FXML
@@ -68,7 +67,7 @@ public class JobOrderVSPPartsDialogController implements Initializable, ScreenIn
     @FXML
     private TableColumn<JobOrderVSPPartsList, String> tblindex14;
     @FXML
-    private TableColumn<?, ?> tblindex16;
+    private TableColumn<JobOrderVSPPartsList, String> tblindex16;
 
     public void setTrans(String fsValue) {
         sTrans = fsValue;
@@ -115,23 +114,18 @@ public class JobOrderVSPPartsDialogController implements Initializable, ScreenIn
                             String fsStockID = item.getTblindex03();
                             String fsCd = item.getTblindex13();
                             String fsDescript = item.getTblindex09();
-                            String fsType = item.getTblindex08();
-
                             String fsQuantity = item.getTblindex06();
                             String fsAmount = item.getTblindex04();
                             String fsJONox = item.getTblindex14();
-                            String fsType2 = item.getTblindexType();
+                            String fsType = item.getTblindexType();
                             String fsTotal = item.getTblindex16();
 
-                            if (!fsDSCode.isEmpty() && !fsDSCode.equals(sTrans)) {
-                                ShowMessageFX.Error(null, pxeModuleName, "VSP Parts " + fsDescript + " already exist in JO No. " + fsJONox + ". Insert Aborted. ");
-                                return;
-                            }
-
-                            // Assuming there is a method to retrieve the transaction number
+//                            if (!fsDSCode.isEmpty() && !fsDSCode.equals(sTrans)) {
+//                                ShowMessageFX.Error(null, pxeModuleName, "VSP Parts " + fsDescript + " already exist in JO No. " + fsJONox + ". Insert Aborted. ");
+//                                return;
+//                            }
                             try {
                                 boolean fsDest = false;
-                                //Validate JO Labor row
                                 for (int lnCtr = 1; lnCtr <= oTrans.getJOPartsCount(); lnCtr++) {
                                     if (oTrans.getJOPartsDetail(lnCtr, "sDescript").toString().equals(fsDescript)) {
                                         ShowMessageFX.Error(null, pxeModuleName, "Skipping, Failed to add vsp parts, " + fsDescript + " already exist.");
@@ -141,15 +135,21 @@ public class JobOrderVSPPartsDialogController implements Initializable, ScreenIn
                                 }
                                 if (!fsDest) {
                                     lnfind++;
+
                                     if (oTrans.AddJOParts()) {
                                         DecimalFormat setFormat = new DecimalFormat("###0.00");
                                         oTrans.setJOPartsDetail(oTrans.getJOPartsCount(), 3, fsStockID);
                                         oTrans.setJOPartsDetail(oTrans.getJOPartsCount(), 14, fsCd);
                                         oTrans.setJOPartsDetail(oTrans.getJOPartsCount(), 4, fsDescript);
-                                        oTrans.setJOPartsDetail(oTrans.getJOPartsCount(), 11, fsType2);
+                                        oTrans.setJOPartsDetail(oTrans.getJOPartsCount(), 11, fsType);
                                         oTrans.setJOPartsDetail(oTrans.getJOPartsCount(), 6, Integer.valueOf(fsQuantity));
                                         oTrans.setJOPartsDetail(oTrans.getJOPartsCount(), 10, setFormat.format(Double.valueOf(fsAmount.replace(",", ""))));
                                         oTrans.setJOPartsDetail(oTrans.getJOPartsCount(), 15, setFormat.format(Double.valueOf(fsTotal.replace(",", ""))));
+                                    }
+                                    if (!oTrans.checkVSPJOParts(fsStockID, Integer.valueOf(fsQuantity), true, oTrans.getJOPartsCount())) {
+                                        ShowMessageFX.Error(null, pxeModuleName, oTrans.getMessage());
+                                        oTrans.removeJOParts(oTrans.getJOPartsCount());
+                                        return;
                                     }
                                 }
                             } catch (SQLException e) {
@@ -211,13 +211,13 @@ public class JobOrderVSPPartsDialogController implements Initializable, ScreenIn
                     String totalAmount = decimalFormat.format(total);
                     partData.add(new JobOrderVSPPartsList(
                             String.valueOf(lnCtr), //ROW
+                            oTrans.getVSPPartsDetail(lnCtr, "sStockIDx").toString(),
                             oTrans.getVSPPartsDetail(lnCtr, "sBarCodex").toString(),
                             oTrans.getVSPPartsDetail(lnCtr, "sDescript").toString(),
                             cType,
                             oTrans.getVSPPartsDetail(lnCtr, "nQuantity").toString(),
                             formattedAmount,
                             oTrans.getVSPPartsDetail(lnCtr, "sDSNoxxxx").toString(),
-                            oTrans.getVSPPartsDetail(lnCtr, "sStockIDx").toString(),
                             oTrans.getVSPPartsDetail(lnCtr, "sDSCodexx").toString(),
                             oTrans.getVSPPartsDetail(lnCtr, "sChrgeTyp").toString(),
                             totalAmount

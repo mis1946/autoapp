@@ -37,6 +37,7 @@ public class VSPPartsDialogController implements Initializable, ScreenInterface 
     private int pnRow = 0;
     private boolean pbState = true;
     private String psOrigDsc = "";
+    private String psStockID = "";
     private final String pxeModuleName = "Vsp Parts Entry Form";
     private VehicleSalesProposalMaster oTrans;
     ObservableList<String> cChargeType = FXCollections.observableArrayList("FREE OF CHARGE", "CHARGE");
@@ -131,6 +132,10 @@ public class VSPPartsDialogController implements Initializable, ScreenInterface 
         psOrigDsc = fsValue;
     }
 
+    public void setStockID(String fsValue) {
+        psStockID = fsValue;
+    }
+
     private void handleComboBoxSelectionVSPMaster(ComboBox<String> comboBox, int fieldNumber) {
         comboBox.setOnAction(e -> {
             try {
@@ -218,6 +223,9 @@ public class VSPPartsDialogController implements Initializable, ScreenInterface 
     private boolean settoClass() {
         try {
             DecimalFormat setFormat = new DecimalFormat("###0.00");
+            String userQuantity = txtField06_Part.getText();
+            int userQuant = Integer.parseInt(userQuantity);
+
             int selectedType = comboBox8.getSelectionModel().getSelectedIndex();
             if (txtField09_Part.getText().trim().isEmpty()) {
                 ShowMessageFX.Warning(getStage(), "Please input Parts Description", "Warning", null);
@@ -229,11 +237,14 @@ public class VSPPartsDialogController implements Initializable, ScreenInterface 
                 txtField09_Part.requestFocus();
                 return false;
             }
-
-            String laborQuantity = txtField06_Part.getText(); // Remove commas from the input string
             try {
-                int amount = Integer.parseInt(laborQuantity);
-                if (amount == 0 || amount < 0) {
+                if (!oTrans.checkVSPJOParts(psStockID, userQuant)) {
+                    ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                    txtField06_Part.requestFocus();
+                    return false;
+                }
+
+                if (userQuant == 0 || userQuant < 0) {
                     ShowMessageFX.Warning(getStage(), "Please input Quantity amount", "Warning", null);
                     txtField06_Part.requestFocus();
                     return false;
@@ -267,11 +278,8 @@ public class VSPPartsDialogController implements Initializable, ScreenInterface 
             }
 
             oTrans.setVSPPartsDetail(pnRow, 9, txtField09_Part.getText());
-
-            int quantity = Integer.parseInt(txtField06_Part.getText());
-
             oTrans.setVSPPartsDetail(pnRow, 8, String.valueOf(selectedType));
-            oTrans.setVSPPartsDetail(pnRow, 6, quantity);
+            oTrans.setVSPPartsDetail(pnRow, 6, userQuant);
             oTrans.setVSPPartsDetail(pnRow, 4, setFormat.format(Double.valueOf(txtField04_Part.getText().replace(",", ""))));
         } catch (SQLException ex) {
             Logger.getLogger(VSPLaborEntryDialogController.class.getName()).log(Level.SEVERE, null, ex);

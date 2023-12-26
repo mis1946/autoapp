@@ -13,6 +13,7 @@ import javafx.beans.property.SimpleStringProperty;
 public class JobOrderPartsTableList {
 
     private SimpleStringProperty tblPartsRow;
+    private SimpleStringProperty tblindex03_Part;
     private SimpleStringProperty tblindex14_Part;
     private SimpleStringProperty tblindex04_Part;
     private SimpleStringProperty tblindex11_Part;
@@ -21,6 +22,7 @@ public class JobOrderPartsTableList {
     private SimpleStringProperty tblindex15_Part;
 
     JobOrderPartsTableList(String tblPartsRow,
+            String tblindex03_Part,
             String tblindex14_Part,
             String tblindex04_Part,
             String tblindex11_Part,
@@ -29,6 +31,7 @@ public class JobOrderPartsTableList {
             String tblindex15_Part) {
 
         this.tblPartsRow = new SimpleStringProperty(tblPartsRow);
+        this.tblindex03_Part = new SimpleStringProperty(tblindex03_Part);
         this.tblindex14_Part = new SimpleStringProperty(tblindex14_Part);
         this.tblindex04_Part = new SimpleStringProperty(tblindex04_Part);
         this.tblindex11_Part = new SimpleStringProperty(tblindex11_Part);
@@ -43,6 +46,14 @@ public class JobOrderPartsTableList {
 
     public void setTblPartsRow(String tblPartsRow) {
         this.tblPartsRow.set(tblPartsRow);
+    }
+
+    public String getTblindex03_Part() {
+        return tblindex03_Part.get();
+    }
+
+    public void setTblindex03_Part(String tblindex03_Part) {
+        this.tblindex03_Part.set(tblindex03_Part);
     }
 
     public String getTblindex14_Part() {

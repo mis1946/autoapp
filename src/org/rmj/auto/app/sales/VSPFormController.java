@@ -607,9 +607,6 @@ public class VSPFormController implements Initializable, ScreenInterface {
                                 loadVSPField();
                             }
                             break;
-                        case 25:
-                            oTrans.setMaster(fieldNumber, Integer.valueOf(comboBox.getValue()));
-                            break;
                         default:
                             oTrans.setMaster(fieldNumber, String.valueOf(selectedType));
                             break;
@@ -627,12 +624,15 @@ public class VSPFormController implements Initializable, ScreenInterface {
 
     private void handleComboBoxSelectionVSPFinance(ComboBox<String> comboBox, int fieldNumber) {
         comboBox.setOnAction(e -> {
+
             try {
                 int selectedType = comboBox.getSelectionModel().getSelectedIndex(); // Retrieve the selected type
                 if (selectedType >= 0) {
-                    oTrans.setVSPFinance(fieldNumber, String.valueOf(selectedType));
-                    // Pass the selected type to setMaster method
-                    initButton(pnEditMode);
+                    if (pnEditMode == EditMode.UPDATE || pnEditMode == EditMode.ADDNEW) {
+                        oTrans.setVSPFinance(fieldNumber, String.valueOf(selectedType));
+                        // Pass the selected type to setMaster method
+                        initButton(pnEditMode);
+                    }
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(VSPFormController.class

@@ -86,7 +86,11 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
     private double yOffset = 0;
     private int pnRow = -1;
     unloadForm unload = new unloadForm(); //Used in Close Button
-    ObservableList<String> cType = FXCollections.observableArrayList("EVENT", "SALES CALL", "PROMO");
+    ObservableList<String> c06 = FXCollections.observableArrayList("MECHANICAL", "BODY PAINT", "SALES JOB ORDER");
+    ObservableList<String> c08 = FXCollections.observableArrayList("GR", "PM", "BODY", "PDI");
+    ObservableList<String> c12 = FXCollections.observableArrayList("PERSONAL ACCOUNT", "INSURANCE", "COMPANY UNIT", "NEW UNIT");
+    ObservableList<String> c07 = FXCollections.observableArrayList("NEW", "JOB CONTINUATION", "BACK JOB");
+
     private ObservableList<JobOrderLaborTableList> laborData = FXCollections.observableArrayList();
     private ObservableList<JobOrderPartsTableList> partData = FXCollections.observableArrayList();
     @FXML
@@ -207,6 +211,8 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
     private Button btnAddParts;
     @FXML
     private TableColumn<JobOrderPartsTableList, String> tblindex15_Part;
+    @FXML
+    private ComboBox<String> comboBox07;
 
     /**
      * Initializes the controller class.
@@ -405,10 +411,35 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
 
     private void initSetComboBoxtoJobOrderMaster() {
 
+        handleComboBoxSelectionVSPMaster(comboBox06, 6);
+        handleComboBoxSelectionVSPMaster(comboBox07, 7);
+        handleComboBoxSelectionVSPMaster(comboBox08, 8);
+        handleComboBoxSelectionVSPMaster(comboBox12, 12);
+
+    }
+
+    private void handleComboBoxSelectionVSPMaster(ComboBox<String> comboBox, int fieldNumber) {
+        if (pnEditMode == EditMode.UPDATE || pnEditMode == EditMode.ADDNEW) {
+            comboBox.setOnAction(e -> {
+                try {
+                    int selectedType = comboBox.getSelectionModel().getSelectedIndex(); // Retrieve the selected type
+                    if (selectedType >= 0) {
+                        oTrans.setMaster(fieldNumber, String.valueOf(selectedType));
+                    }
+                } catch (SQLException ex) {
+                    Logger.getLogger(JobOrderFormController.class
+                            .getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            );
+        }
     }
 
     private void initComboItems() {
-
+        comboBox06.setItems(c06);
+        comboBox07.setItems(c07);
+        comboBox08.setItems(c08);
+        comboBox12.setItems(c12);
     }
 
     private void initMonitoringProperty() {
@@ -766,7 +797,7 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
         return tblViewParts.getSelectionModel().getSelectedItem();
     }
 
-    private boolean loadJobOrderFields() {
+    private boolean loadJobOrderFields() throws SQLException {
         try {
             if (!oTrans.computeAmount()) {
                 ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
@@ -794,6 +825,76 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
                 lblJobOrderStatus.setText("Active");
             }
 
+            if (pbisJobOrderSales) {
+                //JOBTYPE
+                String selectedItem07 = oTrans.getMaster(7).toString();
+                switch (selectedItem07) {
+                    case "0":
+                        selectedItem07 = "NEW";
+                        break;
+                    case "1":
+                        selectedItem07 = "BACK JOB";
+                        break;
+                    case "2":
+                        selectedItem07 = "JOB CONTINUATION";
+                        break;
+
+                }
+
+                comboBox07.setValue(selectedItem07);
+                comboBox08.setValue(null);
+            } else {
+                //LABOR TYPE
+                String selectedItem08 = oTrans.getMaster(8).toString();
+                switch (selectedItem08) {
+                    case "0":
+                        selectedItem08 = "GR";
+                        break;
+                    case "1":
+                        selectedItem08 = "PM";
+                        break;
+                    case "2":
+                        selectedItem08 = "BODY";
+                    case "3":
+                        selectedItem08 = "PDI";
+                        break;
+
+                }
+                comboBox08.setValue(selectedItem08);
+            }
+            //WORK CATEGORY
+            String selectedItem06 = oTrans.getMaster(6).toString();
+            switch (selectedItem06) {
+                case "0":
+                    selectedItem06 = "MECHANICAL";
+                    break;
+                case "1":
+                    selectedItem06 = "BODY PAINT";
+                    break;
+                case "2":
+                    selectedItem06 = "SALES JOB ORDER";
+                    break;
+
+            }
+            comboBox06.setValue(selectedItem06);
+
+            //PAYSOURCE
+            String selectedItem12 = oTrans.getMaster(12).toString();
+            switch (selectedItem12) {
+                case "0":
+                    selectedItem12 = "PERSONAL ACCOUNT";
+                    break;
+                case "1":
+                    selectedItem12 = "INSURANCE";
+                    break;
+                case "2":
+                    selectedItem12 = "COMPANY UNIT";
+                case "3":
+                    selectedItem12 = "NEW UNIT";
+                    break;
+
+            }
+            comboBox12.setValue(selectedItem12);
             txtField37.setText((String) oTrans.getMaster(37));
             txtField36.setText((String) oTrans.getMaster(36));
             txtField39.setText((String) oTrans.getMaster(39));
@@ -910,8 +1011,10 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
             e.printStackTrace();
             ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
             System.exit(1);
+
         } catch (SQLException ex) {
-            Logger.getLogger(JobOrderFormController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(JobOrderFormController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -985,8 +1088,10 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
             if (event.getClickCount() == 2) {
                 try {
                     loadPartsAdditionalDialog(pnRow, false, false);
+
                 } catch (IOException ex) {
-                    Logger.getLogger(JobOrderFormController.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(JobOrderFormController.class
+                            .getName()).log(Level.SEVERE, null, ex);
                 }
             }
 
@@ -1097,8 +1202,10 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
             e.printStackTrace();
             ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
             System.exit(1);
+
         } catch (SQLException ex) {
-            Logger.getLogger(JobOrderFormController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(JobOrderFormController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -1119,7 +1226,10 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
         txtField38.setText("");
         textArea35.setText("");
         textArea11.setText("");
-
+        comboBox06.setValue(null);
+        comboBox07.setValue(null);
+        comboBox08.setValue(null);
+        comboBox12.setValue(null);
         txtField19.setText("0.00");
         txtField20.setText("0.00");
         txtField21.setText("0.00");
@@ -1146,9 +1256,20 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
         txtField13.setDisable(!lbShow);
         txtField40.setDisable(!lbShow);
         txtField16.setDisable(!lbShow);
-        txtField09.setDisable(!lbShow);
+
         textArea11.setDisable(!lbShow);
 
+        if (pbisJobOrderSales) {
+            comboBox06.setDisable(true);
+            comboBox07.setDisable(!lbShow);
+            comboBox08.setDisable(true);
+            comboBox12.setDisable(true);
+
+        } else {
+            comboBox06.setDisable(true);
+            txtField09.setDisable(!lbShow);
+            comboBox12.setDisable(!lbShow);
+        }
         if (fnValue == EditMode.READY) {
             if (lblJobOrderStatus.getText().equals("Cancelled")) {
                 btnCancelJobOrder.setVisible(false);
@@ -1178,6 +1299,7 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
                 txtField16.setDisable(true);
                 txtField09.setDisable(true);
                 comboBox12.setDisable(true);
+                comboBox07.getItems().remove("2");
             } else {
                 txtField40.setDisable(false);
                 txtField03.setDisable(false);

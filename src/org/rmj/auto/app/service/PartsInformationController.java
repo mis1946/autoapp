@@ -11,8 +11,6 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
-import javafx.beans.property.ReadOnlyBooleanPropertyBase;
-import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -31,11 +29,6 @@ import org.rmj.auto.app.views.InputTextFormatter;
 import org.rmj.auto.app.views.ScreenInterface;
 import org.rmj.auto.service.base.JobOrderMaster;
 
-/**
- * FXML Controller class
- *
- * @author User
- */
 public class PartsInformationController implements Initializable, ScreenInterface {
 
     private Boolean lbrDsc;

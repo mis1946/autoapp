@@ -90,7 +90,6 @@ public class JobOrderVSPPartsDialogController implements Initializable, ScreenIn
     }
 
     private void cmdButton_Click(ActionEvent event) {
-
         String lsButton = ((Button) event.getSource()).getId();
         switch (lsButton) {
             case "btnClose":
@@ -110,13 +109,11 @@ public class JobOrderVSPPartsDialogController implements Initializable, ScreenIn
                     if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure you want to add?")) {
                         // Call the addTown here
                         for (JobOrderVSPPartsList item : selectedItems) {
-                            String fsDSCode = item.getTblindex15();
                             String fsStockID = item.getTblindex03();
                             String fsCd = item.getTblindex13();
                             String fsDescript = item.getTblindex09();
                             String fsQuantity = item.getTblindex06();
                             String fsAmount = item.getTblindex04();
-                            String fsJONox = item.getTblindex14();
                             String fsType = item.getTblindexType();
                             String fsTotal = item.getTblindex16();
 
@@ -135,7 +132,6 @@ public class JobOrderVSPPartsDialogController implements Initializable, ScreenIn
                                 }
                                 if (!fsDest) {
                                     lnfind++;
-
                                     if (oTrans.AddJOParts()) {
                                         DecimalFormat setFormat = new DecimalFormat("###0.00");
                                         oTrans.setJOPartsDetail(oTrans.getJOPartsCount(), 3, fsStockID);

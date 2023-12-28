@@ -37,6 +37,7 @@ public class JobOrderVSPLaborDialogController implements Initializable, ScreenIn
 
     private JobOrderMaster oTrans;
     private String sTrans;
+
     private GRider oApp;
     unloadForm unload = new unloadForm(); //Used in Close Button
     private ObservableList<JobOrderVSPLaborList> laborData = FXCollections.observableArrayList();
@@ -124,8 +125,9 @@ public class JobOrderVSPLaborDialogController implements Initializable, ScreenIn
                             String fsDSCode = item.getTblindex12();
                             String fsCd = item.getTblindex03();
                             String fsDescript = item.getTblindex07();
-                            String fsType = item.getTblindex05();
+                            String fsType = item.getTblindexType();
                             String fsAmount = item.getTblindex04();
+
                             String fsJONox = item.getTblindex11();
 
                             if (!fsDSCode.isEmpty() && !fsDSCode.equals(sTrans)) {
@@ -196,6 +198,7 @@ public class JobOrderVSPLaborDialogController implements Initializable, ScreenIn
                             cType,
                             formattedAmount,
                             oTrans.getVSPLaborDetail(lnCtr, "sDSNoxxxx").toString(),
+                            oTrans.getVSPLaborDetail(lnCtr, "sChrgeTyp").toString(),
                             oTrans.getVSPLaborDetail(lnCtr, "sDSCodexx").toString()
                     ));
                 }

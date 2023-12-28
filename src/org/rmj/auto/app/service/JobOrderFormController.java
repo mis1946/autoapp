@@ -426,6 +426,7 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
                     if (selectedType >= 0) {
                         oTrans.setMaster(fieldNumber, String.valueOf(selectedType));
                     }
+                    initButton(pnEditMode);
                 } catch (SQLException ex) {
                     Logger.getLogger(JobOrderFormController.class
                             .getName()).log(Level.SEVERE, null, ex);
@@ -443,8 +444,9 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
     }
 
     private void initMonitoringProperty() {
+
         txtField13.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
-            if (newValue.isEmpty()) {
+            if (newValue.trim().isEmpty()) {
                 clearFields();
                 btnAddLabor.setDisable(true);
                 btnAddParts.setDisable(true);
@@ -453,6 +455,7 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
                 btnAddParts.setDisable(false);
             }
         });
+
     }
 
     private void initCmdButton() {
@@ -518,6 +521,8 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
                                 return;
                             }
                         }
+                    } else {
+                        return;
                     }
                     oTrans.setFormType(pbisJobOrderSales);
                     if (oTrans.SaveRecord()) {
@@ -813,12 +818,6 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
             txtField31.setText((String) oTrans.getMaster(31));
             textArea32.setText((String) oTrans.getMaster(32));
 
-            if (pbisJobOrderSales) {
-                txtField33.setText((String) oTrans.getMaster(34));
-            } else {
-                txtField33.setText((String) oTrans.getMaster(33));
-            }
-
             if (((String) oTrans.getMaster(25)).equals("0")) {
                 lblJobOrderStatus.setText("Cancelled");
             } else {
@@ -833,18 +832,33 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
                         selectedItem07 = "NEW";
                         break;
                     case "1":
-                        selectedItem07 = "BACK JOB";
+                        selectedItem07 = "JOB CONTINUATION";
                         break;
                     case "2":
-                        selectedItem07 = "JOB CONTINUATION";
+                        selectedItem07 = "BACK JOB";
                         break;
 
                 }
-
                 comboBox07.setValue(selectedItem07);
                 comboBox08.setValue(null);
+                txtField33.setText((String) oTrans.getMaster(34));
+
             } else {
                 //LABOR TYPE
+                String selectedItem07 = oTrans.getMaster(7).toString();
+                switch (selectedItem07) {
+                    case "0":
+                        selectedItem07 = "NEW";
+                        break;
+                    case "1":
+                        selectedItem07 = "JOB CONTINUATION";
+                        break;
+                    case "2":
+                        selectedItem07 = "BACK JOB";
+                        break;
+
+                }
+                comboBox07.setValue(selectedItem07);
                 String selectedItem08 = oTrans.getMaster(8).toString();
                 switch (selectedItem08) {
                     case "0":
@@ -861,6 +875,7 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
 
                 }
                 comboBox08.setValue(selectedItem08);
+                txtField33.setText((String) oTrans.getMaster(33));
             }
             //WORK CATEGORY
             String selectedItem06 = oTrans.getMaster(6).toString();
@@ -1261,14 +1276,17 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
 
         if (pbisJobOrderSales) {
             comboBox06.setDisable(true);
-            comboBox07.setDisable(!lbShow);
+            comboBox07.setDisable(!(lbShow && !txtField13.getText().isEmpty()));
             comboBox08.setDisable(true);
             comboBox12.setDisable(true);
+            comboBox07.getItems().remove("BACK JOB");
 
         } else {
             comboBox06.setDisable(true);
             txtField09.setDisable(!lbShow);
             comboBox12.setDisable(!lbShow);
+            comboBox07.setDisable(!(lbShow && !txtField13.getText().isEmpty()));
+
         }
         if (fnValue == EditMode.READY) {
             if (lblJobOrderStatus.getText().equals("Cancelled")) {
@@ -1278,6 +1296,7 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
                 btnEdit.setManaged(false);
                 btnPrint.setVisible(false);
                 btnPrint.setManaged(false);
+
             } else {
                 btnCancelJobOrder.setVisible(true);
                 btnCancelJobOrder.setManaged(true);
@@ -1299,7 +1318,7 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
                 txtField16.setDisable(true);
                 txtField09.setDisable(true);
                 comboBox12.setDisable(true);
-                comboBox07.getItems().remove("2");
+
             } else {
                 txtField40.setDisable(false);
                 txtField03.setDisable(false);
@@ -1307,6 +1326,7 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
                 txtField16.setDisable(false);
                 txtField09.setDisable(false);
                 comboBox12.setDisable(false);
+
             }
         }
     }

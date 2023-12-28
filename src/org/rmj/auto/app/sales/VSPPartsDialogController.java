@@ -38,6 +38,7 @@ public class VSPPartsDialogController implements Initializable, ScreenInterface 
     private boolean pbState = true;
     private String psOrigDsc = "";
     private String psStockID = "";
+    private String psJO = "";
     private final String pxeModuleName = "Vsp Parts Entry Form";
     private VehicleSalesProposalMaster oTrans;
     ObservableList<String> cChargeType = FXCollections.observableArrayList("FREE OF CHARGE", "CHARGE");
@@ -62,47 +63,6 @@ public class VSPPartsDialogController implements Initializable, ScreenInterface 
     /**
      * Initializes the controller class.
      */
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        btnClose.setOnAction(this::cmdButton_Click);
-        btnAdd.setOnAction(this::cmdButton_Click);
-        btnEdit.setOnAction(this::cmdButton_Click);
-        txtField04_Part.setOnKeyPressed(this::txtField_KeyPressed);
-        txtField06_Part.setOnKeyPressed(this::txtField_KeyPressed);
-        txtField09_Part.setOnKeyPressed(this::txtField_KeyPressed);
-        comboBox8.setItems(cChargeType);
-        handleComboBoxSelectionVSPMaster(comboBox8, 8);
-        initNumberFormatterFields();
-        initAlphabeticalFormatterFields();
-        txtField09_Part.focusedProperty().addListener(txtField_Focus);
-        txtField04_Part.focusedProperty().addListener(txtField_Focus);
-        txtField06_Part.focusedProperty().addListener(txtField_Focus);
-        setCapsLockBehavior(txtField09_Part);
-        loadVSPPartsField();
-        if (pbState) {
-            btnAdd.setVisible(true);
-            btnAdd.setManaged(true);
-            btnEdit.setVisible(false);
-            btnEdit.setManaged(false);
-        } else {
-            btnAdd.setVisible(false);
-            btnAdd.setManaged(false);
-            btnEdit.setVisible(true);
-            btnEdit.setManaged(true);
-        }
-    }
-
-    private void initNumberFormatterFields() {
-        Pattern pattern = Pattern.compile("[0-9,.]*");
-        txtField04_Part.setTextFormatter(new InputTextFormatter(pattern));
-        txtField06_Part.setTextFormatter(new InputTextFormatter(pattern));
-    }
-
-    private void initAlphabeticalFormatterFields() {
-        Pattern lettersOnlyPattern = Pattern.compile("[A-Za-z ]*");
-        txtField09_Part.setTextFormatter(new InputTextFormatter(lettersOnlyPattern));
-    }
-
     @Override
     public void setGRider(GRider foValue) {
         oApp = foValue;
@@ -134,6 +94,61 @@ public class VSPPartsDialogController implements Initializable, ScreenInterface 
 
     public void setStockID(String fsValue) {
         psStockID = fsValue;
+    }
+
+    public void setJO(String fsValue) {
+        psJO = fsValue;
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        btnClose.setOnAction(this::cmdButton_Click);
+        btnAdd.setOnAction(this::cmdButton_Click);
+        btnEdit.setOnAction(this::cmdButton_Click);
+        txtField04_Part.setOnKeyPressed(this::txtField_KeyPressed);
+        txtField06_Part.setOnKeyPressed(this::txtField_KeyPressed);
+        txtField09_Part.setOnKeyPressed(this::txtField_KeyPressed);
+        comboBox8.setItems(cChargeType);
+        handleComboBoxSelectionVSPMaster(comboBox8, 8);
+        initNumberFormatterFields();
+        initAlphabeticalFormatterFields();
+        txtField09_Part.focusedProperty().addListener(txtField_Focus);
+        txtField04_Part.focusedProperty().addListener(txtField_Focus);
+        txtField06_Part.focusedProperty().addListener(txtField_Focus);
+        setCapsLockBehavior(txtField09_Part);
+        loadVSPPartsField();
+        if (pbState) {
+            btnAdd.setVisible(true);
+            btnAdd.setManaged(true);
+            btnEdit.setVisible(false);
+            btnEdit.setManaged(false);
+        } else {
+            btnAdd.setVisible(false);
+            btnAdd.setManaged(false);
+            btnEdit.setVisible(true);
+            btnEdit.setManaged(true);
+
+            if (!psStockID.isEmpty()) {
+                txtField09_Part.setDisable(true);
+            }
+
+            if (!psJO.isEmpty()) {
+                txtField04_Part.setDisable(true);
+                comboBox8.setDisable(true);
+                txtField09_Part.setDisable(true);
+            }
+        }
+    }
+
+    private void initNumberFormatterFields() {
+        Pattern pattern = Pattern.compile("[0-9,.]*");
+        txtField04_Part.setTextFormatter(new InputTextFormatter(pattern));
+        txtField06_Part.setTextFormatter(new InputTextFormatter(pattern));
+    }
+
+    private void initAlphabeticalFormatterFields() {
+        Pattern lettersOnlyPattern = Pattern.compile("[A-Za-z ]*");
+        txtField09_Part.setTextFormatter(new InputTextFormatter(lettersOnlyPattern));
     }
 
     private void handleComboBoxSelectionVSPMaster(ComboBox<String> comboBox, int fieldNumber) {
@@ -213,7 +228,7 @@ public class VSPPartsDialogController implements Initializable, ScreenInterface 
             comboBox8.setValue(selectedItem8);
             txtField06_Part.setText(String.valueOf(oTrans.getVSPPartsDetail(pnRow, 6)));
             txtField04_Part.setText(String.valueOf(getFormat.format(Double.parseDouble(String.valueOf(oTrans.getVSPPartsDetail(pnRow, 4))))));
-
+            txtField14_Part.setText(String.valueOf(oTrans.getVSPPartsDetail(pnRow, 14)));
         } catch (SQLException ex) {
             Logger.getLogger(VSPPartsDialogController.class
                     .getName()).log(Level.SEVERE, null, ex);

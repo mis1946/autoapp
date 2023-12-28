@@ -17,7 +17,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -85,9 +84,6 @@ public class JobOrderVSPLaborDialogController implements Initializable, ScreenIn
         pnRow = fnRow;
     }
 
-    /**
-     * Initializes the controller class.
-     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         btnClose.setOnAction(this::cmdButton_Click);
@@ -136,11 +132,8 @@ public class JobOrderVSPLaborDialogController implements Initializable, ScreenIn
                                 ShowMessageFX.Error(null, pxeModuleName, "VSP Labor " + fsDescript + " already exist in JO No. " + fsJONox + ". Insert Aborted. ");
                                 return;
                             }
-
-                            // Assuming there is a method to retrieve the transaction number
                             try {
                                 boolean fsDest = false;
-                                //Validate JO Labor row
                                 for (int lnCtr = 1; lnCtr <= oTrans.getJOLaborCount(); lnCtr++) {
                                     if (oTrans.getJOLaborDetail(lnCtr, "sLaborDsc").toString().equals(fsDescript)) {
                                         ShowMessageFX.Error(null, pxeModuleName, "Skipping, Failed to add vsp labor, " + fsDescript + " already exist.");
@@ -183,6 +176,16 @@ public class JobOrderVSPLaborDialogController implements Initializable, ScreenIn
                 for (int lnCtr = 1; lnCtr <= oTrans.getVSPLaborCount(); lnCtr++) {
                     String amountString = oTrans.getVSPLaborDetail(lnCtr, "nLaborAmt").toString();
                     // Convert the amount to a decimal value
+
+                    String cType = "";
+                    switch (oTrans.getVSPLaborDetail(lnCtr, "sChrgeTyp").toString()) {
+                        case "0":
+                            cType = "FREE OF CHARGE";
+                            break;
+                        case "1":
+                            cType = "CHARGE";
+                            break;
+                    }
                     double amount = Double.parseDouble(amountString);
                     DecimalFormat decimalFormat = new DecimalFormat("#,##0.00");
                     String formattedAmount = decimalFormat.format(amount);
@@ -190,7 +193,7 @@ public class JobOrderVSPLaborDialogController implements Initializable, ScreenIn
                             String.valueOf(lnCtr), //ROW
                             oTrans.getVSPLaborDetail(lnCtr, "sLaborCde").toString(),
                             oTrans.getVSPLaborDetail(lnCtr, "sLaborDsc").toString(),
-                            oTrans.getVSPLaborDetail(lnCtr, "sChrgeTyp").toString(),
+                            cType,
                             formattedAmount,
                             oTrans.getVSPLaborDetail(lnCtr, "sDSNoxxxx").toString(),
                             oTrans.getVSPLaborDetail(lnCtr, "sDSCodexx").toString()

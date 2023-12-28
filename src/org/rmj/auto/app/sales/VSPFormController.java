@@ -2328,7 +2328,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
             loControl.setObject(oTrans);
             loControl.setOrigDsc((String) oTrans.getVSPLaborDetail(fnRow, 7));
             loControl.setState(isAdd);
-
+            loControl.setJO((String) oTrans.getVSPLaborDetail(fnRow, 11));
             loControl.setLbrDsc(isWithLbDsc);
             fxmlLoader.setController(loControl);
             loControl.setRow(fnRow);
@@ -2572,6 +2572,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
             loControl.setRow(fnRow);
             loControl.setOrigDsc((String) oTrans.getVSPPartsDetail(fnRow, 9));
             loControl.setStockID((String) oTrans.getVSPPartsDetail(fnRow, 3));
+            loControl.setJO((String) oTrans.getVSPPartsDetail(fnRow, 11));
             loControl.setLbrDsc(isWithLbDsc);
             //load the main interface
             Parent parent = fxmlLoader.load();

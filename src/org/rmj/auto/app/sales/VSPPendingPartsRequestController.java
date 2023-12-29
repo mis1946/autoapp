@@ -1,6 +1,7 @@
 package org.rmj.auto.app.sales;
 
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
+import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -12,22 +13,29 @@ import java.util.logging.Logger;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.rmj.appdriver.GRider;
 import org.rmj.appdriver.agentfx.CommonUtils;
 import org.rmj.appdriver.agentfx.ShowMessageFX;
 import org.rmj.appdriver.callback.MasterCallback;
+import org.rmj.auto.app.service.JobOrderFormController;
 import org.rmj.auto.app.views.ScreenInterface;
 import org.rmj.auto.app.views.unloadForm;
 import org.rmj.auto.sales.base.VehicleSalesProposalMaster;
@@ -43,6 +51,9 @@ public class VSPPendingPartsRequestController implements Initializable, ScreenIn
     private VehicleSalesProposalMaster oTrans;
     private MasterCallback oListener;
     private int lnCtr = 0;
+    private double xOffset = 0;
+    private double yOffset = 0;
+    private int pnRow = -1;
     unloadForm unload = new unloadForm(); //Used in Close Button
     private final String pxeModuleName = "Sales Parts Request"; //Form Title
     private ObservableList<VSPTableMasterList> vspdata = FXCollections.observableArrayList();
@@ -83,6 +94,16 @@ public class VSPPendingPartsRequestController implements Initializable, ScreenIn
      * Initializes the controller class.
      */
     @Override
+    public void setGRider(GRider foValue) {
+        oApp = foValue;
+    }
+
+    private Stage getStage() {
+//        return (Stage) txtFieldSearch.getScene().getWindow();
+        return null;
+    }
+
+    @Override
     public void initialize(URL url, ResourceBundle rb) {
         oTrans = new VehicleSalesProposalMaster(oApp, oApp.getBranchCode(), true); //Initialize ClientMaster
         oTrans.setCallback(oListener);
@@ -115,14 +136,27 @@ public class VSPPendingPartsRequestController implements Initializable, ScreenIn
             });
         });
 
+        tblVhclPartsRequest.setOnMouseClicked(this::tblParts_Clicked);
+
     }
 
-    @Override
-    public void setGRider(GRider foValue) {
-        oApp = foValue;
-    }
+    private void tblParts_Clicked(MouseEvent event) {
+        pnRow = tblVhclPartsRequest.getSelectionModel().getSelectedIndex() + 1;
+        if (pnRow == 0) {
+            return;
+        }
 
+        if (event.getClickCount() == 2) {
+            try {
+                loadPartsAdditionalDialog(pnRow);
+            } catch (IOException ex) {
+                Logger.getLogger(JobOrderFormController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+        }
+    }
     //Date Formatter
+
     private LocalDate strToDate(String val) {
         DateTimeFormatter date_formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate localDate = LocalDate.parse(val, date_formatter);
@@ -147,11 +181,6 @@ public class VSPPendingPartsRequestController implements Initializable, ScreenIn
         }
     }
 
-    private Stage getStage() {
-//        return (Stage) txtFieldSearch.getScene().getWindow();
-        return null;
-    }
-
     private void loadVhlPartsRequestTable(String fromDate, String toDate) {
         try {
             vspdata.clear();
@@ -163,10 +192,11 @@ public class VSPPendingPartsRequestController implements Initializable, ScreenIn
                     } else {
                         cancelDisplay = "N";
                     }
+                    LocalDate date = strToDate(CommonUtils.xsDateShort((Date) oTrans.getDetail(lnCtr, "dTransact")));
                     vspdata.add(new VSPTableMasterList(
                             String.valueOf(lnCtr),
                             "",
-                            oTrans.getDetail(lnCtr, "dTransact").toString(),
+                            date.toString(),
                             oTrans.getDetail(lnCtr, "sVSPNOxxx").toString().toUpperCase(), //vspNo
                             "", //dDelvryDt
                             "",
@@ -287,4 +317,67 @@ public class VSPPendingPartsRequestController implements Initializable, ScreenIn
         tblindex75.setCellValueFactory(new PropertyValueFactory<>("tblindex75_Master"));
         tblindex61.setCellValueFactory(new PropertyValueFactory<>("tblindex61_Master"));
     }
+
+    private void loadPartsAdditionalDialog(Integer fnRow) throws IOException {
+        /**
+         * if state = true : ADD else if state = false : UPDATE *
+         */
+        try {
+            Stage stage = new Stage();
+
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            fxmlLoader.setLocation(getClass().getResource("VSPPartsRequest.fxml"));
+
+            VSPPartsRequestController loControl = new VSPPartsRequestController();
+            loControl.setGRider(oApp);
+            loControl.setObject(oTrans);
+
+            fxmlLoader.setController(loControl);
+            loControl.setRow(fnRow);
+            loControl.setOrigDsc("");
+            loControl.setStockID((String) oTrans.getDetail(fnRow, 3));
+            loControl.setTrans((String) oTrans.getDetail(fnRow, 1));
+            //load the main interface
+            Parent parent = fxmlLoader.load();
+
+            parent.setOnMousePressed(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    xOffset = event.getSceneX();
+                    yOffset = event.getSceneY();
+                }
+            });
+
+            parent.setOnMouseDragged(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    stage.setX(event.getScreenX() - xOffset);
+                    stage.setY(event.getScreenY() - yOffset);
+                }
+            });
+
+            //set the main interface as the scene/*
+            Scene scene = new Scene(parent);
+            stage.setScene(scene);
+            stage.initStyle(StageStyle.TRANSPARENT);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle("");
+            stage.showAndWait();
+            LocalDate filterFromDate = fromDate.getValue();
+            String psFromDate = filterFromDate.toString();
+            LocalDate filterToDate = toDate.getValue();
+            String psToDate = filterToDate.toString();
+            loadVhlPartsRequestTable(psFromDate, psToDate);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
+            System.exit(1);
+
+        } catch (SQLException ex) {
+            Logger.getLogger(VSPPendingPartsRequestController.class
+                    .getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
 }

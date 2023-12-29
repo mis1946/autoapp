@@ -4,13 +4,6 @@
  */
 package org.rmj.auto.app.sales;
 
-import java.awt.Checkbox;
-import java.time.LocalDate;
-import java.util.Date;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.CheckBox;
 
@@ -21,7 +14,6 @@ import javafx.scene.control.CheckBox;
 public class VehicleSalesApprovalTable {
 
     private SimpleStringProperty tblRow;
-//    private SimpleBooleanProperty tblselected;
     private SimpleStringProperty tblindex13; //sTransNox
     private CheckBox select;
     private SimpleStringProperty tblindex01; //sTransNox

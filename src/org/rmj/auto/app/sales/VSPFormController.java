@@ -2569,6 +2569,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
             loControl.setObject(oTrans);
             loControl.setState(isAdd);
             fxmlLoader.setController(loControl);
+            loControl.setRequest(false);
             loControl.setRow(fnRow);
             loControl.setOrigDsc((String) oTrans.getVSPPartsDetail(fnRow, 9));
             loControl.setStockID((String) oTrans.getVSPPartsDetail(fnRow, 3));
@@ -2668,7 +2669,8 @@ public class VSPFormController implements Initializable, ScreenInterface {
                         oTrans.getVSPPartsDetail(lnCtr, "nQuantity").toString(),
                         formattedAmount,
                         oTrans.getVSPPartsDetail(lnCtr, "sDSNoxxxx").toString(),
-                        totalAmount
+                        totalAmount,
+                        ""
                 ));
 
             }

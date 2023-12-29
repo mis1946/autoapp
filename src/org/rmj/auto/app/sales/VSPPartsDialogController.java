@@ -128,14 +128,9 @@ public class VSPPartsDialogController implements Initializable, ScreenInterface 
             btnEdit.setVisible(true);
             btnEdit.setManaged(true);
 
-            if (!psStockID.isEmpty()) {
-                txtField09_Part.setDisable(true);
-            }
-
             if (!psJO.isEmpty()) {
                 txtField04_Part.setDisable(true);
                 comboBox8.setDisable(true);
-                txtField09_Part.setDisable(true);
             }
         }
     }

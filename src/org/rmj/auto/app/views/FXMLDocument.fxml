@@ -124,6 +124,7 @@
                                                         <Menu mnemonicParsing="false" text="Parts">
                                                             <items>
                                                                 <MenuItem fx:id="mnuItemEntry" mnemonicParsing="false" onAction="#mnuItemEntryClicked" text="Item Information" />
+                                                                <MenuItem fx:id="mnuSalesPartsRequest" mnemonicParsing="false" onAction="#mnuSalesPartsRequestClicked" text="Sales Parts Request" />
                                                             </items>
                                                         </Menu>
                                                         <Menu mnemonicParsing="false" text="Service">

@@ -550,6 +550,7 @@ public class VSPFormPrintController implements Initializable {
                     ownerHomeAddress,
                     oTrans.getMaster("sDescript").toString().toUpperCase(),
                     platOrCsNo,
+                    "",
                     oTrans.getMaster("sFrameNox").toString(),
                     oTrans.getMaster("sEngineNo").toString(),
                     salesExeFullName.toUpperCase(),

@@ -17,7 +17,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="270.0" prefWidth="526.0" stylesheets="@../css/FrameStyle.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane id="AnchorPane" prefHeight="301.0" prefWidth="526.0" stylesheets="@../css/FrameStyle.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <StackPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
@@ -28,7 +28,7 @@
                     <top>
                         <AnchorPane style="-fx-background-color: #FACEA1; -fx-border-color: #F88222;" BorderPane.alignment="CENTER">
                             <children>
-                                <Label alignment="CENTER" prefHeight="17.0" text="VSP Parts Entry" textFill="#5b5b5b" AnchorPane.bottomAnchor="3.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="3.0">
+                                <Label alignment="CENTER" prefHeight="17.0" text="Parts Information" textFill="#5b5b5b" AnchorPane.bottomAnchor="3.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="3.0">
                                     <font>
                                         <Font name="Arial Bold" size="12.0" />
                                     </font>
@@ -58,7 +58,7 @@
                                         <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                     </rowConstraints>
                                     <children>
-                                        <Label text="VSP Parts Description" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                        <Label text="Parts Description" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                             <GridPane.margin>
                                                 <Insets />
                                             </GridPane.margin>
@@ -66,7 +66,7 @@
                                                 <Font name="Arial Bold" size="12.0" />
                                             </font>
                                         </Label>
-                                        <TextField fx:id="txtField09_Part" style="-fx-font-weight: bold;" GridPane.columnIndex="2" GridPane.columnSpan="4" GridPane.rowIndex="1">
+                                        <TextField fx:id="txtField04_Part" disable="true" style="-fx-font-weight: bold;" GridPane.columnIndex="2" GridPane.columnSpan="4" GridPane.rowIndex="1">
                                             <tooltip>
                                                 <Tooltip text="Please fill in the VSP Parts Description." />
                                             </tooltip>
@@ -81,7 +81,7 @@
                                                 <Tooltip text="Please fill in the VSP Parts Quantity." />
                                             </tooltip>
                                         </TextField>
-                                        <ComboBox fx:id="comboBox8" prefWidth="150.0" GridPane.columnIndex="2" GridPane.columnSpan="4" GridPane.rowIndex="3">
+                                        <ComboBox fx:id="comboBox11" disable="true" prefWidth="150.0" GridPane.columnIndex="2" GridPane.columnSpan="4" GridPane.rowIndex="3">
                                             <tooltip>
                                                 <Tooltip text="Please select VSP Parts Charge Type." />
                                             </tooltip>
@@ -91,7 +91,7 @@
                                                 <Font name="Arial Bold" size="12.0" />
                                             </font>
                                         </Label>
-                                        <TextField fx:id="txtField04_Part" promptText="0.00" style="-fx-font-weight: bold;" GridPane.columnIndex="2" GridPane.columnSpan="3" GridPane.rowIndex="4">
+                                        <TextField fx:id="txtField10_Part" disable="true" promptText="0.00" style="-fx-font-weight: bold;" GridPane.columnIndex="2" GridPane.columnSpan="3" GridPane.rowIndex="4">
                                             <tooltip>
                                                 <Tooltip text="Please fill in the VSP Parts Amount." />
                                             </tooltip>
@@ -102,12 +102,12 @@
                                                 <Font name="Arial Bold" size="12.0" />
                                             </font>
                                         </Label>
-                                        <Label text="VSP Parts Number" GridPane.columnIndex="1">
+                                        <Label text="Parts Number" GridPane.columnIndex="1">
                                             <font>
                                                 <Font name="Arial Bold" size="12.0" />
                                             </font>
                                         </Label>
-                                        <Label alignment="CENTER_RIGHT" prefHeight="14.0" prefWidth="134.0" text="*" textFill="#fb0000" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                        <Label alignment="CENTER_RIGHT" prefHeight="14.0" prefWidth="109.0" text="*" textFill="#fb0000" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                             <font>
                                                 <Font name="Arial Bold" size="11.5" />
                                             </font>

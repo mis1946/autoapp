@@ -568,7 +568,7 @@ public class VSPFormPrintController implements Initializable {
                     displayTplInsuranceComp.toUpperCase(),
                     displayCompInsuranceComp.toUpperCase(),
                     oTrans.getMaster("sTaxIDNox").toString(),
-                    oTrans.getMaster("sJobNoxxx").toString(),
+                    oTrans.getMaster("sDSNoxxxx").toString(),
                     CommonUtils.xsDateMedium((Date) oTrans.getMaster("dBirthDte")),
                     oTrans.getMaster("sEmailAdd").toString(),
                     oTrans.getMaster("cOwnerxxx").toString(),

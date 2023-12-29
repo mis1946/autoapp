@@ -70,6 +70,7 @@ import org.rmj.auto.app.sales.UnitReceivingFormController;
 import org.rmj.auto.app.sales.VSPFormController;
 import org.rmj.auto.app.sales.VehicleEntryFormController;
 import org.rmj.auto.app.sales.VehicleSalesApprovalController;
+import org.rmj.auto.app.service.JobOrderFormController;
 import org.rmj.auto.app.views.ActivityFormController;
 
 /**
@@ -83,6 +84,7 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
     private double tabsize;
     private String sSalesInvoiceType = "";
     private String sVehicleInfoType = "";
+    private String sJobOrderType = "";
 
     // Variables to track the window movement
     private double xOffset = 0;
@@ -175,6 +177,8 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
     private MenuItem mnuVhclSalesInv;
     @FXML
     private MenuItem mnuCustVhclInfo;
+    @FXML
+    private MenuItem mnuSalesJobOrder;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -431,6 +435,10 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
                 return new InvoiceFormController();
             case "VehicleSalesInvoiceForm.fxml":
                 return new VehicleSalesInvoiceFormController();
+            /*SERVICE*/
+            case "JobOrderForm.fxml":
+                return new JobOrderFormController();
+
             default:
                 ShowMessageFX.Warning(null, "Warning", "Notify System Admin to Configure Screen Interface for " + fsValue);
                 return null;
@@ -448,12 +456,12 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
             case "CustomerForm.fxml":
                 return "Customer";
             case "CustomerVehicleInfoForm.fxml":
-                if (sVehicleInfoType.isEmpty()){
+                if (sVehicleInfoType.isEmpty()) {
                     ShowMessageFX.Warning(null, "Warning", "Notify System Admin to Configure Tab Title for " + menuaction);
                     return null;
                 }
                 return sVehicleInfoType;
-                //return "Customer Vehicle Information";
+            //return "Customer Vehicle Information";
             case "SupplierInfo.fxml":
                 return "Supplier";
             /*SALES*/
@@ -478,7 +486,7 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
                 return "Bank";
             /*CASHIERING*/
             case "InvoiceForm.fxml":
-                if (sSalesInvoiceType.isEmpty()){
+                if (sSalesInvoiceType.isEmpty()) {
                     ShowMessageFX.Warning(null, "Warning", "Notify System Admin to Configure Tab Title for " + menuaction);
                     return null;
                 }
@@ -488,6 +496,13 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
             /*PARTS*/
             case "ItemEntryForm.fxml":
                 return "Item Information";
+            /**/
+            case "JobOrderForm.fxml":
+                if (sJobOrderType.isEmpty()) {
+                    ShowMessageFX.Warning(null, "Warning", "Notify System Admin to Configure Tab Title for " + menuaction);
+                    return null;
+                }
+                return sJobOrderType;
             default:
                 ShowMessageFX.Warning(null, "Warning", "Notify System Admin to Configure Tab Title for " + menuaction);
                 return null;
@@ -548,7 +563,7 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
             setScene2(loadAnimate(sformname));
         }
     }
-   
+
     @FXML
     private void mnuSupplierInfoClick(ActionEvent event) {
         String sformname = "SupplierInfo.fxml";
@@ -560,6 +575,16 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
 
     /*SALES*/
     @FXML
+    private void mnuSalesJobOrderClick(ActionEvent event) {
+        sJobOrderType = "Sales Job Order Information";
+        String sformname = "JobOrderForm.fxml";
+        //check tab
+        if (checktabs(SetTabTitle(sformname)) == 1) {
+            setScene2(loadAnimate(sformname));
+        }
+    }
+
+    @FXML
     private void mnuSalesAgentClick(ActionEvent event) {
         String sformname = "SalesAgentForm.fxml";
         //check tab
@@ -567,7 +592,7 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
             setScene2(loadAnimate(sformname));
         }
     }
-    
+
     @FXML
     private void mnuUnitRecvClick(ActionEvent event) {
         String sformname = "UnitReceivingForm.fxml";
@@ -603,7 +628,7 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
             setScene2(loadAnimate(sformname));
         }
     }
-    
+
     @FXML
     private void mnuVSPEntryClick(ActionEvent event) {
         String sformname = "VSPForm.fxml";
@@ -612,7 +637,7 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
             setScene2(loadAnimate(sformname));
         }
     }
-    
+
     @FXML
     private void mnuCustVhclInfoClick(ActionEvent event) {
         sVehicleInfoType = "Customer Vehicle Information";
@@ -622,7 +647,7 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
             setScene2(loadAnimate(sformname));
         }
     }
-    
+
     @FXML
     private void mnuVhclEntryClick(ActionEvent event) {
         sVehicleInfoType = "Vehicle Sales Information";
@@ -647,7 +672,7 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
             setScene2(loadAnimate(sformname));
         }
     }
-    
+
     @FXML
     private void mnuVhclMakeEntryClicked(ActionEvent event) {
         String sformname = "VehicleMakeForm.fxml";
@@ -687,7 +712,7 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
             setScene2(loadAnimate(sformname));
         }
     }
-    
+
     /*CASHIERING*/
     @FXML
     private void mnuAckReceiptClick(ActionEvent event) {
@@ -697,9 +722,9 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
         if (checktabs(SetTabTitle(sformname)) == 1) {
             setScene2(loadAnimate(sformname));
         }
-        
+
     }
-    
+
     @FXML
     private void mnuBillingStmtClick(ActionEvent event) {
         sSalesInvoiceType = "Billing Statement";
@@ -739,7 +764,7 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
             setScene2(loadAnimate(sformname));
         }
     }
-    
+
     @FXML
     private void mnuVhclSalesInvClick(ActionEvent event) {
         String sformname = "VehicleSalesInvoiceForm.fxml";
@@ -833,6 +858,17 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
         param.FXMLMenuParameterForm(getController(sformname), oApp, sformname);
     }
 
+    /*Service*/
+    @FXML
+    private void mnuJobOrderClick(ActionEvent event) {
+        sJobOrderType = "Service Job Order Information";
+        String sformname = "JobOrderForm.fxml";
+        //check tab
+        if (checktabs(SetTabTitle(sformname)) == 1) {
+            setScene2(loadAnimate(sformname));
+        }
+    }
+
     /*SET CURRENT TIME*/
     private void getTime() {
         Timeline clock = new Timeline(new KeyFrame(Duration.ZERO, e -> {
@@ -889,11 +925,5 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
     private void initMenu() {
 
     }
-
-    
-
-    
-
-    
 
 }

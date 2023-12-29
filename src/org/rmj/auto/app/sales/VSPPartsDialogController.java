@@ -33,9 +33,10 @@ import org.rmj.auto.sales.base.VehicleSalesProposalMaster;
 
 public class VSPPartsDialogController implements Initializable, ScreenInterface {
 
-    private Boolean lbrDsc;
+    private boolean lbrDsc;
     private int pnRow = 0;
     private boolean pbState = true;
+    private boolean pbRequest = false;
     private String psOrigDsc = "";
     private String psStockID = "";
     private String psJO = "";
@@ -100,6 +101,10 @@ public class VSPPartsDialogController implements Initializable, ScreenInterface 
         psJO = fsValue;
     }
 
+    public void setRequest(boolean fsValue) {
+        pbRequest = fsValue;
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         btnClose.setOnAction(this::cmdButton_Click);
@@ -107,6 +112,7 @@ public class VSPPartsDialogController implements Initializable, ScreenInterface 
         btnEdit.setOnAction(this::cmdButton_Click);
         txtField04_Part.setOnKeyPressed(this::txtField_KeyPressed);
         txtField06_Part.setOnKeyPressed(this::txtField_KeyPressed);
+        txtField14_Part.setOnKeyPressed(this::txtField_KeyPressed);
         txtField09_Part.setOnKeyPressed(this::txtField_KeyPressed);
         comboBox8.setItems(cChargeType);
         handleComboBoxSelectionVSPMaster(comboBox8, 8);
@@ -131,6 +137,26 @@ public class VSPPartsDialogController implements Initializable, ScreenInterface 
             if (!psJO.isEmpty()) {
                 txtField04_Part.setDisable(true);
                 comboBox8.setDisable(true);
+
+            } else {
+                if (pbRequest) {
+                    txtField14_Part.setDisable(false);
+                } else {
+                    txtField14_Part.setDisable(true);
+                }
+            }
+
+            if (pbRequest) {
+                txtField09_Part.setDisable(true);
+                txtField06_Part.setDisable(true);
+                comboBox8.setDisable(true);
+                txtField04_Part.setDisable(true);
+            } else {
+                txtField09_Part.setDisable(false);
+                txtField06_Part.setDisable(false);
+                comboBox8.setDisable(false);
+                txtField04_Part.setDisable(false);
+
             }
         }
     }
@@ -300,12 +326,20 @@ public class VSPPartsDialogController implements Initializable, ScreenInterface 
     private void txtField_KeyPressed(KeyEvent event) {
         String txtFieldID = ((TextField) event.getSource()).getId();
         if (event.getCode() == KeyCode.TAB || event.getCode() == KeyCode.ENTER || event.getCode() == KeyCode.F3) {
-            switch (txtFieldID) {
-                case "txtField09_Labor":
-                    break;
+            try {
+                switch (txtFieldID) {
+                    case "txtField14_Part":
+                        if (oTrans.searchInventory(txtField14_Part.getText(), pnRow)) {
+                            txtField14_Part.setText(String.valueOf(oTrans.getVSPPartsDetail(pnRow, 14)));
+                            break;
+                        }
+
+                }
+                event.consume();
+                CommonUtils.SetNextFocus((TextField) event.getSource());
+            } catch (SQLException ex) {
+                Logger.getLogger(VSPPartsDialogController.class.getName()).log(Level.SEVERE, null, ex);
             }
-            event.consume();
-            CommonUtils.SetNextFocus((TextField) event.getSource());
         } else if (event.getCode() == KeyCode.UP) {
             event.consume();
             CommonUtils.SetPreviousFocus((TextField) event.getSource());
@@ -326,6 +360,16 @@ public class VSPPartsDialogController implements Initializable, ScreenInterface 
                         CommonUtils.closeStage(btnClose);
                     } else {
                         return;
+                    }
+
+                    if (pbRequest) {
+                        if (oTrans.UpdateRecord()) {
+                            if (oTrans.updateVSPPartNumber((String) oTrans.getVSPPartsDetail(pnRow, 1), pnRow)) {
+                                CommonUtils.closeStage(btnClose);
+                            } else {
+                                return;
+                            }
+                        }
                     }
                     break;
                 case "btnClose":

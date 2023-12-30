@@ -8,7 +8,6 @@ package org.rmj.auto.app.sales;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
-import java.text.DecimalFormat;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -148,7 +147,6 @@ public class VSPPartsRequestController implements Initializable, ScreenInterface
     }
 
     private Stage getStage() {
-//        return (Stage) txtFieldSearch.getScene().getWindow();
         return null;
     }
 

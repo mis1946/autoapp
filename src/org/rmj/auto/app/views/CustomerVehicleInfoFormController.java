@@ -808,8 +808,10 @@ public class CustomerVehicleInfoFormController implements Initializable, ScreenI
             
             if(pbisVhclSales){
                 txtField40V.setText((String) oTransVehicle.getMaster(40));
-                txtField41V.setText(CommonUtils.xsDateMedium(SQLUtil.toDate((String) oTransVehicle.getMaster(41), SQLUtil.FORMAT_SHORT_DATE)));
-                //System.out.println(CommonUtils.xsDateMedium(SQLUtil.toDate((String) oTransVehicle.getMaster(41), SQLUtil.FORMAT_SHORT_DATE)));
+                if (!((String) oTransVehicle.getMaster(41)).isEmpty()){
+                    System.out.println(CommonUtils.xsDateMedium(SQLUtil.toDate((String) oTransVehicle.getMaster(41), SQLUtil.FORMAT_SHORT_DATE)));
+                    txtField41V.setText(CommonUtils.xsDateMedium(SQLUtil.toDate((String) oTransVehicle.getMaster(41), SQLUtil.FORMAT_SHORT_DATE)));
+                }
                 txtField42V.setText((String) oTransVehicle.getMaster(42));
             }
             

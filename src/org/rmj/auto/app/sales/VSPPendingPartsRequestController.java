@@ -108,26 +108,12 @@ public class VSPPendingPartsRequestController implements Initializable, ScreenIn
         oTrans = new VehicleSalesProposalMaster(oApp, oApp.getBranchCode(), true); //Initialize ClientMaster
         oTrans.setCallback(oListener);
         oTrans.setWithUI(true);
-//
-//        loadVhlPartsRequestTable();
-        // TODO
+
+        fromDate.setOnAction(event -> loadTable());
+        toDate.setOnAction(event -> loadTable());
         fromDate.setValue(strToDate(CommonUtils.xsDateShort((Date) oApp.getServerDate())));
         toDate.setValue(strToDate(CommonUtils.xsDateShort((Date) oApp.getServerDate())));
-        fromDate.setOnAction(event -> {
-            LocalDate filterFromDate = fromDate.getValue();
-            String psFromDate = filterFromDate.toString();
-            LocalDate filterToDate = toDate.getValue();
-            String psToDate = filterToDate.toString();
-            loadVhlPartsRequestTable(psFromDate, psToDate);
-        });
-
-        toDate.setOnAction(event -> {
-            LocalDate filterFromDate = fromDate.getValue();
-            String psFromDate = filterFromDate.toString();
-            LocalDate filterToDate = toDate.getValue();
-            String psToDate = filterToDate.toString();
-            loadVhlPartsRequestTable(psFromDate, psToDate);
-        });
+        loadTable();
         btnClose.setOnAction(this::cmdButton_Click);
         tblVhclPartsRequest.widthProperty().addListener((ObservableValue<? extends Number> source, Number oldWidth, Number newWidth) -> {
             TableHeaderRow header = (TableHeaderRow) tblVhclPartsRequest.lookup("TableHeaderRow");
@@ -138,6 +124,17 @@ public class VSPPendingPartsRequestController implements Initializable, ScreenIn
 
         tblVhclPartsRequest.setOnMouseClicked(this::tblParts_Clicked);
 
+    }
+
+    private void loadTable() {
+        LocalDate filterFromDate = fromDate.getValue();
+        LocalDate filterToDate = toDate.getValue();
+
+        if (filterFromDate != null && filterToDate != null) {
+            String psFromDate = filterFromDate.toString();
+            String psToDate = filterToDate.toString();
+            loadVhlPartsRequestTable(psFromDate, psToDate);
+        }
     }
 
     private void tblParts_Clicked(MouseEvent event) {

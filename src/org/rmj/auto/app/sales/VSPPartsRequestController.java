@@ -186,15 +186,15 @@ public class VSPPartsRequestController implements Initializable, ScreenInterface
         if (oTrans.OpenRecord(sTrans)) {
             try {
                 if (oTrans.UpdateRecord()) {
-                    txtField68.setText((String) oTrans.getMaster(68));
-                    textArea69.setText((String) oTrans.getMaster(69));
-                    txtField97.setText((String) oTrans.getMaster(97));
-                    txtField75.setText((String) oTrans.getMaster(75));
-                    textArea70.setText((String) oTrans.getMaster(70));
-                    txtField71.setText((String) oTrans.getMaster(71));
-                    txtField72.setText((String) oTrans.getMaster(72));
-                    txtField73.setText((String) oTrans.getMaster(73));
-                    txtField74.setText((String) oTrans.getMaster(74));
+                    txtField68.setText(oTrans.getMaster(68).toString().toUpperCase());
+                    textArea69.setText((String) oTrans.getMaster(69).toString().toUpperCase());
+                    txtField97.setText((String) oTrans.getMaster(97).toString().toUpperCase());
+                    txtField75.setText((String) oTrans.getMaster(75).toString().toUpperCase());
+                    textArea70.setText((String) oTrans.getMaster(70).toString().toUpperCase());
+                    txtField71.setText((String) oTrans.getMaster(71).toString().toUpperCase());
+                    txtField72.setText((String) oTrans.getMaster(72).toString().toUpperCase());
+                    txtField73.setText((String) oTrans.getMaster(73).toString().toUpperCase());
+                    txtField74.setText((String) oTrans.getMaster(74).toString().toUpperCase());
                     loadTableParts();
                 } else {
                     ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
@@ -232,8 +232,8 @@ public class VSPPartsRequestController implements Initializable, ScreenInterface
                         oTrans.getVSPPartsDetail(lnCtr, "sTransNox").toString(),
                         oTrans.getVSPPartsDetail(lnCtr, "sStockIDx").toString(),
                         oTrans.getVSPPartsDetail(lnCtr, "sBarCodex").toString(),
-                        partDesc,
-                        cType,
+                        partDesc.toUpperCase(),
+                        cType.toUpperCase(),
                         oTrans.getVSPPartsDetail(lnCtr, "nQuantity").toString(),
                         "",
                         oTrans.getVSPPartsDetail(lnCtr, "sDSNoxxxx").toString(),

@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import javafx.beans.property.ReadOnlyBooleanPropertyBase;
 import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -33,9 +34,10 @@ import org.rmj.auto.sales.base.VehicleSalesProposalMaster;
 
 public class VSPPartsDialogController implements Initializable, ScreenInterface {
 
-    private Boolean lbrDsc;
+    private boolean lbrDsc;
     private int pnRow = 0;
     private boolean pbState = true;
+    private boolean pbRequest = false;
     private String psOrigDsc = "";
     private String psStockID = "";
     private String psJO = "";
@@ -100,6 +102,10 @@ public class VSPPartsDialogController implements Initializable, ScreenInterface 
         psJO = fsValue;
     }
 
+    public void setRequest(boolean fsValue) {
+        pbRequest = fsValue;
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         btnClose.setOnAction(this::cmdButton_Click);
@@ -107,6 +113,7 @@ public class VSPPartsDialogController implements Initializable, ScreenInterface 
         btnEdit.setOnAction(this::cmdButton_Click);
         txtField04_Part.setOnKeyPressed(this::txtField_KeyPressed);
         txtField06_Part.setOnKeyPressed(this::txtField_KeyPressed);
+        txtField14_Part.setOnKeyPressed(this::txtField_KeyPressed);
         txtField09_Part.setOnKeyPressed(this::txtField_KeyPressed);
         comboBox8.setItems(cChargeType);
         handleComboBoxSelectionVSPMaster(comboBox8, 8);
@@ -131,8 +138,40 @@ public class VSPPartsDialogController implements Initializable, ScreenInterface 
             if (!psJO.isEmpty()) {
                 txtField04_Part.setDisable(true);
                 comboBox8.setDisable(true);
+
+            } else {
+                if (pbRequest) {
+                    txtField14_Part.setDisable(false);
+                } else {
+                    txtField14_Part.setDisable(true);
+                }
+            }
+
+            if (pbRequest) {
+                txtField09_Part.setDisable(true);
+                txtField06_Part.setDisable(true);
+                comboBox8.setDisable(true);
+                txtField04_Part.setDisable(true);
+            } else {
+                txtField09_Part.setDisable(false);
+                txtField06_Part.setDisable(false);
+                comboBox8.setDisable(false);
+                txtField04_Part.setDisable(false);
+
             }
         }
+
+        txtField14_Part.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+            if (newValue.isEmpty()) {
+                try {
+                    oTrans.setVSPPartsDetail(pnRow, 3, "");
+                    oTrans.setVSPPartsDetail(pnRow, 14, "");
+                } catch (SQLException ex) {
+                    Logger.getLogger(VSPPartsDialogController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+
     }
 
     private void initNumberFormatterFields() {
@@ -291,6 +330,7 @@ public class VSPPartsDialogController implements Initializable, ScreenInterface 
             oTrans.setVSPPartsDetail(pnRow, 8, String.valueOf(selectedType));
             oTrans.setVSPPartsDetail(pnRow, 6, userQuant);
             oTrans.setVSPPartsDetail(pnRow, 4, setFormat.format(Double.valueOf(txtField04_Part.getText().replace(",", ""))));
+
         } catch (SQLException ex) {
             Logger.getLogger(VSPLaborEntryDialogController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -300,12 +340,23 @@ public class VSPPartsDialogController implements Initializable, ScreenInterface 
     private void txtField_KeyPressed(KeyEvent event) {
         String txtFieldID = ((TextField) event.getSource()).getId();
         if (event.getCode() == KeyCode.TAB || event.getCode() == KeyCode.ENTER || event.getCode() == KeyCode.F3) {
-            switch (txtFieldID) {
-                case "txtField09_Labor":
-                    break;
+            try {
+                switch (txtFieldID) {
+                    case "txtField14_Part":
+                        if (oTrans.searchInventory(txtField14_Part.getText(), pnRow)) {
+                            txtField14_Part.setText(String.valueOf(oTrans.getVSPPartsDetail(pnRow, 14)));
+                            break;
+                        } else {
+                            ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                            return;
+                        }
+
+                }
+                event.consume();
+                CommonUtils.SetNextFocus((TextField) event.getSource());
+            } catch (SQLException ex) {
+                Logger.getLogger(VSPPartsDialogController.class.getName()).log(Level.SEVERE, null, ex);
             }
-            event.consume();
-            CommonUtils.SetNextFocus((TextField) event.getSource());
         } else if (event.getCode() == KeyCode.UP) {
             event.consume();
             CommonUtils.SetPreviousFocus((TextField) event.getSource());
@@ -321,20 +372,48 @@ public class VSPPartsDialogController implements Initializable, ScreenInterface 
             String lsButton = ((Button) event.getSource()).getId();
             switch (lsButton) {
                 case "btnEdit":
+                    if (pbRequest) {
+//                        if (txtField14_Part.getText().trim().isEmpty()) {
+//                            ShowMessageFX.Warning(getStage(), "Please enter a value for Part Number.", "Warning", null);
+//                            txtField14_Part.focusedProperty();
+//                            return;
+//                        } else {
+
+                        if (oTrans.updateVSPPartNumber(pnRow)) {
+                            CommonUtils.closeStage(btnClose);
+                        } else {
+                            ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                            return;
+                        }
+//                        }
+
+                    } else {
+                        if (settoClass()) {
+                            CommonUtils.closeStage(btnClose);
+                        } else {
+                            return;
+                        }
+                    }
+
+                    break;
                 case "btnAdd":
+
                     if (settoClass()) {
                         CommonUtils.closeStage(btnClose);
                     } else {
                         return;
                     }
+
                     break;
                 case "btnClose":
-                    if (pbState) {
-                        if (oTrans.getVSPPartsDetail(pnRow, 1).toString().isEmpty()) {
-                            oTrans.removeVSPParts(pnRow);
+                    if (!pbRequest) {
+                        if (pbState) {
+                            if (oTrans.getVSPPartsDetail(pnRow, 1).toString().isEmpty()) {
+                                oTrans.removeVSPParts(pnRow);
+                            }
+                        } else {
+                            oTrans.setVSPPartsDetail(pnRow, 9, psOrigDsc);
                         }
-                    } else {
-                        oTrans.setVSPPartsDetail(pnRow, 9, psOrigDsc);
                     }
                     CommonUtils.closeStage(btnClose);
                     break;

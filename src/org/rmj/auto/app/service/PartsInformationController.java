@@ -61,6 +61,39 @@ public class PartsInformationController implements Initializable, ScreenInterfac
      * Initializes the controller class.
      */
     @Override
+    public void setGRider(GRider foValue) {
+        oApp = foValue;
+    }
+
+    public void setObject(JobOrderMaster foValue) {
+        oTrans = foValue;
+    }
+
+    public void setRow(int fnRow) {
+        pnRow = fnRow;
+    }
+
+    public void isAdditional(boolean additional) {
+        additional = additional;
+    }
+
+    public void setState(boolean fbValue) {
+        pbState = fbValue;
+    }
+
+    public void setLbrDsc(Boolean fbValue) {
+        lbrDsc = fbValue;
+    }
+
+    public void setOrigDsc(String fsValue) {
+        psOrigDsc = fsValue;
+    }
+
+    public void setStockID(String fsValue) {
+        psStockID = fsValue;
+    }
+
+    @Override
     public void initialize(URL url, ResourceBundle rb) {
         btnClose.setOnAction(this::cmdButton_Click);
         btnAdd.setOnAction(this::cmdButton_Click);
@@ -100,38 +133,6 @@ public class PartsInformationController implements Initializable, ScreenInterfac
         txtField04_Part.setTextFormatter(new InputTextFormatter(lettersOnlyPattern));
     }
 
-    @Override
-    public void setGRider(GRider foValue) {
-        oApp = foValue;
-    }
-
-    public void setObject(JobOrderMaster foValue) {
-        oTrans = foValue;
-    }
-
-    public void setRow(int fnRow) {
-        pnRow = fnRow;
-    }
-
-    public void isAdditional(boolean additional) {
-        additional = additional;
-    }
-
-    public void setState(boolean fbValue) {
-        pbState = fbValue;
-    }
-
-    public void setLbrDsc(Boolean fbValue) {
-        lbrDsc = fbValue;
-    }
-
-    public void setOrigDsc(String fsValue) {
-        psOrigDsc = fsValue;
-    }
-
-    public void setStockID(String fsValue) {
-        psStockID = fsValue;
-    }
 //
 //    private void handleComboBoxSelectionJoMaster(ComboBox<String> comboBox, int fieldNumber) {
 //        comboBox.setOnAction(e -> {
@@ -157,7 +158,6 @@ public class PartsInformationController implements Initializable, ScreenInterfac
 //
 //        });
 //    }
-
     private static void setCapsLockBehavior(TextField textField) {
         textField.textProperty().addListener((observable, oldValue, newValue) -> {
             if (textField.getText() != null) {

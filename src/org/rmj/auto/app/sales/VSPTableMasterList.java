@@ -79,6 +79,7 @@ public class VSPTableMasterList {
     private SimpleStringProperty tblindex69_Master_Home;
     private SimpleStringProperty tblindex70_Master;
     private SimpleStringProperty tblindex71_Master;
+    private SimpleStringProperty tblindex72_Master;
     private SimpleStringProperty tblindex73_Master;
     private SimpleStringProperty tblindex74_Master;
     private SimpleStringProperty tblindex75_Master;
@@ -178,6 +179,7 @@ public class VSPTableMasterList {
             String tblindex69_Master_Home,
             String tblindex70_Master,
             String tblindex71_Master,
+            String tblindex72_Master,
             String tblindex73_Master,
             String tblindex74_Master,
             String tblindex75_Master,
@@ -278,6 +280,7 @@ public class VSPTableMasterList {
         this.tblindex69_Master_Home = new SimpleStringProperty(tblindex69_Master_Home);
         this.tblindex70_Master = new SimpleStringProperty(tblindex70_Master);
         this.tblindex71_Master = new SimpleStringProperty(tblindex71_Master);
+        this.tblindex72_Master = new SimpleStringProperty(tblindex72_Master);
         this.tblindex73_Master = new SimpleStringProperty(tblindex73_Master);
         this.tblindex74_Master = new SimpleStringProperty(tblindex74_Master);
         this.tblindex75_Master = new SimpleStringProperty(tblindex75_Master);
@@ -873,6 +876,14 @@ public class VSPTableMasterList {
 
     public void setTblindex71_Master(String tblindex71_Master) {
         this.tblindex71_Master.set(tblindex71_Master);
+    }
+
+    public String getTblindex72_Master() {
+        return tblindex72_Master.get();
+    }
+
+    public void setTblindex72_Master(String tblindex72_Master) {
+        this.tblindex72_Master.set(tblindex72_Master);
     }
 
     public String getTblindex73_Master() {

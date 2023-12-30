@@ -246,8 +246,9 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
         /*Set Capitalization Fields*/
 
         Platform.runLater(() -> {
-            lblFormTitle.setText(getParentTabTitle());
-            if (getParentTabTitle().contains("SALES")) {
+            String parentTabTitle = getParentTabTitle();
+            lblFormTitle.setText(parentTabTitle);
+            if (parentTabTitle != null && parentTabTitle.contains("SALES")) {
                 pbisJobOrderSales = true;
                 lblCoBuyerOrCoOwner.setText("Co-Buyer Name");
                 lblVSPorIntake.setText("VSP No.");
@@ -258,9 +259,9 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
                 lblCoBuyerOrCoOwner.setText("Co-Owner Name");
                 lblVSPorIntake.setText("Intake No.");
                 lblSEorSA.setText("Service Advisor");
-
             }
         });
+
         initCapitalizationFields();
 
         /*Set comboBox*/
@@ -312,14 +313,18 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
     }
 
     private String getParentTabTitle() {
-        Node parent = AnchorMain.getParent();
-        Parent tabContentParent = parent.getParent();
-        if (tabContentParent instanceof TabPane) {
-            TabPane tabPane = (TabPane) tabContentParent;
-            Tab tab = findTabByContent(tabPane, AnchorMain);
-            if (tab != null) {
-                pxeModuleName = tab.getText();
-                return tab.getText().toUpperCase();
+        if (AnchorMain != null) {
+            Node parent = AnchorMain.getParent();
+            if (parent != null) {
+                Parent tabContentParent = parent.getParent();
+                if (tabContentParent instanceof TabPane) {
+                    TabPane tabPane = (TabPane) tabContentParent;
+                    Tab tab = findTabByContent(tabPane, AnchorMain);
+                    if (tab != null) {
+                        pxeModuleName = tab.getText();
+                        return tab.getText().toUpperCase();
+                    }
+                }
             }
         }
         return null; // No parent Tab found

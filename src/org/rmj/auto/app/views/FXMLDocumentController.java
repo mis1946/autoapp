@@ -68,6 +68,7 @@ import org.rmj.auto.app.sales.SalesAgentFormController;
 import org.rmj.auto.app.sales.UnitDeliveryReceiptFormController;
 import org.rmj.auto.app.sales.UnitReceivingFormController;
 import org.rmj.auto.app.sales.VSPFormController;
+import org.rmj.auto.app.sales.VSPPendingPartsRequestController;
 import org.rmj.auto.app.sales.VehicleEntryFormController;
 import org.rmj.auto.app.sales.VehicleSalesApprovalController;
 import org.rmj.auto.app.service.JobOrderFormController;
@@ -179,6 +180,8 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
     private MenuItem mnuCustVhclInfo;
     @FXML
     private MenuItem mnuSalesJobOrder;
+    @FXML
+    private MenuItem mnuSalesPartsRequest;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -415,6 +418,10 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
             /*PARTS*/
             case "ItemEntryForm.fxml":
                 return new ItemEntryFormController();
+            case "VSPPendingPartsRequest.fxml":
+                return new VSPPendingPartsRequestController();
+
+            /*PARAMETERS*/
             case "InventoryLocationParam.fxml":
                 return new InventoryLocationParamController();
             case "BinEntryParam.fxml":
@@ -496,6 +503,8 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
             /*PARTS*/
             case "ItemEntryForm.fxml":
                 return "Item Information";
+            case "VSPPendingPartsRequest.fxml":
+                return "Sales Parts Request";
             /**/
             case "JobOrderForm.fxml":
                 if (sJobOrderType.isEmpty()) {
@@ -804,6 +813,15 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
     @FXML
     private void mnuItemEntryClicked(ActionEvent event) {
         String sformname = "ItemEntryForm.fxml";
+        //check tab
+        if (checktabs(SetTabTitle(sformname)) == 1) {
+            setScene2(loadAnimate(sformname));
+        }
+    }
+
+    @FXML
+    private void mnuSalesPartsRequestClicked(ActionEvent event) {
+        String sformname = "VSPPendingPartsRequest.fxml";
         //check tab
         if (checktabs(SetTabTitle(sformname)) == 1) {
             setScene2(loadAnimate(sformname));

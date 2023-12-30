@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import javafx.beans.property.ReadOnlyBooleanPropertyBase;
 import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -159,6 +160,18 @@ public class VSPPartsDialogController implements Initializable, ScreenInterface 
 
             }
         }
+
+        txtField14_Part.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+            if (newValue.isEmpty()) {
+                try {
+                    oTrans.setVSPPartsDetail(pnRow, 3, "");
+                    oTrans.setVSPPartsDetail(pnRow, 14, "");
+                } catch (SQLException ex) {
+                    Logger.getLogger(VSPPartsDialogController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+
     }
 
     private void initNumberFormatterFields() {
@@ -359,29 +372,48 @@ public class VSPPartsDialogController implements Initializable, ScreenInterface 
             String lsButton = ((Button) event.getSource()).getId();
             switch (lsButton) {
                 case "btnEdit":
-                case "btnAdd":
-                    if (settoClass()) {
-                        CommonUtils.closeStage(btnClose);
-                    } else {
-                        return;
-                    }
-
                     if (pbRequest) {
+//                        if (txtField14_Part.getText().trim().isEmpty()) {
+//                            ShowMessageFX.Warning(getStage(), "Please enter a value for Part Number.", "Warning", null);
+//                            txtField14_Part.focusedProperty();
+//                            return;
+//                        } else {
+
                         if (oTrans.updateVSPPartNumber(pnRow)) {
                             CommonUtils.closeStage(btnClose);
                         } else {
                             ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
                             return;
                         }
+//                        }
+
+                    } else {
+                        if (settoClass()) {
+                            CommonUtils.closeStage(btnClose);
+                        } else {
+                            return;
+                        }
                     }
+
+                    break;
+                case "btnAdd":
+
+                    if (settoClass()) {
+                        CommonUtils.closeStage(btnClose);
+                    } else {
+                        return;
+                    }
+
                     break;
                 case "btnClose":
-                    if (pbState) {
-                        if (oTrans.getVSPPartsDetail(pnRow, 1).toString().isEmpty()) {
-                            oTrans.removeVSPParts(pnRow);
+                    if (!pbRequest) {
+                        if (pbState) {
+                            if (oTrans.getVSPPartsDetail(pnRow, 1).toString().isEmpty()) {
+                                oTrans.removeVSPParts(pnRow);
+                            }
+                        } else {
+                            oTrans.setVSPPartsDetail(pnRow, 9, psOrigDsc);
                         }
-                    } else {
-                        oTrans.setVSPPartsDetail(pnRow, 9, psOrigDsc);
                     }
                     CommonUtils.closeStage(btnClose);
                     break;

@@ -317,6 +317,7 @@ public class VSPPartsDialogController implements Initializable, ScreenInterface 
             oTrans.setVSPPartsDetail(pnRow, 8, String.valueOf(selectedType));
             oTrans.setVSPPartsDetail(pnRow, 6, userQuant);
             oTrans.setVSPPartsDetail(pnRow, 4, setFormat.format(Double.valueOf(txtField04_Part.getText().replace(",", ""))));
+
         } catch (SQLException ex) {
             Logger.getLogger(VSPLaborEntryDialogController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -332,6 +333,9 @@ public class VSPPartsDialogController implements Initializable, ScreenInterface 
                         if (oTrans.searchInventory(txtField14_Part.getText(), pnRow)) {
                             txtField14_Part.setText(String.valueOf(oTrans.getVSPPartsDetail(pnRow, 14)));
                             break;
+                        } else {
+                            ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                            return;
                         }
 
                 }
@@ -363,12 +367,11 @@ public class VSPPartsDialogController implements Initializable, ScreenInterface 
                     }
 
                     if (pbRequest) {
-                        if (oTrans.UpdateRecord()) {
-                            if (oTrans.updateVSPPartNumber((String) oTrans.getVSPPartsDetail(pnRow, 1), pnRow)) {
-                                CommonUtils.closeStage(btnClose);
-                            } else {
-                                return;
-                            }
+                        if (oTrans.updateVSPPartNumber(pnRow)) {
+                            CommonUtils.closeStage(btnClose);
+                        } else {
+                            ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                            return;
                         }
                     }
                     break;

@@ -261,7 +261,7 @@ public class VSPPartsRequestController implements Initializable, ScreenInterface
 
         if (event.getClickCount() == 2) {
             try {
-                loadPartsAdditionalDialog(pnRow, false, false);
+                loadPartsAdditionalDialog(pnRow, false);
             } catch (IOException ex) {
                 Logger.getLogger(VSPFormController.class
                         .getName()).log(Level.SEVERE, null, ex);
@@ -271,7 +271,7 @@ public class VSPPartsRequestController implements Initializable, ScreenInterface
 
     }
 
-    private void loadPartsAdditionalDialog(Integer fnRow, boolean isWithLbDsc, boolean isAdd) throws IOException {
+    private void loadPartsAdditionalDialog(Integer fnRow, boolean isAdd) throws IOException {
         /**
          * if state = true : ADD else if state = false : UPDATE *
          */
@@ -291,7 +291,6 @@ public class VSPPartsRequestController implements Initializable, ScreenInterface
             loControl.setOrigDsc((String) oTrans.getVSPPartsDetail(fnRow, 9));
             loControl.setStockID((String) oTrans.getVSPPartsDetail(fnRow, 3));
             loControl.setJO((String) oTrans.getVSPPartsDetail(fnRow, 11));
-            loControl.setLbrDsc(isWithLbDsc);
             //load the main interface
             Parent parent = fxmlLoader.load();
 

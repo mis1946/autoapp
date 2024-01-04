@@ -34,14 +34,13 @@ import org.rmj.auto.sales.base.VehicleSalesProposalMaster;
 
 public class VSPPartsDialogController implements Initializable, ScreenInterface {
 
-    private boolean lbrDsc;
     private int pnRow = 0;
     private boolean pbState = true;
     private boolean pbRequest = false;
     private String psOrigDsc = "";
     private String psStockID = "";
     private String psJO = "";
-    private final String pxeModuleName = "Vsp Parts Entry Form";
+    private final String pxeModuleName = "VSP Parts Entry Form";
     private VehicleSalesProposalMaster oTrans;
     ObservableList<String> cChargeType = FXCollections.observableArrayList("FREE OF CHARGE", "CHARGE");
     private GRider oApp;
@@ -80,10 +79,6 @@ public class VSPPartsDialogController implements Initializable, ScreenInterface 
 
     public void setState(boolean fbValue) {
         pbState = fbValue;
-    }
-
-    public void setLbrDsc(Boolean fbValue) {
-        lbrDsc = fbValue;
     }
 
     public void setOrigDsc(String fsValue) {

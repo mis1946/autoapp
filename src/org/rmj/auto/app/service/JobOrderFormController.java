@@ -218,10 +218,11 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
      * Initializes the controller class.
      */
     public void setAddMode(String fsValue) {
+        pbisJobOrderSales = true;
         btnAdd.fire();
         try {
-            oTrans.setFormType(pbisJobOrderSales);
             if (oTrans.searchVSP(fsValue)) {
+
                 clearFields();
                 loadJobOrderFields();
                 initButton(pnEditMode);

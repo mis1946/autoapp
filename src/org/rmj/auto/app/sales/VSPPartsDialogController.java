@@ -78,10 +78,6 @@ public class VSPPartsDialogController implements Initializable, ScreenInterface 
         pnRow = fnRow;
     }
 
-    public void isAdditional(boolean additional) {
-        additional = additional;
-    }
-
     public void setState(boolean fbValue) {
         pbState = fbValue;
     }

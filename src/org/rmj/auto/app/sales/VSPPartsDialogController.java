@@ -126,18 +126,6 @@ public class VSPPartsDialogController implements Initializable, ScreenInterface 
             btnEdit.setVisible(true);
             btnEdit.setManaged(true);
 
-            if (!psJO.isEmpty()) {
-                txtField04_Part.setDisable(true);
-                comboBox8.setDisable(true);
-
-            } else {
-                if (pbRequest) {
-                    txtField14_Part.setDisable(false);
-                } else {
-                    txtField14_Part.setDisable(true);
-                }
-            }
-
             if (pbRequest) {
                 txtField09_Part.setDisable(true);
                 txtField06_Part.setDisable(true);
@@ -149,6 +137,20 @@ public class VSPPartsDialogController implements Initializable, ScreenInterface 
                 comboBox8.setDisable(false);
                 txtField04_Part.setDisable(false);
 
+            }
+            if (!psJO.isEmpty()) {
+                txtField09_Part.setDisable(true);
+                txtField04_Part.setDisable(true);
+                comboBox8.setDisable(true);
+            } else {
+                if (pbRequest) {
+                    txtField14_Part.setDisable(false);
+                } else {
+                    txtField14_Part.setDisable(true);
+                }
+            }
+            if (!txtField14_Part.getText().isEmpty()) {
+                txtField09_Part.setDisable(true);
             }
         }
 
@@ -371,6 +373,7 @@ public class VSPPartsDialogController implements Initializable, ScreenInterface 
 //                        } else {
 
                         if (oTrans.updateVSPPartNumber(pnRow)) {
+                            ShowMessageFX.Information(null, pxeModuleName, "Part number updated successfully.");
                             CommonUtils.closeStage(btnClose);
                         } else {
                             ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);

@@ -31,6 +31,8 @@ public class ActivityTableList {
     private SimpleStringProperty tblindex26;//sBranchNm
     private SimpleStringProperty tblindex28;//sProvName
 
+    private SimpleStringProperty tblindex30;//sProvName
+
     public ActivityTableList(String tblindex01,
             String tblindex02,
             String tblindex03,
@@ -48,7 +50,8 @@ public class ActivityTableList {
             String tblindex24,
             String tblindex25,
             String tblindex26,
-            String tblindex28) {
+            String tblindex28,
+            String tblindex30) {
         this.tblindex01 = new SimpleStringProperty(tblindex01);
         this.tblindex02 = new SimpleStringProperty(tblindex02);
         this.tblindex03 = new SimpleStringProperty(tblindex03);
@@ -67,6 +70,7 @@ public class ActivityTableList {
         this.tblindex25 = new SimpleStringProperty(tblindex25);
         this.tblindex26 = new SimpleStringProperty(tblindex26);
         this.tblindex28 = new SimpleStringProperty(tblindex28);
+        this.tblindex30 = new SimpleStringProperty(tblindex30);
 
     }
 
@@ -212,5 +216,13 @@ public class ActivityTableList {
 
     public void setTblindex28(String tblindex28) {
         this.tblindex28.set(tblindex28);
+    }
+
+    public String getTblindex30() {
+        return tblindex30.get();
+    }
+
+    public void setTblindex30(String tblindex30) {
+        this.tblindex30.set(tblindex30);
     }
 }

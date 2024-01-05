@@ -981,7 +981,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
                     }
                     break;
                 case "btnJobOrderAdd":
-                    if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure you want to convert this vsp for a new job order record?") == true) {
+                    if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure you want to convert this VSP for a new sales job order record?") == true) {
                     } else {
                         return;
                     }
@@ -3181,6 +3181,11 @@ public class VSPFormController implements Initializable, ScreenInterface {
         chckBoxUndercoat.setDisable(!lbShow);
         chckBoxTint.setDisable(!lbShow);
         btnAdditionalLabor.setDisable(!lbShow);
+        if (fnValue == EditMode.ADDNEW) {
+            btnJobOrderAdd.setDisable(true);
+        } else {
+            btnJobOrderAdd.setDisable(!lbShow);
+        }
         if (fnValue == EditMode.READY) {
             if (lblVSPStatus.getText().equals("Cancelled")) {
                 btnCancelVSP.setVisible(false);
@@ -3414,7 +3419,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
 //                            return;
 //                        }
 
-                        if (ShowMessageFX.OkayCancel(null, pxeModuleName, "You have opened Vehicle Sales Proposal Form. Are you sure you want to convert this inquiry for a new vsp record?") == true) {
+                        if (ShowMessageFX.OkayCancel(null, pxeModuleName, "You have opened Sales Job Order Information Form. Are you sure you want to convert this inquiry for a new sales job order record?") == true) {
                         } else {
                             return;
                         }

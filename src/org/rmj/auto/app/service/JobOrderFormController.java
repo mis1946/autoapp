@@ -218,10 +218,11 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
      * Initializes the controller class.
      */
     public void setAddMode(String fsValue) {
+        pbisJobOrderSales = true;
         btnAdd.fire();
         try {
-            oTrans.setFormType(pbisJobOrderSales);
             if (oTrans.searchVSP(fsValue)) {
+
                 clearFields();
                 loadJobOrderFields();
                 initButton(pnEditMode);
@@ -304,7 +305,7 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
                 header.setReordering(false);
             });
         });
-//        tblViewLabor.setOnMouseClicked(this::tblLabor_Clicked);
+        tblViewLabor.setOnMouseClicked(this::tblLabor_Clicked);
         tblViewParts.setOnMouseClicked(this::tblParts_Clicked);
         date02.setOnAction(this::getDate);
         date02.setDayCellFactory(DateFormatCell);
@@ -622,12 +623,18 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
 
                     break;
                 case "btnAddLabor":
-                    if (oTrans.loadVSPLabor()) {
-                        if (oTrans.getVSPLaborCount() > 0) {
-                            loadVSPLaborDialog();
-                        } else {
-                            ShowMessageFX.Warning(getStage(), "No labor available", "Warning", null);
-                            return;
+                    if (pbisJobOrderSales) {
+                        if (oTrans.loadVSPLabor()) {
+                            if (oTrans.getVSPLaborCount() > 0) {
+                                loadVSPLaborDialog();
+                            } else {
+                                ShowMessageFX.Warning(getStage(), "No labor available", "Warning", null);
+                                return;
+                            }
+                        }
+                    } else {
+                        if (oTrans.addJOLabor()) {
+                            loadLaborAdditionalDialog(oTrans.getJOLaborCount(), true);
                         }
                     }
                     break;
@@ -1046,9 +1053,9 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
             Stage stage = new Stage();
 
             FXMLLoader fxmlLoader = new FXMLLoader();
-            fxmlLoader.setLocation(getClass().getResource("PartsInformation.fxml"));
+            fxmlLoader.setLocation(getClass().getResource("JOPartsInformation.fxml"));
 
-            PartsInformationController loControl = new PartsInformationController();
+            JOPartsInformationController loControl = new JOPartsInformationController();
             loControl.setGRider(oApp);
             loControl.setObject(oTrans);
             loControl.setState(isAdd);
@@ -1095,6 +1102,84 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
         } catch (SQLException ex) {
             Logger.getLogger(VSPFormController.class
                     .getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void loadLaborAdditionalDialog(Integer fnRow, boolean isAdd) throws IOException {
+        /**
+         * if state = true : ADD else if state = false : UPDATE *
+         */
+        try {
+            Stage stage = new Stage();
+
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            fxmlLoader.setLocation(getClass().getResource("JOLaborInformation.fxml"));
+
+            JOLaborInformationController loControl = new JOLaborInformationController();
+            loControl.setGRider(oApp);
+            loControl.setObject(oTrans);
+            loControl.setState(isAdd);
+            fxmlLoader.setController(loControl);
+            loControl.setRow(fnRow);
+            loControl.setOrigDsc((String) oTrans.getJOLaborDetail(fnRow, 10));
+            //load the main interface
+            Parent parent = fxmlLoader.load();
+
+            parent.setOnMousePressed(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    xOffset = event.getSceneX();
+                    yOffset = event.getSceneY();
+                }
+            });
+
+            parent.setOnMouseDragged(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    stage.setX(event.getScreenX() - xOffset);
+                    stage.setY(event.getScreenY() - yOffset);
+                }
+            });
+
+            //set the main interface as the scene/*
+            Scene scene = new Scene(parent);
+            stage.setScene(scene);
+            stage.initStyle(StageStyle.TRANSPARENT);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle("");
+            stage.showAndWait();
+            loadTableLabor();
+            loadJobOrderFields();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
+            System.exit(1);
+
+        } catch (SQLException ex) {
+            Logger.getLogger(VSPFormController.class
+                    .getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void tblLabor_Clicked(MouseEvent event) {
+        if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
+            pnRow = tblViewLabor.getSelectionModel().getSelectedIndex() + 1;
+            if (pnRow == 0) {
+                return;
+            }
+
+            if (event.getClickCount() == 2) {
+                try {
+                    loadLaborAdditionalDialog(pnRow, false);
+
+                } catch (IOException ex) {
+                    Logger.getLogger(JobOrderFormController.class
+                            .getName()).log(Level.SEVERE, null, ex);
+                }
+
+            }
+
         }
     }
 

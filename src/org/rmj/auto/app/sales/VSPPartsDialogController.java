@@ -34,14 +34,13 @@ import org.rmj.auto.sales.base.VehicleSalesProposalMaster;
 
 public class VSPPartsDialogController implements Initializable, ScreenInterface {
 
-    private boolean lbrDsc;
     private int pnRow = 0;
     private boolean pbState = true;
     private boolean pbRequest = false;
     private String psOrigDsc = "";
     private String psStockID = "";
     private String psJO = "";
-    private final String pxeModuleName = "Vsp Parts Entry Form";
+    private final String pxeModuleName = "VSP Parts Entry Form";
     private VehicleSalesProposalMaster oTrans;
     ObservableList<String> cChargeType = FXCollections.observableArrayList("FREE OF CHARGE", "CHARGE");
     private GRider oApp;
@@ -78,16 +77,8 @@ public class VSPPartsDialogController implements Initializable, ScreenInterface 
         pnRow = fnRow;
     }
 
-    public void isAdditional(boolean additional) {
-        additional = additional;
-    }
-
     public void setState(boolean fbValue) {
         pbState = fbValue;
-    }
-
-    public void setLbrDsc(Boolean fbValue) {
-        lbrDsc = fbValue;
     }
 
     public void setOrigDsc(String fsValue) {
@@ -108,22 +99,7 @@ public class VSPPartsDialogController implements Initializable, ScreenInterface 
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        btnClose.setOnAction(this::cmdButton_Click);
-        btnAdd.setOnAction(this::cmdButton_Click);
-        btnEdit.setOnAction(this::cmdButton_Click);
-        txtField04_Part.setOnKeyPressed(this::txtField_KeyPressed);
-        txtField06_Part.setOnKeyPressed(this::txtField_KeyPressed);
-        txtField14_Part.setOnKeyPressed(this::txtField_KeyPressed);
-        txtField09_Part.setOnKeyPressed(this::txtField_KeyPressed);
-        comboBox8.setItems(cChargeType);
-        handleComboBoxSelectionVSPMaster(comboBox8, 8);
-        initNumberFormatterFields();
-        initAlphabeticalFormatterFields();
-        txtField09_Part.focusedProperty().addListener(txtField_Focus);
-        txtField04_Part.focusedProperty().addListener(txtField_Focus);
-        txtField06_Part.focusedProperty().addListener(txtField_Focus);
-        setCapsLockBehavior(txtField09_Part);
-        loadVSPPartsField();
+
         if (pbState) {
             btnAdd.setVisible(true);
             btnAdd.setManaged(true);
@@ -134,18 +110,6 @@ public class VSPPartsDialogController implements Initializable, ScreenInterface 
             btnAdd.setManaged(false);
             btnEdit.setVisible(true);
             btnEdit.setManaged(true);
-
-            if (!psJO.isEmpty()) {
-                txtField04_Part.setDisable(true);
-                comboBox8.setDisable(true);
-
-            } else {
-                if (pbRequest) {
-                    txtField14_Part.setDisable(false);
-                } else {
-                    txtField14_Part.setDisable(true);
-                }
-            }
 
             if (pbRequest) {
                 txtField09_Part.setDisable(true);
@@ -159,8 +123,22 @@ public class VSPPartsDialogController implements Initializable, ScreenInterface 
                 txtField04_Part.setDisable(false);
 
             }
+            if (!psJO.isEmpty()) {
+                txtField09_Part.setDisable(true);
+                txtField04_Part.setDisable(true);
+                comboBox8.setDisable(true);
+            } else {
+                if (pbRequest) {
+                    txtField14_Part.setDisable(false);
+                } else {
+                    txtField14_Part.setDisable(true);
+                }
+            }
+            if (!txtField14_Part.getText().isEmpty()) {
+                txtField09_Part.setDisable(true);
+            }
         }
-
+        handleComboBoxSelectionVSPMaster(comboBox8, 8);
         txtField14_Part.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
             if (newValue.isEmpty()) {
                 try {
@@ -171,7 +149,22 @@ public class VSPPartsDialogController implements Initializable, ScreenInterface 
                 }
             }
         });
+        btnClose.setOnAction(this::cmdButton_Click);
+        btnAdd.setOnAction(this::cmdButton_Click);
+        btnEdit.setOnAction(this::cmdButton_Click);
+        txtField04_Part.setOnKeyPressed(this::txtField_KeyPressed);
+        txtField06_Part.setOnKeyPressed(this::txtField_KeyPressed);
+        txtField14_Part.setOnKeyPressed(this::txtField_KeyPressed);
+        txtField09_Part.setOnKeyPressed(this::txtField_KeyPressed);
+        comboBox8.setItems(cChargeType);
 
+        initNumberFormatterFields();
+        initAlphabeticalFormatterFields();
+        txtField09_Part.focusedProperty().addListener(txtField_Focus);
+        txtField04_Part.focusedProperty().addListener(txtField_Focus);
+        txtField06_Part.focusedProperty().addListener(txtField_Focus);
+        setCapsLockBehavior(txtField09_Part);
+        loadVSPPartsField();
     }
 
     private void initNumberFormatterFields() {
@@ -380,6 +373,7 @@ public class VSPPartsDialogController implements Initializable, ScreenInterface 
 //                        } else {
 
                         if (oTrans.updateVSPPartNumber(pnRow)) {
+                            ShowMessageFX.Information(null, pxeModuleName, "Part number updated successfully.");
                             CommonUtils.closeStage(btnClose);
                         } else {
                             ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);

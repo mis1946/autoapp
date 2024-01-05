@@ -185,14 +185,14 @@ public class VSPPartsRequestController implements Initializable, ScreenInterface
             try {
                 if (oTrans.UpdateRecord()) {
                     txtField68.setText(oTrans.getMaster(68).toString().toUpperCase());
-                    textArea69.setText((String) oTrans.getMaster(69).toString().toUpperCase());
-                    txtField97.setText((String) oTrans.getMaster(97).toString().toUpperCase());
-                    txtField75.setText((String) oTrans.getMaster(75).toString().toUpperCase());
-                    textArea70.setText((String) oTrans.getMaster(70).toString().toUpperCase());
-                    txtField71.setText((String) oTrans.getMaster(71).toString().toUpperCase());
-                    txtField72.setText((String) oTrans.getMaster(72).toString().toUpperCase());
-                    txtField73.setText((String) oTrans.getMaster(73).toString().toUpperCase());
-                    txtField74.setText((String) oTrans.getMaster(74).toString().toUpperCase());
+                    textArea69.setText(oTrans.getMaster(69).toString().toUpperCase());
+                    txtField97.setText(oTrans.getMaster(97).toString().toUpperCase());
+                    txtField75.setText(oTrans.getMaster(75).toString().toUpperCase());
+                    textArea70.setText(oTrans.getMaster(70).toString().toUpperCase());
+                    txtField71.setText(oTrans.getMaster(71).toString().toUpperCase());
+                    txtField72.setText(oTrans.getMaster(72).toString().toUpperCase());
+                    txtField73.setText(oTrans.getMaster(73).toString().toUpperCase());
+                    txtField74.setText(oTrans.getMaster(74).toString().toUpperCase());
                     loadTableParts();
                 } else {
                     ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
@@ -218,10 +218,6 @@ public class VSPPartsRequestController implements Initializable, ScreenInterface
                     case "1":
                         cType = "CHARGE";
                         break;
-                }
-                String partDesc2 = "";
-                if (!oTrans.getVSPPartsDetail(lnCtr, "sPartDesc").toString().isEmpty()) {
-                    partDesc2 = oTrans.getVSPPartsDetail(lnCtr, "sPartDesc").toString();
                 }
                 String partDesc = (String) oTrans.getVSPPartsDetail(lnCtr, "sDescript");
                 int quant = Integer.parseInt(oTrans.getVSPPartsDetail(lnCtr, "nQuantity").toString());
@@ -265,7 +261,7 @@ public class VSPPartsRequestController implements Initializable, ScreenInterface
 
         if (event.getClickCount() == 2) {
             try {
-                loadPartsAdditionalDialog(pnRow, false, false);
+                loadPartsAdditionalDialog(pnRow, false);
             } catch (IOException ex) {
                 Logger.getLogger(VSPFormController.class
                         .getName()).log(Level.SEVERE, null, ex);
@@ -275,7 +271,7 @@ public class VSPPartsRequestController implements Initializable, ScreenInterface
 
     }
 
-    private void loadPartsAdditionalDialog(Integer fnRow, boolean isWithLbDsc, boolean isAdd) throws IOException {
+    private void loadPartsAdditionalDialog(Integer fnRow, boolean isAdd) throws IOException {
         /**
          * if state = true : ADD else if state = false : UPDATE *
          */
@@ -295,7 +291,6 @@ public class VSPPartsRequestController implements Initializable, ScreenInterface
             loControl.setOrigDsc((String) oTrans.getVSPPartsDetail(fnRow, 9));
             loControl.setStockID((String) oTrans.getVSPPartsDetail(fnRow, 3));
             loControl.setJO((String) oTrans.getVSPPartsDetail(fnRow, 11));
-            loControl.setLbrDsc(isWithLbDsc);
             //load the main interface
             Parent parent = fxmlLoader.load();
 

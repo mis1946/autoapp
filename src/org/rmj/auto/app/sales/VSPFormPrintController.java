@@ -108,18 +108,28 @@ public class VSPFormPrintController implements Initializable {
             case "btnPrint":
                 try {
                 if (JasperPrintManager.printReport(jasperPrint, true)) {
-                    ShowMessageFX.Information(null, pxeModuleName, "Printed Successfully");
-                    //Set Value to Refunded amount
-                    //oTrans.setMaster(0, dRefundAmt);
+                    if (oTrans.UpdateRecord()) {
+                        oTrans.setMaster(58, String.valueOf("1"));
+                        if (oTrans.SaveRecord()) {
+                            ShowMessageFX.Information(null, pxeModuleName, "Printed Successfully");
+                        } else {
+                            ShowMessageFX.Warning(null, pxeModuleName, oTrans.getMessage());
+                        }
+                    } else {
+                        ShowMessageFX.Warning(null, pxeModuleName, oTrans.getMessage());
+                    }
+
                     CommonUtils.closeStage(btnClose);
                 } else {
                     ShowMessageFX.Warning(null, pxeModuleName, "Print Aborted");
                 }
             } catch (JRException ex) {
-
                 ShowMessageFX.Warning(null, pxeModuleName, "Print Aborted");
+            } catch (SQLException ex) {
+                Logger.getLogger(VSPFormPrintController.class.getName()).log(Level.SEVERE, null, ex);
             }
             break;
+
             default:
                 ShowMessageFX.Warning(null, pxeModuleName, "Button with name " + lsButton + " not registered.");
                 break;

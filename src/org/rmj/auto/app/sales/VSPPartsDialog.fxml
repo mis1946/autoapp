@@ -96,7 +96,11 @@
                                                 <Tooltip text="Please fill in the VSP Parts Amount." />
                                             </tooltip>
                                         </TextField>
-                                        <TextField fx:id="txtField14_Part" disable="true" promptText="Search: F3" style="-fx-font-weight: bold;" GridPane.columnIndex="2" GridPane.columnSpan="4" />
+                                        <TextField fx:id="txtField14_Part" disable="true" promptText="Search: F3" style="-fx-font-weight: bold;" GridPane.columnIndex="2" GridPane.columnSpan="4">
+                                            <tooltip>
+                                                <Tooltip text="Please fill in the VSP Parts Number." />
+                                            </tooltip>
+                                        </TextField>
                                         <Label text="Quantity" GridPane.columnIndex="1" GridPane.rowIndex="2">
                                             <font>
                                                 <Font name="Arial Bold" size="12.0" />

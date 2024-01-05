@@ -29,7 +29,7 @@ import org.rmj.auto.app.views.InputTextFormatter;
 import org.rmj.auto.app.views.ScreenInterface;
 import org.rmj.auto.service.base.JobOrderMaster;
 
-public class PartsInformationController implements Initializable, ScreenInterface {
+public class JOPartsInformationController implements Initializable, ScreenInterface {
 
     private Boolean lbrDsc;
     private int pnRow = 0;
@@ -71,10 +71,6 @@ public class PartsInformationController implements Initializable, ScreenInterfac
 
     public void setRow(int fnRow) {
         pnRow = fnRow;
-    }
-
-    public void isAdditional(boolean additional) {
-        additional = additional;
     }
 
     public void setState(boolean fbValue) {
@@ -153,7 +149,7 @@ public class PartsInformationController implements Initializable, ScreenInterfac
 //                }
 //
 //            } catch (SQLException ex) {
-//                Logger.getLogger(PartsInformationController.class.getName()).log(Level.SEVERE, null, ex);
+//                Logger.getLogger(JOPartsInformationController.class.getName()).log(Level.SEVERE, null, ex);
 //            }
 //
 //        });
@@ -191,7 +187,7 @@ public class PartsInformationController implements Initializable, ScreenInterfac
             txtField10_Part.setText(String.valueOf(getFormat.format(Double.parseDouble(String.valueOf(oTrans.getJOPartsDetail(pnRow, 10))))));
 
         } catch (SQLException ex) {
-            Logger.getLogger(PartsInformationController.class
+            Logger.getLogger(JOPartsInformationController.class
                     .getName()).log(Level.SEVERE, null, ex);
         }
         return true;
@@ -274,7 +270,7 @@ public class PartsInformationController implements Initializable, ScreenInterfac
                     6, quantity);
 //            oTrans.setJOPartsDetail(pnRow, 5, setFormat.format(Double.valueOf(txtField05_Part.getText().replace(",", ""))));
         } catch (SQLException ex) {
-            Logger.getLogger(PartsInformationController.class
+            Logger.getLogger(JOPartsInformationController.class
                     .getName()).log(Level.SEVERE, null, ex);
         }
 
@@ -328,7 +324,7 @@ public class PartsInformationController implements Initializable, ScreenInterfac
 
             }
         } catch (SQLException ex) {
-            Logger.getLogger(PartsInformationController.class
+            Logger.getLogger(JOPartsInformationController.class
                     .getName()).log(Level.SEVERE, null, ex);
         }
 

@@ -960,12 +960,12 @@ public class VSPFormController implements Initializable, ScreenInterface {
                     break;
                 case "btnAdditionalLabor":
                     if (oTrans.addVSPLabor("", false)) {
-                        loadLaborAdditionalDialog(oTrans.getVSPLaborCount(), false, true);
+                        loadLaborAdditionalDialog(oTrans.getVSPLaborCount(), true);
                     }
                     break;
                 case "btnAddParts":
                     if (oTrans.AddVSPParts()) {
-                        loadPartsAdditionalDialog(oTrans.getVSPPartsCount(), false, true);
+                        loadPartsAdditionalDialog(oTrans.getVSPPartsCount(), true);
                     }
                     break;
                 case "btnPrint":
@@ -981,7 +981,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
                     }
                     break;
                 case "btnJobOrderAdd":
-                    if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure you want to convert this vsp for a new job order record?") == true) {
+                    if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure you want to convert this VSP for a new sales job order record?") == true) {
                     } else {
                         return;
                     }
@@ -2313,7 +2313,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
         return localDate;
     }
 
-    private void loadLaborAdditionalDialog(Integer fnRow, boolean isWithLbDsc, boolean isAdd) throws IOException {
+    private void loadLaborAdditionalDialog(Integer fnRow, boolean isAdd) throws IOException {
         /**
          * if state = true : ADD else if state = false : UPDATE *
          */
@@ -2329,7 +2329,6 @@ public class VSPFormController implements Initializable, ScreenInterface {
             loControl.setOrigDsc((String) oTrans.getVSPLaborDetail(fnRow, 7));
             loControl.setState(isAdd);
             loControl.setJO((String) oTrans.getVSPLaborDetail(fnRow, 11));
-            loControl.setLbrDsc(isWithLbDsc);
             fxmlLoader.setController(loControl);
             loControl.setRow(fnRow);
 
@@ -2449,7 +2448,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
 
             if (event.getClickCount() == 2) {
                 try {
-                    loadLaborAdditionalDialog(pnRow, true, false);
+                    loadLaborAdditionalDialog(pnRow, false);
 
                 } catch (IOException ex) {
                     Logger.getLogger(VSPFormController.class
@@ -2464,35 +2463,35 @@ public class VSPFormController implements Initializable, ScreenInterface {
     private void addRowVSPLabor() {
         chckBoxRustProof.setOnAction(event -> {
             if (chckBoxRustProof.isSelected()) {
-                initLaborDescript("RUSTPROOF", Double.valueOf("0.00"), true);
+                initLaborDescript("RUSTPROOF", true);
                 chckBoxRustProof.setSelected(false);
             }
         });
         chckBoxPermaShine.setOnAction(event -> {
             if (chckBoxPermaShine.isSelected()) {
-                initLaborDescript("PERMASHINE", Double.valueOf("0.00"), true);
+                initLaborDescript("PERMASHINE", true);
                 chckBoxPermaShine.setSelected(false);
             }
         });
         chckBoxUndercoat.setOnAction(event -> {
             if (chckBoxUndercoat.isSelected()) {
-                initLaborDescript("UNDERCOAT", Double.valueOf("0.00"), true);
+                initLaborDescript("UNDERCOAT", true);
                 chckBoxUndercoat.setSelected(false);
             }
         });
         chckBoxTint.setOnAction(event -> {
             if (chckBoxTint.isSelected()) {
-                initLaborDescript("TINT", Double.valueOf("0.00"), true);
+                initLaborDescript("TINT", true);
                 chckBoxTint.setSelected(false);
             }
         });
 
     }
 
-    private void initLaborDescript(String laborDescript, double fdblAmt, boolean withLabor) {
+    private void initLaborDescript(String laborDescript, boolean withLabor) {
         if (oTrans.addVSPLabor(laborDescript, withLabor)) {
             try {
-                loadLaborAdditionalDialog(oTrans.getVSPLaborCount(), true, true);
+                loadLaborAdditionalDialog(oTrans.getVSPLaborCount(), true);
 
             } catch (SQLException ex) {
                 Logger.getLogger(VSPFormController.class
@@ -2554,7 +2553,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
         }
     }
 
-    private void loadPartsAdditionalDialog(Integer fnRow, boolean isWithLbDsc, boolean isAdd) throws IOException {
+    private void loadPartsAdditionalDialog(Integer fnRow, boolean isAdd) throws IOException {
         /**
          * if state = true : ADD else if state = false : UPDATE *
          */
@@ -2574,7 +2573,6 @@ public class VSPFormController implements Initializable, ScreenInterface {
             loControl.setOrigDsc((String) oTrans.getVSPPartsDetail(fnRow, 9));
             loControl.setStockID((String) oTrans.getVSPPartsDetail(fnRow, 3));
             loControl.setJO((String) oTrans.getVSPPartsDetail(fnRow, 11));
-            loControl.setLbrDsc(isWithLbDsc);
             //load the main interface
             Parent parent = fxmlLoader.load();
 
@@ -2624,7 +2622,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
 
             if (event.getClickCount() == 2) {
                 try {
-                    loadPartsAdditionalDialog(pnRow, false, false);
+                    loadPartsAdditionalDialog(pnRow, false);
 
                 } catch (IOException ex) {
                     Logger.getLogger(VSPFormController.class
@@ -3183,6 +3181,11 @@ public class VSPFormController implements Initializable, ScreenInterface {
         chckBoxUndercoat.setDisable(!lbShow);
         chckBoxTint.setDisable(!lbShow);
         btnAdditionalLabor.setDisable(!lbShow);
+        if (fnValue == EditMode.ADDNEW) {
+            btnJobOrderAdd.setDisable(true);
+        } else {
+            btnJobOrderAdd.setDisable(!lbShow);
+        }
         if (fnValue == EditMode.READY) {
             if (lblVSPStatus.getText().equals("Cancelled")) {
                 btnCancelVSP.setVisible(false);
@@ -3416,7 +3419,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
 //                            return;
 //                        }
 
-                        if (ShowMessageFX.OkayCancel(null, pxeModuleName, "You have opened Vehicle Sales Proposal Form. Are you sure you want to convert this inquiry for a new vsp record?") == true) {
+                        if (ShowMessageFX.OkayCancel(null, pxeModuleName, "You have opened Sales Job Order Information Form. Are you sure you want to convert this inquiry for a new sales job order record?") == true) {
                         } else {
                             return;
                         }

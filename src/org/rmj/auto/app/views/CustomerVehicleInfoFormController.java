@@ -562,9 +562,13 @@ public class CustomerVehicleInfoFormController implements Initializable, ScreenI
                     break;
                 
                 case "btnCancel":
-                    clearFields();
-                    bBtnVhclAvl = false;
-                    pnEditMode = EditMode.UNKNOWN;
+                    if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure you want to cancel?") == true) {
+                        clearFields();
+                        bBtnVhclAvl = false;
+                        pnEditMode = EditMode.UNKNOWN;
+                    } else {
+                        return;
+                    }
                     break;
                 case "btnClose":
                     if (ShowMessageFX.OkayCancel(null, "Close Tab", "Are you sure you want to close this Tab?") == true) {

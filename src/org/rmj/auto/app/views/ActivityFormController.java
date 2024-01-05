@@ -50,9 +50,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import static javafx.scene.input.KeyCode.DOWN;
 import static javafx.scene.input.KeyCode.ENTER;
-import static javafx.scene.input.KeyCode.F3;
-import static javafx.scene.input.KeyCode.TAB;
-import static javafx.scene.input.KeyCode.UP;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.StageStyle;
 import javafx.util.Callback;
@@ -188,8 +185,6 @@ public class ActivityFormController implements Initializable, ScreenInterface {
     @FXML
     private ComboBox<String> comboBox29; //sEventTyp
     @FXML
-    private TextField txtField01; //sActvtyID
-    @FXML
     private Button btnCancel;
     @FXML
     private TableColumn<ActivityTownEntryTableList, String> tblRowCity;
@@ -211,6 +206,8 @@ public class ActivityFormController implements Initializable, ScreenInterface {
     private Button btnActCancel;
     @FXML
     private Label lblCancelStatus;
+    @FXML
+    private TextField txtField30;
 
     /**
      * Initializes the controller class.
@@ -468,7 +465,7 @@ public class ActivityFormController implements Initializable, ScreenInterface {
                             ShowMessageFX.Information(getStage(), "Transaction save successfully.", pxeModuleName, null);
                             loadActivityField();
                             pnEditMode = EditMode.READY;
-                            if (oTrans.SearchRecord(oTrans.getMaster(1).toString(), true)) {
+                            if (oTrans.SearchRecord(oTrans.getMaster(30).toString(), true)) {
                                 loadActivityField();
                                 loadActivityVehicleTable();
                                 loadActMembersTable();
@@ -1096,7 +1093,7 @@ public class ActivityFormController implements Initializable, ScreenInterface {
     private void loadActivityField() {
         try {
 
-            txtField01.setText((String) oTrans.getMaster(1)); // sActvtyID
+            txtField30.setText((String) oTrans.getMaster(30)); // sActvtyID
             dateFrom06.setValue(strToDate(CommonUtils.xsDateShort((Date) oTrans.getMaster(6))));
             dateTo07.setValue(strToDate(CommonUtils.xsDateShort((Date) oTrans.getMaster(7))));
             String selectedItem = oTrans.getMaster(29).toString();//sEventTyp
@@ -1579,7 +1576,7 @@ public class ActivityFormController implements Initializable, ScreenInterface {
     public void clearFields() {
         removeRequired();
         townCitydata.clear();
-        txtField01.setText("");//sActvtyID
+        txtField30.setText("");//sActvtyID
         dateFrom06.setValue(strToDate(CommonUtils.xsDateShort((Date) oApp.getServerDate())));
         dateTo07.setValue(strToDate(CommonUtils.xsDateShort((Date) oApp.getServerDate())));
         lblCancelStatus.setText("");

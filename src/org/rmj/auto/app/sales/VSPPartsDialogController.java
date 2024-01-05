@@ -99,22 +99,7 @@ public class VSPPartsDialogController implements Initializable, ScreenInterface 
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        btnClose.setOnAction(this::cmdButton_Click);
-        btnAdd.setOnAction(this::cmdButton_Click);
-        btnEdit.setOnAction(this::cmdButton_Click);
-        txtField04_Part.setOnKeyPressed(this::txtField_KeyPressed);
-        txtField06_Part.setOnKeyPressed(this::txtField_KeyPressed);
-        txtField14_Part.setOnKeyPressed(this::txtField_KeyPressed);
-        txtField09_Part.setOnKeyPressed(this::txtField_KeyPressed);
-        comboBox8.setItems(cChargeType);
-        handleComboBoxSelectionVSPMaster(comboBox8, 8);
-        initNumberFormatterFields();
-        initAlphabeticalFormatterFields();
-        txtField09_Part.focusedProperty().addListener(txtField_Focus);
-        txtField04_Part.focusedProperty().addListener(txtField_Focus);
-        txtField06_Part.focusedProperty().addListener(txtField_Focus);
-        setCapsLockBehavior(txtField09_Part);
-        loadVSPPartsField();
+
         if (pbState) {
             btnAdd.setVisible(true);
             btnAdd.setManaged(true);
@@ -153,7 +138,7 @@ public class VSPPartsDialogController implements Initializable, ScreenInterface 
                 txtField09_Part.setDisable(true);
             }
         }
-
+        handleComboBoxSelectionVSPMaster(comboBox8, 8);
         txtField14_Part.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
             if (newValue.isEmpty()) {
                 try {
@@ -164,7 +149,22 @@ public class VSPPartsDialogController implements Initializable, ScreenInterface 
                 }
             }
         });
+        btnClose.setOnAction(this::cmdButton_Click);
+        btnAdd.setOnAction(this::cmdButton_Click);
+        btnEdit.setOnAction(this::cmdButton_Click);
+        txtField04_Part.setOnKeyPressed(this::txtField_KeyPressed);
+        txtField06_Part.setOnKeyPressed(this::txtField_KeyPressed);
+        txtField14_Part.setOnKeyPressed(this::txtField_KeyPressed);
+        txtField09_Part.setOnKeyPressed(this::txtField_KeyPressed);
+        comboBox8.setItems(cChargeType);
 
+        initNumberFormatterFields();
+        initAlphabeticalFormatterFields();
+        txtField09_Part.focusedProperty().addListener(txtField_Focus);
+        txtField04_Part.focusedProperty().addListener(txtField_Focus);
+        txtField06_Part.focusedProperty().addListener(txtField_Focus);
+        setCapsLockBehavior(txtField09_Part);
+        loadVSPPartsField();
     }
 
     private void initNumberFormatterFields() {

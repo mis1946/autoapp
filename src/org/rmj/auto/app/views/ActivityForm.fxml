@@ -346,7 +346,7 @@
                                                                                                         <Insets left="5.0" />
                                                                                                     </GridPane.margin>
                                                                                                 </Label>
-                                                                                                <TextField fx:id="txtField01" disable="true" editable="false" GridPane.columnIndex="1" GridPane.columnSpan="3" />
+                                                                                                <TextField fx:id="txtField30" disable="true" editable="false" GridPane.columnIndex="1" GridPane.columnSpan="3" />
                                                                                                 <Label alignment="CENTER_RIGHT" prefHeight="14.0" prefWidth="73.0" text="*" textFill="#fb0000" GridPane.rowIndex="2">
                                                                                                     <font>
                                                                                                         <Font name="Arial Bold" size="11.5" />

@@ -151,8 +151,6 @@ public class ActivityFormController implements Initializable, ScreenInterface {
     @FXML
     private TextField txtField05;  //sActTypDs
     @FXML
-    private TextField textSeek01; //Search Activity No
-    @FXML
     private TextField textSeek02; //Search Activity Name
     @FXML
     private TextField txtField32; //Branch
@@ -208,6 +206,8 @@ public class ActivityFormController implements Initializable, ScreenInterface {
     private Label lblCancelStatus;
     @FXML
     private TextField txtField30;
+    @FXML
+    private TextField textSeek30;
 
     /**
      * Initializes the controller class.
@@ -218,7 +218,7 @@ public class ActivityFormController implements Initializable, ScreenInterface {
     }
 
     private Stage getStage() {
-        return (Stage) textSeek01.getScene().getWindow();
+        return (Stage) textSeek30.getScene().getWindow();
     }
 
     @Override
@@ -441,6 +441,11 @@ public class ActivityFormController implements Initializable, ScreenInterface {
                             txtField12.requestFocus();
                             return;
                         }
+                        if (Integer.parseInt(txtField12.getText()) >= 10000) {
+                            ShowMessageFX.Warning(getStage(), "Please enter a valid No. of Target Clients", "Warning", null);
+                            txtField12.requestFocus();
+                            return;
+                        }
                         if (txtField28.getText().trim().equals("")) {
                             ShowMessageFX.Warning(getStage(), "Please enter a value for Province.", "Warning", null);
                             txtField28.requestFocus();
@@ -582,7 +587,7 @@ public class ActivityFormController implements Initializable, ScreenInterface {
                         }
                     }
                     try {
-                        if (oTrans.SearchRecord(textSeek01.getText(), false)) {
+                        if (oTrans.SearchRecord("", false)) {
                             removeRequired();
                             loadActivityField();
                             loadActivityVehicleTable();
@@ -699,8 +704,7 @@ public class ActivityFormController implements Initializable, ScreenInterface {
                         oTrans.setMaster(lnIndex, lsValue); // Handle Encoded Value
                         break;
                     case 12: // nTrgtClnt
-                        int targetClients = Integer.parseInt(lsValue);
-                        oTrans.setMaster(lnIndex, targetClients);
+                        oTrans.setMaster(lnIndex, Integer.valueOf(lsValue.replace(",", "")));
                         break;
                 }
 
@@ -767,7 +771,7 @@ public class ActivityFormController implements Initializable, ScreenInterface {
         textArea09.setOnKeyPressed(this::txtArea_KeyPressed);
         textArea03.setOnKeyPressed(this::txtArea_KeyPressed);
         textArea02.setOnKeyPressed(this::txtArea_KeyPressed);
-        textSeek01.setOnKeyPressed(this::txtField_KeyPressed); //Activity No Search
+        textSeek30.setOnKeyPressed(this::txtField_KeyPressed); //Activity No Search
         textSeek02.setOnKeyPressed(this::txtField_KeyPressed); //Activity Title Search
 
     }
@@ -789,14 +793,14 @@ public class ActivityFormController implements Initializable, ScreenInterface {
         try {
             if (event.getCode() == KeyCode.TAB || event.getCode() == KeyCode.ENTER || event.getCode() == KeyCode.F3) {
                 switch (txtFieldID) {
-                    case "textSeek01":  //Search by Activity No
+                    case "textSeek30":  //Search by Activity No
                         if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
                             if (ShowMessageFX.OkayCancel(null, "Confirmation", "You have unsaved data. Are you sure you want to browse a new record?") == true) {
                             } else {
                                 return;
                             }
                         }
-                        if (oTrans.SearchRecord(textSeek01.getText(), false)) {
+                        if (oTrans.SearchRecord(textSeek30.getText(), false)) {
                             removeRequired();
                             loadActivityField();
                             loadActivityVehicleTable();
@@ -829,7 +833,7 @@ public class ActivityFormController implements Initializable, ScreenInterface {
                             pnEditMode = oTrans.getEditMode();
                         } else {
                             ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
-                            textSeek01.clear();
+                            textSeek30.clear();
                             actVhclModelData.clear();
                             actMembersData.clear();
                             clearFields();
@@ -975,17 +979,19 @@ public class ActivityFormController implements Initializable, ScreenInterface {
         });
         dateFrom06.valueProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
-                dateTo07.setDayCellFactory(DateTo);
-                dateTo07.setValue(newValue.plusDays(1));
-
+                if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
+                    dateTo07.setDayCellFactory(DateTo);
+                    dateTo07.setValue(newValue.plusDays(1));
+                }
             }
         });
         comboBox29.setOnAction(e -> {
             String selectedType = comboBox29.getValue();// Retrieve the type ID for the selected type
             // Set the type ID in the text field
             try {
-                oTrans.setMaster(29, selectedType); // Pass the selected type to the setMaster method
-
+                if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
+                    oTrans.setMaster(29, selectedType); // Pass the selected type to the setMaster method
+                }
             } catch (SQLException ex) {
                 Logger.getLogger(ActivityFormController.class
                         .getName()).log(Level.SEVERE, null, ex);
@@ -1018,7 +1024,9 @@ public class ActivityFormController implements Initializable, ScreenInterface {
     /*Set Date Value to Master Class*/
     public void getDateFrom(ActionEvent event) {
         try {
-            oTrans.setMaster(6, SQLUtil.toDate(dateFrom06.getValue().toString(), SQLUtil.FORMAT_SHORT_DATE));
+            if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
+                oTrans.setMaster(6, SQLUtil.toDate(dateFrom06.getValue().toString(), SQLUtil.FORMAT_SHORT_DATE));
+            }
 
         } catch (SQLException ex) {
             Logger.getLogger(CustomerFormController.class
@@ -1028,8 +1036,9 @@ public class ActivityFormController implements Initializable, ScreenInterface {
 
     public void getDateTo(ActionEvent event) {
         try {
-            oTrans.setMaster(7, SQLUtil.toDate(dateTo07.getValue().toString(), SQLUtil.FORMAT_SHORT_DATE));
-
+            if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
+                oTrans.setMaster(7, SQLUtil.toDate(dateTo07.getValue().toString(), SQLUtil.FORMAT_SHORT_DATE));
+            }
         } catch (SQLException ex) {
             Logger.getLogger(CustomerFormController.class
                     .getName()).log(Level.SEVERE, null, ex);
@@ -1038,9 +1047,9 @@ public class ActivityFormController implements Initializable, ScreenInterface {
 
     private void initFormatterFields() {
         Pattern pattern = Pattern.compile("[\\d\\p{Punct}]*");
-        Pattern trgPattern = Pattern.compile("\\p{ASCII}{0,4}");
+        Pattern numberOnlyPattern = Pattern.compile("[0-9]*");
 
-        txtField12.setTextFormatter(new InputTextFormatter(trgPattern));  //nTrgtClnt
+        txtField12.setTextFormatter(new InputTextFormatter(numberOnlyPattern));  //nTrgtClnt
         txtField11.setTextFormatter(new InputTextFormatter(pattern));  //nRcvdBdgt
     }
 

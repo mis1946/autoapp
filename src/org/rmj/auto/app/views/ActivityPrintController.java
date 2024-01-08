@@ -232,25 +232,25 @@ public class ActivityPrintController implements Initializable, ScreenInterface {
                 }
                 String duration = from + " - " + to;
                 actMasterData.add(new ActivityTableList(
-                        oTrans.getDetail(lnCtr, "sActvtyID").toString(),
-                        oTrans.getDetail(lnCtr, "sActTitle").toString(),
-                        oTrans.getDetail(lnCtr, "sActDescx").toString(),
-                        oTrans.getDetail(lnCtr, "sActTypDs").toString(),
+                        oTrans.getDetail(lnCtr, "sActvtyID").toString().toUpperCase(),
+                        oTrans.getDetail(lnCtr, "sActTitle").toString().toUpperCase(),
+                        oTrans.getDetail(lnCtr, "sActDescx").toString().toUpperCase(),
+                        oTrans.getDetail(lnCtr, "sActTypDs").toString().toUpperCase(),
                         duration,
                         "",
-                        oTrans.getDetail(lnCtr, "sLocation").toString(),
-                        oTrans.getDetail(lnCtr, "sCompnynx").toString(),
+                        oTrans.getDetail(lnCtr, "sLocation").toString().toUpperCase(),
+                        oTrans.getDetail(lnCtr, "sCompnynx").toString().toUpperCase(),
                         oTrans.getDetail(lnCtr, "nPropBdgt").toString(),
                         oTrans.getDetail(lnCtr, "nTrgtClnt").toString(),
                         logRemark,
-                        oTrans.getDetail(lnCtr, "sRemarksx").toString(),
+                        oTrans.getDetail(lnCtr, "sRemarksx").toString().toUpperCase(),
                         dEntry,
                         dApproved,
-                        oTrans.getDetail(lnCtr, "sDeptName").toString(),
-                        oTrans.getDetail(lnCtr, "sCompnyNm").toString(),
-                        oTrans.getDetail(lnCtr, "sBranchNm").toString(),
-                        oTrans.getDetail(lnCtr, "sProvName").toString(),
-                        oTrans.getDetail(lnCtr, "sActNoxxx").toString()
+                        oTrans.getDetail(lnCtr, "sDeptName").toString().toUpperCase(),
+                        oTrans.getDetail(lnCtr, "sCompnyNm").toString().toUpperCase(),
+                        oTrans.getDetail(lnCtr, "sBranchNm").toString().toUpperCase(),
+                        oTrans.getDetail(lnCtr, "sProvName").toString().toUpperCase(),
+                        oTrans.getDetail(lnCtr, "sActNoxxx").toString().toUpperCase()
                 ));
             }
             townCitydata.clear();
@@ -268,26 +268,26 @@ public class ActivityPrintController implements Initializable, ScreenInterface {
             townCitydata.add(new ActivityTownEntryTableList(
                     "", //ROW
                     "",
-                    town
+                    town.toUpperCase()
             ));
             actMembersData.clear();
             for (lnCtr = 1; lnCtr <= oTrans.getActMemberCount(); lnCtr++) {
                 if (oTrans.getActMember(lnCtr, "cOriginal").equals("1")) {
                     actMembersData.add(new ActivityMemberTable(
                             String.valueOf(lnCtr), //ROW
-                            oTrans.getActMember(lnCtr, "sDeptName").toString(),
+                            oTrans.getActMember(lnCtr, "sDeptName").toString().toUpperCase(),
                             "",
-                            oTrans.getActMember(lnCtr, "sCompnyNm").toString(),
-                            oTrans.getActMember(lnCtr, "sEmployID").toString()));
+                            oTrans.getActMember(lnCtr, "sCompnyNm").toString().toUpperCase(),
+                            oTrans.getActMember(lnCtr, "sEmployID").toString().toUpperCase()));
                 }
             }
             actVhclModelData.clear();
             for (lnCtr = 1; lnCtr <= oTrans.getActVehicleCount(); lnCtr++) {
                 actVhclModelData.add(new ActivityVchlEntryTable(
                         String.valueOf(lnCtr), //ROW
-                        oTrans.getActVehicle(lnCtr, "sSerialID").toString(),
-                        oTrans.getActVehicle(lnCtr, "sDescript").toString(),
-                        oTrans.getActVehicle(lnCtr, "sCSNoxxxx").toString()));
+                        oTrans.getActVehicle(lnCtr, "sSerialID").toString().toUpperCase(),
+                        oTrans.getActVehicle(lnCtr, "sDescript").toString().toUpperCase(),
+                        oTrans.getActVehicle(lnCtr, "sCSNoxxxx").toString().toUpperCase()));
             }
         }
         String sourceFileName = "D://GGC_Java_Systems/reports/autoapp/ActivityPrint.jasper";

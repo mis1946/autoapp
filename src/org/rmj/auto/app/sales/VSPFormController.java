@@ -936,6 +936,8 @@ public class VSPFormController implements Initializable, ScreenInterface {
                     try {
                         clearFields();
                         clearVSPFieldsFinance();
+                        laborData.clear();
+                        partData.clear();
                         switchToTab(tabMain, ImTabPane);
                         if (oTrans.searchRecord()) {
                             switchToTab(tabMain, ImTabPane);
@@ -948,6 +950,8 @@ public class VSPFormController implements Initializable, ScreenInterface {
                         } else {
                             ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
                             clearFields();
+                            laborData.clear();
+                            partData.clear();
                             clearVSPFieldsFinance();
                             switchToTab(tabMain, ImTabPane);
                             pnEditMode = EditMode.UNKNOWN;
@@ -1389,6 +1393,8 @@ public class VSPFormController implements Initializable, ScreenInterface {
                         try {
                             clearFields();
                             clearVSPFieldsFinance();
+                            laborData.clear();
+                            partData.clear();
                             switchToTab(tabMain, ImTabPane);
                             if (oTrans.searchRecord()) {
                                 switchToTab(tabMain, ImTabPane);
@@ -1402,6 +1408,8 @@ public class VSPFormController implements Initializable, ScreenInterface {
                             } else {
                                 ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
                                 clearFields();
+                                laborData.clear();
+                                partData.clear();
                                 clearVSPFieldsFinance();
                                 switchToTab(tabMain, ImTabPane);
                                 pnEditMode = EditMode.UNKNOWN;
@@ -1421,6 +1429,8 @@ public class VSPFormController implements Initializable, ScreenInterface {
                         } else {
                             clearFields();
                             clearClassMasterField();
+                            laborData.clear();
+                            partData.clear();
                             txtField77.clear();
                             txtField77.requestFocus();
                             ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);

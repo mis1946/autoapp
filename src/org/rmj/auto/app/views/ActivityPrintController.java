@@ -7,8 +7,6 @@ package org.rmj.auto.app.views;
 import java.awt.Component;
 import java.net.URL;
 import java.sql.SQLException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -35,15 +33,12 @@ import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperPrintManager;
-import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.swing.JRViewer;
 import org.rmj.appdriver.GRider;
 import org.rmj.appdriver.agentfx.CommonUtils;
 import org.rmj.appdriver.agentfx.ShowMessageFX;
 import org.rmj.appdriver.callback.MasterCallback;
-import org.rmj.auto.app.views.ScreenInterface;
-import org.rmj.auto.app.views.unloadForm;
 import org.rmj.auto.clients.base.Activity;
 
 /**
@@ -105,8 +100,6 @@ public class ActivityPrintController implements Initializable, ScreenInterface {
                 try {
                 if (JasperPrintManager.printReport(jasperPrint, true)) {
                     ShowMessageFX.Information(null, pxeModuleName, "Printed Successfully");
-                    //Set Value to Refunded amount
-                    //oTrans.setMaster(0, dRefundAmt);
                     CommonUtils.closeStage(btnClose);
                 } else {
                     ShowMessageFX.Warning(null, pxeModuleName, "Print Aborted");
@@ -233,6 +226,10 @@ public class ActivityPrintController implements Initializable, ScreenInterface {
                 }
                 String from = CommonUtils.xsDateLong((Date) oTrans.getDetail(lnCtr, "dDateFrom"));
                 String to = CommonUtils.xsDateLong((Date) oTrans.getDetail(lnCtr, "dDateThru"));
+                String logRemark = "";
+                if (!oTrans.getDetail(lnCtr, "sLogRemrk").toString().isEmpty()) {
+                    logRemark = oTrans.getDetail(lnCtr, "sLogRemrk").toString().toUpperCase();
+                }
                 String duration = from + " - " + to;
                 actMasterData.add(new ActivityTableList(
                         oTrans.getDetail(lnCtr, "sActvtyID").toString(),
@@ -245,14 +242,16 @@ public class ActivityPrintController implements Initializable, ScreenInterface {
                         oTrans.getDetail(lnCtr, "sCompnynx").toString(),
                         oTrans.getDetail(lnCtr, "nPropBdgt").toString(),
                         oTrans.getDetail(lnCtr, "nTrgtClnt").toString(),
-                        oTrans.getDetail(lnCtr, "sLogRemrk").toString(),
+                        logRemark,
                         oTrans.getDetail(lnCtr, "sRemarksx").toString(),
                         dEntry,
                         dApproved,
                         oTrans.getDetail(lnCtr, "sDeptName").toString(),
                         oTrans.getDetail(lnCtr, "sCompnyNm").toString(),
                         oTrans.getDetail(lnCtr, "sBranchNm").toString(),
-                        oTrans.getDetail(lnCtr, "sProvName").toString()));
+                        oTrans.getDetail(lnCtr, "sProvName").toString(),
+                        oTrans.getDetail(lnCtr, "sActNoxxx").toString()
+                ));
             }
             townCitydata.clear();
             String town = "";

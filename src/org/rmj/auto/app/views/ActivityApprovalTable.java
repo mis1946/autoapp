@@ -31,6 +31,7 @@ public class ActivityApprovalTable {
     private SimpleStringProperty tblindex25; //sCompnyNm
     private SimpleStringProperty tblindex26; //sBranchNm
     private SimpleStringProperty tblindex28; //sProvName
+    private SimpleStringProperty tblindex30; //sProvName
 
     public ActivityApprovalTable(String tblRow,
             String tblindex17,
@@ -47,7 +48,8 @@ public class ActivityApprovalTable {
             String tblindex24,
             String tblindex25,
             String tblindex26,
-            String tblindex28
+            String tblindex28,
+            String tblindex30
     ) {
         this.tblRow = new SimpleStringProperty(tblRow);
         this.select = new CheckBox();
@@ -66,6 +68,7 @@ public class ActivityApprovalTable {
         this.tblindex25 = new SimpleStringProperty(tblindex25);
         this.tblindex26 = new SimpleStringProperty(tblindex26);
         this.tblindex28 = new SimpleStringProperty(tblindex28);
+        this.tblindex30 = new SimpleStringProperty(tblindex30);
 
     }
 
@@ -202,6 +205,14 @@ public class ActivityApprovalTable {
 
     public void setTblindex28(String tblindex28) {
         this.tblindex28.set(tblindex28);
+    }
+
+    public String getTblindex30() {
+        return tblindex30.get();
+    }
+
+    public void setTblindex30(String tblindex30) {
+        this.tblindex30.set(tblindex30);
     }
 
 }

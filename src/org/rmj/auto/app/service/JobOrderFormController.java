@@ -561,7 +561,6 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
                         }
                     }
                     try {
-                        clearFields();
                         switchToTab(mainTab, ImTabPane);
                         oTrans.setFormType(pbisJobOrderSales);
                         if (oTrans.SearchRecord()) {

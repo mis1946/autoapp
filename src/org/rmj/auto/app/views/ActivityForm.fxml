@@ -334,12 +334,12 @@
                                                                                                         <Tooltip text="Please fill in the Branch." />
                                                                                                     </tooltip>
                                                                                                 </TextField>
-                                                                                                <TextField fx:id="txtField12" GridPane.columnIndex="13" GridPane.rowIndex="6">
+                                                                                                <TextField fx:id="txtField12" alignment="CENTER_RIGHT" promptText="0" GridPane.columnIndex="13" GridPane.rowIndex="6">
                                                                                                     <tooltip>
                                                                                                         <Tooltip text="Please fill in the No. of Target Clients." />
                                                                                                     </tooltip>
                                                                                                 </TextField>
-                                                                                                <TextField fx:id="txtField11" alignment="CENTER_RIGHT" GridPane.columnIndex="13" GridPane.rowIndex="7" />
+                                                                                                <TextField fx:id="txtField11" alignment="CENTER_RIGHT" promptText="0.00" GridPane.columnIndex="13" GridPane.rowIndex="7" />
                                                                                                 <Label id="LabelDesc" prefHeight="54.0" prefWidth="84.0" text="From" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                                                                                     <GridPane.margin>
                                                                                                         <Insets />

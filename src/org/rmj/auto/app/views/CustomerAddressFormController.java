@@ -50,6 +50,7 @@ public class CustomerAddressFormController implements Initializable, ScreenInter
     private boolean pbState = true;
     private String psOrigTown = "";
     private String psOrigBrgy = "";
+    TextFieldAnimationUtil txtFieldAnimation = new TextFieldAnimationUtil();
 
     @FXML
     private Button btnEdit;
@@ -118,9 +119,9 @@ public class CustomerAddressFormController implements Initializable, ScreenInter
         };
 
         //addRequiredFieldListener(txtField03Addr);
-        addRequiredFieldListener(txtField04Addr);
-        addRequiredFieldListener(txtField05Addr);
-        addRequiredFieldListener(txtField06Addr);
+        txtFieldAnimation.addRequiredFieldListener(txtField04Addr);
+        txtFieldAnimation.addRequiredFieldListener(txtField05Addr);
+        txtFieldAnimation.addRequiredFieldListener(txtField06Addr);
 
         CommonUtils.addTextLimiter(txtField03Addr, 5); //HOUSE NO
 
@@ -192,42 +193,6 @@ public class CustomerAddressFormController implements Initializable, ScreenInter
 
     public void setGRider(GRider foValue) {
         oApp = foValue;
-    }
-
-    //Animation
-    private void shakeTextField(TextField textField) {
-        Timeline timeline = new Timeline();
-        double originalX = textField.getTranslateX();
-
-        // Add keyframes for the animation
-        KeyFrame keyFrame1 = new KeyFrame(Duration.millis(0), new KeyValue(textField.translateXProperty(), 0));
-        KeyFrame keyFrame2 = new KeyFrame(Duration.millis(100), new KeyValue(textField.translateXProperty(), -5));
-        KeyFrame keyFrame3 = new KeyFrame(Duration.millis(200), new KeyValue(textField.translateXProperty(), 5));
-        KeyFrame keyFrame4 = new KeyFrame(Duration.millis(300), new KeyValue(textField.translateXProperty(), -5));
-        KeyFrame keyFrame5 = new KeyFrame(Duration.millis(400), new KeyValue(textField.translateXProperty(), 5));
-        KeyFrame keyFrame6 = new KeyFrame(Duration.millis(500), new KeyValue(textField.translateXProperty(), -5));
-        KeyFrame keyFrame7 = new KeyFrame(Duration.millis(600), new KeyValue(textField.translateXProperty(), 5));
-        KeyFrame keyFrame8 = new KeyFrame(Duration.millis(700), new KeyValue(textField.translateXProperty(), originalX));
-
-        // Add keyframes to the timeline
-        timeline.getKeyFrames().addAll(
-                keyFrame1, keyFrame2, keyFrame3, keyFrame4, keyFrame5, keyFrame6, keyFrame7, keyFrame8
-        );
-
-        // Play the animation
-        timeline.play();
-    }
-
-    //Validation
-    private void addRequiredFieldListener(TextField textField) {
-        textField.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue && textField.getText().isEmpty()) {
-                shakeTextField(textField);
-                textField.getStyleClass().add("required-field");
-            } else {
-                textField.getStyleClass().remove("required-field");
-            }
-        });
     }
 
     private static void setCapsLockBehavior(TextField textField) {

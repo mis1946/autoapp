@@ -15,6 +15,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import static javafx.scene.input.KeyCode.DOWN;
 import static javafx.scene.input.KeyCode.ENTER;
 import static javafx.scene.input.KeyCode.F3;
@@ -79,6 +80,7 @@ public class InventoryLocationParamController implements Initializable, ScreenIn
         oTrans = new PartsItemLocation(oApp, oApp.getBranchCode(), true);
         oTrans.setCallback(oListener);
         oTrans.setWithUI(true);
+
         setCapsLockBehavior(txtField02);
         setCapsLockBehavior(txtField07);
         setCapsLockBehavior(txtField09);
@@ -235,7 +237,6 @@ public class InventoryLocationParamController implements Initializable, ScreenIn
                         ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
                     }
                     break;
-
                 case "btnCancel":
                     if (ShowMessageFX.OkayCancel(getStage(), "Are you sure you want to cancel?", pxeModuleName, null) == true) {
                         clearFields();
@@ -348,74 +349,64 @@ public class InventoryLocationParamController implements Initializable, ScreenIn
     }
 
     private void txtField_KeyPressed(KeyEvent event) {
-
         TextField txtField = (TextField) event.getSource();
-        int lnIndex = Integer.parseInt(((TextField) event.getSource()).getId().substring(8, 10));
         String txtFieldID = ((TextField) event.getSource()).getId();
-        String lsValue = txtField.getText();
         try {
-            switch (event.getCode()) {
-                case F3:
-                case TAB:
-                case ENTER:
-                    switch (txtFieldID) {
-                        case "txtField07": //warehouse
-                            if (oTrans.searchWarehouse(txtField07.getText())) {
-                                generateLocation();
-                                loadLocationField();
-                            } else {
-                                ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
-                                txtField07.setText("");
-                                oTrans.setMaster(6, "");
-                                oTrans.setMaster(7, "");
+            if (event.getCode() == KeyCode.TAB || event.getCode() == KeyCode.ENTER || event.getCode() == KeyCode.F3) {
+                switch (txtFieldID) {
+                    case "txtField07": //warehouse
+                        if (oTrans.searchWarehouse(txtField.getText())) {
+                            generateLocation();
+                            loadLocationField();
+                        } else {
+                            txtField07.setText("");
+                            oTrans.setMaster(6, "");
+                            oTrans.setMaster(7, "");
+                            ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                            txtField07.requestFocus();
+                            return;
+                        }
+                        break;
+                    case "txtField09": //section
+                        if (oTrans.searchSection(txtField.getText())) {
+                            generateLocation();
+                            loadLocationField();
+                        } else {
+                            txtField09.clear();
+                            oTrans.setMaster(8, "");
+                            oTrans.setMaster(9, "");
+                            ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                            txtField09.requestFocus();
+                            return;
+                        }
+                        initButton(pnEditMode);
+                        break;
+                    case "txtField11": //bin
+                        if (oTrans.searchBin(txtField.getText())) {
+                            generateLocation();
+                            loadLocationField();
+                        } else {
+                            txtField11.clear();
+                            oTrans.setMaster(10, "");
+                            oTrans.setMaster(11, "");
+                            ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                            txtField11.requestFocus();
+                            return;
+                        }
+                        break;
+                    default:
+                        break;
 
-                            }
-                            break;
-                        case "txtField09": //section
-                            if (oTrans.searchSection(txtField09.getText())) {
-                                generateLocation();
-                                loadLocationField();
-                            } else {
-                                ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
-                                txtField09.clear();
-                                oTrans.setMaster(8, "");
-                                oTrans.setMaster(9, "");
-
-                            }
-                            initButton(pnEditMode);
-                            break;
-                        case "txtField11": //bin
-                            if (oTrans.searchBin(txtField11.getText())) {
-                                generateLocation();
-                                loadLocationField();
-                            } else {
-                                ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
-                                txtField11.clear();
-                                oTrans.setMaster(10, "");
-                                oTrans.setMaster(11, "");
-
-                            }
-                            break;
-                        default:
-                            break;
-                    }
-                    break;
+                }
+                event.consume();
+                CommonUtils.SetNextFocus((TextField) event.getSource());
+            } else if (event.getCode() == KeyCode.UP) {
+                event.consume();
+                CommonUtils.SetPreviousFocus((TextField) event.getSource());
             }
         } catch (SQLException e) {
             ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
         }
-        generateLocation();
-        switch (event.getCode()) {
-            case ENTER:
-            case F3:
-            case TAB:
-            case DOWN:
-                CommonUtils.SetNextFocus(txtField);
-                break;
-            case UP:
-                CommonUtils.SetPreviousFocus(txtField);
-
-        }
-
     }
+
 }

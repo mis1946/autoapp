@@ -99,8 +99,7 @@ public class VSPPendingPartsRequestController implements Initializable, ScreenIn
     }
 
     private Stage getStage() {
-//        return (Stage) txtFieldSearch.getScene().getWindow();
-        return null;
+        return (Stage) tblVhclPartsRequest.getScene().getWindow();
     }
 
     @Override

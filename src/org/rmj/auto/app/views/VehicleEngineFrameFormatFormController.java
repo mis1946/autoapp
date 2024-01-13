@@ -53,6 +53,7 @@ public class VehicleEngineFrameFormatFormController implements Initializable, Sc
     private String psCodeType;
     private String psMakeID, psMakeDesc;
     private String psModelID, psModelDesc;
+    TextFieldAnimationUtil txtFieldAnimation = new TextFieldAnimationUtil();
 
     ObservableList<String> cCodeType = FXCollections.observableArrayList("MANUFACTURING", "FRAME", "ENGINE");
 
@@ -127,12 +128,12 @@ public class VehicleEngineFrameFormatFormController implements Initializable, Sc
         pnCodeType = fnValue;
         return pnCodeType;
     }
-    
+
     public Boolean setState(Boolean fbValue) {
         pbState = fbValue;
         return pbState;
     }
-    
+
     public Boolean setOpenEvent(Boolean fbValue) {
         pbOpenEvent = fbValue;
         return pbOpenEvent;
@@ -154,8 +155,8 @@ public class VehicleEngineFrameFormatFormController implements Initializable, Sc
         oTrans = new VehicleEngineFrame(oApp, oApp.getBranchCode(), true); //Initialize ClientMaster
         oTrans.setCallback(oListener);
         oTrans.setWithUI(true);
-        
-        if(pbOpenEvent){
+
+        if (pbOpenEvent) {
             txtField07.setText(psMakeDesc);
             txtField09.setText(psModelDesc);
         }
@@ -166,7 +167,7 @@ public class VehicleEngineFrameFormatFormController implements Initializable, Sc
             txtField02.clear();
             txtField03.clear();
             pnEditMode = EditMode.UNKNOWN;
-            if(!pbOpenEvent){
+            if (!pbOpenEvent) {
                 txtField07.setText("");
                 txtField09.setText("");
             }
@@ -174,8 +175,8 @@ public class VehicleEngineFrameFormatFormController implements Initializable, Sc
             pnCodeType = comboBox10.getSelectionModel().getSelectedIndex();
             showFields(pnCodeType);
         });
-        
-        if (pbState){
+
+        if (pbState) {
             comboBox10.getSelectionModel().select(pnCodeType); //Code Type
             showFields(pnCodeType);
         }
@@ -187,12 +188,12 @@ public class VehicleEngineFrameFormatFormController implements Initializable, Sc
         setCapsLockBehavior(txtField02);
         setCapsLockBehavior(txtField07);
         setCapsLockBehavior(txtField09);
-        
-        addRequiredFieldListener(txtField07);
-        addRequiredFieldListener(txtField09);
-        addRequiredFieldListener(txtField02_make);
-        addRequiredFieldListener(txtField02_frame);
-        addRequiredFieldListener(txtField03);
+
+        txtFieldAnimation.addRequiredFieldListener(txtField07);
+        txtFieldAnimation.addRequiredFieldListener(txtField09);
+        txtFieldAnimation.addRequiredFieldListener(txtField02_make);
+        txtFieldAnimation.addRequiredFieldListener(txtField02_frame);
+        txtFieldAnimation.addRequiredFieldListener(txtField03);
 
         CommonUtils.addTextLimiter(txtField02_make, 3); //ManuFacturing
         CommonUtils.addTextLimiter(txtField02_frame, 2); //Frame
@@ -202,10 +203,10 @@ public class VehicleEngineFrameFormatFormController implements Initializable, Sc
         txtField02_frame.focusedProperty().addListener(txtField_Focus);  // Frame Pattern
         txtField02.focusedProperty().addListener(txtField_Focus);  // Engine Pattern
         txtField03.focusedProperty().addListener(txtField_Focus);  // Length
-        
+
         txtField07.setOnKeyPressed(this::txtField_KeyPressed);
         txtField09.setOnKeyPressed(this::txtField_KeyPressed);
-        
+
         //Button SetOnAction using cmdButton_Click() method
         btnClose.setOnAction(this::cmdButton_Click);
         btnSearch.setOnAction(this::cmdButton_Click);
@@ -216,60 +217,24 @@ public class VehicleEngineFrameFormatFormController implements Initializable, Sc
         pnEditMode = EditMode.UNKNOWN;
         initbutton(pnEditMode);
     }
-    
-    //Animation    
-    private void shakeTextField(TextField textField) {
-        Timeline timeline = new Timeline();
-        double originalX = textField.getTranslateX();
 
-        // Add keyframes for the animation
-        KeyFrame keyFrame1 = new KeyFrame(Duration.millis(0), new KeyValue(textField.translateXProperty(), 0));
-        KeyFrame keyFrame2 = new KeyFrame(Duration.millis(100), new KeyValue(textField.translateXProperty(), -5));
-        KeyFrame keyFrame3 = new KeyFrame(Duration.millis(200), new KeyValue(textField.translateXProperty(), 5));
-        KeyFrame keyFrame4 = new KeyFrame(Duration.millis(300), new KeyValue(textField.translateXProperty(), -5));
-        KeyFrame keyFrame5 = new KeyFrame(Duration.millis(400), new KeyValue(textField.translateXProperty(), 5));
-        KeyFrame keyFrame6 = new KeyFrame(Duration.millis(500), new KeyValue(textField.translateXProperty(), -5));
-        KeyFrame keyFrame7 = new KeyFrame(Duration.millis(600), new KeyValue(textField.translateXProperty(), 5));
-        KeyFrame keyFrame8 = new KeyFrame(Duration.millis(700), new KeyValue(textField.translateXProperty(), originalX));
-
-        // Add keyframes to the timeline
-        timeline.getKeyFrames().addAll(
-                keyFrame1, keyFrame2, keyFrame3, keyFrame4, keyFrame5, keyFrame6, keyFrame7, keyFrame8
-        );
-
-        // Play the animation
-        timeline.play();
-    }
-
-    //Validation
-    private void addRequiredFieldListener(TextField textField) {
-        textField.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue && textField.getText().isEmpty()) {
-                shakeTextField(textField);
-                textField.getStyleClass().add("required-field");
-            } else {
-                textField.getStyleClass().remove("required-field");
-            }
-        });
-    }
-   
-    private void showFields(Integer fnValue){
+    private void showFields(Integer fnValue) {
         switch (fnValue) {
             case 0:
                 psCodeType = "Manufaturing";
-                
+
                 //Make
                 //Code Type
                 lblModel.setVisible(false); //Model
                 txtField09.setVisible(false); //Model
                 lblManufacturing.setVisible(true); //Manufacturing
                 txtField02_make.setVisible(true); //Make Manufacturing
-                lblCode.setVisible(false); //Code 
+                lblCode.setVisible(false); //Code
                 txtField02_frame.setVisible(false); //Code Frame
                 txtField02.setVisible(false); //Code Engine
                 lblLength.setVisible(false); //Length
                 txtField03.setVisible(false); //Length
-                
+
                 label01.setVisible(true); //Make
                 label02.setVisible(false); //Model
                 label03.setVisible(true); //Code Type
@@ -290,14 +255,14 @@ public class VehicleEngineFrameFormatFormController implements Initializable, Sc
                 lblCode.setText("Frame Code");
                 lblLength.setText("Frame No Length");
                 psCodeType = "Frame";
-                
+
                 label01.setVisible(true); //Make
                 label02.setVisible(true); //Model
                 label03.setVisible(true); //Code Type
                 label04.setVisible(false); //Manufacturing
                 label05.setVisible(true); //code
                 label06.setVisible(true); //Length
-                
+
                 break;
             case 2:
                 lblManufacturing.setVisible(false);
@@ -312,7 +277,7 @@ public class VehicleEngineFrameFormatFormController implements Initializable, Sc
                 lblCode.setText("Engine Code");
                 lblLength.setText("Engine No Length");
                 psCodeType = "Engine";
-                
+
                 label01.setVisible(true); //Make
                 label02.setVisible(true); //Model
                 label03.setVisible(true); //Code Type
@@ -322,7 +287,6 @@ public class VehicleEngineFrameFormatFormController implements Initializable, Sc
                 break;
         }
     }
-    
 
     public void setGRider(GRider foValue) {
         oApp = foValue;
@@ -353,7 +317,7 @@ public class VehicleEngineFrameFormatFormController implements Initializable, Sc
                     txtField03.clear();
                     oTrans.setCodeType(pnCodeType);
                     if (oTrans.NewRecord()) {
-                        if (pbOpenEvent){
+                        if (pbOpenEvent) {
                             oTrans.setMaster(6, psMakeID);
                             oTrans.setMaster(7, psMakeDesc);
                             oTrans.setMaster(8, psModelID);
@@ -401,7 +365,7 @@ public class VehicleEngineFrameFormatFormController implements Initializable, Sc
                         return;
                     }
                     if (oTrans.searchVhclEngineFrame(pnCodeType)) {
-                    //if (oTrans.searchVhclEngineFrame()) {
+                        //if (oTrans.searchVhclEngineFrame()) {
                         loadEngineFrameField();
                         pnEditMode = oTrans.getEditMode();
                     } else {
@@ -490,7 +454,7 @@ public class VehicleEngineFrameFormatFormController implements Initializable, Sc
                 CommonUtils.SetPreviousFocus(txtField);
         }
     }
-    
+
     private void loadEngineFrameField() {
         try {
 
@@ -542,7 +506,7 @@ public class VehicleEngineFrameFormatFormController implements Initializable, Sc
 
     private void initbutton(int fnValue) {
         boolean lbShow = (fnValue == EditMode.ADDNEW || fnValue == EditMode.UPDATE);
-        if(pbOpenEvent){
+        if (pbOpenEvent) {
             txtField07.setDisable(true);
             txtField09.setDisable(true);
         } else {
@@ -571,13 +535,7 @@ public class VehicleEngineFrameFormatFormController implements Initializable, Sc
     }
 
     private void clearFields() {
-        /*Clear Red Color for required fileds*/
-        txtField07.getStyleClass().remove("required-field");
-        txtField09.getStyleClass().remove("required-field");
-        txtField02_make.getStyleClass().remove("required-field");
-        txtField02_frame.getStyleClass().remove("required-field");
-        txtField03.getStyleClass().remove("required-field");
-        
+
         comboBox10.setValue(null);
         txtField02_make.clear();
         txtField02_frame.clear();
@@ -586,4 +544,12 @@ public class VehicleEngineFrameFormatFormController implements Initializable, Sc
 
     }
 
+    private void removeRequired() {
+        txtFieldAnimation.removeShakeAnimation(txtField07, txtFieldAnimation.shakeTextField(txtField07), "required-field");
+        txtFieldAnimation.removeShakeAnimation(txtField09, txtFieldAnimation.shakeTextField(txtField09), "required-field");
+        txtFieldAnimation.removeShakeAnimation(txtField02_make, txtFieldAnimation.shakeTextField(txtField02_make), "required-field");
+        txtFieldAnimation.removeShakeAnimation(txtField02_frame, txtFieldAnimation.shakeTextField(txtField02_frame), "required-field");
+        txtFieldAnimation.removeShakeAnimation(txtField03, txtFieldAnimation.shakeTextField(txtField03), "required-field");
+
+    }
 }

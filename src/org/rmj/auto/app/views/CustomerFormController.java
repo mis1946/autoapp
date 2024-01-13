@@ -310,6 +310,8 @@ public class CustomerFormController implements Initializable, ScreenInterface {
     private TableColumn tblCoVhcllist05;
     @FXML
     private TableColumn tblCoVhcllist07;
+    @FXML
+    private Button btnCancel;
 
     private Stage getStage() {
         return (Stage) txtField01.getScene().getWindow();
@@ -484,6 +486,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
         btnSave.setOnAction(this::cmdButton_Click);
         btnClose.setOnAction(this::cmdButton_Click);
         btnBrowse.setOnAction(this::cmdButton_Click);
+        btnCancel.setOnAction(this::cmdButton_Click);
         //Update Class master
         comboBox18.setOnAction(e -> {
             if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
@@ -906,6 +909,19 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                     } else {
                         return;
                     }
+                case "btnCancel":
+                    if (ShowMessageFX.OkayCancel(getStage(), "Are you sure you want to cancel?", pxeModuleName, null) == true) {
+                        removeRequired();
+                        clearFields();
+                        addressdata.clear();
+                        mobiledata.clear();
+                        emaildata.clear();
+                        socialmediadata.clear();
+                        vhclinfodata.clear();
+                        coownvhclinfodata.clear();
+                        pnEditMode = EditMode.UNKNOWN;
+                    }
+                    break;
                 case "btnTabAdd":
                     switch (iTabIndex) {
                         case 0:
@@ -3787,6 +3803,8 @@ public class CustomerFormController implements Initializable, ScreenInterface {
         comboBox07.setDisable(!lbShow); //Title
         txtField25.setDisable(!lbShow); // Spouse
         txtField16.setDisable(!lbShow); //company name
+        btnCancel.setVisible(lbShow);
+        btnCancel.setManaged(lbShow);
         cmdCLIENTType(lbShow);
 
         if (comboBox09.getSelectionModel().getSelectedIndex() == 0) {

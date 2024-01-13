@@ -6,18 +6,13 @@
 package org.rmj.auto.app.parts;
 
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
 import javafx.beans.property.ReadOnlyBooleanPropertyBase;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -45,9 +40,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import static javafx.scene.input.KeyCode.DOWN;
-import static javafx.scene.input.KeyCode.ENTER;
-import static javafx.scene.input.KeyCode.F3;
-import static javafx.scene.input.KeyCode.TAB;
 import static javafx.scene.input.KeyCode.UP;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -56,15 +48,14 @@ import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import javafx.util.Duration;
 import org.rmj.appdriver.GRider;
 import org.rmj.appdriver.agentfx.CommonUtils;
 import org.rmj.appdriver.agentfx.ShowMessageFX;
 import org.rmj.appdriver.callback.MasterCallback;
 import org.rmj.appdriver.constants.EditMode;
 import org.rmj.auto.app.bank.BankEntryFormController;
-import org.rmj.auto.app.views.ActivityMemberTable;
 import org.rmj.auto.app.views.ScreenInterface;
+import org.rmj.auto.app.views.TextFieldAnimationUtil;
 import org.rmj.auto.app.views.unloadForm;
 import org.rmj.auto.parts.base.ItemEntry;
 //import static org.rmj.webcamfx.ui.CameraType.Webcam;
@@ -83,7 +74,7 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
     private ItemEntry oTrans;
     private int pnEditMode;
     private final String pxeModuleName = "Item Entry";
-
+    TextFieldAnimationUtil txtFieldAnimation = new TextFieldAnimationUtil();
     unloadForm unload = new unloadForm(); //Used in Close Button
     private String oldTransNo = "";
     private String sTransNo = "";
@@ -225,104 +216,36 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
         oTrans = new ItemEntry(oApp, oApp.getBranchCode(), true); //Initialize ClientMaster
         oTrans.setCallback(oListener);
         oTrans.setWithUI(true);
-        loadItemList();
+
         comboFilter.setItems(cItems);
-        btnClose.setOnAction(this::cmdButton_Click);
-        btnAdd.setOnAction(this::cmdButton_Click);
-        btnEdit.setOnAction(this::cmdButton_Click);
-        btnCancel.setOnAction(this::cmdButton_Click);
-        btnSave.setOnAction(this::cmdButton_Click);
+
+        //initialize buttons events
+        initButton_Click();
 
         tblItemList.setOnMouseClicked(this::tblItemEntry_Clicked);
 
-        btnBrandName.setOnAction(this::cmdButton_Click);
-        btnCategory.setOnAction(this::cmdButton_Click);
-        btnInvType.setOnAction(this::cmdButton_Click);
-        btnMeasurement.setOnAction(this::cmdButton_Click);
-        btnSupsAdd.setOnAction(this::cmdButton_Click);
-        btnSupsDel.setOnAction(this::cmdButton_Click);
-        btnModelAdd.setOnAction(this::cmdButton_Click);
-        btnModelDel.setOnAction(this::cmdButton_Click);
-        btnModelExpand.setOnAction(this::cmdButton_Click);
-        btnCapture.setOnAction(this::cmdButton_Click);
-        btnUpload.setOnAction(this::cmdButton_Click);
-        btnLoadPhoto.setOnAction(this::cmdButton_Click);
+        //initilize capslock fields
+        initSetCapsLock();
 
-        setCapsLockBehavior(txtField01);
-        setCapsLockBehavior(txtField02);
-        setCapsLockBehavior(txtField32);
-        setCapsLockBehavior(txtField03);
-        setCapsLockBehavior(txtField04);
-        setCapsLockBehavior(txtField13);
-        setCapsLockBehavior(txtField12);
-        setCapsLockBehavior(txtField33);
-        setCapsLockBehavior(txtField34);
+        //initlize textfield focus
+        initTextFieldFocus();
+        //initlize textfield keypressed
+        initTextFieldKeypressed();
 
-        txtField01.focusedProperty().addListener(txtField_Focus);
-        txtField02.focusedProperty().addListener(txtField_Focus);
-        txtField32.focusedProperty().addListener(txtField_Focus);
-        txtField03.focusedProperty().addListener(txtField_Focus);
-        txtField04.focusedProperty().addListener(txtField_Focus);
-        txtField13.focusedProperty().addListener(txtField_Focus);
-        txtField12.focusedProperty().addListener(txtField_Focus);
-        txtField33.focusedProperty().addListener(txtField_Focus);
-        txtField34.focusedProperty().addListener(txtField_Focus);
+        //add shake animation
+        initAddRequiredField();
 
-        txtField32.setOnKeyPressed(this::txtField_KeyPressed);
-        txtField12.setOnKeyPressed(this::txtField_KeyPressed);
-        txtField33.setOnKeyPressed(this::txtField_KeyPressed);
-        txtField34.setOnKeyPressed(this::txtField_KeyPressed);
-        pnEditMode = EditMode.UNKNOWN;
-        initButton(pnEditMode);
-        addRequiredFieldListener(txtField02);
-        addRequiredFieldListener(txtField32);
-        addRequiredFieldListener(txtField03);
-        addRequiredFieldListener(txtField12);
-        addRequiredFieldListener(txtField33);
-        addRequiredFieldListener(txtField34);
         txtField12.textProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue.isEmpty()) {
                 txtField33.clear();
             }
         });
 
+        loadItemList();
         pagination.setPageFactory(this::createPage);
         initCombo();
-
-    }
-
-    private void addRequiredFieldListener(TextField textField) {
-        textField.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue && textField.getText().isEmpty()) {
-                shakeTextField(textField);
-                textField.getStyleClass().add("required-field");
-            } else {
-                textField.getStyleClass().remove("required-field");
-            }
-        });
-    }
-
-    private void shakeTextField(TextField textField) {
-        Timeline timeline = new Timeline();
-        double originalX = textField.getTranslateX();
-
-        // Add keyframes for the animation
-        KeyFrame keyFrame1 = new KeyFrame(Duration.millis(0), new KeyValue(textField.translateXProperty(), 0));
-        KeyFrame keyFrame2 = new KeyFrame(Duration.millis(100), new KeyValue(textField.translateXProperty(), -5));
-        KeyFrame keyFrame3 = new KeyFrame(Duration.millis(200), new KeyValue(textField.translateXProperty(), 5));
-        KeyFrame keyFrame4 = new KeyFrame(Duration.millis(300), new KeyValue(textField.translateXProperty(), -5));
-        KeyFrame keyFrame5 = new KeyFrame(Duration.millis(400), new KeyValue(textField.translateXProperty(), 5));
-        KeyFrame keyFrame6 = new KeyFrame(Duration.millis(500), new KeyValue(textField.translateXProperty(), -5));
-        KeyFrame keyFrame7 = new KeyFrame(Duration.millis(600), new KeyValue(textField.translateXProperty(), 5));
-        KeyFrame keyFrame8 = new KeyFrame(Duration.millis(700), new KeyValue(textField.translateXProperty(), originalX));
-
-        // Add keyframes to the timeline
-        timeline.getKeyFrames().addAll(
-                keyFrame1, keyFrame2, keyFrame3, keyFrame4, keyFrame5, keyFrame6, keyFrame7, keyFrame8
-        );
-
-        // Play the animation
-        timeline.play();
+        pnEditMode = EditMode.UNKNOWN;
+        initButton(pnEditMode);
     }
 
     public void initCombo() {
@@ -357,6 +280,18 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
         oApp = foValue;
     }
 
+    private void initSetCapsLock() {
+        setCapsLockBehavior(txtField01);
+        setCapsLockBehavior(txtField02);
+        setCapsLockBehavior(txtField32);
+        setCapsLockBehavior(txtField03);
+        setCapsLockBehavior(txtField04);
+        setCapsLockBehavior(txtField13);
+        setCapsLockBehavior(txtField12);
+        setCapsLockBehavior(txtField33);
+        setCapsLockBehavior(txtField34);
+    }
+
     private static void setCapsLockBehavior(TextField textField) {
         textField.textProperty().addListener((observable, oldValue, newValue) -> {
             if (textField.getText() != null) {
@@ -374,6 +309,27 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
         }
         return tblItemList;
 
+    }
+
+    private void initButton_Click() {
+        btnClose.setOnAction(this::cmdButton_Click);
+        btnAdd.setOnAction(this::cmdButton_Click);
+        btnEdit.setOnAction(this::cmdButton_Click);
+        btnCancel.setOnAction(this::cmdButton_Click);
+        btnSave.setOnAction(this::cmdButton_Click);
+
+        btnBrandName.setOnAction(this::cmdButton_Click);
+        btnCategory.setOnAction(this::cmdButton_Click);
+        btnInvType.setOnAction(this::cmdButton_Click);
+        btnMeasurement.setOnAction(this::cmdButton_Click);
+        btnSupsAdd.setOnAction(this::cmdButton_Click);
+        btnSupsDel.setOnAction(this::cmdButton_Click);
+        btnModelAdd.setOnAction(this::cmdButton_Click);
+        btnModelDel.setOnAction(this::cmdButton_Click);
+        btnModelExpand.setOnAction(this::cmdButton_Click);
+        btnCapture.setOnAction(this::cmdButton_Click);
+        btnUpload.setOnAction(this::cmdButton_Click);
+        btnLoadPhoto.setOnAction(this::cmdButton_Click);
     }
 
     private void cmdButton_Click(ActionEvent event) {
@@ -854,70 +810,72 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
         tblItemList.setItems(sortedData);
     }
 
+    private void initTextFieldKeypressed() {
+        txtField32.setOnKeyPressed(this::txtField_KeyPressed);
+        txtField12.setOnKeyPressed(this::txtField_KeyPressed);
+        txtField33.setOnKeyPressed(this::txtField_KeyPressed);
+        txtField34.setOnKeyPressed(this::txtField_KeyPressed);
+    }
+
     private void txtField_KeyPressed(KeyEvent event) {
         TextField txtField = (TextField) event.getSource();
-        int lnIndex = Integer.parseInt(((TextField) event.getSource()).getId().substring(8, 10));
         String txtFieldID = ((TextField) event.getSource()).getId();
-        String lsValue = txtField.getText();
-
         try {
-            switch (event.getCode()) {
-                case F3:
-                case TAB:
-                case ENTER:
-                    switch (txtFieldID) {
-                        case "txtField32":
-                            if (oTrans.searchBrand(lsValue)) {
-                                txtField32.setText((String) oTrans.getMaster(32));
-                            } else {
-                                ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
-                            }
-                            break;
-                        case "txtField12":
-                            if (oTrans.searchInvType(lsValue)) {
-                                txtField12.setText((String) oTrans.getMaster(12));
-                                txtField33.clear();
-                            } else {
-                                txtField12.clear();
-                                txtField12.requestFocus();
-                                ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
-                            }
-                            break;
-                        case "txtField33":
-                            if (oTrans.getMaster(12).toString().isEmpty()) {
-                                ShowMessageFX.Warning(getStage(), "Please select inventory type first", "Warning", null);
-                                return;
-                            }
-                            if (oTrans.searchInvCategory(lsValue, oTrans.getMaster(12).toString())) {
-                                txtField33.setText((String) oTrans.getMaster(33));
-                            } else {
-                                ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
-                            }
-                            break;
-                        case "txtField34":
-                            if (oTrans.searchMeasure(lsValue)) {
-                                txtField34.setText((String) oTrans.getMaster(34));
-                            } else {
-                                ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
-                            }
-                            break;
-                    }
+            if (event.getCode() == KeyCode.TAB || event.getCode() == KeyCode.ENTER || event.getCode() == KeyCode.F3) {
+                switch (txtFieldID) {
+                    case "txtField32":
+                        if (oTrans.searchBrand(txtField.getText())) {
+                            txtField32.setText((String) oTrans.getMaster(32));
+                        } else {
+                            ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                            txtField32.requestFocus();
+                            return;
+                        }
+                        break;
+                    case "txtField12":
+                        if (oTrans.searchInvType(txtField.getText())) {
+                            txtField12.setText((String) oTrans.getMaster(12));
+                            txtField33.clear();
+                        } else {
+                            txtField12.clear();
+                            ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                            txtField12.requestFocus();
+                            return;
+                        }
+                        break;
+                    case "txtField33":
+                        if (oTrans.getMaster(12).toString().isEmpty()) {
+                            ShowMessageFX.Warning(getStage(), "Please select inventory type first", "Warning", null);
+                            return;
+                        }
+                        if (oTrans.searchInvCategory(txtField.getText(), oTrans.getMaster(12).toString())) {
+                            txtField33.setText((String) oTrans.getMaster(33));
+                        } else {
+                            ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                            txtField33.requestFocus();
+                            return;
+                        }
+                        break;
+                    case "txtField34":
+                        if (oTrans.searchMeasure(txtField.getText())) {
+                            txtField34.setText((String) oTrans.getMaster(34));
+                        } else {
+                            ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                            txtField34.requestFocus();
+                            return;
+                        }
+                        break;
 
-                    break;
-
+                }
+                event.consume();
+                CommonUtils.SetNextFocus((TextField) event.getSource());
+            } else if (event.getCode() == KeyCode.UP) {
+                event.consume();
+                CommonUtils.SetPreviousFocus((TextField) event.getSource());
             }
         } catch (SQLException e) {
             ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
         }
-        switch (event.getCode()) {
-            case ENTER:
-            case DOWN:
-                CommonUtils.SetNextFocus(txtField);
-                break;
-            case UP:
-                CommonUtils.SetPreviousFocus(txtField);
-        }
-
     }
 
     //parameter
@@ -1294,6 +1252,17 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
         }
     }
 
+    private void initTextFieldFocus() {
+        txtField01.focusedProperty().addListener(txtField_Focus);
+        txtField02.focusedProperty().addListener(txtField_Focus);
+        txtField32.focusedProperty().addListener(txtField_Focus);
+        txtField03.focusedProperty().addListener(txtField_Focus);
+        txtField04.focusedProperty().addListener(txtField_Focus);
+        txtField13.focusedProperty().addListener(txtField_Focus);
+        txtField12.focusedProperty().addListener(txtField_Focus);
+        txtField33.focusedProperty().addListener(txtField_Focus);
+        txtField34.focusedProperty().addListener(txtField_Focus);
+    }
     /*Set TextField Value to Master Class*/
     final ChangeListener<? super Boolean> txtField_Focus = (o, ov, nv) -> {
         try {
@@ -1327,13 +1296,26 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
         }
     };
 
+    private void initAddRequiredField() {
+        txtFieldAnimation.addRequiredFieldListener(txtField02);
+        txtFieldAnimation.addRequiredFieldListener(txtField32);
+        txtFieldAnimation.addRequiredFieldListener(txtField03);
+        txtFieldAnimation.addRequiredFieldListener(txtField12);
+        txtFieldAnimation.addRequiredFieldListener(txtField33);
+        txtFieldAnimation.addRequiredFieldListener(txtField34);
+    }
+
+    public void removeRequired() {
+        txtFieldAnimation.removeShakeAnimation(txtField02, txtFieldAnimation.shakeTextField(txtField02), "required-field");
+        txtFieldAnimation.removeShakeAnimation(txtField03, txtFieldAnimation.shakeTextField(txtField03), "required-field");
+        txtFieldAnimation.removeShakeAnimation(txtField32, txtFieldAnimation.shakeTextField(txtField32), "required-field");
+        txtFieldAnimation.removeShakeAnimation(txtField12, txtFieldAnimation.shakeTextField(txtField12), "required-field");
+        txtFieldAnimation.removeShakeAnimation(txtField33, txtFieldAnimation.shakeTextField(txtField33), "required-field");
+        txtFieldAnimation.removeShakeAnimation(txtField34, txtFieldAnimation.shakeTextField(txtField34), "required-field");
+    }
+
     private void clearFields() {
-        txtField02.getStyleClass().remove("required-field");
-        txtField03.getStyleClass().remove("required-field");
-        txtField32.getStyleClass().remove("required-field");
-        txtField12.getStyleClass().remove("required-field");
-        txtField33.getStyleClass().remove("required-field");
-        txtField34.getStyleClass().remove("required-field");
+        removeRequired();
         Image imageError = new Image("file:D:/GGC_SEG_Folder-Java/autoapp/src/org/rmj/auto/app/images/no-image-available.png");
         imgPartsPic.setImage(imageError);
         txtField01.setText("");

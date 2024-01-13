@@ -564,9 +564,7 @@ public class ActivityFormController implements Initializable, ScreenInterface {
                     break;
                 case "btnCancel":
                     if (ShowMessageFX.OkayCancel(getStage(), "Are you sure you want to cancel?", pxeModuleName, null) == true) {
-                        removeRequired();
                         clearFields();
-                        txtField05.getStyleClass().remove("required-field");
                         actVhclModelData.clear();
                         actMembersData.clear();
                         townCitydata.clear();

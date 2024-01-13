@@ -39,6 +39,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -58,28 +59,29 @@ import org.rmj.appdriver.constants.EditMode;
 import org.rmj.auto.app.views.CancelForm;
 import org.rmj.auto.app.views.InputTextFormatter;
 import org.rmj.auto.app.views.ScreenInterface;
+import org.rmj.auto.app.views.TextFieldAnimationUtil;
 import org.rmj.auto.app.views.unloadForm;
 import org.rmj.auto.cashiering.base.UnitSalesInvoice;
 
 /**
  * FXML Controller class
  *
- * @author Arsiela
- * Date Created 09-25-2023
+ * @author Arsiela Date Created 09-25-2023
  */
 public class VehicleSalesInvoiceFormController implements Initializable, ScreenInterface {
-    
+
     private GRider oApp;
     private UnitSalesInvoice oTrans;
     private MasterCallback oListener;
     CancelForm cancelform = new CancelForm(); //Object for cancellation remarks
     unloadForm unload = new unloadForm(); //Used in Close Button
+    TextFieldAnimationUtil txtFieldAnimation = new TextFieldAnimationUtil();
     private String pxeModuleName = "Vehicle Sales Invoice";
     private int pnEditMode;//Modifying fields
     private int lnCtr = 0;
     private double xOffset = 0;
     private double yOffset = 0;
-    
+
     @FXML
     private Button btnAdd;
     @FXML
@@ -147,14 +149,19 @@ public class VehicleSalesInvoiceFormController implements Initializable, ScreenI
     private TextArea textArea34;
     @FXML
     private TextField txtField36;
-    
-    
+
     private Stage getStage() {
         return (Stage) btnSave.getScene().getWindow();
     }
+
     /**
      * Initializes the controller class.
      */
+    @Override
+    public void setGRider(GRider foValue) {
+        oApp = foValue;
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         oListener = (int fnIndex, Object foValue) -> {
@@ -164,25 +171,20 @@ public class VehicleSalesInvoiceFormController implements Initializable, ScreenI
         oTrans = new UnitSalesInvoice(oApp, oApp.getBranchCode(), true); //Initialize ClientMaster
         oTrans.setCallback(oListener);
         oTrans.setWithUI(true);
-        
+
+        //Button Click Event
+        initButton_Cick();
+        //initialize textfield keypressed
+        initTxtFieldKeyPressed();
+        //initialize textfield focus
+        initTxtFieldFocus();
         //Set fields to caps lock
-        setFieldsCapsLock();
+        initSetFieldsCapsLock();
+        //Set fields pattern
+        initPattern();
+
         cmbType032.setItems(cCustomerType); //Customer Type
-        txtField05.focusedProperty().addListener(txtField_Focus);  // si number
-        txtField10.focusedProperty().addListener(txtField_Focus);  // nDiscount
-        txtField03.setOnAction(this::getDate); //dTransact
-        txtField03.setDayCellFactory(callB);
-        
-        txtField06.setOnKeyPressed(this::txtField_KeyPressed);  // sSourceNo
-        txtField10.setOnKeyPressed(this::txtField_KeyPressed);  // nDiscount
-        textSeek01.setOnKeyPressed(this::txtField_KeyPressed);  // search
-        
-        Pattern pattern;
-        pattern = Pattern.compile("[[0-9][.][,]]*");
-        txtField10.setTextFormatter(new InputTextFormatter(pattern)); //nDiscount
-        pattern = Pattern.compile("[0-9]*");
-        txtField05.setTextFormatter(new InputTextFormatter(pattern)); //sReferNox
-        
+
         txtField06.textProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue.isEmpty()) {
                 //clearFields();
@@ -191,9 +193,9 @@ public class VehicleSalesInvoiceFormController implements Initializable, ScreenI
                 loadFields();
             }
         });
-        
+
         cmbType032.setOnAction(event -> {
-            if (pnEditMode == EditMode.ADDNEW){
+            if (pnEditMode == EditMode.ADDNEW) {
                 clearClass();
                 try {
                     oTrans.setMaster(32, String.valueOf(cmbType032.getSelectionModel().getSelectedIndex()));
@@ -203,72 +205,52 @@ public class VehicleSalesInvoiceFormController implements Initializable, ScreenI
                 }
             }
         });
-        
-        //Shake 
-        addRequiredFieldListener(txtField05);
-        addRequiredFieldListener(txtField06);
-        
-        setCapsLockBehavior(txtField05);
-        setCapsLockBehavior(txtField06);
-        setCapsLockBehavior(txtField30);
-        setCapsLockBehavior(txtField31);
-        setCapsLockBehavior(txtField24);
-        setCapsLockBehavior(txtField19);
-        setCapsLockBehavior(txtField20);
-        setCapsLockBehavior(txtField21);
-        setCapsLockBehavior(txtField22);
-        setCapsLockBehavior(txtField23);
-        setCapsLockBehavior(txtField33);
-        setCapsLockBehavior(txtField36);
-        setCapsLockBehavior(textArea18);
-        setCapsLockBehavior(textArea34);
-        
-        //Button Click Event
+
+        //set shake animation to textfield
+        initAddRequiredField();
+        /*Clear Fields*/
+        clearFields();
+        txtField03.setOnAction(this::getDate); //dTransact
+        txtField03.setDayCellFactory(callB);
+        pnEditMode = EditMode.UNKNOWN;
+        initButton(pnEditMode);
+    }
+
+    private void initButton_Cick() {
         btnAdd.setOnAction(this::cmdButton_Click);
-        btnEdit.setOnAction(this::cmdButton_Click); 
-        btnSave.setOnAction(this::cmdButton_Click); 
+        btnEdit.setOnAction(this::cmdButton_Click);
+        btnSave.setOnAction(this::cmdButton_Click);
         btnBrowse.setOnAction(this::cmdButton_Click);
         btnPrint.setOnAction(this::cmdButton_Click);
         btnCancelSI.setOnAction(this::cmdButton_Click);
         btnCancel.setOnAction(this::cmdButton_Click);
-        btnClose.setOnAction(this::cmdButton_Click); 
-
-        /*Clear Fields*/
-        clearFields();
-
-        pnEditMode = EditMode.UNKNOWN;
-        initButton(pnEditMode); 
-    }    
-    
-    @Override
-    public void setGRider(GRider foValue) {
-        oApp = foValue;
+        btnClose.setOnAction(this::cmdButton_Click);
     }
-    
+
     private void cmdButton_Click(ActionEvent event) {
         try {
-            String lsButton = ((Button)event.getSource()).getId();
-            switch (lsButton){
-                case "btnAdd": //create new 
+            String lsButton = ((Button) event.getSource()).getId();
+            switch (lsButton) {
+                case "btnAdd": //create new
                     /*Clear Fields*/
                     if (oTrans.NewRecord()) {
-                    clearFields();
-                    loadFields();
-                    pnEditMode = oTrans.getEditMode();
+                        clearFields();
+                        loadFields();
+                        pnEditMode = oTrans.getEditMode();
                     } else {
                         ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
                     }
                     break;
-                case "btnEdit": //modify 
+                case "btnEdit": //modify
                     if (oTrans.UpdateRecord()) {
                         pnEditMode = oTrans.getEditMode();
                     } else {
                         ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
                     }
                     break;
-                case "btnSave": 
+                case "btnSave":
                     //Validate before saving
-                    if (((String)oTrans.getMaster(5)).isEmpty()){
+                    if (((String) oTrans.getMaster(5)).isEmpty()) {
                         ShowMessageFX.Information(getStage(), "Invalid SI Number.", pxeModuleName, null);
                         txtField05.requestFocus();
                         return;
@@ -277,10 +259,10 @@ public class VehicleSalesInvoiceFormController implements Initializable, ScreenI
                     if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure, do you want to save?") == true) {
                     } else {
                         return;
-                    }        
+                    }
                     if (oTrans.SaveRecord()) {
                         ShowMessageFX.Information(getStage(), "Transaction save successfully.", pxeModuleName, null);
-                        if (oTrans.OpenRecord(oTrans.getMaster("sTransNox").toString())){
+                        if (oTrans.OpenRecord(oTrans.getMaster("sTransNox").toString())) {
                             loadFields();
                             pnEditMode = oTrans.getEditMode();
                         } else {
@@ -289,7 +271,7 @@ public class VehicleSalesInvoiceFormController implements Initializable, ScreenI
                     } else {
                         ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", "Error while saving " + pxeModuleName);
                     }
-                    break; 
+                    break;
                 case "btnBrowse":
                     if ((pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE)) {
                         if (ShowMessageFX.OkayCancel(null, "Confirmation", "You have unsaved data. Are you sure you want to browse a new record?") == true) {
@@ -299,7 +281,7 @@ public class VehicleSalesInvoiceFormController implements Initializable, ScreenI
                         }
                     }
 
-                    if (oTrans.SearchRecord()){
+                    if (oTrans.SearchRecord()) {
                         loadFields();
                         pnEditMode = oTrans.getEditMode();
                     } else {
@@ -313,10 +295,10 @@ public class VehicleSalesInvoiceFormController implements Initializable, ScreenI
                     } else {
                         return;
                     }
-                    
+
                     if (cancelform.loadCancelWindow(oApp, (String) oTrans.getMaster(1), (String) oTrans.getMaster(5), "VSI")) {
-                        if (oTrans.CancelInvoice((String) oTrans.getMaster(1))){
-                            if (!oTrans.OpenRecord((String) oTrans.getMaster(1))){
+                        if (oTrans.CancelInvoice((String) oTrans.getMaster(1))) {
+                            if (!oTrans.OpenRecord((String) oTrans.getMaster(1))) {
                                 ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", "");
                             }
                             loadFields();
@@ -332,128 +314,137 @@ public class VehicleSalesInvoiceFormController implements Initializable, ScreenI
                     }
                     break;
                 case "btnPrint":
-                    if(!loadPrint((String) oTrans.getMaster(1))){
+                    if (!loadPrint((String) oTrans.getMaster(1))) {
                         ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", "Error while printing " + pxeModuleName);
                         return;
                     }
                     break;
                 case "btnCancel":
-                    clearFields();
-                    pnEditMode = EditMode.UNKNOWN;
+                    if (ShowMessageFX.OkayCancel(getStage(), "Are you sure you want to cancel?", pxeModuleName, null) == true) {
+                        clearFields();
+                        pnEditMode = EditMode.UNKNOWN;
+                    }
                     break;
                 case "btnClose": //close tab
-                    if(ShowMessageFX.OkayCancel(null, "Close Tab", "Are you sure you want to close this Tab?") == true){
+                    if (ShowMessageFX.OkayCancel(null, "Close Tab", "Are you sure you want to close this Tab?") == true) {
                         if (unload != null) {
                             unload.unloadForm(AnchorMain, oApp, pxeModuleName);
-                        }else {
-                            ShowMessageFX.Warning(null, "Warning", "Please notify the system administrator to configure the null value at the close button.");    
+                        } else {
+                            ShowMessageFX.Warning(null, "Warning", "Please notify the system administrator to configure the null value at the close button.");
+
                         }
                         break;
-                    } else
+                    } else {
                         return;
+                    }
             }
         } catch (SQLException ex) {
             Logger.getLogger(VehicleSalesInvoiceFormController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        initButton(pnEditMode); 
+        initButton(pnEditMode);
     }
-    
-    private void txtField_KeyPressed(KeyEvent event){
-        TextField txtField = (TextField)event.getSource();
-        int lnIndex = Integer.parseInt(((TextField)event.getSource()).getId().substring(8,10));
 
-          try{
-               switch (event.getCode()){
-                    case F3:
-                    case TAB:
-                    case ENTER:
-                        switch (lnIndex){
-                            case 1:
-                                if ((pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE)) {
-                                    if (ShowMessageFX.OkayCancel(null, "Confirmation", "You have unsaved data. Are you sure you want to browse a new record?") == true) {
-                                        clearFields();
-                                    } else {
-                                        return;
-                                    }
-                                }
-
-                                if (oTrans.SearchRecord()){
-                                    loadFields();
-                                    pnEditMode = oTrans.getEditMode();
-                                } else {
-                                    ShowMessageFX.Warning(getStage(), "There was an error while loading information.", "Warning", null);
-                                    pnEditMode = EditMode.UNKNOWN;
-                                    clearFields();
-                                }
-                                
-                                initButton(pnEditMode);
-                                break;
-                            case 6:
-                                if (oTrans.searchUDR(txtField06.getText(), String.valueOf(cmbType032.getSelectionModel().getSelectedIndex()))){
-                                    oTrans.computeAmount();
-                                    loadFields();
-                                } else {
-                                    ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
-                                    txtField06.clear();
-                                    txtField06.requestFocus();
-                                }
-                            break;
-                        } 
-                        break;
-               }
-          }catch(SQLException e){
-                ShowMessageFX.Warning(getStage(),e.getMessage(), "Warning", null);
-          }
-
-        switch (event.getCode()){
-        case ENTER:
-        case DOWN:
-            CommonUtils.SetNextFocus(txtField);
-            break;
-        case UP:
-            CommonUtils.SetPreviousFocus(txtField);
-        }
-
+    private void initTxtFieldKeyPressed() {
+        txtField06.setOnKeyPressed(this::txtField_KeyPressed);  // sSourceNo
+        txtField10.setOnKeyPressed(this::txtField_KeyPressed);  // nDiscount
+        textSeek01.setOnKeyPressed(this::txtField_KeyPressed);  // search
     }
-    
-    /*Set TextField Value to Master Class*/
-    final ChangeListener<? super Boolean> txtField_Focus = (o,ov,nv)->{
+
+    private void txtField_KeyPressed(KeyEvent event) {
+        TextField txtField = (TextField) event.getSource();
+        String txtFieldID = ((TextField) event.getSource()).getId();
         try {
-            TextField txtField = (TextField)((ReadOnlyBooleanPropertyBase)o).getBean();
+            if (event.getCode() == KeyCode.TAB || event.getCode() == KeyCode.ENTER || event.getCode() == KeyCode.F3) {
+                switch (txtFieldID) {
+                    case "textSeek01":
+                        if ((pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE)) {
+                            if (ShowMessageFX.OkayCancel(null, "Confirmation", "You have unsaved data. Are you sure you want to browse a new record?") == true) {
+                                clearFields();
+                            } else {
+                                return;
+                            }
+                        }
+                        if (oTrans.SearchRecord()) {
+                            loadFields();
+                            pnEditMode = oTrans.getEditMode();
+                        } else {
+                            ShowMessageFX.Warning(getStage(), "There was an error while loading information.", "Warning", null);
+                            pnEditMode = EditMode.UNKNOWN;
+                            clearFields();
+                        }
+                        initButton(pnEditMode);
+                        break;
+                    case "txtField06":
+                        if (oTrans.searchUDR(txtField.getText(), String.valueOf(cmbType032.getSelectionModel().getSelectedIndex()))) {
+                            oTrans.computeAmount();
+                            loadFields();
+                        } else {
+                            ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                            txtField06.clear();
+                            txtField06.requestFocus();
+                            return;
+                        }
+                        break;
+                }
+                event.consume();
+                CommonUtils.SetNextFocus((TextField) event.getSource());
+            } else if (event.getCode() == KeyCode.UP) {
+                event.consume();
+                CommonUtils.SetPreviousFocus((TextField) event.getSource());
+            }
+        } catch (SQLException e) {
+            ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
+        }
+    }
+
+    private void initTxtFieldFocus() {
+        txtField05.focusedProperty().addListener(txtField_Focus);  // si number
+        txtField10.focusedProperty().addListener(txtField_Focus);  // nDiscount
+    }
+    /*Set TextField Value to Master Class*/
+    final ChangeListener<? super Boolean> txtField_Focus = (o, ov, nv) -> {
+        try {
+            TextField txtField = (TextField) ((ReadOnlyBooleanPropertyBase) o).getBean();
             int lnIndex = Integer.parseInt(txtField.getId().substring(8, 10));
             String lsValue = txtField.getText();
 
-            if (lsValue == null) return;
-            if(!nv){ /*Lost Focus*/
-                    switch (lnIndex){
+            if (lsValue == null) {
+                return;
+            }
+            if (!nv) {
+                /*Lost Focus*/
+                switch (lnIndex) {
 //                            case 11:
 //                            case 12:
-                            case 10:
-                                if (lsValue.isEmpty()) lsValue = "0.00";
-                                
-                                if (Double.valueOf(lsValue.replace(",", "")) > ((Double) oTrans.getMaster(29))){
-                                    lsValue = "0.00";
-                                    ShowMessageFX.Warning(getStage(), "Invalid Amount", "Warning", null);
-                                    txtField10.requestFocus();
-                                }
-                                
-                                oTrans.setMaster(lnIndex, Double.valueOf(lsValue.replace(",", "")));
-                                oTrans.computeAmount();
-                                loadFields();
-                                break;
-                            case 5:
-                                oTrans.setMaster(lnIndex, lsValue);
-                                break;
+                    case 10:
+                        if (lsValue.isEmpty()) {
+                            lsValue = "0.00";
+                        }
 
-                    }
+                        if (Double.valueOf(lsValue.replace(",", "")) > ((Double) oTrans.getMaster(29))) {
+                            lsValue = "0.00";
+                            ShowMessageFX.Warning(getStage(), "Invalid Amount", "Warning", null);
+                            txtField10.requestFocus();
+                        }
 
-            } else
-               txtField.selectAll();
+                        oTrans.setMaster(lnIndex, Double.valueOf(lsValue.replace(",", "")));
+                        oTrans.computeAmount();
+                        loadFields();
+                        break;
+                    case 5:
+                        oTrans.setMaster(lnIndex, lsValue);
+                        break;
+
+                }
+
+            } else {
+                txtField.selectAll();
+            }
         } catch (SQLException ex) {
             Logger.getLogger(VehicleSalesInvoiceFormController.class.getName()).log(Level.SEVERE, null, ex);
         }
     };
-    
+
     /*Set Date Value to Master Class*/
     public void getDate(ActionEvent event) {
         try {
@@ -462,8 +453,8 @@ public class VehicleSalesInvoiceFormController implements Initializable, ScreenI
             Logger.getLogger(VehicleSalesInvoiceFormController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    private void loadFields(){
+
+    private void loadFields() {
         try {
             txtField03.setValue(strToDate(CommonUtils.xsDateShort((Date) oTrans.getMaster(3))));//dTransact
             txtField05.setText((String) oTrans.getMaster(5));//sReferNox
@@ -481,34 +472,34 @@ public class VehicleSalesInvoiceFormController implements Initializable, ScreenI
             textArea18.setText(sDescrpt); //sDescript
             txtField23.setText(sColor); //sColorDsc
             cmbType032.getSelectionModel().select(Integer.parseInt(oTrans.getMaster(32).toString())); //Customer Type
-            
+
             textArea34.setText((String) oTrans.getMaster(34)); //Remarks
             txtField33.setText((String) oTrans.getMaster(33)); //Tin
             txtField36.setText((String) oTrans.getMaster(36)); //sCoCltNmx
-            if (((String) oTrans.getMaster(15)).equals("1")){
+            if (((String) oTrans.getMaster(15)).equals("1")) {
                 lblStatus15.setText("Active");
             } else {
                 lblStatus15.setText("Cancelled");
             }
-            
+
             // Format the decimal value with decimal separators
             DecimalFormat decimalFormat = new DecimalFormat("#,##0.00");
-            
-            txtField29.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f",(Double) oTrans.getMaster(29))))); //nUnitPrce
-            txtField09_2.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f",(Double) oTrans.getMaster(9))))); //nTranTotl
-            txtField11.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f",(Double) oTrans.getMaster(11))))); //nVatRatex
-            txtField12.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f",(Double)oTrans.getMaster(12))))); //nVatAmtxx
+
+            txtField29.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f", (Double) oTrans.getMaster(29))))); //nUnitPrce
+            txtField09_2.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f", (Double) oTrans.getMaster(9))))); //nTranTotl
+            txtField11.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f", (Double) oTrans.getMaster(11))))); //nVatRatex
+            txtField12.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f", (Double) oTrans.getMaster(12))))); //nVatAmtxx
             //System.out.println("Discount >> " + decimalFormat.format(Double.parseDouble(String.format("%.2f",(Double) oTrans.getMaster(10)))));
-            txtField10.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f",(Double) oTrans.getMaster(10))))); //nDiscount
-            txtField09.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f",(Double) oTrans.getMaster(9))))); //nTranTotl
-            
+            txtField10.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f", (Double) oTrans.getMaster(10))))); //nDiscount
+            txtField09.setText(decimalFormat.format(Double.parseDouble(String.format("%.2f", (Double) oTrans.getMaster(9))))); //nTranTotl
+
         } catch (SQLException ex) {
             Logger.getLogger(VehicleSalesInvoiceFormController.class.getName()).log(Level.SEVERE, null, ex);
         }
-    
+
     }
-    
-    private boolean loadPrint(String fsValue){
+
+    private boolean loadPrint(String fsValue) {
         try {
             Stage stage = new Stage();
 
@@ -554,67 +545,25 @@ public class VehicleSalesInvoiceFormController implements Initializable, ScreenI
         }
         return true;
     }
-    
-//    private void clearClassFields(){
-//        try {
-//            //Class Master
-//            for (lnCtr = 1; lnCtr <= 34; lnCtr++) {
-//                switch (lnCtr) {
-//                    case 3:
-//                        oTrans.setMaster(lnCtr, oApp.getServerDate()); 
-//                        break;
-//                    case 5: //sReferNox
-//                    case 6: //sSourceNo
-//                    case 7: //sSourceCd
-//                    case 30: //sCompnyNm
-//                    case 31: //sAddressx
-//                    case 33: //tin
-//                    case 34: //remarks
-//                    case 24: //sSalesExe
-//                    case 19: //sCSNoxxxx
-//                    case 20: //sPlateNox
-//                    case 21: //sFrameNox
-//                    case 22: //sEngineNo
-//                    case 18: //sDescript
-//                    case 23: //sColorDsc
-//                        oTrans.setMaster(lnCtr, ""); 
-//                        break;
-////                    case 32: //customerType
-////                        oTrans.setMaster(lnCtr, "0"); 
-////                        break;
-//                    case 29: //nUnitPrce
-//                    case 11: //nVatRatex
-//                    case 12: //nVatAmtxx
-//                    case 10: //nDiscount
-//                    case 9: //nTranTotl
-//                        oTrans.setMaster(lnCtr, 0.00); 
-//                        break;
-//                        
-//                }
-//            } 
-//        } catch (SQLException ex) {
-//            Logger.getLogger(VehicleSalesInvoiceFormController.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//    }
-    
+
     /*Clear Class*/
-    public void clearClass(){
+    public void clearClass() {
         try {
-            for (int lnCtr = 1; lnCtr <= 39; lnCtr++){
-                switch(lnCtr) {                      
-                    case 6: //a.sSourceNo             
+            for (int lnCtr = 1; lnCtr <= 39; lnCtr++) {
+                switch (lnCtr) {
+                    case 6: //a.sSourceNo
                     case 7: //a.sSourceCd
-                    case 8: //a.sClientID 
-                    case 18: //sDescript 
-                    case 19: //sCSNoxxxx                                                                                                                                                                                                                                                                        
-                    case 20: //sPlateNox 			 																																		                                                                                                                                                                                            
-                    case 21: //sFrameNox 			 																																		                                                                                                                                                                                            
-                    case 22: //sEngineNo 			 																																	                                                                                                                                                                                              
-                    case 23: //sColorDsc 			 																																	                                                                                                                                                                                              
-                    case 24: //sSalesExe                                                                                                                                                                                                                                                                       
-                    case 25: //sEmployID              
-                    case 30: //sCompnyNm 
-                    case 31: //sAddressx 
+                    case 8: //a.sClientID
+                    case 18: //sDescript
+                    case 19: //sCSNoxxxx
+                    case 20: //sPlateNox
+                    case 21: //sFrameNox
+                    case 22: //sEngineNo
+                    case 23: //sColorDsc
+                    case 24: //sSalesExe
+                    case 25: //sEmployID
+                    case 30: //sCompnyNm
+                    case 31: //sAddressx
                     case 33: //sTaxIDNox
                     case 34: //sRemarksx
                     case 35: //sCoCltIDx
@@ -629,10 +578,10 @@ public class VehicleSalesInvoiceFormController implements Initializable, ScreenI
                     case 11: //a.nVatRatex
                     case 12: //a.nVatAmtxx
                     case 13: //a.nAmtPaidx
-                    case 26: //nAddlDscx 
-                    case 27: //nPromoDsc 
-                    case 28: //nFleetDsc 
-                    case 29: //nUnitPrce 
+                    case 26: //nAddlDscx
+                    case 27: //nPromoDsc
+                    case 28: //nFleetDsc
+                    case 29: //nUnitPrce
                         oTrans.setMaster(lnCtr, 0.00);
                         break;
                 }
@@ -642,47 +591,52 @@ public class VehicleSalesInvoiceFormController implements Initializable, ScreenI
             Logger.getLogger(VehicleSalesInvoiceFormController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    /*Clear Fields*/
-    public void clearFields(){
-        /*Clear Red Color for required fileds*/
-        txtField05.getStyleClass().remove("required-field");
-        txtField06.getStyleClass().remove("required-field");
-        
-        cmbType032.setValue("");
-        lblStatus15.setText("");
-        txtField05.clear(); //sReferNox
-        txtField06.clear(); //sSourceNo
-        txtField30.clear(); //sCompnyNm
-        txtField31.clear(); //sAddressx
-        txtField24.clear(); //sSalesExe
-        txtField19.clear(); //sCSNoxxxx
-        txtField20.clear(); //sPlateNox
-        txtField21.clear(); //sFrameNox
-        txtField22.clear(); //sEngineNo
-        textArea18.clear(); //sDescript
-        txtField23.clear(); //sColorDsc
-        txtField29.clear(); //nUnitPrce
-        txtField09_2.clear(); //nUnitPrce
-        txtField11.clear(); //nVatRatex
-        txtField12.clear(); //nVatAmtxx
-        txtField10.clear(); //nDiscount
-        txtField09.clear(); //nTranTotl
-        txtField36.clear(); //sCoCltNmx
+
+    private void initAddRequiredField() {
+        txtFieldAnimation.addRequiredFieldListener(txtField05);
+        txtFieldAnimation.addRequiredFieldListener(txtField06);
     }
-    
+
+    /*Clear Fields*/
+    public void clearFields() {
+
+        removeRequired();
+        cmbType032.setValue(null);
+        lblStatus15.setText("");
+        txtField05.setText("");
+        txtField06.setText("");
+        txtField30.setText("");
+        txtField31.setText("");
+        txtField24.setText("");
+        txtField19.setText("");
+        txtField20.setText("");
+        txtField21.setText("");
+        txtField22.setText("");
+        textArea18.setText("");
+        txtField23.setText("");
+        txtField29.setText("0.00");
+        txtField09_2.setText("0.00");
+        txtField11.setText("0.00");
+        txtField12.setText("0.00");
+        txtField10.setText("0.00");
+        txtField09.setText("0.00");
+        txtField36.setText("");
+    }
+
+    private void removeRequired() {
+        txtFieldAnimation.removeShakeAnimation(txtField05, txtFieldAnimation.shakeTextField(txtField05), "required-field");
+        txtFieldAnimation.removeShakeAnimation(txtField06, txtFieldAnimation.shakeTextField(txtField06), "required-field");
+
+    }
+
     /*Enabling / Disabling Fields*/
-    private void initButton(int fnValue){
-        /* NOTE:
-            lbShow (FALSE)= invisible
-            !lbShow (TRUE)= visible
-        */
+    private void initButton(int fnValue) {
         boolean lbShow = (fnValue == EditMode.ADDNEW || fnValue == EditMode.UPDATE);
-        
-        //if lbShow = false hide btn   
+
+        //if lbShow = false hide btn
         btnAdd.setVisible(!lbShow);
         btnAdd.setManaged(!lbShow);
-        btnEdit.setVisible(false); 
+        btnEdit.setVisible(false);
         btnEdit.setManaged(false);
         btnSave.setVisible(lbShow);
         btnSave.setManaged(lbShow);
@@ -692,9 +646,9 @@ public class VehicleSalesInvoiceFormController implements Initializable, ScreenI
         btnCancelSI.setManaged(false);
         btnPrint.setVisible(false);
         btnPrint.setManaged(false);
-        
+
         if (fnValue == EditMode.READY) { //show edit if user clicked save / browse
-            btnEdit.setVisible(true); 
+            btnEdit.setVisible(true);
             btnEdit.setManaged(true);
             btnCancelSI.setVisible(true);
             btnCancelSI.setManaged(true);
@@ -707,16 +661,16 @@ public class VehicleSalesInvoiceFormController implements Initializable, ScreenI
         txtField06.setDisable(true); //sSourceNo
         cmbType032.setDisable(true); //Customer type
         textArea34.setDisable(!lbShow); //Remarks
-        textArea18.setDisable(!lbShow); //vehicle description
-        
-        if (fnValue == EditMode.ADDNEW){
+        textArea18.setDisable(true); //vehicle description
+
+        if (fnValue == EditMode.ADDNEW) {
             btnCancel.setVisible(true);
             btnCancel.setManaged(true);
             txtField05.setDisable(false);//sReferNox
             cmbType032.setDisable(false); //Customer type
             txtField06.setDisable(false); //sSourceNo
         }
-        
+
         //txtField30.setDisable(!lbShow); //sCompnyNm
         //txtField31.setDisable(!lbShow); //sAddressx
         //txtField24.setDisable(!lbShow); //sSalesExe
@@ -731,29 +685,26 @@ public class VehicleSalesInvoiceFormController implements Initializable, ScreenI
         //txtField11.setDisable(!lbShow); //nVatRatex
         //txtField12.setDisable(!lbShow); //nVatAmtxx
         //txtField09.setDisable(!lbShow); //nTranTotl
-        
     }
-    
-    private void setFieldsCapsLock(){
-        setCapsLockBehavior(txtField05); //sReferNox
-        setCapsLockBehavior(txtField06); //sSourceNo
-        setCapsLockBehavior(txtField30); //sCompnyNm
-        setCapsLockBehavior(txtField31); //sAddressx
-        setCapsLockBehavior(txtField24); //sSalesExe
-        setCapsLockBehavior(txtField19); //sCSNoxxxx
-        setCapsLockBehavior(txtField20); //sPlateNox
-        setCapsLockBehavior(txtField21); //sFrameNox
-        setCapsLockBehavior(txtField22); //sEngineNo
-        setCapsLockBehavior(textArea18); //sDescript
-        setCapsLockBehavior(txtField23); //sColorDsc
-//        setCapsLockBehavior(txtField29); //nUnitPrce
-//        setCapsLockBehavior(txtField09_2); //nUnitPrce
-//        setCapsLockBehavior(txtField11); //nVatRatex
-//        setCapsLockBehavior(txtField12); //nVatAmtxx
-//        setCapsLockBehavior(txtField10); //nDiscount
-//        setCapsLockBehavior(txtField09); //nTranTotl
+
+    private void initSetFieldsCapsLock() {
+        setCapsLockBehavior(txtField05);
+        setCapsLockBehavior(txtField06);
+        setCapsLockBehavior(txtField30);
+        setCapsLockBehavior(txtField31);
+        setCapsLockBehavior(txtField24);
+        setCapsLockBehavior(txtField19);
+        setCapsLockBehavior(txtField20);
+        setCapsLockBehavior(txtField21);
+        setCapsLockBehavior(txtField22);
+        setCapsLockBehavior(txtField23);
+        setCapsLockBehavior(txtField33);
+        setCapsLockBehavior(txtField36);
+
+        setCapsLockBehavior(textArea18);
+        setCapsLockBehavior(textArea34);
     }
-    
+
     private static void setCapsLockBehavior(TextField textField) {
         textField.textProperty().addListener((observable, oldValue, newValue) -> {
             if (textField.getText() != null) {
@@ -769,14 +720,23 @@ public class VehicleSalesInvoiceFormController implements Initializable, ScreenI
             }
         });
     }
-    
+
+    private void initPattern() {
+        Pattern pattern;
+        pattern = Pattern.compile("[[0-9][.][,]]*");
+        txtField10.setTextFormatter(new InputTextFormatter(pattern)); //nDiscount
+        pattern = Pattern.compile("[0-9]*");
+        txtField05.setTextFormatter(new InputTextFormatter(pattern)); //sReferNox
+
+    }
+
     /*Convert Date to String*/
     private LocalDate strToDate(String val) {
         DateTimeFormatter date_formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate localDate = LocalDate.parse(val, date_formatter);
         return localDate;
     }
-    
+
     private Callback<DatePicker, DateCell> callB = new Callback<DatePicker, DateCell>() {
         @Override
         public DateCell call(final DatePicker param) {
@@ -792,42 +752,5 @@ public class VehicleSalesInvoiceFormController implements Initializable, ScreenI
         }
 
     };
-    
-    //Animation    
-    private void shakeTextField(TextField textField) {
-        Timeline timeline = new Timeline();
-        double originalX = textField.getTranslateX();
 
-        // Add keyframes for the animation
-        KeyFrame keyFrame1 = new KeyFrame(Duration.millis(0), new KeyValue(textField.translateXProperty(), 0));
-        KeyFrame keyFrame2 = new KeyFrame(Duration.millis(100), new KeyValue(textField.translateXProperty(), -5));
-        KeyFrame keyFrame3 = new KeyFrame(Duration.millis(200), new KeyValue(textField.translateXProperty(), 5));
-        KeyFrame keyFrame4 = new KeyFrame(Duration.millis(300), new KeyValue(textField.translateXProperty(), -5));
-        KeyFrame keyFrame5 = new KeyFrame(Duration.millis(400), new KeyValue(textField.translateXProperty(), 5));
-        KeyFrame keyFrame6 = new KeyFrame(Duration.millis(500), new KeyValue(textField.translateXProperty(), -5));
-        KeyFrame keyFrame7 = new KeyFrame(Duration.millis(600), new KeyValue(textField.translateXProperty(), 5));
-        KeyFrame keyFrame8 = new KeyFrame(Duration.millis(700), new KeyValue(textField.translateXProperty(), originalX));
-
-        // Add keyframes to the timeline
-        timeline.getKeyFrames().addAll(
-                keyFrame1, keyFrame2, keyFrame3, keyFrame4, keyFrame5, keyFrame6, keyFrame7, keyFrame8
-        );
-
-        // Play the animation
-        timeline.play();
-    }
-
-    //Validation
-    private void addRequiredFieldListener(TextField textField) {
-        textField.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue && textField.getText().isEmpty()) {
-                shakeTextField(textField);
-                textField.getStyleClass().add("required-field");
-            } else {
-                textField.getStyleClass().remove("required-field");
-            }
-        });
-    }
-    
-    
 }

@@ -16,9 +16,6 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
 import javafx.beans.property.ReadOnlyBooleanPropertyBase;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -53,7 +50,6 @@ import static javafx.scene.input.KeyCode.ENTER;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.StageStyle;
 import javafx.util.Callback;
-import javafx.util.Duration;
 import org.rmj.appdriver.GRider;
 import org.rmj.appdriver.SQLUtil;
 import org.rmj.appdriver.agentfx.CommonUtils;
@@ -72,6 +68,7 @@ public class ActivityFormController implements Initializable, ScreenInterface {
     private GRider oApp;
     private Activity oTrans;
     private MasterCallback oListener;
+    TextFieldAnimationUtil txtFieldAnimation = new TextFieldAnimationUtil();
     private ObservableList<ActivityMemberTable> actMembersData = FXCollections.observableArrayList();
     private ObservableList<ActivityTownEntryTableList> townCitydata = FXCollections.observableArrayList();
     private ObservableList<ActivityVchlEntryTable> actVhclModelData = FXCollections.observableArrayList();
@@ -303,12 +300,10 @@ public class ActivityFormController implements Initializable, ScreenInterface {
         setCapsLockBehavior(txtField25); //sCompyNm
         setCapsLockBehavior(txtField05); //sActTypDs
         setCapsLockBehavior(txtField26); //sBranchNm
-        setCapsLockBehavior(txtField12); //nTrgtClnt
         setCapsLockBehavior(txtField28); //sProvName
         setCapsLockBehavior(txtField24); //sDeptName
         setCapsLockBehavior(txtField11); //nRcvdBdgt
         setCapsLockBehavior(txtField32); //Branch
-        setCapsLockBehavior(txtField12); //nTrgtClnt
 
         setCapsLockBehavior(textArea09); //sCompnynx
         setCapsLockBehavior(textArea02); //sActTitle
@@ -674,7 +669,6 @@ public class ActivityFormController implements Initializable, ScreenInterface {
         txtField24.focusedProperty().addListener(txtField_Focus); //sDeptName
         txtField11.focusedProperty().addListener(txtField_Focus); //nRcvdBdgt
 //        txtField32.focusedProperty().addListener(txtField_Focus); //Branch
-        txtField12.focusedProperty().addListener(txtField_Focus); //nTrgtClnt
 
         textArea08.focusedProperty().addListener(txtArea_Focus); //sAddressx
         textArea15.focusedProperty().addListener(txtArea_Focus); //sLogRemrk
@@ -761,7 +755,6 @@ public class ActivityFormController implements Initializable, ScreenInterface {
         txtField24.setOnKeyPressed(this::txtField_KeyPressed); //sDeptName
         txtField11.setOnKeyPressed(this::txtField_KeyPressed); //nRcvdBdgt
 //        txtField32.setOnKeyPressed(this::txtField_KeyPressed); //Branch
-        txtField12.setOnKeyPressed(this::txtField_KeyPressed); //nTrgtClnt
         txtField25.setOnKeyPressed(this::txtField_KeyPressed); //sCompyNm
 
         /* TextArea KeyPressed */
@@ -871,6 +864,8 @@ public class ActivityFormController implements Initializable, ScreenInterface {
                             txtField24.setText((String) oTrans.getMaster(24));
                         } else {
                             ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                            txtField24.requestFocus();
+                            return;
                         }
                         break;
                     case "txtField25":
@@ -878,6 +873,8 @@ public class ActivityFormController implements Initializable, ScreenInterface {
                             txtField25.setText((String) oTrans.getMaster(25));
                         } else {
                             ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                            txtField25.requestFocus();
+                            return;
                         }
                         break;
                     case "txtField26":
@@ -885,6 +882,8 @@ public class ActivityFormController implements Initializable, ScreenInterface {
                             txtField26.setText((String) oTrans.getMaster(26));
                         } else {
                             ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                            txtField26.requestFocus();
+                            return;
                         }
                         break;
                     case "txtField28":
@@ -907,8 +906,9 @@ public class ActivityFormController implements Initializable, ScreenInterface {
                             pnEditMode = oTrans.getEditMode();
                         } else {
                             ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                            txtField28.requestFocus();
+                            return;
                         }
-
                         break;
 
                 }
@@ -924,47 +924,11 @@ public class ActivityFormController implements Initializable, ScreenInterface {
     }
 
     private void initAddRequiredField() {
-        addRequiredFieldListener(txtField05);
-        addRequiredFieldListener(txtField24);
-        addRequiredFieldListener(txtField25);
-        addRequiredFieldListener(txtField26);
-        addRequiredFieldListener(txtField28);
-    }
-
-    //Validation
-    private void addRequiredFieldListener(TextField textField) {
-        textField.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue && textField.getText().isEmpty()) {
-                shakeTextField(textField);
-                textField.getStyleClass().add("required-field");
-            } else {
-                textField.getStyleClass().remove("required-field");
-            }
-        });
-    }
-
-    //Animation
-    private void shakeTextField(TextField textField) {
-        Timeline timeline = new Timeline();
-        double originalX = textField.getTranslateX();
-
-        // Add keyframes for the animation
-        KeyFrame keyFrame1 = new KeyFrame(Duration.millis(0), new KeyValue(textField.translateXProperty(), 0));
-        KeyFrame keyFrame2 = new KeyFrame(Duration.millis(100), new KeyValue(textField.translateXProperty(), -5));
-        KeyFrame keyFrame3 = new KeyFrame(Duration.millis(200), new KeyValue(textField.translateXProperty(), 5));
-        KeyFrame keyFrame4 = new KeyFrame(Duration.millis(300), new KeyValue(textField.translateXProperty(), -5));
-        KeyFrame keyFrame5 = new KeyFrame(Duration.millis(400), new KeyValue(textField.translateXProperty(), 5));
-        KeyFrame keyFrame6 = new KeyFrame(Duration.millis(500), new KeyValue(textField.translateXProperty(), -5));
-        KeyFrame keyFrame7 = new KeyFrame(Duration.millis(600), new KeyValue(textField.translateXProperty(), 5));
-        KeyFrame keyFrame8 = new KeyFrame(Duration.millis(700), new KeyValue(textField.translateXProperty(), originalX));
-
-        // Add keyframes to the timeline
-        timeline.getKeyFrames().addAll(
-                keyFrame1, keyFrame2, keyFrame3, keyFrame4, keyFrame5, keyFrame6, keyFrame7, keyFrame8
-        );
-
-        // Play the animation
-        timeline.play();
+        txtFieldAnimation.addRequiredFieldListener(txtField05);
+        txtFieldAnimation.addRequiredFieldListener(txtField24);
+        txtFieldAnimation.addRequiredFieldListener(txtField25);
+        txtFieldAnimation.addRequiredFieldListener(txtField26);
+        txtFieldAnimation.addRequiredFieldListener(txtField28);
     }
 
     private void initMonitoringProperty() {
@@ -1602,18 +1566,18 @@ public class ActivityFormController implements Initializable, ScreenInterface {
         txtField25.setText(""); //sCompnyNm
         txtField26.setText(""); //sBranchNm
         txtField32.setText(""); //Branch
-        txtField12.setText(""); //nTrgtClnt
-        txtField11.setText("0.0");  //nRcvdBdg
+        txtField12.setText("0"); //nTrgtClnt
+        txtField11.setText("0.00");  //nRcvdBdg
         txtField28.setText(""); //sProvName
         textArea08.setText(""); //Street
         textArea09.setText(""); //sCompnynx
     }
 
     public void removeRequired() {
-        txtField05.getStyleClass().remove("required-field");
-        txtField24.getStyleClass().remove("required-field");
-        txtField25.getStyleClass().remove("required-field");
-        txtField26.getStyleClass().remove("required-field");
-        txtField28.getStyleClass().remove("required-field");
+        txtFieldAnimation.removeShakeAnimation(txtField05, txtFieldAnimation.shakeTextField(txtField05), "required-field");
+        txtFieldAnimation.removeShakeAnimation(txtField24, txtFieldAnimation.shakeTextField(txtField24), "required-field");
+        txtFieldAnimation.removeShakeAnimation(txtField25, txtFieldAnimation.shakeTextField(txtField25), "required-field");
+        txtFieldAnimation.removeShakeAnimation(txtField26, txtFieldAnimation.shakeTextField(txtField26), "required-field");
+        txtFieldAnimation.removeShakeAnimation(txtField28, txtFieldAnimation.shakeTextField(txtField28), "required-field");
     }
 }

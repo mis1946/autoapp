@@ -52,7 +52,6 @@ public class ActivityApprovalController implements Initializable, ScreenInterfac
     private int lnCtr = 0;
     private final String pxeModuleName = "Activity Approval"; //Form Title
     unloadForm unload = new unloadForm(); //Used in Close Button
-
     @FXML
     private AnchorPane AnchorMain;
     @FXML

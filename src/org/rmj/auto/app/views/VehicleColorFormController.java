@@ -32,13 +32,11 @@ import org.rmj.appdriver.agentfx.ShowMessageFX;
 import org.rmj.appdriver.callback.MasterCallback;
 import org.rmj.appdriver.constants.EditMode;
 import org.rmj.auto.parameters.VehicleColor;
-import org.rmj.auto.parameters.VehicleMake;
 
 /**
  * FXML Controller class
  *
- * @author Arsiela 
- * Date Created: 05-25-2023
+ * @author Arsiela Date Created: 05-25-2023
  */
 public class VehicleColorFormController implements Initializable, ScreenInterface {
 
@@ -47,7 +45,6 @@ public class VehicleColorFormController implements Initializable, ScreenInterfac
     private VehicleColor oTrans;
     private int pnEditMode;
     private final String pxeModuleName = "Vehicle Color";
-
     private String oldTransNo = "";
     private String sTransNo = "";
     private int lnRow;
@@ -213,14 +210,18 @@ public class VehicleColorFormController implements Initializable, ScreenInterfac
 
                     vhclparamdata.add(new VehicleDescriptionTableParameter(
                             String.valueOf(lnCtr) //Row
-                            , (String) oTrans.getDetail(lnCtr, 2) //Description
-                            , sRecStat //Record Status
-                            , (String) oTrans.getDetail(lnCtr, 1) //sSourceID
-                            ,""
-                            , ""
-                            , ""
-                            , ""
-                            , ""
+                            ,
+                             (String) oTrans.getDetail(lnCtr, 2) //Description
+                            ,
+                             sRecStat //Record Status
+                            ,
+                             (String) oTrans.getDetail(lnCtr, 1) //sSourceID
+                            ,
+                             "",
+                            "",
+                            "",
+                            "",
+                            ""
                     ));
                 }
                 initVehicleMake();
@@ -259,7 +260,7 @@ public class VehicleColorFormController implements Initializable, ScreenInterfac
                     pnEditMode = oTrans.getEditMode();
                 } else {
                     pnEditMode = EditMode.UNKNOWN;
-                }   
+                }
                 txtField02.setText((String) oTrans.getMaster(2)); // Description
             }
         } catch (SQLException ex) {

@@ -105,7 +105,7 @@ public class CustomerContactFormController implements Initializable, ScreenInter
         oListener = (int fnIndex, Object foValue) -> {
             System.out.println("Set Class Value " + fnIndex + "-->" + foValue);
         };
-        CommonUtils.addTextLimiter(txtField03Cont, 12); //CONTACT NO
+        CommonUtils.addTextLimiter(txtField03Cont, 11); //CONTACT NO
         addRequiredFieldListener(txtField03Cont);
         Pattern pattern;
         pattern = Pattern.compile("[0-9]*");

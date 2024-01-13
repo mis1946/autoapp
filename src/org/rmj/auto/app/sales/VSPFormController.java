@@ -19,10 +19,6 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
-import javafx.beans.InvalidationListener;
 import javafx.beans.property.ReadOnlyBooleanPropertyBase;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -59,7 +55,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Callback;
-import javafx.util.Duration;
 import org.rmj.appdriver.GRider;
 import org.rmj.appdriver.SQLUtil;
 import org.rmj.appdriver.agentfx.CommonUtils;
@@ -69,6 +64,7 @@ import org.rmj.appdriver.constants.EditMode;
 import org.rmj.auto.app.service.JobOrderFormController;
 import org.rmj.auto.app.views.InputTextFormatter;
 import org.rmj.auto.app.views.ScreenInterface;
+import org.rmj.auto.app.views.TextFieldAnimationUtil;
 import org.rmj.auto.app.views.unloadForm;
 import org.rmj.auto.sales.base.InquiryFollowUp;
 import org.rmj.auto.sales.base.VehicleSalesProposalMaster;
@@ -86,6 +82,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
     private InquiryFollowUp oTransFollowUp;
     unloadForm unload = new unloadForm(); //Used in Close Button
     private final String pxeModuleName = "Vehicle Sales Proposal"; //Form Title
+    TextFieldAnimationUtil txtFieldAnimation = new TextFieldAnimationUtil();
     public int pnEditMode;//Modifying fields
     private int lnCtr = 0;
     private String TransNo = "";
@@ -1437,8 +1434,9 @@ public class VSPFormController implements Initializable, ScreenInterface {
                             laborData.clear();
                             partData.clear();
                             txtField77.clear();
-                            txtField77.requestFocus();
                             ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                            txtField77.requestFocus();
+                            return;
                         }
                         break;
                     case "txtField68":
@@ -1451,6 +1449,8 @@ public class VSPFormController implements Initializable, ScreenInterface {
                             }
                         } else {
                             ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                            txtField68.requestFocus();
+                            return;
                         }
                         break;
                     case "txtField97":
@@ -1463,14 +1463,17 @@ public class VSPFormController implements Initializable, ScreenInterface {
                             }
                         } else {
                             ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                            txtField97.requestFocus();
+                            return;
                         }
                         break;
                     case "txtField04_Finance":
                         if (oTrans.searchBankApplication()) {
                             txtField04_Finance.setText(oTrans.getVSPFinance(4).toString());
                         } else {
-                            txtField04_Finance.requestFocus();
                             ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                            txtField04_Finance.requestFocus();
+                            return;
                         }
                         break;
                     case "txtField71":
@@ -1478,6 +1481,8 @@ public class VSPFormController implements Initializable, ScreenInterface {
                             loadVSPField();
                         } else {
                             ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                            txtField71.requestFocus();
+                            return;
                         }
                         break;
                     case "txtField72":
@@ -1485,22 +1490,26 @@ public class VSPFormController implements Initializable, ScreenInterface {
                             loadVSPField();
                         } else {
                             ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                            txtField72.requestFocus();
+                            return;
                         }
                         break;
                     case "txtField26":
                         if (oTrans.searchInsurance(txtField.getText(), true)) {
                             txtField26.setText((String) oTrans.getMaster(85));
                         } else {
-                            txtField26.requestFocus();
                             ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                            txtField26.requestFocus();
+                            return;
                         }
                         break;
                     case "txtField27":
                         if (oTrans.searchInsurance(txtField.getText(), false)) {
                             txtField27.setText((String) oTrans.getMaster(86));
                         } else {
-                            txtField27.requestFocus();
                             ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                            txtField27.requestFocus();
+                            return;
                         }
                         break;
 
@@ -3360,51 +3369,15 @@ public class VSPFormController implements Initializable, ScreenInterface {
     }
 
     private void initAddRequiredField() {
-        addRequiredFieldListener(txtField77);
-        addRequiredFieldListener(txtField68);
-    }
-
-    //Validation
-    private void addRequiredFieldListener(TextField textField) {
-        textField.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue && textField.getText().isEmpty() || !newValue && textField.getText().equals(Double.valueOf("0.00"))) {
-                shakeTextField(textField);
-                textField.getStyleClass().add("required-field");
-            } else {
-                textField.getStyleClass().remove("required-field");
-            }
-        });
-    }
-
-    //TextFieldAnimation
-    private void shakeTextField(TextField textField) {
-        Timeline timeline = new Timeline();
-        double originalX = textField.getTranslateX();
-
-        // Add keyframes for the animation
-        KeyFrame keyFrame1 = new KeyFrame(Duration.millis(0), new KeyValue(textField.translateXProperty(), 0));
-        KeyFrame keyFrame2 = new KeyFrame(Duration.millis(100), new KeyValue(textField.translateXProperty(), -5));
-        KeyFrame keyFrame3 = new KeyFrame(Duration.millis(200), new KeyValue(textField.translateXProperty(), 5));
-        KeyFrame keyFrame4 = new KeyFrame(Duration.millis(300), new KeyValue(textField.translateXProperty(), -5));
-        KeyFrame keyFrame5 = new KeyFrame(Duration.millis(400), new KeyValue(textField.translateXProperty(), 5));
-        KeyFrame keyFrame6 = new KeyFrame(Duration.millis(500), new KeyValue(textField.translateXProperty(), -5));
-        KeyFrame keyFrame7 = new KeyFrame(Duration.millis(600), new KeyValue(textField.translateXProperty(), 5));
-        KeyFrame keyFrame8 = new KeyFrame(Duration.millis(700), new KeyValue(textField.translateXProperty(), originalX));
-
-        // Add keyframes to the timeline
-        timeline.getKeyFrames().addAll(
-                keyFrame1, keyFrame2, keyFrame3, keyFrame4, keyFrame5, keyFrame6, keyFrame7, keyFrame8
-        );
-
-        // Play the animation
-        timeline.play();
+        txtFieldAnimation.addRequiredFieldListener(txtField77);
+        txtFieldAnimation.addRequiredFieldListener(txtField68);
     }
 
     public void removeRequired() {
-        txtField77.getStyleClass().remove("required-field");
-        txtField68.getStyleClass().remove("required-field");
-
+        txtFieldAnimation.removeShakeAnimation(txtField77, txtFieldAnimation.shakeTextField(txtField77), "required-field");
+        txtFieldAnimation.removeShakeAnimation(txtField68, txtFieldAnimation.shakeTextField(txtField68), "required-field");
     }
+
 
     /*OPEN WINDOW FOR */
     private void loadJobOrderWindow() {

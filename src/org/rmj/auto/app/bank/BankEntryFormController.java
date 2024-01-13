@@ -11,9 +11,6 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
 import javafx.beans.property.ReadOnlyBooleanPropertyBase;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -39,7 +36,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 import org.rmj.appdriver.GRider;
 import org.rmj.appdriver.agentfx.CommonUtils;
 import org.rmj.appdriver.agentfx.ShowMessageFX;
@@ -47,6 +43,7 @@ import org.rmj.appdriver.callback.MasterCallback;
 import org.rmj.appdriver.constants.EditMode;
 import org.rmj.auto.app.views.InputTextFormatter;
 import org.rmj.auto.app.views.ScreenInterface;
+import org.rmj.auto.app.views.TextFieldAnimationUtil;
 import org.rmj.auto.app.views.unloadForm;
 import org.rmj.auto.clients.base.BankInformation;
 
@@ -62,7 +59,7 @@ public class BankEntryFormController implements Initializable, ScreenInterface {
     unloadForm unload = new unloadForm(); //Object for closing form
     private final String pxeModuleName = "Bank"; //Form Title
     private MasterCallback oListener;
-
+    TextFieldAnimationUtil txtFieldAnimation = new TextFieldAnimationUtil();
     private int pnEditMode;//Modifying fields
     private int pnRow = -1;
     private int oldPnRow = -1;
@@ -136,63 +133,24 @@ public class BankEntryFormController implements Initializable, ScreenInterface {
         oTrans = new BankInformation(oApp, oApp.getBranchCode(), true); //Initialize ClientMaster
         oTrans.setCallback(oListener);
         oTrans.setWithUI(true);
-        setCapsLockBehavior(txtField02);
-        setCapsLockBehavior(txtField17);
-        setCapsLockBehavior(txtField05);
-        setCapsLockBehavior(txtField18);
-        setCapsLockBehavior(txtField15);
-        setCapsLockBehavior(txtField07);
-        setCapsLockBehavior(txtField04);
-        setCapsLockBehavior(txtField08);
-        setCapsLockBehavior(txtField09);
+
+        //initialize set capslock
+        initSetCapsLockField();
         /*Set Focus to set Value to Class*/
-        txtField02.focusedProperty().addListener(txtField_Focus); // sBankName
-//          txtField03.focusedProperty().addListener(txtField_Focus); // sBankAdv
-        txtField17.focusedProperty().addListener(txtField_Focus); // sBankBrch
-        txtField05.focusedProperty().addListener(txtField_Focus); // sAddressx
-        txtField18.focusedProperty().addListener(txtField_Focus); // sTownName
-        txtField15.focusedProperty().addListener(txtField_Focus); // sProvName
-        txtField07.focusedProperty().addListener(txtField_Focus); // sZippCode
-        txtField04.focusedProperty().addListener(txtField_Focus); // sContactP
-        txtField08.focusedProperty().addListener(txtField_Focus); // sTelNoxxx
-        txtField09.focusedProperty().addListener(txtField_Focus); // sFaxNoxxx
-
-        txtField02.setOnKeyPressed(this::txtField_KeyPressed); // sBankName
-        txtField03.setOnKeyPressed(this::txtField_KeyPressed); // sBankAdv
-        txtField17.setOnKeyPressed(this::txtField_KeyPressed); // sBankBrch
-        txtField05.setOnKeyPressed(this::txtField_KeyPressed); // sAddressx
-        txtField18.setOnKeyPressed(this::txtField_KeyPressed);// sTownName
-        txtField15.setOnKeyPressed(this::txtField_KeyPressed); // sProvName
-        txtField07.setOnKeyPressed(this::txtField_KeyPressed); // sZippCode
-        txtField04.setOnKeyPressed(this::txtField_KeyPressed); // sContactP
-        txtField08.setOnKeyPressed(this::txtField_KeyPressed);// sTelNoxxx
-        txtField09.setOnKeyPressed(this::txtField_KeyPressed); // sFaxNoxxx
-
-        addRequiredFieldListener(txtField02);
-        addRequiredFieldListener(txtField03);
-        addRequiredFieldListener(txtField17);
-        addRequiredFieldListener(txtField05);
-        addRequiredFieldListener(txtField18);
-        addRequiredFieldListener(txtField15);
-
+        initTxtFieldFocus();
+        //initilize text keypressed
+        initTxtFieldKeyPressed();
+        //add shakeanimation
+        initAddRequiredField();
         //Button Click Event
-        btnAdd.setOnAction(this::cmdButton_Click);
-        btnEdit.setOnAction(this::cmdButton_Click);
-        btnSave.setOnAction(this::cmdButton_Click);
-        btnClose.setOnAction(this::cmdButton_Click);
-        btnCancel.setOnAction(this::cmdButton_Click);
+        initButtonClick();
+
         tblBankEntry.setOnMouseClicked(this::tblBankEntry_Clicked);
 
         /*Clear Fields*/
         clearFields();
 
         Pattern pattern = Pattern.compile("[\\d\\p{Punct}]*");
-        TextFormatter<String> formatter = new TextFormatter<>(change -> {
-            if (!change.getControlNewText().matches(pattern.pattern())) {
-                return null;
-            }
-            return change;
-        });
         txtField08.setTextFormatter(new InputTextFormatter(pattern)); //sTelNoxxx
         txtField09.setTextFormatter(new InputTextFormatter(pattern)); //sFaxNoxxx
 
@@ -220,6 +178,19 @@ public class BankEntryFormController implements Initializable, ScreenInterface {
         oApp = foValue;
     }
 
+    private void initSetCapsLockField() {
+        setCapsLockBehavior(txtField03);
+        setCapsLockBehavior(txtField02);
+        setCapsLockBehavior(txtField17);
+        setCapsLockBehavior(txtField05);
+        setCapsLockBehavior(txtField18);
+        setCapsLockBehavior(txtField15);
+        setCapsLockBehavior(txtField07);
+        setCapsLockBehavior(txtField04);
+        setCapsLockBehavior(txtField08);
+        setCapsLockBehavior(txtField09);
+    }
+
     private static void setCapsLockBehavior(TextField textField) {
         textField.textProperty().addListener((observable, oldValue, newValue) -> {
             if (textField.getText() != null) {
@@ -228,40 +199,60 @@ public class BankEntryFormController implements Initializable, ScreenInterface {
         });
     }
 
-//Animation
-    private void shakeTextField(TextField textField) {
-        Timeline timeline = new Timeline();
-        double originalX = textField.getTranslateX();
+    private void initTxtFieldFocus() {
+        txtField02.focusedProperty().addListener(txtField_Focus); // sBankName
+//          txtField03.focusedProperty().addListener(txtField_Focus); // sBankAdv
+        txtField17.focusedProperty().addListener(txtField_Focus); // sBankBrch
+        txtField05.focusedProperty().addListener(txtField_Focus); // sAddressx
+        txtField18.focusedProperty().addListener(txtField_Focus); // sTownName
+        txtField15.focusedProperty().addListener(txtField_Focus); // sProvName
+        txtField07.focusedProperty().addListener(txtField_Focus); // sZippCode
+        txtField04.focusedProperty().addListener(txtField_Focus); // sContactP
+        txtField08.focusedProperty().addListener(txtField_Focus); // sTelNoxxx
+        txtField09.focusedProperty().addListener(txtField_Focus); // sFaxNoxxx
 
-        // Add keyframes for the animation
-        KeyFrame keyFrame1 = new KeyFrame(Duration.millis(0), new KeyValue(textField.translateXProperty(), 0));
-        KeyFrame keyFrame2 = new KeyFrame(Duration.millis(100), new KeyValue(textField.translateXProperty(), -5));
-        KeyFrame keyFrame3 = new KeyFrame(Duration.millis(200), new KeyValue(textField.translateXProperty(), 5));
-        KeyFrame keyFrame4 = new KeyFrame(Duration.millis(300), new KeyValue(textField.translateXProperty(), -5));
-        KeyFrame keyFrame5 = new KeyFrame(Duration.millis(400), new KeyValue(textField.translateXProperty(), 5));
-        KeyFrame keyFrame6 = new KeyFrame(Duration.millis(500), new KeyValue(textField.translateXProperty(), -5));
-        KeyFrame keyFrame7 = new KeyFrame(Duration.millis(600), new KeyValue(textField.translateXProperty(), 5));
-        KeyFrame keyFrame8 = new KeyFrame(Duration.millis(700), new KeyValue(textField.translateXProperty(), originalX));
-
-        // Add keyframes to the timeline
-        timeline.getKeyFrames().addAll(
-                keyFrame1, keyFrame2, keyFrame3, keyFrame4, keyFrame5, keyFrame6, keyFrame7, keyFrame8
-        );
-
-        // Play the animation
-        timeline.play();
     }
+    /* Set TextField Value to Master Class */
+    final ChangeListener<? super Boolean> txtField_Focus = (o, ov, nv) -> {
+        try {
+            TextField txtField = (TextField) ((ReadOnlyBooleanPropertyBase) o).getBean();
+            int lnIndex = Integer.parseInt(txtField.getId().substring(8, 10));
+            String lsValue = txtField.getText().toUpperCase();
 
-//Validation
-    private void addRequiredFieldListener(TextField textField) {
-        textField.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue && textField.getText().isEmpty()) {
-                shakeTextField(textField);
-                textField.getStyleClass().add("required-field");
-            } else {
-                textField.getStyleClass().remove("required-field");
+            if (lsValue == null) {
+                return;
             }
-        });
+            if (!nv) {
+                /* Lost Focus */
+                switch (lnIndex) {
+                    case 2: // sBankName
+                    case 17: // sBankBrch
+                    case 5: // sAddressx
+                    case 7: // sZipCode
+                    case 4: // sContactP
+                    case 15: // sProvName
+                    case 18: // sTownNamexx
+                    case 8: // sTelNoxxx
+                    case 9: // sFaxNoxx
+                        oTrans.setMaster(lnIndex, lsValue);
+                        break;
+                }
+            } else {
+                txtField.selectAll();
+
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(BankEntryFormController.class
+                    .getName()).log(Level.SEVERE, null, ex);
+        }
+    };
+
+    private void initButtonClick() {
+        btnAdd.setOnAction(this::cmdButton_Click);
+        btnEdit.setOnAction(this::cmdButton_Click);
+        btnSave.setOnAction(this::cmdButton_Click);
+        btnClose.setOnAction(this::cmdButton_Click);
+        btnCancel.setOnAction(this::cmdButton_Click);
     }
 
     private void cmdButton_Click(ActionEvent event) {
@@ -544,7 +535,6 @@ public class BankEntryFormController implements Initializable, ScreenInterface {
 
     private void loadBankEntryField() {
         try {
-
             txtField02.setText((String) oTrans.getMaster("sBankName"));// sBankName
             txtField03.setText((String) oTrans.getMaster("sBankCode"));// sBankAdv
             txtField17.setText((String) oTrans.getMaster("sBankBrch"));// sBankBrch
@@ -555,10 +545,23 @@ public class BankEntryFormController implements Initializable, ScreenInterface {
             txtField04.setText((String) oTrans.getMaster("sContactP"));// sContactP
             txtField08.setText((String) oTrans.getMaster("sTelNoxxx"));// sTelNoxxx
             txtField09.setText((String) oTrans.getMaster("sFaxNoxxx"));// sFaxNoxxx
-
         } catch (SQLException e) {
             ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
         }
+    }
+
+    private void initTxtFieldKeyPressed() {
+
+        txtField02.setOnKeyPressed(this::txtField_KeyPressed); // sBankName
+        txtField03.setOnKeyPressed(this::txtField_KeyPressed); // sBankAdv
+        txtField17.setOnKeyPressed(this::txtField_KeyPressed); // sBankBrch
+        txtField05.setOnKeyPressed(this::txtField_KeyPressed); // sAddressx
+        txtField18.setOnKeyPressed(this::txtField_KeyPressed);// sTownName
+        txtField15.setOnKeyPressed(this::txtField_KeyPressed); // sProvName
+        txtField07.setOnKeyPressed(this::txtField_KeyPressed); // sZippCode
+        txtField04.setOnKeyPressed(this::txtField_KeyPressed); // sContactP
+        txtField08.setOnKeyPressed(this::txtField_KeyPressed);// sTelNoxxx
+        txtField09.setOnKeyPressed(this::txtField_KeyPressed); // sFaxNoxxx
     }
 
     private void txtField_KeyPressed(KeyEvent event) {
@@ -573,6 +576,8 @@ public class BankEntryFormController implements Initializable, ScreenInterface {
                             loadBankEntryField();
                         } else {
                             ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                            txtField18.requestFocus();
+                            return;
                         }
                         break;
                     case 15: // sProvName
@@ -584,8 +589,9 @@ public class BankEntryFormController implements Initializable, ScreenInterface {
                             txtField07.clear();
                         } else {
                             txtField15.clear();
-                            txtField15.requestFocus();
                             ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                            txtField15.requestFocus();
+                            return;
                         }
                         break;
                 }
@@ -599,40 +605,6 @@ public class BankEntryFormController implements Initializable, ScreenInterface {
             ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
         }
     }
-    /* Set TextField Value to Master Class */
-    final ChangeListener<? super Boolean> txtField_Focus = (o, ov, nv) -> {
-        try {
-            TextField txtField = (TextField) ((ReadOnlyBooleanPropertyBase) o).getBean();
-            int lnIndex = Integer.parseInt(txtField.getId().substring(8, 10));
-            String lsValue = txtField.getText().toUpperCase();
-
-            if (lsValue == null) {
-                return;
-            }
-            if (!nv) {
-                /* Lost Focus */
-                switch (lnIndex) {
-                    case 2: // sBankName
-                    case 17: // sBankBrch
-                    case 5: // sAddressx
-                    case 7: // sZipCode
-                    case 4: // sContactP
-                    case 15: // sProvName
-                    case 18: // sTownNamexx
-                    case 8: // sTelNoxxx
-                    case 9: // sFaxNoxx
-                        oTrans.setMaster(lnIndex, lsValue);
-                        break;
-                }
-            } else {
-                txtField.selectAll();
-
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(BankEntryFormController.class
-                    .getName()).log(Level.SEVERE, null, ex);
-        }
-    };
 
     private void initButton(int fnValue) {
         pnRow = 0;
@@ -645,7 +617,7 @@ public class BankEntryFormController implements Initializable, ScreenInterface {
 
         /*Bank Entry*/
         txtField02.setDisable(!lbShow); // sBankNamexx
-        txtField03.setDisable(!lbShow); // sBankAdv
+//        txtField03.setDisable(true); // sBankAdv
         txtField17.setDisable(!lbShow); // sBranchx
         txtField05.setDisable(!lbShow); // sBarangayx
         txtField18.setDisable(!(lbShow && !txtField15.getText().isEmpty()));
@@ -673,17 +645,20 @@ public class BankEntryFormController implements Initializable, ScreenInterface {
         }
     }
 
+    private void initAddRequiredField() {
+        txtFieldAnimation.addRequiredFieldListener(txtField02);
+        txtFieldAnimation.addRequiredFieldListener(txtField03);
+        txtFieldAnimation.addRequiredFieldListener(txtField17);
+        txtFieldAnimation.addRequiredFieldListener(txtField05);
+        txtFieldAnimation.addRequiredFieldListener(txtField18);
+        txtFieldAnimation.addRequiredFieldListener(txtField15);
+    }
+
     /*Clear Fields*/
     public void clearFields() {
         pnRow = 0;
         /*clear tables*/
-        txtField02.getStyleClass().remove("required-field");
-        txtField03.getStyleClass().remove("required-field");
-        txtField17.getStyleClass().remove("required-field");
-        txtField05.getStyleClass().remove("required-field");
-        txtField18.getStyleClass().remove("required-field");
-        txtField15.getStyleClass().remove("required-field");
-
+        removeRequired();
         txtField02.setText(""); // sBankName
         txtField03.setText("");  // sBankAdv
         txtField17.setText("");  // sBankBrch
@@ -694,5 +669,15 @@ public class BankEntryFormController implements Initializable, ScreenInterface {
         txtField04.setText("");  // sContactP
         txtField08.setText("");  // sTeleNoxxx
         txtField09.setText(""); // sFaxNoxxx
+    }
+
+    private void removeRequired() {
+        txtFieldAnimation.removeShakeAnimation(txtField02, txtFieldAnimation.shakeTextField(txtField02), "required-field");
+        txtFieldAnimation.removeShakeAnimation(txtField03, txtFieldAnimation.shakeTextField(txtField03), "required-field");
+        txtFieldAnimation.removeShakeAnimation(txtField17, txtFieldAnimation.shakeTextField(txtField17), "required-field");
+        txtFieldAnimation.removeShakeAnimation(txtField05, txtFieldAnimation.shakeTextField(txtField05), "required-field");
+        txtFieldAnimation.removeShakeAnimation(txtField18, txtFieldAnimation.shakeTextField(txtField18), "required-field");
+        txtFieldAnimation.removeShakeAnimation(txtField15, txtFieldAnimation.shakeTextField(txtField15), "required-field");
+
     }
 }

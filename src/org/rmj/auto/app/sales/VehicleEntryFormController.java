@@ -7,7 +7,6 @@ package org.rmj.auto.app.sales;
 
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
 import java.net.URL;
-import java.sql.SQLException;
 import java.util.ResourceBundle;
 import javafx.beans.property.ReadOnlyBooleanPropertyBase;
 import javafx.beans.value.ChangeListener;
@@ -40,142 +39,144 @@ import org.rmj.auto.app.views.ScreenInterface;
 import org.rmj.auto.app.views.unloadForm;
 
 /**
- * FXML Controller class
- * DATE CREATED 04-03-2023 
+ * FXML Controller class DATE CREATED 04-03-2023
+ *
  * @author Arsiela
  */
 public class VehicleEntryFormController implements Initializable, ScreenInterface {
+
     private GRider oApp;
     private MasterCallback oListener;
-    
-    unloadForm unload = new unloadForm(); //Used in Close Button
-     private final String pxeModuleName = "Vehicle Entry"; //Form Title
-     private int pnEditMode;//Modifying fields
-     private int pnRow = -1;
-     private int oldPnRow = -1;
-     private int lnCtr = 0;
-     private int pagecounter;
-     
-     private String oldTransNo = "";
-     private String TransNo = "";
-     
-     /*populate tables Vehicle Description List*/
-     private ObservableList<VehicleEntryTableList> vhcllistdata = FXCollections.observableArrayList();
-     private FilteredList<VehicleEntryTableList> filteredData;
-     private static final int ROWS_PER_PAGE = 50;
-     
-     @FXML
-     private Pagination pagination;
-     @FXML
-     private TableView tblVhclEntryList;
-     @FXML
-     private TableColumn tblindex01;
-     @FXML
-     private TableColumn tblindex02;
-     @FXML
-     private TableColumn tblindex03;
-     @FXML
-     private TableColumn tblindex04;
-     @FXML
-     private Button btnAdd;
-     @FXML
-     private Button btnEdit;
-     @FXML
-     private Button btnSave;
-     @FXML
-     private Button btnClose;
-     @FXML
-     private TextField txtField04;
-     @FXML
-     private TextField txtField06;
-     @FXML
-     private TextField txtField05;
-     @FXML
-     private TextField txtField08;
-     @FXML
-     private TextField textSeek01;
-     @FXML
-     private AnchorPane AnchorMain;
-     
-     private Stage getStage(){
-          return (Stage) textSeek01.getScene().getWindow();
-     }
-     
-     /**
-      * Initializes the controller class.
-      */
-     @Override
-     public void initialize(URL url, ResourceBundle rb) {
-          oListener = (int fnIndex, Object foValue) -> {
-               System.out.println("Set Class Value "  + fnIndex + "-->" + foValue);
-          };
-          
-          
-          //Button Click Event
-          btnAdd.setOnAction(this::cmdButton_Click);
-          btnEdit.setOnAction(this::cmdButton_Click); 
-          btnSave.setOnAction(this::cmdButton_Click); 
-          btnClose.setOnAction(this::cmdButton_Click); 
-          //Populate table
-          loadVhclEntryListTable();
-          pagination.setPageFactory(this::createPage); 
-          
-          /*Clear Fields*/
-          clearFields();
-          
-          pnEditMode = EditMode.UNKNOWN;
-          initButton(pnEditMode); 
-     }
 
-     @Override
-     public void setGRider(GRider foValue) {
-          oApp = foValue;
-     }
-     
-     private void cmdButton_Click(ActionEvent event) {
-          String lsButton = ((Button)event.getSource()).getId();
-               switch (lsButton){
-                    case "btnAdd": //create new Vehicle Description
-                         break;
-                    case "btnEdit": //modify vehicle description
-                         break;
-                    case "btnSave": 
-                         //Validate before saving
-                         //Proceed Saving
-                         break;                        
-                    case "btnClose": //close tab
-                         if(ShowMessageFX.OkayCancel(null, "Close Tab", "Are you sure you want to close this Tab?") == true){
-                               if (unload != null) {
-                                    unload.unloadForm(AnchorMain, oApp, pxeModuleName);
-                               }else {
-                                    ShowMessageFX.Warning(null, "Warning", "Please notify the system administrator to configure the null value at the close button.");    
-                               }
-                               break;
-                         } else
-                             return;
-               }
-               initButton(pnEditMode);  
-     }
-     //use for creating new page on pagination 
-     private Node createPage(int pageIndex) {
-          int fromIndex = pageIndex * ROWS_PER_PAGE;
-          int toIndex = Math.min(fromIndex + ROWS_PER_PAGE, vhcllistdata.size());
-          if(vhcllistdata.size()>0){
-             tblVhclEntryList.setItems(FXCollections.observableArrayList(vhcllistdata.subList(fromIndex, toIndex))); 
-          }
-          return tblVhclEntryList;
-          
-     }
-     
-     //storing values on vhcldescdata  
-     private void loadVhclEntryListTable(){
+    unloadForm unload = new unloadForm(); //Used in Close Button
+    private final String pxeModuleName = "Vehicle Entry"; //Form Title
+    private int pnEditMode;//Modifying fields
+    private int pnRow = -1;
+    private int oldPnRow = -1;
+    private int lnCtr = 0;
+    private int pagecounter;
+
+    private String oldTransNo = "";
+    private String TransNo = "";
+
+    /*populate tables Vehicle Description List*/
+    private ObservableList<VehicleEntryTableList> vhcllistdata = FXCollections.observableArrayList();
+    private FilteredList<VehicleEntryTableList> filteredData;
+    private static final int ROWS_PER_PAGE = 50;
+
+    @FXML
+    private Pagination pagination;
+    @FXML
+    private TableView tblVhclEntryList;
+    @FXML
+    private TableColumn tblindex01;
+    @FXML
+    private TableColumn tblindex02;
+    @FXML
+    private TableColumn tblindex03;
+    @FXML
+    private TableColumn tblindex04;
+    @FXML
+    private Button btnAdd;
+    @FXML
+    private Button btnEdit;
+    @FXML
+    private Button btnSave;
+    @FXML
+    private Button btnClose;
+    @FXML
+    private TextField txtField04;
+    @FXML
+    private TextField txtField06;
+    @FXML
+    private TextField txtField05;
+    @FXML
+    private TextField txtField08;
+    @FXML
+    private TextField textSeek01;
+    @FXML
+    private AnchorPane AnchorMain;
+
+    private Stage getStage() {
+        return (Stage) textSeek01.getScene().getWindow();
+    }
+
+    /**
+     * Initializes the controller class.
+     */
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        oListener = (int fnIndex, Object foValue) -> {
+            System.out.println("Set Class Value " + fnIndex + "-->" + foValue);
+        };
+
+        //Button Click Event
+        btnAdd.setOnAction(this::cmdButton_Click);
+        btnEdit.setOnAction(this::cmdButton_Click);
+        btnSave.setOnAction(this::cmdButton_Click);
+        btnClose.setOnAction(this::cmdButton_Click);
+        //Populate table
+        loadVhclEntryListTable();
+        pagination.setPageFactory(this::createPage);
+
+        /*Clear Fields*/
+        clearFields();
+
+        pnEditMode = EditMode.UNKNOWN;
+        initButton(pnEditMode);
+    }
+
+    @Override
+    public void setGRider(GRider foValue) {
+        oApp = foValue;
+    }
+
+    private void cmdButton_Click(ActionEvent event) {
+        String lsButton = ((Button) event.getSource()).getId();
+        switch (lsButton) {
+            case "btnAdd": //create new Vehicle Description
+                break;
+            case "btnEdit": //modify vehicle description
+                break;
+            case "btnSave":
+                //Validate before saving
+                //Proceed Saving
+                break;
+            case "btnClose": //close tab
+                if (ShowMessageFX.OkayCancel(null, "Close Tab", "Are you sure you want to close this Tab?") == true) {
+                    if (unload != null) {
+                        unload.unloadForm(AnchorMain, oApp, pxeModuleName);
+                    } else {
+                        ShowMessageFX.Warning(null, "Warning", "Please notify the system administrator to configure the null value at the close button.");
+                    }
+                    break;
+                } else {
+                    return;
+                }
+        }
+        initButton(pnEditMode);
+    }
+    //use for creating new page on pagination
+
+    private Node createPage(int pageIndex) {
+        int fromIndex = pageIndex * ROWS_PER_PAGE;
+        int toIndex = Math.min(fromIndex + ROWS_PER_PAGE, vhcllistdata.size());
+        if (vhcllistdata.size() > 0) {
+            tblVhclEntryList.setItems(FXCollections.observableArrayList(vhcllistdata.subList(fromIndex, toIndex)));
+        }
+        return tblVhclEntryList;
+
+    }
+
+    //storing values on vhcldescdata
+    private void loadVhclEntryListTable() {
 //          try {
-               /*Populate table*/
-               vhcllistdata.clear();
-               //if (oTrans.LoadList("")){
+        /*Populate table*/
+        vhcllistdata.clear();
+        //if (oTrans.LoadList("")){
 //                    String sDescription ;
 //                    for (lnCtr = 1; lnCtr <= oTrans.getItemCount(); lnCtr++){
-//                         sDescription = oTrans.getDetail(lnCtr,"sModelDsc").toString() 
+//                         sDescription = oTrans.getDetail(lnCtr,"sModelDsc").toString()
 //                                 + " " + oTrans.getDetail(lnCtr,"sTypeDesc").toString()
 //                                 + " " + oTrans.getDetail(lnCtr,"sTransMsn").toString()
 //                                 + " " + oTrans.getDetail(lnCtr,"sColorDsc").toString();
@@ -188,153 +189,154 @@ public class VehicleEntryFormController implements Initializable, ScreenInterfac
 //                         oTrans.getDetail(lnCtr,"sTypeDesc").toString(), //Type
 //                         oTrans.getDetail(lnCtr,"sTransMsn").toString(), //Transmission
 //                         oTrans.getDetail(lnCtr,"cVhclSize").toString(), //Vehicle Size
-//                         oTrans.getDetail(lnCtr,"sColorDsc").toString(), //Color        
-//                         oTrans.getDetail(lnCtr,"sDescript").toString(), //Description 
+//                         oTrans.getDetail(lnCtr,"sColorDsc").toString(), //Color
+//                         oTrans.getDetail(lnCtr,"sDescript").toString(), //Description
 //                         oTrans.getDetail(lnCtr,"sVhclIDxx").toString()  //sVhclIDxx
 //                         ));
 //                    }
 //                    initVhclEntryListTable();
-               //}
-               //loadTab();
-               
+        //}
+        //loadTab();
+
 //          } catch (SQLException e) {
 //               ShowMessageFX.Warning(getStage(),e.getMessage(), "Warning", null);
 //          }
-     }
-     
-     /*populate Table*/    
-     private void initVhclEntryListTable() {
-          tblindex01.setCellValueFactory(new PropertyValueFactory<>("tblindex01"));
-          tblindex02.setCellValueFactory(new PropertyValueFactory<>("tblindex02"));
-          tblindex03.setCellValueFactory(new PropertyValueFactory<>("tblindex03"));
-          tblindex04.setCellValueFactory(new PropertyValueFactory<>("tblindex04"));
-          
-          tblVhclEntryList.widthProperty().addListener((ObservableValue<? extends Number> source, Number oldWidth, Number newWidth) -> {
-               TableHeaderRow header = (TableHeaderRow) tblVhclEntryList.lookup("TableHeaderRow");
-               header.reorderingProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
-               header.setReordering(false);
-               });
-          });
-          
-          filteredData = new FilteredList<>(vhcllistdata, b -> true);
-          autoSearch(textSeek01);
-          // 3. Wrap the FilteredList in a SortedList. 
-          SortedList<VehicleEntryTableList> sortedData = new SortedList<>(filteredData);
+    }
 
-          // 4. Bind the SortedList comparator to the TableView comparator.
-          // 	  Otherwise, sorting the TableView would have no effect.
-          sortedData.comparatorProperty().bind(tblVhclEntryList.comparatorProperty());
+    /*populate Table*/
+    private void initVhclEntryListTable() {
+        tblindex01.setCellValueFactory(new PropertyValueFactory<>("tblindex01"));
+        tblindex02.setCellValueFactory(new PropertyValueFactory<>("tblindex02"));
+        tblindex03.setCellValueFactory(new PropertyValueFactory<>("tblindex03"));
+        tblindex04.setCellValueFactory(new PropertyValueFactory<>("tblindex04"));
 
-          // 5. Add sorted (and filtered) data to the table.
-          tblVhclEntryList.setItems(sortedData);
-          tblVhclEntryList.widthProperty().addListener((ObservableValue<? extends Number> source, Number oldWidth, Number newWidth) -> {
-              TableHeaderRow header = (TableHeaderRow) tblVhclEntryList.lookup("TableHeaderRow");
-              header.reorderingProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
-                  header.setReordering(false);
-              });
-              header.setDisable(true);
-          });
-            
-     }
-     
-     private void autoSearch(TextField txtField){
-          int lnIndex = Integer.parseInt(txtField.getId().substring(8, 10));
-          boolean fsCode = true;
-          txtField.textProperty().addListener((observable, oldValue, newValue) -> {
-               filteredData.setPredicate(clients-> {
-               // If filter text is empty, display all persons.
-               if (newValue == null || newValue.isEmpty()) {
-                   return true;
-               }
-               // Compare order no. and last name of every person with filter text.
-               String lowerCaseFilter = newValue.toLowerCase();
-               switch (lnIndex){
-                       case 1:
-                           if(lnIndex == 2){
-                               return (clients.getTblindex10().toLowerCase().contains(lowerCaseFilter)); // Does not match.   
-                            }else {
-                               return (clients.getTblindex10().toLowerCase().contains(lowerCaseFilter)); // Does not match.
-                            }   
-                       default:
-                       return true;            
-            }
+        tblVhclEntryList.widthProperty().addListener((ObservableValue<? extends Number> source, Number oldWidth, Number newWidth) -> {
+            TableHeaderRow header = (TableHeaderRow) tblVhclEntryList.lookup("TableHeaderRow");
+            header.reorderingProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+                header.setReordering(false);
             });
-            
+        });
+
+        filteredData = new FilteredList<>(vhcllistdata, b -> true);
+        autoSearch(textSeek01);
+        // 3. Wrap the FilteredList in a SortedList.
+        SortedList<VehicleEntryTableList> sortedData = new SortedList<>(filteredData);
+
+        // 4. Bind the SortedList comparator to the TableView comparator.
+        // 	  Otherwise, sorting the TableView would have no effect.
+        sortedData.comparatorProperty().bind(tblVhclEntryList.comparatorProperty());
+
+        // 5. Add sorted (and filtered) data to the table.
+        tblVhclEntryList.setItems(sortedData);
+        tblVhclEntryList.widthProperty().addListener((ObservableValue<? extends Number> source, Number oldWidth, Number newWidth) -> {
+            TableHeaderRow header = (TableHeaderRow) tblVhclEntryList.lookup("TableHeaderRow");
+            header.reorderingProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+                header.setReordering(false);
+            });
+            header.setDisable(true);
+        });
+
+    }
+
+    private void autoSearch(TextField txtField) {
+        int lnIndex = Integer.parseInt(txtField.getId().substring(8, 10));
+        boolean fsCode = true;
+        txtField.textProperty().addListener((observable, oldValue, newValue) -> {
+            filteredData.setPredicate(clients -> {
+                // If filter text is empty, display all persons.
+                if (newValue == null || newValue.isEmpty()) {
+                    return true;
+                }
+                // Compare order no. and last name of every person with filter text.
+                String lowerCaseFilter = newValue.toLowerCase();
+                switch (lnIndex) {
+                    case 1:
+                        if (lnIndex == 2) {
+                            return (clients.getTblindex10().toLowerCase().contains(lowerCaseFilter)); // Does not match.
+                        } else {
+                            return (clients.getTblindex10().toLowerCase().contains(lowerCaseFilter)); // Does not match.
+                        }
+                    default:
+                        return true;
+                }
+            });
+
             changeTableView(0, ROWS_PER_PAGE);
         });
         loadTab();
-     } 
-     
-     private void loadTab(){
-                int totalPage = (int) (Math.ceil(vhcllistdata.size() * 1.0 / ROWS_PER_PAGE));
-                pagination.setPageCount(totalPage);
-                pagination.setCurrentPageIndex(0);
-                changeTableView(0, ROWS_PER_PAGE);
-                pagination.currentPageIndexProperty().addListener(
-                        (observable, oldValue, newValue) -> changeTableView(newValue.intValue(), ROWS_PER_PAGE));
-      
-     } 
-     
-     private void changeTableView(int index, int limit) {
-          int fromIndex = index * limit;
-          int toIndex = Math.min(fromIndex + limit, vhcllistdata.size());
+    }
 
-          int minIndex = Math.min(toIndex, filteredData.size());
-          SortedList<VehicleEntryTableList> sortedData = new SortedList<>(
-                  FXCollections.observableArrayList(filteredData.subList(Math.min(fromIndex, minIndex), minIndex)));
-          sortedData.comparatorProperty().bind(tblVhclEntryList.comparatorProperty());
-          tblVhclEntryList.setItems(sortedData); 
-     }
+    private void loadTab() {
+        int totalPage = (int) (Math.ceil(vhcllistdata.size() * 1.0 / ROWS_PER_PAGE));
+        pagination.setPageCount(totalPage);
+        pagination.setCurrentPageIndex(0);
+        changeTableView(0, ROWS_PER_PAGE);
+        pagination.currentPageIndexProperty().addListener(
+                (observable, oldValue, newValue) -> changeTableView(newValue.intValue(), ROWS_PER_PAGE));
 
-     @FXML
-     private void tblVhclEntryList_Clicked(MouseEvent event) {
-          if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
-               if(ShowMessageFX.OkayCancel(null, pxeModuleName, "You have unsaved data, are you sure you want to continue?") == true){   
-              } else
-                  return;
-          }
-          
-          pnRow = tblVhclEntryList.getSelectionModel().getSelectedIndex(); 
-          pagecounter = pnRow + pagination.getCurrentPageIndex() * ROWS_PER_PAGE;
-          if (pagecounter >= 0){
-               if(event.getClickCount() > 0){
-                    getSelectedItem(filteredData.get(pagecounter).getTblindex11()); //Populate field based on selected Item
+    }
 
-                    tblVhclEntryList.setOnKeyReleased((KeyEvent t)-> {
-                        KeyCode key = t.getCode();
-                        switch (key){
-                            case DOWN:
-                                pnRow = tblVhclEntryList.getSelectionModel().getSelectedIndex();
-                                pagecounter = pnRow + pagination.getCurrentPageIndex() * ROWS_PER_PAGE;
-                                if (pagecounter == tblVhclEntryList.getItems().size()) {
-                                    pagecounter = tblVhclEntryList.getItems().size();
-                                    getSelectedItem(filteredData.get(pagecounter).getTblindex11());
-                                }else {
-                                   int y = 1;
-                                  pnRow = pnRow + y;
-                                    getSelectedItem(filteredData.get(pagecounter).getTblindex11());
-                                }
-                                break;
-                            case UP:
-                                pnRow = tblVhclEntryList.getSelectionModel().getSelectedIndex();
-                                pagecounter = pnRow + pagination.getCurrentPageIndex() * ROWS_PER_PAGE;
+    private void changeTableView(int index, int limit) {
+        int fromIndex = index * limit;
+        int toIndex = Math.min(fromIndex + limit, vhcllistdata.size());
+
+        int minIndex = Math.min(toIndex, filteredData.size());
+        SortedList<VehicleEntryTableList> sortedData = new SortedList<>(
+                FXCollections.observableArrayList(filteredData.subList(Math.min(fromIndex, minIndex), minIndex)));
+        sortedData.comparatorProperty().bind(tblVhclEntryList.comparatorProperty());
+        tblVhclEntryList.setItems(sortedData);
+    }
+
+    @FXML
+    private void tblVhclEntryList_Clicked(MouseEvent event) {
+        if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
+            if (ShowMessageFX.OkayCancel(null, pxeModuleName, "You have unsaved data, are you sure you want to continue?") == true) {
+            } else {
+                return;
+            }
+        }
+
+        pnRow = tblVhclEntryList.getSelectionModel().getSelectedIndex();
+        pagecounter = pnRow + pagination.getCurrentPageIndex() * ROWS_PER_PAGE;
+        if (pagecounter >= 0) {
+            if (event.getClickCount() > 0) {
+                getSelectedItem(filteredData.get(pagecounter).getTblindex11()); //Populate field based on selected Item
+
+                tblVhclEntryList.setOnKeyReleased((KeyEvent t) -> {
+                    KeyCode key = t.getCode();
+                    switch (key) {
+                        case DOWN:
+                            pnRow = tblVhclEntryList.getSelectionModel().getSelectedIndex();
+                            pagecounter = pnRow + pagination.getCurrentPageIndex() * ROWS_PER_PAGE;
+                            if (pagecounter == tblVhclEntryList.getItems().size()) {
+                                pagecounter = tblVhclEntryList.getItems().size();
                                 getSelectedItem(filteredData.get(pagecounter).getTblindex11());
-                                break;
-                            default:
-                              return; 
-                      }
-                    });
-               } 
-               pnEditMode = EditMode.READY;
-               initButton(pnEditMode);  
-          }  
-     }
-     
-     /*Populate Text Field Based on selected address in table*/
-     private void getSelectedItem(String TransNo){
+                            } else {
+                                int y = 1;
+                                pnRow = pnRow + y;
+                                getSelectedItem(filteredData.get(pagecounter).getTblindex11());
+                            }
+                            break;
+                        case UP:
+                            pnRow = tblVhclEntryList.getSelectionModel().getSelectedIndex();
+                            pagecounter = pnRow + pagination.getCurrentPageIndex() * ROWS_PER_PAGE;
+                            getSelectedItem(filteredData.get(pagecounter).getTblindex11());
+                            break;
+                        default:
+                            return;
+                    }
+                });
+            }
+            pnEditMode = EditMode.READY;
+            initButton(pnEditMode);
+        }
+    }
+
+    /*Populate Text Field Based on selected address in table*/
+    private void getSelectedItem(String TransNo) {
 //          oldTransNo = TransNo;
 //          if (oTrans.OpenRecord(TransNo)){
-//               //txtField02.setText(vhcldescdata.get(pagecounter).getTblindex10()); //Description 
+//               //txtField02.setText(vhcldescdata.get(pagecounter).getTblindex10()); //Description
 //               txtField03.setText(vhcldescdata.get(pagecounter).getTblindex02()); //Make
 //               txtField04.setText(vhcldescdata.get(pagecounter).getTblindex05()); //Model
 //               txtField05.setText(vhcldescdata.get(pagecounter).getTblindex09()); //Color
@@ -356,19 +358,19 @@ public class VehicleEntryFormController implements Initializable, ScreenInterfac
 //               }
 //
 //               comboBox09.getSelectionModel().select(Integer.parseInt(vhcldescdata.get(pagecounter).getTblindex08())); //Vehicle Size
-//               oldPnRow = pagecounter;   
+//               oldPnRow = pagecounter;
 //          }
-        
-     }
-     
-     private void loadVehicleDescField(){
+
+    }
+
+    private void loadVehicleDescField() {
 //          try {
 //               txtField03.setText((String) oTrans.getMaster(15));
 //               txtField04.setText((String) oTrans.getMaster(16));
 //               txtField05.setText((String) oTrans.getMaster(17));
 //               txtField06.setText((String) oTrans.getMaster(18));
 //               txtField08.setText( oTrans.getMaster(8).toString());
-//               
+//
 //               switch (oTrans.getMaster(7).toString()) {
 //                    case "AT":
 //                         comboBox07.getSelectionModel().select(0);
@@ -384,112 +386,114 @@ public class VehicleEntryFormController implements Initializable, ScreenInterfac
 //               }
 //
 //               comboBox09.getSelectionModel().select(Integer.parseInt(oTrans.getMaster(9).toString()));
-//    
-//               
+//
+//
 //          } catch (SQLException e) {
 //               ShowMessageFX.Warning(getStage(),e.getMessage(), "Warning", null);
 //          }
-     }
-     
-     private void txtField_KeyPressed(KeyEvent event){
-          TextField txtField = (TextField)event.getSource();
-          int lnIndex = Integer.parseInt(((TextField)event.getSource()).getId().substring(8,10));
-          
+    }
+
+    private void txtField_KeyPressed(KeyEvent event) {
+        TextField txtField = (TextField) event.getSource();
+        int lnIndex = Integer.parseInt(((TextField) event.getSource()).getId().substring(8, 10));
+
 //          try{
 //               switch (event.getCode()){
 //                    case F3:
-//                         switch (lnIndex){ 
+//                         switch (lnIndex){
 //                              case 3: //Make
 //                                   if (oTrans.searchVehicleMake(txtField03.getText())){
 //                                        loadVehicleDescField();
-//                                   } else 
+//                                   } else
 //                                       ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
-//                              
+//
 //                              break;
 //                              case 4: //Model
 //                                   if (oTrans.searchVehicleModel(txtField04.getText())){
 //                                        loadVehicleDescField();
-//                                   } else 
+//                                   } else
 //                                       ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
-//                              
+//
 //                              break;
-//                              
-//                              case 5: //Color 
+//
+//                              case 5: //Color
 //                                   if (oTrans.searchVehicleColor(txtField05.getText())){
 //                                        loadVehicleDescField();
-//                                   } else 
+//                                   } else
 //                                       ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
-//           
+//
 //                              break;
-//                              
-//                              case 6: //Type 
+//
+//                              case 6: //Type
 //                                   if (oTrans.searchVehicleType(txtField06.getText())){
 //                                        loadVehicleDescField();
 //                                        pnEditMode = oTrans.getEditMode();
-//                                   } else 
+//                                   } else
 //                                       ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
-//                              break;     
-//                         } 
+//                              break;
+//                         }
 //                    break;
 //                    case TAB:
 //                    case ENTER:
-//                         switch (lnIndex){ 
+//                         switch (lnIndex){
 //                              case 3: //Make
 //                                   if (oTrans.searchVehicleMake(txtField03.getText())){
 //                                        loadVehicleDescField();
-//                                   } else 
+//                                   } else
 //                                       ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
 //                              break;
-//                              
+//
 //                              case 4: //Model
 //                                   if (oTrans.searchVehicleModel(txtField04.getText())){
 //                                        loadVehicleDescField();
-//                                   } else 
+//                                   } else
 //                                       ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
 //                              break;
-//                              
-//                              case 5: //Color 
+//
+//                              case 5: //Color
 //                                   if (oTrans.searchVehicleColor(txtField05.getText())){
 //                                        loadVehicleDescField();
-//                                   } else 
-//                                       ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);                            
+//                                   } else
+//                                       ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
 //                              break;
-//                              
-//                              case 6: //Type 
+//
+//                              case 6: //Type
 //                                   if (oTrans.searchVehicleType(txtField06.getText())){
 //                                        loadVehicleDescField();
 //                                        pnEditMode = oTrans.getEditMode();
-//                                   } else 
+//                                   } else
 //                                       ShowMessageFX.Warning(getStage(), oTrans.getMessage(),"Warning", null);
-//                              break;       
-//                         } 
+//                              break;
+//                         }
 //                         break;
 //               }
 //          }catch(SQLException e){
 //                ShowMessageFX.Warning(getStage(),e.getMessage(), "Warning", null);
 //          }
-          
-          switch (event.getCode()){
-          case ENTER:
-          case DOWN:
-              CommonUtils.SetNextFocus(txtField);
-              break;
-          case UP:
-              CommonUtils.SetPreviousFocus(txtField);
-          }
-          
-     }
-     
-     /*Set TextField Value to Master Class*/
-     final ChangeListener<? super Boolean> txtField_Focus = (o,ov,nv)->{
+        switch (event.getCode()) {
+            case ENTER:
+            case DOWN:
+                CommonUtils.SetNextFocus(txtField);
+                break;
+            case UP:
+                CommonUtils.SetPreviousFocus(txtField);
+        }
+
+    }
+
+    /*Set TextField Value to Master Class*/
+    final ChangeListener<? super Boolean> txtField_Focus = (o, ov, nv) -> {
 //          try{
-            TextField txtField = (TextField)((ReadOnlyBooleanPropertyBase)o).getBean();
-            int lnIndex = Integer.parseInt(txtField.getId().substring(8, 10));
-            String lsValue = txtField.getText();
-            
-            if (lsValue == null) return;
-            if(!nv){ /*Lost Focus*/
-                    switch (lnIndex){
+        TextField txtField = (TextField) ((ReadOnlyBooleanPropertyBase) o).getBean();
+        int lnIndex = Integer.parseInt(txtField.getId().substring(8, 10));
+        String lsValue = txtField.getText();
+
+        if (lsValue == null) {
+            return;
+        }
+        if (!nv) {
+            /*Lost Focus*/
+            switch (lnIndex) {
 //                         case 3: //sMakeIDxx
 //                              oTrans.setMaster(15, lsValue); //Handle Encoded Value
 //                              break;
@@ -504,30 +508,31 @@ public class VehicleEntryFormController implements Initializable, ScreenInterfac
 //                              break;
 //                         case 8: //nYearModl
 //                              if (lsValue.trim().equals("")){
-//                                   oTrans.setMaster(lnIndex,  0); //Handle Encoded Value     
+//                                   oTrans.setMaster(lnIndex,  0); //Handle Encoded Value
 //                              } else {
 //                                   oTrans.setMaster(lnIndex,  Integer.parseInt(lsValue)); //Handle Encoded Value
 //                              }
 //                              break;
-                        
-                    }
-                
-            } else
-               txtField.selectAll();
+
+            }
+
+        } else {
+            txtField.selectAll();
+        }
 //          } catch (SQLException ex) {
 //            Logger.getLogger(VehicleEntryFormController.class.getName()).log(Level.SEVERE, null, ex);
 //          }
-     };
-     
-     /*Set ComboBox Value to Master Class*/ 
-     @SuppressWarnings("ResultOfMethodCallIgnored")
-     private boolean setSelection(){
+    };
+
+    /*Set ComboBox Value to Master Class*/
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    private boolean setSelection() {
 //          try {
 //               if (comboBox07.getSelectionModel().getSelectedIndex() < 0){
 //                   ShowMessageFX.Warning("No `Transmission` selected.", pxeModuleName, "Please select `Transmission` value.");
 //                   comboBox07.requestFocus();
 //                   return false;
-//               }else 
+//               }else
 //                    //oTrans.setMaster(7, String.valueOf(comboBox07.getSelectionModel().getSelectedIndex()));
 //                    if (comboBox07.getSelectionModel().getSelectedIndex() == 0){
 //                         oTrans.setMaster(7, "AT");
@@ -536,12 +541,12 @@ public class VehicleEntryFormController implements Initializable, ScreenInterfac
 //                    }else if  (comboBox07.getSelectionModel().getSelectedIndex() == 2){
 //                         oTrans.setMaster(7, "CVT");
 //                    }
-//               
+//
 //               if (comboBox09.getSelectionModel().getSelectedIndex() < 0){
 //                   ShowMessageFX.Warning("No `Vehicle Size` selected.", pxeModuleName, "Please select `Vehicle Size` value.");
 //                   comboBox09.requestFocus();
 //                   return false;
-//               }else 
+//               }else
 //                    //oTrans.setMaster(9, String.valueOf(comboBox09.getSelectionModel().getSelectedIndex()));
 //                    oTrans.setMaster(9, comboBox09.getSelectionModel().getSelectedIndex());
 //
@@ -549,20 +554,18 @@ public class VehicleEntryFormController implements Initializable, ScreenInterfac
 //          ShowMessageFX.Warning(getStage(),ex.getMessage(), "Warning", null);
 //          }
 
-          return true;
-     }
-     
-               
-     
-     /*Enabling / Disabling Fields*/
-     private void initButton(int fnValue){
-          pnRow = 0;
-          /* NOTE:
+        return true;
+    }
+
+    /*Enabling / Disabling Fields*/
+    private void initButton(int fnValue) {
+        pnRow = 0;
+        /* NOTE:
                lbShow (FALSE)= invisible
                !lbShow (TRUE)= visible
-          */
-          boolean lbShow = (fnValue == EditMode.ADDNEW || fnValue == EditMode.UPDATE);
-          
+         */
+        boolean lbShow = (fnValue == EditMode.ADDNEW || fnValue == EditMode.UPDATE);
+
 //          /*Vehicle Description*/
 //          txtField03.setDisable(!lbShow); // sMakeIDxx
 //          txtField04.setDisable(!lbShow); // sModelIDx
@@ -571,26 +574,25 @@ public class VehicleEntryFormController implements Initializable, ScreenInterfac
 //          txtField08.setDisable(!lbShow); // nYearModl
 //          comboBox07.setDisable(!lbShow); //Transmission
 //          comboBox09.setDisable(!lbShow); //Vehicle Size
-          
-          btnAdd.setVisible(!lbShow);
-          btnAdd.setManaged(!lbShow);
-          //if lbShow = false hide btn          
-          btnEdit.setVisible(false); 
-          btnEdit.setManaged(false);
-          btnSave.setVisible(lbShow);
-          btnSave.setManaged(lbShow);
-          
-          if (fnValue == EditMode.READY) { //show edit if user clicked save / browse
-               btnEdit.setVisible(true); 
-               btnEdit.setManaged(true);
-          }
-     }
-     
-     /*Clear Fields*/
-     public void clearFields(){
-          pnRow = 0;
-          /*clear tables*/
-          
+        btnAdd.setVisible(!lbShow);
+        btnAdd.setManaged(!lbShow);
+        //if lbShow = false hide btn
+        btnEdit.setVisible(false);
+        btnEdit.setManaged(false);
+        btnSave.setVisible(lbShow);
+        btnSave.setManaged(lbShow);
+
+        if (fnValue == EditMode.READY) { //show edit if user clicked save / browse
+            btnEdit.setVisible(true);
+            btnEdit.setManaged(true);
+        }
+    }
+
+    /*Clear Fields*/
+    public void clearFields() {
+        pnRow = 0;
+        /*clear tables*/
+
 //          txtField02.clear(); // sDescript
 //          txtField03.clear(); // sMakeIDxx
 //          txtField04.clear(); // sModelIDx
@@ -599,7 +601,6 @@ public class VehicleEntryFormController implements Initializable, ScreenInterfac
 //          txtField08.clear(); // nYearModl
 //          comboBox07.setValue(null); //Transmission
 //          comboBox09.setValue(null); //Vehicle Size
-     }
-     
-     
+    }
+
 }

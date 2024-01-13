@@ -40,27 +40,26 @@ import org.rmj.auto.clients.base.ClientMobile;
 /**
  * FXML Controller class
  *
- * @author Arsiela 
- * Date Created: 10-23-2023
+ * @author Arsiela Date Created: 10-23-2023
  */
 public class CustomerContactFormController implements Initializable, ScreenInterface {
+
     private GRider oApp;
     private MasterCallback oListener;
     private ClientMobile oTransMobile;
     private final String pxeModuleName = "Customer Mobile";
     private int pnRow = 0;
     private boolean pbState = true;
-    
     @FXML
     private Button btnAdd;
     @FXML
     private Button btnEdit;
     @FXML
     private Button btnClose;
-    
+
     ObservableList<String> cOwnCont = FXCollections.observableArrayList("PERSONAL", "OFFICE", "OTHERS");
     ObservableList<String> cTypCont = FXCollections.observableArrayList("MOBILE", "TELEPHONE", "FAX");
-    
+
     @FXML
     private ComboBox comboBox05Cont; // Contact Ownership
     @FXML
@@ -81,21 +80,21 @@ public class CustomerContactFormController implements Initializable, ScreenInter
     private RadioButton radiobtn11CntN;
     @FXML
     private TextArea textArea13Cont;
-    
-    public void setObject(ClientMobile foObject){
+
+    public void setObject(ClientMobile foObject) {
         oTransMobile = foObject;
-    } 
-    
-    public void setRow(int fnRow){
+    }
+
+    public void setRow(int fnRow) {
         pnRow = fnRow;
     }
-    
-    public void setState(boolean fbValue){
+
+    public void setState(boolean fbValue) {
         pbState = fbValue;
     }
-    
-    private Stage getStage(){
-         return (Stage) btnClose.getScene().getWindow();
+
+    private Stage getStage() {
+        return (Stage) btnClose.getScene().getWindow();
     }
 
     /**
@@ -104,15 +103,15 @@ public class CustomerContactFormController implements Initializable, ScreenInter
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         oListener = (int fnIndex, Object foValue) -> {
-            System.out.println("Set Class Value "  + fnIndex + "-->" + foValue);
+            System.out.println("Set Class Value " + fnIndex + "-->" + foValue);
         };
         CommonUtils.addTextLimiter(txtField03Cont, 11); //CONTACT NO
         addRequiredFieldListener(txtField03Cont);
         Pattern pattern;
         pattern = Pattern.compile("[0-9]*");
         txtField03Cont.setTextFormatter(new InputTextFormatter(pattern)); //Mobile No
-        
-        comboBox05Cont.setItems(cOwnCont); // Contact Ownership 
+
+        comboBox05Cont.setItems(cOwnCont); // Contact Ownership
         comboBox04Cont.setItems(cTypCont); // Mobile Type
         comboBox04Cont.setOnAction(e -> {
             txtField03Cont.clear();
@@ -122,31 +121,31 @@ public class CustomerContactFormController implements Initializable, ScreenInter
         setCapsLockBehavior(textArea13Cont);
         txtField03Cont.setOnKeyPressed(this::txtField_KeyPressed);  //Mobile Number
         textArea13Cont.setOnKeyPressed(this::txtArea_KeyPressed); // Contact Remarks
-        
+
         //Button SetOnAction using cmdButton_Click() method
         btnClose.setOnAction(this::cmdButton_Click);
         btnAdd.setOnAction(this::cmdButton_Click);
         btnEdit.setOnAction(this::cmdButton_Click);
-        
-        if(pbState){
+
+        if (pbState) {
             btnAdd.setVisible(true);
             btnAdd.setManaged(true);
             btnEdit.setVisible(false);
             btnEdit.setManaged(false);
         } else {
-            loadFields();   
+            loadFields();
             btnAdd.setVisible(false);
-            btnAdd.setManaged(false);   
+            btnAdd.setManaged(false);
             btnEdit.setVisible(true);
             btnEdit.setManaged(true);
         }
-    }   
-    
+    }
+
     public void setGRider(GRider foValue) {
         oApp = foValue;
     }
-    
-     //Animation    
+
+    //Animation
     private void shakeTextField(TextField textField) {
         Timeline timeline = new Timeline();
         double originalX = textField.getTranslateX();
@@ -197,15 +196,15 @@ public class CustomerContactFormController implements Initializable, ScreenInter
             }
         });
     }
-    
+
     private void cmdButton_Click(ActionEvent event) {
         try {
-            String lsButton = ((Button)event.getSource()).getId();
-            switch (lsButton){
+            String lsButton = ((Button) event.getSource()).getId();
+            switch (lsButton) {
                 case "btnEdit":
                 case "btnAdd":
-                    if (settoClass()){
-                        if (lsButton.equals("btnAdd")){
+                    if (settoClass()) {
+                        if (lsButton.equals("btnAdd")) {
                             oTransMobile.addMobile();
                         }
                         CommonUtils.closeStage(btnClose);
@@ -225,9 +224,9 @@ public class CustomerContactFormController implements Initializable, ScreenInter
         } catch (SQLException ex) {
             Logger.getLogger(CustomerContactFormController.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }  
-    
-    private boolean settoClass(){
+    }
+
+    private boolean settoClass() {
         try {
             for (int lnCtr = 1; lnCtr <= oTransMobile.getItemCount(); lnCtr++) {
                 if (oTransMobile.getMobile(lnCtr, "cPrimaryx").toString().equals("1") && (lnCtr != pnRow)) {
@@ -237,23 +236,23 @@ public class CustomerContactFormController implements Initializable, ScreenInter
                     }
                 }
             }
-            
+
             //Validate Before adding to tables
             if (txtField03Cont.getText().isEmpty() || txtField03Cont.getText().trim().equals("")) {
                 ShowMessageFX.Warning(getStage(), "Invalid Mobile. Insert to table Aborted!", "Warning", null);
                 return false;
             }
-            
+
             if (!radiobtn11CntY.isSelected() && !radiobtn11CntN.isSelected()) {
                 ShowMessageFX.Warning(getStage(), "Please select Mobile Type. Insert to table Aborted!", "Warning", null);
                 return false;
             }
-            
+
             if (!radiobtn14CntY.isSelected() && !radiobtn14CntN.isSelected()) {
                 ShowMessageFX.Warning(getStage(), "Please select Mobile Status. Insert to table Aborted!", "Warning", null);
                 return false;
             }
-            
+
             if (comboBox05Cont.getValue().equals("")) {
                 ShowMessageFX.Warning(getStage(), "Please select Contact Ownership. Insert to table Aborted!", "Warning", null);
                 return false;
@@ -262,12 +261,12 @@ public class CustomerContactFormController implements Initializable, ScreenInter
                 ShowMessageFX.Warning(getStage(), "Please select Mobile Type. Insert to table Aborted!", "Warning", null);
                 return false;
             }
-            
+
             oTransMobile.setMobile(pnRow, 3, txtField03Cont.getText());
             oTransMobile.setMobile(pnRow, 4, comboBox04Cont.getSelectionModel().getSelectedIndex());
             oTransMobile.setMobile(pnRow, 5, comboBox05Cont.getSelectionModel().getSelectedIndex());
             oTransMobile.setMobile(pnRow, 13, textArea13Cont.getText());
-            
+
             if (radiobtn11CntY.isSelected()) {
                 oTransMobile.setMobile(pnRow, 11, 1);
             } else {
@@ -281,11 +280,11 @@ public class CustomerContactFormController implements Initializable, ScreenInter
         } catch (SQLException ex) {
             Logger.getLogger(CustomerContactFormController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         return true;
     }
-    
-    private void loadFields(){
+
+    private void loadFields() {
         try {
             txtField03Cont.setText((String) oTransMobile.getMobile(pnRow, "sMobileNo"));
             textArea13Cont.setText((String) oTransMobile.getMobile(pnRow, "sRemarksx"));
@@ -309,12 +308,12 @@ public class CustomerContactFormController implements Initializable, ScreenInter
             Logger.getLogger(CustomerContactFormController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     private void txtField_KeyPressed(KeyEvent event) {
         TextField txtField = (TextField) event.getSource();
         int lnIndex = Integer.parseInt(((TextField) event.getSource()).getId().substring(8, 10));
         String txtFieldID = ((TextField) event.getSource()).getId();
-        
+
         switch (event.getCode()) {
             case ENTER:
             case DOWN:
@@ -325,7 +324,7 @@ public class CustomerContactFormController implements Initializable, ScreenInter
         }
 
     }
-    
+
     /*TRIGGER FOCUS*/
     private void txtArea_KeyPressed(KeyEvent event) {
         if (event.getCode() == ENTER || event.getCode() == DOWN) {
@@ -336,5 +335,5 @@ public class CustomerContactFormController implements Initializable, ScreenInter
             CommonUtils.SetPreviousFocus((TextArea) event.getSource());
         }
     }
-    
+
 }

@@ -13,9 +13,6 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
 import javafx.beans.property.ReadOnlyBooleanPropertyBase;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -45,7 +42,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import javafx.util.Duration;
 import org.rmj.appdriver.GRider;
 import org.rmj.appdriver.agentfx.CommonUtils;
 import org.rmj.appdriver.agentfx.ShowMessageFX;
@@ -65,6 +61,8 @@ public class VehicleDescriptionFormController implements Initializable, ScreenIn
     private MasterCallback oListener;
 
     unloadForm unload = new unloadForm(); //Used in Close Button
+    TextFieldAnimationUtil txtFieldAnimation = new TextFieldAnimationUtil();
+
     private final String pxeModuleName = "Vehicle Description"; //Form Title
     private int pnEditMode;//Modifying fields
     private int pnRow = -1;
@@ -241,11 +239,11 @@ public class VehicleDescriptionFormController implements Initializable, ScreenIn
                 Logger.getLogger(VehicleDescriptionFormController.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
-        addRequiredFieldListener(txtField03);
-        addRequiredFieldListener(txtField04);
-        addRequiredFieldListener(txtField06);
-        addRequiredFieldListener(txtField05);
-        addRequiredFieldListener(txtField08);
+        txtFieldAnimation.addRequiredFieldListener(txtField03);
+        txtFieldAnimation.addRequiredFieldListener(txtField04);
+        txtFieldAnimation.addRequiredFieldListener(txtField06);
+        txtFieldAnimation.addRequiredFieldListener(txtField05);
+        txtFieldAnimation.addRequiredFieldListener(txtField08);
 
         //Button Click Event
         btnAdd.setOnAction(this::cmdButton_Click);
@@ -268,42 +266,6 @@ public class VehicleDescriptionFormController implements Initializable, ScreenIn
 
         pnEditMode = EditMode.UNKNOWN;
         initButton(pnEditMode);
-    }
-
-    //Animation
-    private void shakeTextField(TextField textField) {
-        Timeline timeline = new Timeline();
-        double originalX = textField.getTranslateX();
-
-        // Add keyframes for the animation
-        KeyFrame keyFrame1 = new KeyFrame(Duration.millis(0), new KeyValue(textField.translateXProperty(), 0));
-        KeyFrame keyFrame2 = new KeyFrame(Duration.millis(100), new KeyValue(textField.translateXProperty(), -5));
-        KeyFrame keyFrame3 = new KeyFrame(Duration.millis(200), new KeyValue(textField.translateXProperty(), 5));
-        KeyFrame keyFrame4 = new KeyFrame(Duration.millis(300), new KeyValue(textField.translateXProperty(), -5));
-        KeyFrame keyFrame5 = new KeyFrame(Duration.millis(400), new KeyValue(textField.translateXProperty(), 5));
-        KeyFrame keyFrame6 = new KeyFrame(Duration.millis(500), new KeyValue(textField.translateXProperty(), -5));
-        KeyFrame keyFrame7 = new KeyFrame(Duration.millis(600), new KeyValue(textField.translateXProperty(), 5));
-        KeyFrame keyFrame8 = new KeyFrame(Duration.millis(700), new KeyValue(textField.translateXProperty(), originalX));
-
-        // Add keyframes to the timeline
-        timeline.getKeyFrames().addAll(
-                keyFrame1, keyFrame2, keyFrame3, keyFrame4, keyFrame5, keyFrame6, keyFrame7, keyFrame8
-        );
-
-        // Play the animation
-        timeline.play();
-    }
-
-//Validation
-    private void addRequiredFieldListener(TextField textField) {
-        textField.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue && textField.getText().isEmpty()) {
-                shakeTextField(textField);
-                textField.getStyleClass().add("required-field");
-            } else {
-                textField.getStyleClass().remove("required-field");
-            }
-        });
     }
 
     @Override
@@ -851,13 +813,7 @@ public class VehicleDescriptionFormController implements Initializable, ScreenIn
     /*Clear Fields*/
     public void clearFields() {
         pnRow = 0;
-        /*clear tables*/
-        txtField03.getStyleClass().remove("required-field");
-        txtField04.getStyleClass().remove("required-field");
-        txtField06.getStyleClass().remove("required-field");
-        txtField05.getStyleClass().remove("required-field");
-        txtField08.getStyleClass().remove("required-field");
-
+        removeRequired();
         txtField02.clear(); // sDescript
         txtField03.clear(); // sMakeIDxx
         txtField04.clear(); // sModelIDx
@@ -866,6 +822,15 @@ public class VehicleDescriptionFormController implements Initializable, ScreenIn
         txtField08.clear(); // nYearModl
         comboBox07.setValue(null); //Transmission
         comboBox09.setValue(null); //Vehicle Size
+    }
+
+    private void removeRequired() {
+        txtFieldAnimation.removeShakeAnimation(txtField03, txtFieldAnimation.shakeTextField(txtField03), "required-field");
+        txtFieldAnimation.removeShakeAnimation(txtField04, txtFieldAnimation.shakeTextField(txtField04), "required-field");
+        txtFieldAnimation.removeShakeAnimation(txtField06, txtFieldAnimation.shakeTextField(txtField06), "required-field");
+        txtFieldAnimation.removeShakeAnimation(txtField05, txtFieldAnimation.shakeTextField(txtField05), "required-field");
+        txtFieldAnimation.removeShakeAnimation(txtField08, txtFieldAnimation.shakeTextField(txtField08), "required-field");
+
     }
 
     /*LOAD VEHICLE DESCRIPTION PARAMETERS*/

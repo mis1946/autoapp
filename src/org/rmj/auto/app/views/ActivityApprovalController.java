@@ -52,7 +52,6 @@ public class ActivityApprovalController implements Initializable, ScreenInterfac
     private int lnCtr = 0;
     private final String pxeModuleName = "Activity Approval"; //Form Title
     unloadForm unload = new unloadForm(); //Used in Close Button
-
     @FXML
     private AnchorPane AnchorMain;
     @FXML
@@ -323,7 +322,9 @@ public class ActivityApprovalController implements Initializable, ScreenInterfac
                             oTrans.getDetail(lnCtr, "sDeptName").toString().toUpperCase(),
                             oTrans.getDetail(lnCtr, "sCompnyNm").toString().toUpperCase(),
                             oTrans.getDetail(lnCtr, "sBranchNm").toString().toUpperCase(),
-                            oTrans.getDetail(lnCtr, "sProvName").toString().toUpperCase()));
+                            oTrans.getDetail(lnCtr, "sProvName").toString().toUpperCase(),
+                            oTrans.getDetail(lnCtr, "sActNoxxx").toString().toUpperCase()
+                    ));
                     totalBudg = totalBudg + Double.parseDouble(oTrans.getDetail(lnCtr, "nPropBdgt").toString());
                 }
                 lbTotalBudget.setText((CommonUtils.NumberFormat((Number) totalBudg, "₱ " + "#,##0.00")));

@@ -341,6 +341,7 @@ public class VSPPartsDialogController implements Initializable, ScreenInterface 
                             break;
                         } else {
                             ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                            txtField14_Part.requestFocus();
                             return;
                         }
 

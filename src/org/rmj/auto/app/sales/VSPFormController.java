@@ -19,9 +19,6 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
 import javafx.beans.property.ReadOnlyBooleanPropertyBase;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -58,7 +55,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Callback;
-import javafx.util.Duration;
 import org.rmj.appdriver.GRider;
 import org.rmj.appdriver.SQLUtil;
 import org.rmj.appdriver.agentfx.CommonUtils;
@@ -68,6 +64,7 @@ import org.rmj.appdriver.constants.EditMode;
 import org.rmj.auto.app.service.JobOrderFormController;
 import org.rmj.auto.app.views.InputTextFormatter;
 import org.rmj.auto.app.views.ScreenInterface;
+import org.rmj.auto.app.views.TextFieldAnimationUtil;
 import org.rmj.auto.app.views.unloadForm;
 import org.rmj.auto.sales.base.InquiryFollowUp;
 import org.rmj.auto.sales.base.VehicleSalesProposalMaster;
@@ -85,10 +82,13 @@ public class VSPFormController implements Initializable, ScreenInterface {
     private InquiryFollowUp oTransFollowUp;
     unloadForm unload = new unloadForm(); //Used in Close Button
     private final String pxeModuleName = "Vehicle Sales Proposal"; //Form Title
+    TextFieldAnimationUtil txtFieldAnimation = new TextFieldAnimationUtil();
     public int pnEditMode;//Modifying fields
     private int lnCtr = 0;
     private String TransNo = "";
     private int pnRow = -1;
+    private double xOffset = 0;
+    private double yOffset = 0;
     @FXML
     public AnchorPane AnchorMain;
     @FXML
@@ -396,6 +396,11 @@ public class VSPFormController implements Initializable, ScreenInterface {
         date04.setDayCellFactory(DateFormatCell);
         pnEditMode = EditMode.UNKNOWN;
         initButton(pnEditMode);
+        if (!comboBox24.getSelectionModel().isSelected(0)) {
+            comboBox25.getItems().remove("0");
+        } else {
+            comboBox25.getItems().add("0");
+        }
 
     }
 
@@ -424,8 +429,6 @@ public class VSPFormController implements Initializable, ScreenInterface {
             Logger.getLogger(VSPFormController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    private double xOffset = 0;
-    private double yOffset = 0;
 
     /**
      * Initializes the controller class.
@@ -558,21 +561,6 @@ public class VSPFormController implements Initializable, ScreenInterface {
         handleComboBoxSelectionVSPFinance(comboBox02_Finance, 2);
     }
 
-    private void clearVSPFieldsFinance() {
-        txtField04_Finance.setText("");
-        txtField14_Finance.setText("0.00");
-        txtField06_Finance.setText("0");
-        txtField07_Finance.setText("0.00");
-        comboBox02_Finance.setValue(null);
-        txtField082_Finance.setText("0.00");
-        txtField13_Finance.setText("0.00");
-        txtField05_Finance.setText("0.00");
-        txtField09_Finance.setText("0.00");
-        txtField08_Finance.setText("0.00");
-        txtField12_Finance.setText("0.00");
-        txtField10_Finance.setText("0.00");
-    }
-
     private void handleComboBoxSelectionVSPMaster(ComboBox<String> comboBox, int fieldNumber) {
         comboBox.setOnAction(e -> {
             try {
@@ -600,17 +588,23 @@ public class VSPFormController implements Initializable, ScreenInterface {
 
                                         oTrans.AddVSPFinance();
                                     }
-
                                 } catch (SQLException ex) {
                                     Logger.getLogger(VSPFormController.class.getName()).log(Level.SEVERE, null, ex);
                                 }
                                 loadVSPField();
                             }
                             break;
-                        default:
-                            oTrans.setMaster(fieldNumber, String.valueOf(selectedType));
-                            break;
 
+                        case 25:
+                            if (pnEditMode == EditMode.UPDATE || pnEditMode == EditMode.ADDNEW) {
+                                oTrans.setMaster(fieldNumber, Integer.valueOf(comboBox.getValue()));
+                            }
+                            break;
+                        default:
+                            if (pnEditMode == EditMode.UPDATE || pnEditMode == EditMode.ADDNEW) {
+                                oTrans.setMaster(fieldNumber, String.valueOf(selectedType));
+                            }
+                            break;
                     }
                     initButton(pnEditMode);
                 }
@@ -623,23 +617,39 @@ public class VSPFormController implements Initializable, ScreenInterface {
     }
 
     private void handleComboBoxSelectionVSPFinance(ComboBox<String> comboBox, int fieldNumber) {
-        comboBox.setOnAction(e -> {
+        if (pnEditMode == EditMode.UPDATE || pnEditMode == EditMode.ADDNEW) {
+            comboBox.setOnAction(e -> {
+                try {
+                    int selectedType = comboBox.getSelectionModel().getSelectedIndex(); // Retrieve the selected type
+                    if (selectedType >= 0) {
+                        if (pnEditMode == EditMode.UPDATE || pnEditMode == EditMode.ADDNEW) {
+                            oTrans.setVSPFinance(fieldNumber, String.valueOf(selectedType));
+                            initButton(pnEditMode);
 
-            try {
-                int selectedType = comboBox.getSelectionModel().getSelectedIndex(); // Retrieve the selected type
-                if (selectedType >= 0) {
-                    if (pnEditMode == EditMode.UPDATE || pnEditMode == EditMode.ADDNEW) {
-                        oTrans.setVSPFinance(fieldNumber, String.valueOf(selectedType));
-                        // Pass the selected type to setMaster method
-                        initButton(pnEditMode);
+                        }
                     }
+                } catch (SQLException ex) {
+                    Logger.getLogger(VSPFormController.class
+                            .getName()).log(Level.SEVERE, null, ex);
                 }
-            } catch (SQLException ex) {
-                Logger.getLogger(VSPFormController.class
-                        .getName()).log(Level.SEVERE, null, ex);
             }
+            );
         }
-        );
+    }
+
+    private void clearVSPFieldsFinance() {
+        txtField04_Finance.setText("");
+        txtField14_Finance.setText("0.00");
+        txtField06_Finance.setText("0");
+        txtField07_Finance.setText("0.00");
+        comboBox02_Finance.setValue(null);
+        txtField082_Finance.setText("0.00");
+        txtField13_Finance.setText("0.00");
+        txtField05_Finance.setText("0.00");
+        txtField09_Finance.setText("0.00");
+        txtField08_Finance.setText("0.00");
+        txtField12_Finance.setText("0.00");
+        txtField10_Finance.setText("0.00");
     }
 
     private void initComboItems() {
@@ -667,8 +677,10 @@ public class VSPFormController implements Initializable, ScreenInterface {
             }
         } catch (NumberFormatException ex) {
             ex.printStackTrace();
+
         } catch (SQLException ex) {
-            Logger.getLogger(VSPFormController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(VSPFormController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -705,7 +717,8 @@ public class VSPFormController implements Initializable, ScreenInterface {
                     oTrans.setMaster(68, "");
 
                 } catch (SQLException ex) {
-                    Logger.getLogger(VSPFormController.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(VSPFormController.class
+                            .getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }
@@ -827,7 +840,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
             }
         }
         );
-        //COMPRE TYPE
+
         comboBox24.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             try {
                 switch (newValue) {
@@ -844,25 +857,13 @@ public class VSPFormController implements Initializable, ScreenInterface {
                         break;
                     default:
                         break;
-                }
 
-                // If comboBox24 value is not "NONE," remove "0" from comboBox25's items
-                if (!"NONE".equals(newValue)) {
-                    comboBox25.getItems().remove("0");
-                } else {
-                    // If comboBox24 value is "NONE," ensure "0" is in comboBox25's items
-                    if (!comboBox25.getItems().contains("0")) {
-                        comboBox25.getItems().add("0");
-
-                    }
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(VSPFormController.class
                         .getName()).log(Level.SEVERE, null, ex);
             }
-        }
-        );
-
+        });
     }
 
     /* Initialize CmdButton */
@@ -899,6 +900,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
                     oTrans.setMaster(55, "0");
                 }
                 loadVSPField();
+
             } catch (SQLException ex) {
                 Logger.getLogger(VSPFormController.class
                         .getName()).log(Level.SEVERE, null, ex);
@@ -936,6 +938,8 @@ public class VSPFormController implements Initializable, ScreenInterface {
                     try {
                         clearFields();
                         clearVSPFieldsFinance();
+                        laborData.clear();
+                        partData.clear();
                         switchToTab(tabMain, ImTabPane);
                         if (oTrans.searchRecord()) {
                             switchToTab(tabMain, ImTabPane);
@@ -948,6 +952,8 @@ public class VSPFormController implements Initializable, ScreenInterface {
                         } else {
                             ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
                             clearFields();
+                            laborData.clear();
+                            partData.clear();
                             clearVSPFieldsFinance();
                             switchToTab(tabMain, ImTabPane);
                             pnEditMode = EditMode.UNKNOWN;
@@ -1389,6 +1395,8 @@ public class VSPFormController implements Initializable, ScreenInterface {
                         try {
                             clearFields();
                             clearVSPFieldsFinance();
+                            laborData.clear();
+                            partData.clear();
                             switchToTab(tabMain, ImTabPane);
                             if (oTrans.searchRecord()) {
                                 switchToTab(tabMain, ImTabPane);
@@ -1402,6 +1410,8 @@ public class VSPFormController implements Initializable, ScreenInterface {
                             } else {
                                 ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
                                 clearFields();
+                                laborData.clear();
+                                partData.clear();
                                 clearVSPFieldsFinance();
                                 switchToTab(tabMain, ImTabPane);
                                 pnEditMode = EditMode.UNKNOWN;
@@ -1421,9 +1431,12 @@ public class VSPFormController implements Initializable, ScreenInterface {
                         } else {
                             clearFields();
                             clearClassMasterField();
+                            laborData.clear();
+                            partData.clear();
                             txtField77.clear();
-                            txtField77.requestFocus();
                             ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                            txtField77.requestFocus();
+                            return;
                         }
                         break;
                     case "txtField68":
@@ -1436,6 +1449,8 @@ public class VSPFormController implements Initializable, ScreenInterface {
                             }
                         } else {
                             ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                            txtField68.requestFocus();
+                            return;
                         }
                         break;
                     case "txtField97":
@@ -1448,14 +1463,17 @@ public class VSPFormController implements Initializable, ScreenInterface {
                             }
                         } else {
                             ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                            txtField97.requestFocus();
+                            return;
                         }
                         break;
                     case "txtField04_Finance":
                         if (oTrans.searchBankApplication()) {
                             txtField04_Finance.setText(oTrans.getVSPFinance(4).toString());
                         } else {
-                            txtField04_Finance.requestFocus();
                             ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                            txtField04_Finance.requestFocus();
+                            return;
                         }
                         break;
                     case "txtField71":
@@ -1463,6 +1481,8 @@ public class VSPFormController implements Initializable, ScreenInterface {
                             loadVSPField();
                         } else {
                             ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                            txtField71.requestFocus();
+                            return;
                         }
                         break;
                     case "txtField72":
@@ -1470,22 +1490,26 @@ public class VSPFormController implements Initializable, ScreenInterface {
                             loadVSPField();
                         } else {
                             ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                            txtField72.requestFocus();
+                            return;
                         }
                         break;
                     case "txtField26":
                         if (oTrans.searchInsurance(txtField.getText(), true)) {
                             txtField26.setText((String) oTrans.getMaster(85));
                         } else {
-                            txtField26.requestFocus();
                             ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                            txtField26.requestFocus();
+                            return;
                         }
                         break;
                     case "txtField27":
                         if (oTrans.searchInsurance(txtField.getText(), false)) {
                             txtField27.setText((String) oTrans.getMaster(86));
                         } else {
-                            txtField27.requestFocus();
                             ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                            txtField27.requestFocus();
+                            return;
                         }
                         break;
 
@@ -1789,7 +1813,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
                                         oTrans.setVSPFinance(13, Double.valueOf("0.00"));
                                         oTrans.setVSPFinance(8, Double.valueOf("0.00"));
                                         oTrans.setVSPFinance(7, Double.valueOf("0.00"));
-                                        oTrans.setVSPFinance(6, String.valueOf("0"));
+                                        oTrans.setVSPFinance(6, "0");
                                         oTrans.setVSPFinance(14, Double.valueOf("0.00"));
                                 }
                             }
@@ -1871,6 +1895,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
 
             } else {
                 txtField.selectAll();
+
             }
         } catch (SQLException ex) {
             Logger.getLogger(VSPFormController.class
@@ -2299,6 +2324,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
         try {
             if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
                 oTrans.setMaster(4, SQLUtil.toDate(date04.getValue().toString(), SQLUtil.FORMAT_SHORT_DATE));
+
             }
         } catch (SQLException ex) {
             Logger.getLogger(VSPFormController.class
@@ -3098,8 +3124,8 @@ public class VSPFormController implements Initializable, ScreenInterface {
                         oTrans.setMaster(17, Double.valueOf("0.00"));
                         oTrans.setMaster(27, "");
                         oTrans.setMaster(86, "");
-                        oTrans.setMaster(24, String.valueOf("0"));
-                        oTrans.setMaster(25, String.valueOf("0"));
+                        oTrans.setMaster(24, "0");
+                        oTrans.setMaster(25, "0");
 
                     } catch (SQLException ex) {
                         Logger.getLogger(VSPFormController.class
@@ -3115,7 +3141,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
                  {
                     try {
                         oTrans.setMaster(17, Double.valueOf("0.00"));
-                        oTrans.setMaster(24, String.valueOf("1"));
+                        oTrans.setMaster(24, "1");
 
                     } catch (SQLException ex) {
                         Logger.getLogger(VSPFormController.class
@@ -3138,8 +3164,8 @@ public class VSPFormController implements Initializable, ScreenInterface {
                         oTrans.setMaster(86, "");
                         txtField17.setText("0.00");
                         txtField27.setText("");
-                        oTrans.setMaster(24, String.valueOf("0"));
-                        oTrans.setMaster(25, String.valueOf("0"));
+                        oTrans.setMaster(24, "0");
+                        oTrans.setMaster(25, "0");
 
                     } catch (SQLException ex) {
                         Logger.getLogger(VSPFormController.class
@@ -3181,11 +3207,9 @@ public class VSPFormController implements Initializable, ScreenInterface {
         chckBoxUndercoat.setDisable(!lbShow);
         chckBoxTint.setDisable(!lbShow);
         btnAdditionalLabor.setDisable(!lbShow);
-        if (fnValue == EditMode.ADDNEW) {
-            btnJobOrderAdd.setDisable(true);
-        } else {
-            btnJobOrderAdd.setDisable(!lbShow);
-        }
+
+        btnJobOrderAdd.setDisable(fnValue == EditMode.ADDNEW ? true : false);
+
         if (fnValue == EditMode.READY) {
             if (lblVSPStatus.getText().equals("Cancelled")) {
                 btnCancelVSP.setVisible(false);
@@ -3345,51 +3369,15 @@ public class VSPFormController implements Initializable, ScreenInterface {
     }
 
     private void initAddRequiredField() {
-        addRequiredFieldListener(txtField77);
-        addRequiredFieldListener(txtField68);
-    }
-
-    //Validation
-    private void addRequiredFieldListener(TextField textField) {
-        textField.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue && textField.getText().isEmpty() || !newValue && textField.getText().equals(Double.valueOf("0.00"))) {
-                shakeTextField(textField);
-                textField.getStyleClass().add("required-field");
-            } else {
-                textField.getStyleClass().remove("required-field");
-            }
-        });
-    }
-
-    //TextFieldAnimation
-    private void shakeTextField(TextField textField) {
-        Timeline timeline = new Timeline();
-        double originalX = textField.getTranslateX();
-
-        // Add keyframes for the animation
-        KeyFrame keyFrame1 = new KeyFrame(Duration.millis(0), new KeyValue(textField.translateXProperty(), 0));
-        KeyFrame keyFrame2 = new KeyFrame(Duration.millis(100), new KeyValue(textField.translateXProperty(), -5));
-        KeyFrame keyFrame3 = new KeyFrame(Duration.millis(200), new KeyValue(textField.translateXProperty(), 5));
-        KeyFrame keyFrame4 = new KeyFrame(Duration.millis(300), new KeyValue(textField.translateXProperty(), -5));
-        KeyFrame keyFrame5 = new KeyFrame(Duration.millis(400), new KeyValue(textField.translateXProperty(), 5));
-        KeyFrame keyFrame6 = new KeyFrame(Duration.millis(500), new KeyValue(textField.translateXProperty(), -5));
-        KeyFrame keyFrame7 = new KeyFrame(Duration.millis(600), new KeyValue(textField.translateXProperty(), 5));
-        KeyFrame keyFrame8 = new KeyFrame(Duration.millis(700), new KeyValue(textField.translateXProperty(), originalX));
-
-        // Add keyframes to the timeline
-        timeline.getKeyFrames().addAll(
-                keyFrame1, keyFrame2, keyFrame3, keyFrame4, keyFrame5, keyFrame6, keyFrame7, keyFrame8
-        );
-
-        // Play the animation
-        timeline.play();
+        txtFieldAnimation.addRequiredFieldListener(txtField77);
+        txtFieldAnimation.addRequiredFieldListener(txtField68);
     }
 
     public void removeRequired() {
-        txtField77.getStyleClass().remove("required-field");
-        txtField68.getStyleClass().remove("required-field");
-
+        txtFieldAnimation.removeShakeAnimation(txtField77, txtFieldAnimation.shakeTextField(txtField77), "required-field");
+        txtFieldAnimation.removeShakeAnimation(txtField68, txtFieldAnimation.shakeTextField(txtField68), "required-field");
     }
+
 
     /*OPEN WINDOW FOR */
     private void loadJobOrderWindow() {
@@ -3454,8 +3442,10 @@ public class VSPFormController implements Initializable, ScreenInterface {
             e.printStackTrace();
             ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
             System.exit(1);
+
         } catch (SQLException ex) {
-            Logger.getLogger(VSPFormController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(VSPFormController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 }

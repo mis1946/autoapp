@@ -16,9 +16,6 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
 import javafx.beans.property.ReadOnlyBooleanPropertyBase;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -50,13 +47,9 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import static javafx.scene.input.KeyCode.DOWN;
 import static javafx.scene.input.KeyCode.ENTER;
-import static javafx.scene.input.KeyCode.F3;
-import static javafx.scene.input.KeyCode.TAB;
-import static javafx.scene.input.KeyCode.UP;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.StageStyle;
 import javafx.util.Callback;
-import javafx.util.Duration;
 import org.rmj.appdriver.GRider;
 import org.rmj.appdriver.SQLUtil;
 import org.rmj.appdriver.agentfx.CommonUtils;
@@ -75,6 +68,7 @@ public class ActivityFormController implements Initializable, ScreenInterface {
     private GRider oApp;
     private Activity oTrans;
     private MasterCallback oListener;
+    TextFieldAnimationUtil txtFieldAnimation = new TextFieldAnimationUtil();
     private ObservableList<ActivityMemberTable> actMembersData = FXCollections.observableArrayList();
     private ObservableList<ActivityTownEntryTableList> townCitydata = FXCollections.observableArrayList();
     private ObservableList<ActivityVchlEntryTable> actVhclModelData = FXCollections.observableArrayList();
@@ -154,8 +148,6 @@ public class ActivityFormController implements Initializable, ScreenInterface {
     @FXML
     private TextField txtField05;  //sActTypDs
     @FXML
-    private TextField textSeek01; //Search Activity No
-    @FXML
     private TextField textSeek02; //Search Activity Name
     @FXML
     private TextField txtField32; //Branch
@@ -188,8 +180,6 @@ public class ActivityFormController implements Initializable, ScreenInterface {
     @FXML
     private ComboBox<String> comboBox29; //sEventTyp
     @FXML
-    private TextField txtField01; //sActvtyID
-    @FXML
     private Button btnCancel;
     @FXML
     private TableColumn<ActivityTownEntryTableList, String> tblRowCity;
@@ -211,6 +201,10 @@ public class ActivityFormController implements Initializable, ScreenInterface {
     private Button btnActCancel;
     @FXML
     private Label lblCancelStatus;
+    @FXML
+    private TextField txtField30;
+    @FXML
+    private TextField textSeek30;
 
     /**
      * Initializes the controller class.
@@ -221,7 +215,7 @@ public class ActivityFormController implements Initializable, ScreenInterface {
     }
 
     private Stage getStage() {
-        return (Stage) textSeek01.getScene().getWindow();
+        return (Stage) textSeek30.getScene().getWindow();
     }
 
     @Override
@@ -306,12 +300,10 @@ public class ActivityFormController implements Initializable, ScreenInterface {
         setCapsLockBehavior(txtField25); //sCompyNm
         setCapsLockBehavior(txtField05); //sActTypDs
         setCapsLockBehavior(txtField26); //sBranchNm
-        setCapsLockBehavior(txtField12); //nTrgtClnt
         setCapsLockBehavior(txtField28); //sProvName
         setCapsLockBehavior(txtField24); //sDeptName
         setCapsLockBehavior(txtField11); //nRcvdBdgt
         setCapsLockBehavior(txtField32); //Branch
-        setCapsLockBehavior(txtField12); //nTrgtClnt
 
         setCapsLockBehavior(textArea09); //sCompnynx
         setCapsLockBehavior(textArea02); //sActTitle
@@ -444,6 +436,11 @@ public class ActivityFormController implements Initializable, ScreenInterface {
                             txtField12.requestFocus();
                             return;
                         }
+                        if (Integer.parseInt(txtField12.getText()) >= 10000) {
+                            ShowMessageFX.Warning(getStage(), "Please enter a valid No. of Target Clients", "Warning", null);
+                            txtField12.requestFocus();
+                            return;
+                        }
                         if (txtField28.getText().trim().equals("")) {
                             ShowMessageFX.Warning(getStage(), "Please enter a value for Province.", "Warning", null);
                             txtField28.requestFocus();
@@ -468,7 +465,7 @@ public class ActivityFormController implements Initializable, ScreenInterface {
                             ShowMessageFX.Information(getStage(), "Transaction save successfully.", pxeModuleName, null);
                             loadActivityField();
                             pnEditMode = EditMode.READY;
-                            if (oTrans.SearchRecord(oTrans.getMaster(1).toString(), true)) {
+                            if (oTrans.SearchRecord(oTrans.getMaster(30).toString(), true)) {
                                 loadActivityField();
                                 loadActivityVehicleTable();
                                 loadActMembersTable();
@@ -567,9 +564,7 @@ public class ActivityFormController implements Initializable, ScreenInterface {
                     break;
                 case "btnCancel":
                     if (ShowMessageFX.OkayCancel(getStage(), "Are you sure you want to cancel?", pxeModuleName, null) == true) {
-                        removeRequired();
                         clearFields();
-                        txtField05.getStyleClass().remove("required-field");
                         actVhclModelData.clear();
                         actMembersData.clear();
                         townCitydata.clear();
@@ -585,7 +580,7 @@ public class ActivityFormController implements Initializable, ScreenInterface {
                         }
                     }
                     try {
-                        if (oTrans.SearchRecord(textSeek01.getText(), false)) {
+                        if (oTrans.SearchRecord("", false)) {
                             removeRequired();
                             loadActivityField();
                             loadActivityVehicleTable();
@@ -672,7 +667,6 @@ public class ActivityFormController implements Initializable, ScreenInterface {
         txtField24.focusedProperty().addListener(txtField_Focus); //sDeptName
         txtField11.focusedProperty().addListener(txtField_Focus); //nRcvdBdgt
 //        txtField32.focusedProperty().addListener(txtField_Focus); //Branch
-        txtField12.focusedProperty().addListener(txtField_Focus); //nTrgtClnt
 
         textArea08.focusedProperty().addListener(txtArea_Focus); //sAddressx
         textArea15.focusedProperty().addListener(txtArea_Focus); //sLogRemrk
@@ -702,8 +696,7 @@ public class ActivityFormController implements Initializable, ScreenInterface {
                         oTrans.setMaster(lnIndex, lsValue); // Handle Encoded Value
                         break;
                     case 12: // nTrgtClnt
-                        int targetClients = Integer.parseInt(lsValue);
-                        oTrans.setMaster(lnIndex, targetClients);
+                        oTrans.setMaster(lnIndex, Integer.valueOf(lsValue.replace(",", "")));
                         break;
                 }
 
@@ -760,7 +753,6 @@ public class ActivityFormController implements Initializable, ScreenInterface {
         txtField24.setOnKeyPressed(this::txtField_KeyPressed); //sDeptName
         txtField11.setOnKeyPressed(this::txtField_KeyPressed); //nRcvdBdgt
 //        txtField32.setOnKeyPressed(this::txtField_KeyPressed); //Branch
-        txtField12.setOnKeyPressed(this::txtField_KeyPressed); //nTrgtClnt
         txtField25.setOnKeyPressed(this::txtField_KeyPressed); //sCompyNm
 
         /* TextArea KeyPressed */
@@ -770,7 +762,7 @@ public class ActivityFormController implements Initializable, ScreenInterface {
         textArea09.setOnKeyPressed(this::txtArea_KeyPressed);
         textArea03.setOnKeyPressed(this::txtArea_KeyPressed);
         textArea02.setOnKeyPressed(this::txtArea_KeyPressed);
-        textSeek01.setOnKeyPressed(this::txtField_KeyPressed); //Activity No Search
+        textSeek30.setOnKeyPressed(this::txtField_KeyPressed); //Activity No Search
         textSeek02.setOnKeyPressed(this::txtField_KeyPressed); //Activity Title Search
 
     }
@@ -792,14 +784,14 @@ public class ActivityFormController implements Initializable, ScreenInterface {
         try {
             if (event.getCode() == KeyCode.TAB || event.getCode() == KeyCode.ENTER || event.getCode() == KeyCode.F3) {
                 switch (txtFieldID) {
-                    case "textSeek01":  //Search by Activity No
+                    case "textSeek30":  //Search by Activity No
                         if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
                             if (ShowMessageFX.OkayCancel(null, "Confirmation", "You have unsaved data. Are you sure you want to browse a new record?") == true) {
                             } else {
                                 return;
                             }
                         }
-                        if (oTrans.SearchRecord(textSeek01.getText(), false)) {
+                        if (oTrans.SearchRecord(textSeek30.getText(), false)) {
                             removeRequired();
                             loadActivityField();
                             loadActivityVehicleTable();
@@ -832,7 +824,7 @@ public class ActivityFormController implements Initializable, ScreenInterface {
                             pnEditMode = oTrans.getEditMode();
                         } else {
                             ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
-                            textSeek01.clear();
+                            textSeek30.clear();
                             actVhclModelData.clear();
                             actMembersData.clear();
                             clearFields();
@@ -870,6 +862,8 @@ public class ActivityFormController implements Initializable, ScreenInterface {
                             txtField24.setText((String) oTrans.getMaster(24));
                         } else {
                             ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                            txtField24.requestFocus();
+                            return;
                         }
                         break;
                     case "txtField25":
@@ -877,6 +871,8 @@ public class ActivityFormController implements Initializable, ScreenInterface {
                             txtField25.setText((String) oTrans.getMaster(25));
                         } else {
                             ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                            txtField25.requestFocus();
+                            return;
                         }
                         break;
                     case "txtField26":
@@ -884,6 +880,8 @@ public class ActivityFormController implements Initializable, ScreenInterface {
                             txtField26.setText((String) oTrans.getMaster(26));
                         } else {
                             ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                            txtField26.requestFocus();
+                            return;
                         }
                         break;
                     case "txtField28":
@@ -906,8 +904,9 @@ public class ActivityFormController implements Initializable, ScreenInterface {
                             pnEditMode = oTrans.getEditMode();
                         } else {
                             ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                            txtField28.requestFocus();
+                            return;
                         }
-
                         break;
 
                 }
@@ -923,47 +922,11 @@ public class ActivityFormController implements Initializable, ScreenInterface {
     }
 
     private void initAddRequiredField() {
-        addRequiredFieldListener(txtField05);
-        addRequiredFieldListener(txtField24);
-        addRequiredFieldListener(txtField25);
-        addRequiredFieldListener(txtField26);
-        addRequiredFieldListener(txtField28);
-    }
-
-    //Validation
-    private void addRequiredFieldListener(TextField textField) {
-        textField.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue && textField.getText().isEmpty()) {
-                shakeTextField(textField);
-                textField.getStyleClass().add("required-field");
-            } else {
-                textField.getStyleClass().remove("required-field");
-            }
-        });
-    }
-
-    //Animation
-    private void shakeTextField(TextField textField) {
-        Timeline timeline = new Timeline();
-        double originalX = textField.getTranslateX();
-
-        // Add keyframes for the animation
-        KeyFrame keyFrame1 = new KeyFrame(Duration.millis(0), new KeyValue(textField.translateXProperty(), 0));
-        KeyFrame keyFrame2 = new KeyFrame(Duration.millis(100), new KeyValue(textField.translateXProperty(), -5));
-        KeyFrame keyFrame3 = new KeyFrame(Duration.millis(200), new KeyValue(textField.translateXProperty(), 5));
-        KeyFrame keyFrame4 = new KeyFrame(Duration.millis(300), new KeyValue(textField.translateXProperty(), -5));
-        KeyFrame keyFrame5 = new KeyFrame(Duration.millis(400), new KeyValue(textField.translateXProperty(), 5));
-        KeyFrame keyFrame6 = new KeyFrame(Duration.millis(500), new KeyValue(textField.translateXProperty(), -5));
-        KeyFrame keyFrame7 = new KeyFrame(Duration.millis(600), new KeyValue(textField.translateXProperty(), 5));
-        KeyFrame keyFrame8 = new KeyFrame(Duration.millis(700), new KeyValue(textField.translateXProperty(), originalX));
-
-        // Add keyframes to the timeline
-        timeline.getKeyFrames().addAll(
-                keyFrame1, keyFrame2, keyFrame3, keyFrame4, keyFrame5, keyFrame6, keyFrame7, keyFrame8
-        );
-
-        // Play the animation
-        timeline.play();
+        txtFieldAnimation.addRequiredFieldListener(txtField05);
+        txtFieldAnimation.addRequiredFieldListener(txtField24);
+        txtFieldAnimation.addRequiredFieldListener(txtField25);
+        txtFieldAnimation.addRequiredFieldListener(txtField26);
+        txtFieldAnimation.addRequiredFieldListener(txtField28);
     }
 
     private void initMonitoringProperty() {
@@ -978,17 +941,19 @@ public class ActivityFormController implements Initializable, ScreenInterface {
         });
         dateFrom06.valueProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
-                dateTo07.setDayCellFactory(DateTo);
-                dateTo07.setValue(newValue.plusDays(1));
-
+                if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
+                    dateTo07.setDayCellFactory(DateTo);
+                    dateTo07.setValue(newValue.plusDays(1));
+                }
             }
         });
         comboBox29.setOnAction(e -> {
             String selectedType = comboBox29.getValue();// Retrieve the type ID for the selected type
             // Set the type ID in the text field
             try {
-                oTrans.setMaster(29, selectedType); // Pass the selected type to the setMaster method
-
+                if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
+                    oTrans.setMaster(29, selectedType); // Pass the selected type to the setMaster method
+                }
             } catch (SQLException ex) {
                 Logger.getLogger(ActivityFormController.class
                         .getName()).log(Level.SEVERE, null, ex);
@@ -1021,7 +986,9 @@ public class ActivityFormController implements Initializable, ScreenInterface {
     /*Set Date Value to Master Class*/
     public void getDateFrom(ActionEvent event) {
         try {
-            oTrans.setMaster(6, SQLUtil.toDate(dateFrom06.getValue().toString(), SQLUtil.FORMAT_SHORT_DATE));
+            if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
+                oTrans.setMaster(6, SQLUtil.toDate(dateFrom06.getValue().toString(), SQLUtil.FORMAT_SHORT_DATE));
+            }
 
         } catch (SQLException ex) {
             Logger.getLogger(CustomerFormController.class
@@ -1031,8 +998,9 @@ public class ActivityFormController implements Initializable, ScreenInterface {
 
     public void getDateTo(ActionEvent event) {
         try {
-            oTrans.setMaster(7, SQLUtil.toDate(dateTo07.getValue().toString(), SQLUtil.FORMAT_SHORT_DATE));
-
+            if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
+                oTrans.setMaster(7, SQLUtil.toDate(dateTo07.getValue().toString(), SQLUtil.FORMAT_SHORT_DATE));
+            }
         } catch (SQLException ex) {
             Logger.getLogger(CustomerFormController.class
                     .getName()).log(Level.SEVERE, null, ex);
@@ -1041,9 +1009,9 @@ public class ActivityFormController implements Initializable, ScreenInterface {
 
     private void initFormatterFields() {
         Pattern pattern = Pattern.compile("[\\d\\p{Punct}]*");
-        Pattern trgPattern = Pattern.compile("\\p{ASCII}{0,4}");
+        Pattern numberOnlyPattern = Pattern.compile("[0-9]*");
 
-        txtField12.setTextFormatter(new InputTextFormatter(trgPattern));  //nTrgtClnt
+        txtField12.setTextFormatter(new InputTextFormatter(numberOnlyPattern));  //nTrgtClnt
         txtField11.setTextFormatter(new InputTextFormatter(pattern));  //nRcvdBdgt
     }
 
@@ -1096,7 +1064,7 @@ public class ActivityFormController implements Initializable, ScreenInterface {
     private void loadActivityField() {
         try {
 
-            txtField01.setText((String) oTrans.getMaster(1)); // sActvtyID
+            txtField30.setText((String) oTrans.getMaster(30)); // sActvtyID
             dateFrom06.setValue(strToDate(CommonUtils.xsDateShort((Date) oTrans.getMaster(6))));
             dateTo07.setValue(strToDate(CommonUtils.xsDateShort((Date) oTrans.getMaster(7))));
             String selectedItem = oTrans.getMaster(29).toString();//sEventTyp
@@ -1579,7 +1547,7 @@ public class ActivityFormController implements Initializable, ScreenInterface {
     public void clearFields() {
         removeRequired();
         townCitydata.clear();
-        txtField01.setText("");//sActvtyID
+        txtField30.setText("");//sActvtyID
         dateFrom06.setValue(strToDate(CommonUtils.xsDateShort((Date) oApp.getServerDate())));
         dateTo07.setValue(strToDate(CommonUtils.xsDateShort((Date) oApp.getServerDate())));
         lblCancelStatus.setText("");
@@ -1596,18 +1564,18 @@ public class ActivityFormController implements Initializable, ScreenInterface {
         txtField25.setText(""); //sCompnyNm
         txtField26.setText(""); //sBranchNm
         txtField32.setText(""); //Branch
-        txtField12.setText(""); //nTrgtClnt
-        txtField11.setText("0.0");  //nRcvdBdg
+        txtField12.setText("0"); //nTrgtClnt
+        txtField11.setText("0.00");  //nRcvdBdg
         txtField28.setText(""); //sProvName
         textArea08.setText(""); //Street
         textArea09.setText(""); //sCompnynx
     }
 
     public void removeRequired() {
-        txtField05.getStyleClass().remove("required-field");
-        txtField24.getStyleClass().remove("required-field");
-        txtField25.getStyleClass().remove("required-field");
-        txtField26.getStyleClass().remove("required-field");
-        txtField28.getStyleClass().remove("required-field");
+        txtFieldAnimation.removeShakeAnimation(txtField05, txtFieldAnimation.shakeTextField(txtField05), "required-field");
+        txtFieldAnimation.removeShakeAnimation(txtField24, txtFieldAnimation.shakeTextField(txtField24), "required-field");
+        txtFieldAnimation.removeShakeAnimation(txtField25, txtFieldAnimation.shakeTextField(txtField25), "required-field");
+        txtFieldAnimation.removeShakeAnimation(txtField26, txtFieldAnimation.shakeTextField(txtField26), "required-field");
+        txtFieldAnimation.removeShakeAnimation(txtField28, txtFieldAnimation.shakeTextField(txtField28), "required-field");
     }
 }

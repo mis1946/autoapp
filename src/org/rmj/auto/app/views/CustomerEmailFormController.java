@@ -35,22 +35,21 @@ import org.rmj.appdriver.agentfx.CommonUtils;
 import org.rmj.appdriver.agentfx.ShowMessageFX;
 import org.rmj.appdriver.callback.MasterCallback;
 import org.rmj.auto.clients.base.ClientEMail;
-import org.rmj.auto.clients.base.ClientMobile;
 
 /**
  * FXML Controller class
  *
- * @author Arsiela 
- * Date Created: 10-23-2023
+ * @author Arsiela Date Created: 10-23-2023
  */
 public class CustomerEmailFormController implements Initializable, ScreenInterface {
+
     private GRider oApp;
     private MasterCallback oListener;
     private ClientEMail oTransEmail;
     private final String pxeModuleName = "Customer Email";
     private int pnRow = 0;
     private boolean pbState = true;
-    
+
     @FXML
     private Button btnEdit;
     @FXML
@@ -74,94 +73,58 @@ public class CustomerEmailFormController implements Initializable, ScreenInterfa
     private TextField txtField03EmAd;
     @FXML
     private Button btnAdd;
-    
-    public void setObject(ClientEMail foObject){
+
+    public void setObject(ClientEMail foObject) {
         oTransEmail = foObject;
-    } 
-    
-    public void setRow(int fnRow){
+    }
+
+    public void setRow(int fnRow) {
         pnRow = fnRow;
     }
-    
-    public void setState(boolean fbValue){
+
+    public void setState(boolean fbValue) {
         pbState = fbValue;
     }
-    
-    private Stage getStage(){
-         return (Stage) btnClose.getScene().getWindow();
+
+    private Stage getStage() {
+        return (Stage) btnClose.getScene().getWindow();
     }
-    
+
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         oListener = (int fnIndex, Object foValue) -> {
-            System.out.println("Set Class Value "  + fnIndex + "-->" + foValue);
+            System.out.println("Set Class Value " + fnIndex + "-->" + foValue);
         };
-        
+
         comboBox04EmAd.setItems(cOwnEmAd); // Email Ownership
-        
+
         //CLIENT Email
         txtField03EmAd.setOnKeyPressed(this::txtField_KeyPressed); // Email Address
-        
+
         //Button SetOnAction using cmdButton_Click() method
         btnClose.setOnAction(this::cmdButton_Click);
         btnAdd.setOnAction(this::cmdButton_Click);
         btnEdit.setOnAction(this::cmdButton_Click);
-        
-        if(pbState){
+
+        if (pbState) {
             btnAdd.setVisible(true);
             btnAdd.setManaged(true);
             btnEdit.setVisible(false);
             btnEdit.setManaged(false);
         } else {
-            loadFields();   
+            loadFields();
             btnAdd.setVisible(false);
-            btnAdd.setManaged(false);   
+            btnAdd.setManaged(false);
             btnEdit.setVisible(true);
             btnEdit.setManaged(true);
         }
-    }  
-    
+    }
+
     public void setGRider(GRider foValue) {
         oApp = foValue;
-    }
-    
-     //Animation    
-    private void shakeTextField(TextField textField) {
-        Timeline timeline = new Timeline();
-        double originalX = textField.getTranslateX();
-
-        // Add keyframes for the animation
-        KeyFrame keyFrame1 = new KeyFrame(Duration.millis(0), new KeyValue(textField.translateXProperty(), 0));
-        KeyFrame keyFrame2 = new KeyFrame(Duration.millis(100), new KeyValue(textField.translateXProperty(), -5));
-        KeyFrame keyFrame3 = new KeyFrame(Duration.millis(200), new KeyValue(textField.translateXProperty(), 5));
-        KeyFrame keyFrame4 = new KeyFrame(Duration.millis(300), new KeyValue(textField.translateXProperty(), -5));
-        KeyFrame keyFrame5 = new KeyFrame(Duration.millis(400), new KeyValue(textField.translateXProperty(), 5));
-        KeyFrame keyFrame6 = new KeyFrame(Duration.millis(500), new KeyValue(textField.translateXProperty(), -5));
-        KeyFrame keyFrame7 = new KeyFrame(Duration.millis(600), new KeyValue(textField.translateXProperty(), 5));
-        KeyFrame keyFrame8 = new KeyFrame(Duration.millis(700), new KeyValue(textField.translateXProperty(), originalX));
-
-        // Add keyframes to the timeline
-        timeline.getKeyFrames().addAll(
-                keyFrame1, keyFrame2, keyFrame3, keyFrame4, keyFrame5, keyFrame6, keyFrame7, keyFrame8
-        );
-
-        // Play the animation
-        timeline.play();
-    }
-
-    //Validation
-    private void addRequiredFieldListener(TextField textField) {
-        textField.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue && textField.getText().isEmpty()) {
-                shakeTextField(textField);
-                textField.getStyleClass().add("required-field");
-            } else {
-                textField.getStyleClass().remove("required-field");
-            }
-        });
     }
 
     private static void setCapsLockBehavior(TextField textField) {
@@ -179,15 +142,15 @@ public class CustomerEmailFormController implements Initializable, ScreenInterfa
             }
         });
     }
-    
+
     private void cmdButton_Click(ActionEvent event) {
         try {
-            String lsButton = ((Button)event.getSource()).getId();
-            switch (lsButton){
+            String lsButton = ((Button) event.getSource()).getId();
+            switch (lsButton) {
                 case "btnEdit":
                 case "btnAdd":
-                    if (settoClass()){
-                        if (lsButton.equals("btnAdd")){
+                    if (settoClass()) {
+                        if (lsButton.equals("btnAdd")) {
                             oTransEmail.addEmail();
                         }
                         CommonUtils.closeStage(btnClose);
@@ -207,9 +170,9 @@ public class CustomerEmailFormController implements Initializable, ScreenInterfa
         } catch (SQLException ex) {
             Logger.getLogger(CustomerEmailFormController.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }  
-    
-    private boolean settoClass(){
+    }
+
+    private boolean settoClass() {
         try {
             for (int lnCtr = 1; lnCtr <= oTransEmail.getItemCount(); lnCtr++) {
                 if (oTransEmail.getEmail(lnCtr, "cPrimaryx").toString().equals("1") && (lnCtr != pnRow)) {
@@ -219,7 +182,7 @@ public class CustomerEmailFormController implements Initializable, ScreenInterfa
                     }
                 }
             }
-            
+
             //Validate Before adding to tables
             if (txtField03EmAd.getText().isEmpty() || txtField03EmAd.getText().trim().equals("")) {
                 ShowMessageFX.Warning(getStage(), "Invalid Email. Insert to table Aborted!", "Warning", null);
@@ -259,14 +222,14 @@ public class CustomerEmailFormController implements Initializable, ScreenInterfa
             } else {
                 oTransEmail.setEmail(pnRow, 6, 0);
             }
-            
+
         } catch (SQLException ex) {
             Logger.getLogger(CustomerEmailFormController.class.getName()).log(Level.SEVERE, null, ex);
         }
         return true;
     }
-    
-    private void loadFields(){
+
+    private void loadFields() {
         try {
             txtField03EmAd.setText((String) oTransEmail.getEmail(pnRow, "sEmailAdd"));
             comboBox04EmAd.getSelectionModel().select(Integer.parseInt((String) oTransEmail.getEmail(pnRow, "cOwnerxxx")));
@@ -288,12 +251,12 @@ public class CustomerEmailFormController implements Initializable, ScreenInterfa
             Logger.getLogger(CustomerEmailFormController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     private void txtField_KeyPressed(KeyEvent event) {
         TextField txtField = (TextField) event.getSource();
         int lnIndex = Integer.parseInt(((TextField) event.getSource()).getId().substring(8, 10));
         String txtFieldID = ((TextField) event.getSource()).getId();
-        
+
         switch (event.getCode()) {
             case ENTER:
             case DOWN:
@@ -304,7 +267,7 @@ public class CustomerEmailFormController implements Initializable, ScreenInterfa
         }
 
     }
-    
+
     /*TRIGGER FOCUS*/
     private void txtArea_KeyPressed(KeyEvent event) {
         if (event.getCode() == ENTER || event.getCode() == DOWN) {
@@ -315,5 +278,5 @@ public class CustomerEmailFormController implements Initializable, ScreenInterfa
             CommonUtils.SetPreviousFocus((TextArea) event.getSource());
         }
     }
-    
+
 }

@@ -229,7 +229,7 @@
                                                                                                                         <Tooltip text="Please fill in the Bank Name." />
                                                                                                                     </tooltip>
                                                                                                                 </TextField>
-                                                                                                                <TextField fx:id="txtField03" GridPane.columnIndex="2" GridPane.columnSpan="4" GridPane.rowIndex="2">
+                                                                                                                <TextField fx:id="txtField03" disable="true" editable="false" GridPane.columnIndex="2" GridPane.columnSpan="4" GridPane.rowIndex="2">
                                                                                                                     <tooltip>
                                                                                                                         <Tooltip text="Please fill in the Bank Abbrev." />
                                                                                                                     </tooltip>

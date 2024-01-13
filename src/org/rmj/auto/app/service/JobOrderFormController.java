@@ -16,9 +16,6 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyBooleanPropertyBase;
 import javafx.beans.value.ChangeListener;
@@ -53,7 +50,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Callback;
-import javafx.util.Duration;
 import org.rmj.appdriver.GRider;
 import org.rmj.appdriver.SQLUtil;
 import org.rmj.appdriver.agentfx.CommonUtils;
@@ -64,6 +60,7 @@ import org.rmj.auto.app.sales.VSPFormController;
 import org.rmj.auto.app.views.CancelForm;
 import org.rmj.auto.app.views.InputTextFormatter;
 import org.rmj.auto.app.views.ScreenInterface;
+import org.rmj.auto.app.views.TextFieldAnimationUtil;
 import org.rmj.auto.app.views.unloadForm;
 import org.rmj.auto.service.base.JobOrderMaster;
 
@@ -79,6 +76,7 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
     private MasterCallback oListener;
     private String fsValue;
     CancelForm cancelform = new CancelForm(); //Object for closing form
+    TextFieldAnimationUtil txtFieldAnimation = new TextFieldAnimationUtil();
     private String pxeModuleName = "Job Order Information"; //Form Title
     private int pnEditMode;//Modifying fields
     private boolean pbisJobOrderSales = false;
@@ -222,7 +220,6 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
         btnAdd.fire();
         try {
             if (oTrans.searchVSP(fsValue)) {
-
                 clearFields();
                 loadJobOrderFields();
                 initButton(pnEditMode);
@@ -561,7 +558,6 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
                         }
                     }
                     try {
-                        clearFields();
                         switchToTab(mainTab, ImTabPane);
                         oTrans.setFormType(pbisJobOrderSales);
                         if (oTrans.SearchRecord()) {
@@ -682,10 +678,16 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
                     if (pbisJobOrderSales) {
                         if (oTrans.searchVSP(txtField13.getText())) {
                             loadJobOrderFields();
+                        } else {
+                            ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                            txtField03.requestFocus();
+                            return;
                         }
                     } else {
                         if (oTrans.searchIntake(txtField13.getText())) {
                             loadJobOrderFields();
+                            txtField03.requestFocus();
+                            return;
                         }
                     }
                 } catch (SQLException ex) {
@@ -1422,48 +1424,11 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
     }
 
     private void initAddRequiredField() {
-        addRequiredFieldListener(txtField13);
-
-    }
-
-    //Validation
-    private void addRequiredFieldListener(TextField textField) {
-        textField.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue && textField.getText().isEmpty() || !newValue && textField.getText().equals(Double.valueOf("0.00"))) {
-                shakeTextField(textField);
-                textField.getStyleClass().add("required-field");
-            } else {
-                textField.getStyleClass().remove("required-field");
-            }
-        });
-    }
-
-    //TextFieldAnimation
-    private void shakeTextField(TextField textField) {
-        Timeline timeline = new Timeline();
-        double originalX = textField.getTranslateX();
-
-        // Add keyframes for the animation
-        KeyFrame keyFrame1 = new KeyFrame(Duration.millis(0), new KeyValue(textField.translateXProperty(), 0));
-        KeyFrame keyFrame2 = new KeyFrame(Duration.millis(100), new KeyValue(textField.translateXProperty(), -5));
-        KeyFrame keyFrame3 = new KeyFrame(Duration.millis(200), new KeyValue(textField.translateXProperty(), 5));
-        KeyFrame keyFrame4 = new KeyFrame(Duration.millis(300), new KeyValue(textField.translateXProperty(), -5));
-        KeyFrame keyFrame5 = new KeyFrame(Duration.millis(400), new KeyValue(textField.translateXProperty(), 5));
-        KeyFrame keyFrame6 = new KeyFrame(Duration.millis(500), new KeyValue(textField.translateXProperty(), -5));
-        KeyFrame keyFrame7 = new KeyFrame(Duration.millis(600), new KeyValue(textField.translateXProperty(), 5));
-        KeyFrame keyFrame8 = new KeyFrame(Duration.millis(700), new KeyValue(textField.translateXProperty(), originalX));
-
-        // Add keyframes to the timeline
-        timeline.getKeyFrames().addAll(
-                keyFrame1, keyFrame2, keyFrame3, keyFrame4, keyFrame5, keyFrame6, keyFrame7, keyFrame8
-        );
-
-        // Play the animation
-        timeline.play();
+        txtFieldAnimation.addRequiredFieldListener(txtField13);
     }
 
     public void removeRequired() {
-        txtField13.getStyleClass().remove("required-field");
+        txtFieldAnimation.removeShakeAnimation(txtField13, txtFieldAnimation.shakeTextField(txtField13), "required-field");
 
     }
 

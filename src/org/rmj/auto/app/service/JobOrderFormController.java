@@ -258,6 +258,24 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
                 lblVSPorIntake.setText("Intake No.");
                 lblSEorSA.setText("Service Advisor");
             }
+            
+            oTrans.setFormType(pbisJobOrderSales);
+            if(oTrans.loadState()){
+                try {
+                    pnEditMode = oTrans.getEditMode();
+                    loadJobOrderFields();
+                    loadTableLabor();
+                    loadTableParts();
+                    initButton(pnEditMode);
+                } catch (SQLException ex) {
+                    Logger.getLogger(JobOrderFormController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }else {
+                if(oTrans.getMessage().isEmpty()){
+                }else{
+                    ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                }
+            }
         });
 
         initCapitalizationFields();

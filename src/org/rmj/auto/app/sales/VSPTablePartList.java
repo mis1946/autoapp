@@ -5,10 +5,12 @@
 package org.rmj.auto.app.sales;
 
 import javafx.beans.property.SimpleStringProperty;
+import javafx.scene.control.CheckBox;
 
 public class VSPTablePartList {
 
     private SimpleStringProperty tblPartsRow;
+    private CheckBox select;
     private SimpleStringProperty tblindex01_Part;
     private SimpleStringProperty tblindex03_Part;
     private SimpleStringProperty tblindex14_Part;
@@ -33,6 +35,7 @@ public class VSPTablePartList {
             String tblindex17_Part
     ) {
         this.tblPartsRow = new SimpleStringProperty(tblPartsRow);
+        this.select = new CheckBox();
         this.tblindex01_Part = new SimpleStringProperty(tblindex01_Part);
         this.tblindex03_Part = new SimpleStringProperty(tblindex03_Part);
         this.tblindex14_Part = new SimpleStringProperty(tblindex14_Part);
@@ -51,6 +54,14 @@ public class VSPTablePartList {
 
     public void setTblPartsRow(String tblPartsRow) {
         this.tblPartsRow.set(tblPartsRow);
+    }
+
+    public CheckBox getSelect() {
+        return select;
+    }
+
+    public void setSelect(CheckBox select) {
+        this.select = select;
     }
 
     public String getTblindex01_Part() {

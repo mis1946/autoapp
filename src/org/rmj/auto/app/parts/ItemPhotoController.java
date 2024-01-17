@@ -8,15 +8,16 @@ package org.rmj.auto.app.parts;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import java.net.URL;
 import java.util.ResourceBundle;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import org.rmj.appdriver.GRider;
 import org.rmj.appdriver.agentfx.CommonUtils;
@@ -24,13 +25,13 @@ import org.rmj.appdriver.agentfx.CommonUtils;
 /**
  * FXML Controller class
  *
- * @author Arsiela
- * Date Created: 06-28-2023
+ * @author Arsiela Date Created: 06-28-2023
  */
 public class ItemPhotoController implements Initializable {
+
     private GRider oApp;
     //private  oTrans;
-    
+
     public int tbl_row = 0;
     private String psCode;
     private String btncode;
@@ -41,7 +42,7 @@ public class ItemPhotoController implements Initializable {
     private final String pxeModuleName = "Item Photo";
     double total = 0;
     private int imgRow = -1;
-    
+
     @FXML
     private Button btnExit;
     @FXML
@@ -59,6 +60,15 @@ public class ItemPhotoController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+
+        btnExit.addEventFilter(KeyEvent.KEY_RELEASED, new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                if (event.getCode() == KeyCode.ESCAPE) {
+                    CommonUtils.closeStage(btnExit);
+                }
+            }
+        });
         loadPhoto();
         btnExit.setOnAction(this::cmdButton_Click);
     }
@@ -70,11 +80,10 @@ public class ItemPhotoController implements Initializable {
 //    public void setPhotoObject( foValue) {
 //        oTrans = foValue;
 //    }
-
     public void setPicName(String fsValue) {
         validPhoto = fsValue;
     }
-    
+
     public void setPicUrl(String fsValue) {
         validPhotoURL = fsValue;
     }

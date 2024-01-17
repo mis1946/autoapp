@@ -98,7 +98,7 @@ public class ItemEntryModelController implements Initializable, ScreenInterface 
         btnAdd.setOnAction(this::cmdButton_Click);
         btnFilterMake.setOnAction(this::cmdButton_Click);
         btnFilterModel.setOnAction(this::cmdButton_Click);
-
+        setUpperCaseTextField();
         CheckNoYear();
         loadItemModelTable();
         loadItemModelYearTable();
@@ -127,6 +127,19 @@ public class ItemEntryModelController implements Initializable, ScreenInterface 
 
     public void setObject(ItemEntry foValue) {
         oTrans = foValue;
+    }
+
+    private void setUpperCaseTextField() {
+        setCapsLockBehavior(txtSeeks01);
+        setCapsLockBehavior(txtSeeks02);
+    }
+
+    private static void setCapsLockBehavior(TextField textField) {
+        textField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (textField.getText() != null) {
+                textField.setText(newValue.toUpperCase());
+            }
+        });
     }
 
     private void txtField_KeyPressed(KeyEvent event) {

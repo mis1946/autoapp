@@ -12,6 +12,7 @@ import javafx.scene.control.CheckBox;
 public class VSPTableLaborList {
 
     private SimpleStringProperty tblLaborRow;
+    private CheckBox select;
     private SimpleStringProperty tblindex01_Labor;
     private SimpleStringProperty tblindex03_Labor;
     private SimpleStringProperty tblindex07_Labor;
@@ -39,6 +40,7 @@ public class VSPTableLaborList {
             boolean tblindex08
     ) {
         this.tblLaborRow = new SimpleStringProperty(tblLaborRow);
+        this.select = new CheckBox();
         this.tblindex01_Labor = new SimpleStringProperty(tblindex01_Labor);
         this.tblindex03_Labor = new SimpleStringProperty(tblindex03_Labor);
         this.tblindex07_Labor = new SimpleStringProperty(tblindex07_Labor);
@@ -61,6 +63,14 @@ public class VSPTableLaborList {
 
     public void setTblLaborRow(String tblLaborRow) {
         this.tblLaborRow.set(tblLaborRow);
+    }
+
+    public CheckBox getSelect() {
+        return select;
+    }
+
+    public void setSelect(CheckBox select) {
+        this.select = select;
     }
 
     public String getTblindex01_Labor() {

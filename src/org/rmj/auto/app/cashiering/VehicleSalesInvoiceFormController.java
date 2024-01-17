@@ -17,9 +17,6 @@ import java.util.function.UnaryOperator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyBooleanPropertyBase;
 import javafx.beans.value.ChangeListener;
@@ -187,16 +184,14 @@ public class VehicleSalesInvoiceFormController implements Initializable, ScreenI
         cmbType032.setItems(cCustomerType); //Customer Type
 
         txtField06.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
-                if (newValue.isEmpty()) {
-                    //clearFields();
-                    clearClass();
-                    //clearClassFields();
-                    loadFields();
-                }
+            if (newValue.isEmpty()) {
+                //clearFields();
+                clearClass();
+                //clearClassFields();
+                loadFields();
             }
         });
-        
+
         cmbType032.setOnAction(event -> {
             if (pnEditMode == EditMode.ADDNEW) {
                 clearClass();
@@ -217,20 +212,18 @@ public class VehicleSalesInvoiceFormController implements Initializable, ScreenI
         txtField03.setDayCellFactory(callB);
         pnEditMode = EditMode.UNKNOWN;
         initButton(pnEditMode);
-        
         Platform.runLater(() -> {
-            if(oTrans.loadState()){
+            if (oTrans.loadState()) {
                 pnEditMode = oTrans.getEditMode();
                 loadFields();
                 initButton(pnEditMode);
-            }else {
-                if(oTrans.getMessage().isEmpty()){
-                }else{
+            } else {
+                if (oTrans.getMessage().isEmpty()) {
+                } else {
                     ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
                 }
             }
         });
-        
     }
 
     private void initButton_Cick() {
@@ -473,15 +466,6 @@ public class VehicleSalesInvoiceFormController implements Initializable, ScreenI
 
     private void loadFields() {
         try {
-            // Get the current event handler
-            EventHandler<ActionEvent> eventHandler = cmbType032.getOnAction();
-            // Remove the event handler to prevent it from triggering
-            cmbType032.setOnAction(null);
-            // Set the value without triggering the event
-            cmbType032.getSelectionModel().select(Integer.parseInt(oTrans.getMaster(32).toString())); // Customer Type
-            // Add the event handler back
-            cmbType032.setOnAction(eventHandler);
-            
             txtField03.setValue(strToDate(CommonUtils.xsDateShort((Date) oTrans.getMaster(3))));//dTransact
             txtField05.setText((String) oTrans.getMaster(5));//sReferNox
             txtField06.setText((String) oTrans.getMaster(6)); //sSourceNo
@@ -497,7 +481,8 @@ public class VehicleSalesInvoiceFormController implements Initializable, ScreenI
             String sDescrpt = ((String) oTrans.getMaster(18)).replaceAll(sRegex, " ");
             textArea18.setText(sDescrpt); //sDescript
             txtField23.setText(sColor); //sColorDsc
-            
+            cmbType032.getSelectionModel().select(Integer.parseInt(oTrans.getMaster(32).toString())); //Customer Type
+
             textArea34.setText((String) oTrans.getMaster(34)); //Remarks
             txtField33.setText((String) oTrans.getMaster(33)); //Tin
             txtField36.setText((String) oTrans.getMaster(36)); //sCoCltNmx

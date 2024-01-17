@@ -16,6 +16,7 @@ import java.util.Date;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanPropertyBase;
 import javafx.beans.value.ChangeListener;
@@ -710,6 +711,21 @@ public class InquiryFormController implements Initializable, ScreenInterface {
                 selectedIndex = tabPaneMain.getSelectionModel().getSelectedIndex();
                 initBtnProcess(oTransProcess.getEditMode());
                 initButton(pnEditMode);
+            }
+        });
+        
+        Platform.runLater(() -> {
+            if(oTrans.loadState()){
+                pnEditMode = oTrans.getEditMode();
+                loadCustomerInquiry();
+                loadTargetVehicle();
+                loadPromosOfferred();
+                initButton(pnEditMode);
+            }else {
+                if(oTrans.getMessage().isEmpty()){
+                }else{
+                    ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                }
             }
         });
 

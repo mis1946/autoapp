@@ -224,6 +224,19 @@ public class CustomerVehicleInfoFormController implements Initializable, ScreenI
             } else {
                 pbisVhclSales = false;
             }
+            
+            oTransVehicle.setFormType(pbisVhclSales);
+            if(oTransVehicle.loadState()){
+                pnEditMode = oTransVehicle.getEditMode();
+                loadClientVehicleInfo();
+                loadVehicleHtryTable();
+                initVhclInfoButton(pnEditMode);
+            }else {
+                if(oTransVehicle.getMessage().isEmpty()){
+                }else{
+                    ShowMessageFX.Warning(getStage(), oTransVehicle.getMessage(), "Warning", null);
+                }
+            }
         });
 
         oTransVehicle = new ClientVehicleInfo(oApp, oApp.getBranchCode(), false);

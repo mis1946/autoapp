@@ -19,6 +19,7 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
+import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyBooleanPropertyBase;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -394,14 +395,30 @@ public class VSPFormController implements Initializable, ScreenInterface {
         tblViewParts.setOnMouseClicked(this::tblParts_Clicked);
         date04.setOnAction(this::getDate);
         date04.setDayCellFactory(DateFormatCell);
-        pnEditMode = EditMode.UNKNOWN;
-        initButton(pnEditMode);
+        
         if (!comboBox24.getSelectionModel().isSelected(0)) {
             comboBox25.getItems().remove("0");
         } else {
             comboBox25.getItems().add("0");
         }
-
+        
+        pnEditMode = EditMode.UNKNOWN;
+        initButton(pnEditMode);
+        
+        Platform.runLater(() -> {
+            if(oTrans.loadState()){
+                pnEditMode = oTrans.getEditMode();
+                loadVSPField();
+                loadTableLabor();
+                loadTableParts();
+                initButton(pnEditMode);
+            }else {
+                if(oTrans.getMessage().isEmpty()){
+                }else{
+                    ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                }
+            }
+        });
     }
 
     private Stage getStage() {
@@ -1468,7 +1485,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
                         }
                         break;
                     case "txtField04_Finance":
-                        if (oTrans.searchBankApplication()) {
+                        if (oTrans.searchBankApplication(txtField04_Finance.getText())) {
                             txtField04_Finance.setText(oTrans.getVSPFinance(4).toString());
                         } else {
                             ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);

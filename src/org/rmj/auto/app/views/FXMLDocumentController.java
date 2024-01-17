@@ -10,8 +10,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -51,6 +53,7 @@ import org.rmj.appdriver.SQLUtil;
 import org.rmj.appdriver.agentfx.CommonUtils;
 import org.rmj.appdriver.agentfx.ShowMessageFX;
 import org.rmj.appdriver.agentfx.callback.IFXML;
+import org.rmj.appdriver.constants.EditMode;
 import org.rmj.auto.app.bank.BankEntryFormController;
 import org.rmj.auto.app.cashiering.InvoiceFormController;
 import org.rmj.auto.app.cashiering.VehicleSalesInvoiceFormController;
@@ -73,6 +76,8 @@ import org.rmj.auto.app.sales.VehicleEntryFormController;
 import org.rmj.auto.app.sales.VehicleSalesApprovalController;
 import org.rmj.auto.app.service.JobOrderFormController;
 import org.rmj.auto.app.views.ActivityFormController;
+import org.rmj.auto.json.FormStateManager;
+import org.rmj.auto.json.TabsStateManager;
 
 /**
  *
@@ -91,7 +96,7 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
     private double xOffset = 0;
     private double yOffset = 0;
     FXMLMenuParameterForm param = new FXMLMenuParameterForm();
-
+    List<String> tabName = new ArrayList<>();
     @FXML
     private Label AppUser;
     @FXML
@@ -182,6 +187,8 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
     private MenuItem mnuSalesJobOrder;
     @FXML
     private MenuItem mnuSalesPartsRequest;
+    @FXML
+    private MenuItem mnuServiceJobOrder;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -279,7 +286,106 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
         tabpane.setOnDragDone(event -> {
             event.consume();
         });
-
+        
+        List<String> tabs = new ArrayList<>();
+        tabs = TabsStateManager.loadCurrentTab();
+        if(tabs.size() > 0){
+            if (ShowMessageFX.YesNo(null, "Automotive Application", "You want to restore unclosed tabs?") == true) {
+                for (String tabName : tabs) {
+                    triggerMenu(tabName);
+                }
+            } else {
+                for(String tabName : tabs){
+                    TabsStateManager.closeTab(tabName);
+                }
+                TabsStateManager.saveCurrentTab(new ArrayList<>());
+                return;
+            } 
+        }
+    }
+    
+    private void triggerMenu(String sFormName){
+        
+        switch(sFormName){
+            /*DIRECTORY*/
+            case "Activity":
+                mnuActivity.fire();
+                break;
+//            case "Activity Approval":
+//                mnuActivityApproval.fire();
+//                break;
+            case "Customer":
+                mnuCustomerInfo.fire();
+                break;
+            case "Customer Vehicle Information":
+                mnuCustVhclInfo.fire();
+                break;
+            case "Vehicle Sales Information":
+                mnuVhclEntry.fire();
+                break;
+//            case "Supplier":
+//                break;
+            /*SALES*/
+//            case "Sales Agent":
+//                mnuSalesAgent.fire();
+//                break;
+            case "Vehicle Description":
+                mnuVhclDesc.fire();
+                break;
+//            case "Unit Receiving":
+//                
+//                break;
+            case "Inquiry":
+                mnuInquiry.fire();
+                break;
+//            case "Vehicle Reservation Approval":
+//                mnuVhclRsrvApp.fire();
+//                break;
+            case "Unit Delivery Receipt":
+                mnuUnitDeliveryReceipt.fire();
+                break;
+            case "Vehicle Sales Proposal":
+                mnuVSPEntry.fire();
+                break;
+            case "Sales Job Order Information":
+                mnuSalesJobOrder.fire();
+                break;
+            /*ACCOUNTING*/
+            case "Bank":
+                mnuBank.fire();
+                break;
+            /*CASHIERING*/
+//            case "Acknowledgement Receipt":
+//                mnuAckReceipt.fire();
+//                break;
+//            case "Billing Statement":
+//                mnuBillingStmt.fire();
+//                break;
+//            case "Collection Receipt":
+//                mnuColReceipt.fire();
+//                break;
+//            case "Official Receipt":
+//                mnuOfcReceipt.fire();
+//                break;
+//            case "Parts Sales Invoice":
+//                mnuPartsSalesInv.fire();
+//                break;    
+            case "Vehicle Sales Invoice":
+                mnuVhclSalesInv.fire();
+                break;
+            /*PARTS*/
+            case "Item Information":
+                mnuItemEntry.fire();
+                break;
+//            case "Sales Parts Request":
+//                mnuSalesPartsRequest.fire();
+//                break;
+            /*SERVICE*/
+            case "Service Job Order Information":
+                mnuServiceJobOrder.fire();
+                break;
+        }
+        
     }
 
     private int findTabIndex(String tabText) {
@@ -344,7 +450,10 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
         //Add new tab;
         Tab newTab = new Tab(SetTabTitle(fsFormName));
         newTab.setStyle("-fx-font-weight: bold; -fx-pref-width: 180; -fx-font-size: 10.5px; -fx-font-family: arial;");
-
+        //tabIds.add(fsFormName);
+        tabName.add(SetTabTitle(fsFormName));
+        // Save the list of tab IDs to the JSON file
+        TabsStateManager.saveCurrentTab(tabName);
         try {
             Node content = fxmlLoader.load();
             newTab.setContent(content);
@@ -352,13 +461,31 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
             tabpane.getSelectionModel().select(newTab);
             //newTab.setOnClosed(event -> {
             newTab.setOnCloseRequest(event -> {
-
                 if (ShowMessageFX.YesNo(null, "Close Tab", "Are you sure, do you want to close tab?") == true) {
                     Tabclose();
+                    //tabIds.remove(newTab.getText());
+                    tabName.remove(newTab.getText());
+                    // Save the list of tab IDs to the JSON file
+                    TabsStateManager.saveCurrentTab(tabName);
+                    TabsStateManager.closeTab(newTab.getText());
                 } else {
                     // Cancel the close request
                     event.consume();
                 }
+
+            });
+            
+            newTab.setOnSelectionChanged(event -> {
+                ObservableList<Tab> tabs = tabpane.getTabs();
+                for (Tab tab : tabs) {
+                     if (tab.getText().equals(newTab.getText())) {
+                            tabName.remove(newTab.getText());
+                            tabName.add(newTab.getText());
+                            // Save the list of tab IDs to the JSON file
+                            TabsStateManager.saveCurrentTab(tabName);
+                        break;
+                     }
+                }  
 
             });
             return (TabPane) tabpane;
@@ -517,7 +644,6 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
                 return null;
         }
     }
-
     //Load Main Screen if no tab remain
     public void Tabclose() {
         int tabsize = tabpane.getTabs().size();
@@ -934,6 +1060,12 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
     public void logout(Stage stage) {
 
         if (ShowMessageFX.YesNo(null, "Exit", "Are you sure, do you want to close?") == true) {
+            if(tabName.size() > 0){
+                for(String tabsName : tabName){
+                    TabsStateManager.closeTab(tabsName);
+                }
+                TabsStateManager.saveCurrentTab(new ArrayList<>());
+            }
             System.out.println("You successfully logged out!");
             stage.close();
         }

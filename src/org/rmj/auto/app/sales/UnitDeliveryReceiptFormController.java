@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyBooleanPropertyBase;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -171,6 +172,19 @@ public class UnitDeliveryReceiptFormController implements Initializable, ScreenI
         comboBox32.setItems(cFormItems);
         pnEditMode = EditMode.UNKNOWN;
         initButton(pnEditMode);
+        
+        Platform.runLater(() -> {
+            if(oTrans.loadState()){
+                pnEditMode = oTrans.getEditMode();
+                loadCustomerField();
+                initButton(pnEditMode);
+            }else {
+                if(oTrans.getMessage().isEmpty()){
+                }else{
+                    ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                }
+            }
+        });
 
     }
 

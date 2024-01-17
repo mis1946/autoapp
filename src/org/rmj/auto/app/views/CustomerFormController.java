@@ -19,6 +19,7 @@ import java.util.function.UnaryOperator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
+import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyBooleanPropertyBase;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -333,21 +334,25 @@ public class CustomerFormController implements Initializable, ScreenInterface {
         oTransAddress = new ClientAddress(oApp, oApp.getBranchCode(), false);
         oTransAddress.setCallback(oListener);
         oTransAddress.setWithUI(true);
+        oTrans.setAddressObject(oTransAddress);
         initAddress();
 
         oTransMobile = new ClientMobile(oApp, oApp.getBranchCode(), false);
         oTransMobile.setCallback(oListener);
         oTransMobile.setWithUI(true);
+        oTrans.setMobileObject(oTransMobile);
         initContact();
 
         oTransEmail = new ClientEMail(oApp, oApp.getBranchCode(), false);
         oTransEmail.setCallback(oListener);
         oTransEmail.setWithUI(true);
+        oTrans.setEmailObject(oTransEmail);
         initEmail();
 
         oTransSocMed = new ClientSocMed(oApp, oApp.getBranchCode(), false);
         oTransSocMed.setCallback(oListener);
         oTransSocMed.setWithUI(true);
+        oTrans.setSocMedObject(oTransSocMed);
         initSocialMedia();
 
         setCapsLockBehavior(txtField01);
@@ -567,26 +572,30 @@ public class CustomerFormController implements Initializable, ScreenInterface {
         });
 
         txtField12.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
-                if (newValue.isEmpty()) {
-                    try {
-                        oTrans.setMaster(12, "");
-                        oTrans.setMaster(25, "");
-                    } catch (SQLException ex) {
-                        Logger.getLogger(CustomerFormController.class.getName()).log(Level.SEVERE, null, ex);
+            if(newValue != null){
+                if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
+                    if (newValue.isEmpty()) {
+                        try {
+                            oTrans.setMaster(12, "");
+                            oTrans.setMaster(25, "");
+                        } catch (SQLException ex) {
+                            Logger.getLogger(CustomerFormController.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                     }
                 }
             }
         });
 
         txtField25.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
-                if (newValue.isEmpty()) {
-                    try {
-                        oTrans.setMaster(27, "");
-                        oTrans.setMaster(28, "");
-                    } catch (SQLException ex) {
-                        Logger.getLogger(CustomerFormController.class.getName()).log(Level.SEVERE, null, ex);
+            if(newValue != null){
+                if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
+                    if (newValue.isEmpty()) {
+                        try {
+                            oTrans.setMaster(27, "");
+                            oTrans.setMaster(28, "");
+                        } catch (SQLException ex) {
+                            Logger.getLogger(CustomerFormController.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                     }
                 }
             }
@@ -594,12 +603,14 @@ public class CustomerFormController implements Initializable, ScreenInterface {
 
         txtField10.textProperty().addListener((observable, oldValue, newValue) -> {
             if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
-                if (newValue.isEmpty()) {
-                    try {
-                        oTrans.setMaster(10, "");
-                        oTrans.setMaster(24, "");
-                    } catch (SQLException ex) {
-                        Logger.getLogger(CustomerFormController.class.getName()).log(Level.SEVERE, null, ex);
+                if(newValue != null){
+                    if (newValue.isEmpty()) {
+                        try {
+                            oTrans.setMaster(10, "");
+                            oTrans.setMaster(24, "");
+                        } catch (SQLException ex) {
+                            Logger.getLogger(CustomerFormController.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                     }
                 }
             }
@@ -614,7 +625,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                 //clearContactInfo();
             }
         });
-
+       
         /*Clear Fields*/
         clearFields();
         pnEditMode = EditMode.UNKNOWN;
@@ -622,12 +633,31 @@ public class CustomerFormController implements Initializable, ScreenInterface {
 
         /*CUSTOMER VEHICLE INFORMATION*/
         custVehicleInfo();
+        
+        Platform.runLater(() -> {
+            if(oTrans.loadState()){
+                pnEditMode = oTrans.getEditMode();
+                loadClientMaster();
+                loadAddress();
+                loadContact();
+                loadEmail();
+                loadSocialMedia();
+                loadVehicleInfoTable();
+                initButton(pnEditMode);
+            } else {
+                if(oTrans.getMessage().isEmpty()){
+                }else{
+                    ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                }
+            }
+        });
     }
 
     private void custVehicleInfo() {
         oTransVehicle = new ClientVehicleInfo(oApp, oApp.getBranchCode(), false);
         oTransVehicle.setCallback(oListener);
         oTransVehicle.setWithUI(true);
+        oTrans.setVhclInfoObject(oTransVehicle);
         initVehicleInfo();
         initCoVehicleInfo();
 //        initVehicleHtry();
@@ -930,6 +960,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
 //                            } else {
                             loadAddressForm(oTransAddress.getItemCount(), true);
                             loadAddress();
+                            oTrans.saveState(oTrans.toJSONString());
 
 //                                //Validate Primary Before Inserting
 //                                if (!validateContactInfo()) {
@@ -953,6 +984,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
 
                             loadMobileForm(oTransMobile.getItemCount(), true);
                             loadContact();
+                            oTrans.saveState(oTrans.toJSONString());
                             //oTransMobile.addMobile();
 
 //                            if (pnRow >= 1) {
@@ -979,6 +1011,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
 
                             loadEmailForm(oTransEmail.getItemCount(), true);
                             loadEmail();
+                            oTrans.saveState(oTrans.toJSONString());
                             //oTransEmail.addEmail();
 
 //                            if (pnRow >= 1) {
@@ -1003,6 +1036,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                         case 3:
                             loadSocialMediaForm(oTransSocMed.getItemCount(), true);
                             loadSocialMedia();
+                            oTrans.saveState(oTrans.toJSONString());
                             //oTransSocMed.addSocMed();
 //                            if (pnRow >= 1) {
 //                                pnRow = 0;
@@ -1095,6 +1129,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                             oTransAddress.removeAddress(pnRow);
                             pnRow = 0;
                             loadAddress();
+                            oTrans.saveState(oTrans.toJSONString());
                             /*Clear Fields*/
 //                            clearAddress();
                             break;
@@ -1106,6 +1141,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                             oTransMobile.removeMobile(pnRow);
                             pnRow = 0;
                             loadContact();
+                            oTrans.saveState(oTrans.toJSONString());
                             /*Clear Fields*/
 //                            clearContact();
 
@@ -1118,6 +1154,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                             oTransEmail.removeEmail(pnRow);
                             pnRow = 0;
                             loadEmail();
+                            oTrans.saveState(oTrans.toJSONString());
                             /*Clear Fields*/
 //                            clearEmail();
                             break;
@@ -1129,6 +1166,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                             oTransSocMed.removeSocMed(pnRow);
                             pnRow = 0;
                             loadSocialMedia();
+                            oTrans.saveState(oTrans.toJSONString());
                             /*Clear Fields*/
 //                            clearSocMed();
                             break;

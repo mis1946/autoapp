@@ -23,6 +23,8 @@ public class VSPTableLaborList {
     private SimpleStringProperty tblindex04_Labor_Under;
     private SimpleStringProperty tblindex04_Labor_Tint;
     private SimpleStringProperty tblindex11_Labor;
+    private SimpleStringProperty tblindex14_Labor;
+    private SimpleStringProperty tblindex12_Labor;
     private CheckBox addOrNot;
     private SimpleBooleanProperty tblindex08;
 
@@ -37,6 +39,8 @@ public class VSPTableLaborList {
             String tblindex04_Labor_Under,
             String tblindex04_Labor_Tint,
             String tblindex11_Labor,
+            String tblindex14_Labor,
+            String tblindex12_Labor,
             boolean tblindex08
     ) {
         this.tblLaborRow = new SimpleStringProperty(tblLaborRow);
@@ -51,6 +55,8 @@ public class VSPTableLaborList {
         this.tblindex04_Labor_Under = new SimpleStringProperty(tblindex04_Labor_Under);
         this.tblindex04_Labor_Tint = new SimpleStringProperty(tblindex04_Labor_Tint);
         this.tblindex11_Labor = new SimpleStringProperty(tblindex11_Labor);
+        this.tblindex14_Labor = new SimpleStringProperty(tblindex14_Labor);
+        this.tblindex12_Labor = new SimpleStringProperty(tblindex12_Labor);
         this.addOrNot = new CheckBox();
         this.tblindex08 = new SimpleBooleanProperty(tblindex08);
         this.addOrNot.setSelected(tblindex08);
@@ -152,6 +158,24 @@ public class VSPTableLaborList {
 
     public void setTblindex11_Labor(String tblindex11_Labor) {
         this.tblindex11_Labor.set(tblindex11_Labor);
+
+    }
+
+    public String getTblindex14_Labor() {
+        return tblindex14_Labor.get();
+    }
+
+    public void setTblindex14_Labor(String tblindex14_Labor) {
+        this.tblindex14_Labor.set(tblindex14_Labor);
+
+    }
+
+    public String getTblindex12_Labor() {
+        return tblindex12_Labor.get();
+    }
+
+    public void setTblindex12_Labor(String tblindex12_Labor) {
+        this.tblindex12_Labor.set(tblindex12_Labor);
 
     }
 

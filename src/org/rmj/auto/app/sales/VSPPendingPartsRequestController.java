@@ -107,6 +107,7 @@ public class VSPPendingPartsRequestController implements Initializable, ScreenIn
         oTrans = new VehicleSalesProposalMaster(oApp, oApp.getBranchCode(), true); //Initialize ClientMaster
         oTrans.setCallback(oListener);
         oTrans.setWithUI(true);
+        oTrans.setFormType(false);
 
         fromDate.setOnAction(event -> loadTable());
         toDate.setOnAction(event -> loadTable());
@@ -146,7 +147,7 @@ public class VSPPendingPartsRequestController implements Initializable, ScreenIn
             try {
                 loadPartsAdditionalDialog(pnRow);
             } catch (IOException ex) {
-                Logger.getLogger(JobOrderFormController.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(VSPPendingPartsRequestController.class.getName()).log(Level.SEVERE, null, ex);
             }
 
         }

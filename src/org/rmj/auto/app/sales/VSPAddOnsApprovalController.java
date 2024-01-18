@@ -139,6 +139,10 @@ public class VSPAddOnsApprovalController implements Initializable, ScreenInterfa
     private TextField txtField13;
     @FXML
     private TextField txtField14;
+    @FXML
+    private TableColumn<VSPTableLaborList, String> tblindex14_Labor;
+    @FXML
+    private TableColumn<VSPTablePartList, String> tblindex20_Part;
 
     /**
      * Initializes the controller class.
@@ -163,7 +167,7 @@ public class VSPAddOnsApprovalController implements Initializable, ScreenInterfa
 
         //Initialize buttons
         initCmdButton();
-
+        oTrans.setFormType(false);
         tblViewLabor.widthProperty().addListener((ObservableValue<? extends Number> source, Number oldWidth, Number newWidth) -> {
             TableHeaderRow header = (TableHeaderRow) tblViewLabor.lookup("TableHeaderRow");
             header.reorderingProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
@@ -189,93 +193,121 @@ public class VSPAddOnsApprovalController implements Initializable, ScreenInterfa
     }
 
     private void cmdButton_Click(ActionEvent event) {
-        String lsButton = ((Button) event.getSource()).getId();
-        switch (lsButton) {
-            case "btnBrowse":
-                try {
-                if (oTrans.searchRecord()) {
-                    loadVSPApprovalField();
-                    loadTableLabor();
-                    loadTableParts();
-                    pnEditMode = EditMode.READY;
-                    initButton(pnEditMode);
-                } else {
-                    ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
-                    clearFields();
-                    laborData.clear();
-                    partData.clear();
-                    pnEditMode = EditMode.UNKNOWN;
-
-                }
-            } catch (SQLException ex) {
-                Logger.getLogger(VSPAddOnsApprovalController.class
-                        .getName()).log(Level.SEVERE, null, ex);
-            }
-            break;
-            case "btnApprove":
-                ObservableList<VSPTableLaborList> selectedLaborItems = FXCollections.observableArrayList();
-                ObservableList<VSPTablePartList> selectedPartsItems = FXCollections.observableArrayList();
-                for (VSPTableLaborList itemLabor : tblViewLabor.getItems()) {
-                    if (itemLabor.getSelect().isSelected()) {
-                        selectedLaborItems.add(itemLabor);
-                    }
-                }
-                for (VSPTablePartList itemParts : tblViewParts.getItems()) {
-                    if (itemParts.getSelect().isSelected()) {
-                        selectedPartsItems.add(itemParts);
-                    }
-                }
-                if (selectedLaborItems.isEmpty() && selectedPartsItems.isEmpty()) {
-                    ShowMessageFX.Information(null, pxeModuleName, "No items selected to approve.");
-                } else {
-                    int i = 0;
-                    if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure you want to approve?")) {
-                        for (VSPTableLaborList itemLabor : selectedLaborItems) {
-                            String fsLaborRow = itemLabor.getTblLaborRow();
-                            int fsRowInt = Integer.parseInt(fsLaborRow);// Assuming there is a method to retrieve the transaction number
-                            boolean approvedLabor = oTrans.vspAddOnsApproval(fsRowInt, true); // Handle SQL exception
-                            if (approvedLabor) {
-                                i = i + 1;
-                            } else {
-                                ShowMessageFX.Error(null, pxeModuleName, "Failed to approve labor.");
-                            }
-                        }
-                        // Approve selected parts items
-                        for (VSPTablePartList itemParts : selectedPartsItems) {
-                            // Assuming there is a method to retrieve the transaction number for parts
-                            String fsPartsRow = itemParts.getTblPartsRow();
-                            int fsRowIntParts = Integer.parseInt(fsPartsRow);
-                            boolean approvedParts = oTrans.vspAddOnsApproval(fsRowIntParts, false); // Handle SQL exception
-                            if (approvedParts) {
-                                i = i + 1;
-                            } else {
-                                ShowMessageFX.Error(null, pxeModuleName, "Failed to approve parts.");
-                            }
-                        }
+        try {
+            String lsButton = ((Button) event.getSource()).getId();
+            switch (lsButton) {
+                case "btnBrowse":
+                    try {
+                    if (oTrans.searchRecord()) {
+                        loadVSPApprovalField();
                         loadTableLabor();
-                        loadTableParts(); // Assuming there is a method to load parts table
-                        ShowMessageFX.Information(null, pxeModuleName, i + " item(s) approved successfully.");
-                        tblViewLabor.getItems().removeAll(selectedLaborItems);
+                        loadTableParts();
+                        pnEditMode = EditMode.READY;
+                        initButton(pnEditMode);
+                    } else {
+                        ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                        clearFields();
+                        laborData.clear();
+                        partData.clear();
+                        pnEditMode = EditMode.UNKNOWN;
+
+                    }
+                } catch (SQLException ex) {
+                    Logger.getLogger(VSPAddOnsApprovalController.class
+                            .getName()).log(Level.SEVERE, null, ex);
+                }
+                break;
+                case "btnApprove":
+                    ObservableList<VSPTableLaborList> selectedLaborItems = FXCollections.observableArrayList();
+                    ObservableList<VSPTablePartList> selectedPartsItems = FXCollections.observableArrayList();
+                    for (VSPTableLaborList itemLabor : tblViewLabor.getItems()) {
+                        if (itemLabor.getSelect().isSelected()) {
+                            selectedLaborItems.add(itemLabor);
+                        }
+                    }
+                    for (VSPTablePartList itemParts : tblViewParts.getItems()) {
+                        if (itemParts.getSelect().isSelected()) {
+                            selectedPartsItems.add(itemParts);
+                        }
+                    }
+                    if (selectedLaborItems.isEmpty() && selectedPartsItems.isEmpty()) {
+                        ShowMessageFX.Information(null, pxeModuleName, "No items selected to approve.");
+                    } else {
+                        int i = 0;
+                        if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure you want to approve?")) {
+                            for (VSPTableLaborList itemLabor : selectedLaborItems) {
+                                String fsLaborRow = itemLabor.getTblLaborRow();
+                                int fsRowInt = Integer.parseInt(fsLaborRow);// Assuming there is a method to retrieve the transaction number
+                                boolean approvedLabor = oTrans.vspAddOnsApproval(fsRowInt, true); // Handle SQL exception
+                                String fsLaborApprovedBy = itemLabor.getTblindex12_Labor();
+                                if (!fsLaborApprovedBy.isEmpty()) {
+                                    ShowMessageFX.Error(null, pxeModuleName, "Failed to approve labor, the item(s) already approved.");
+                                    loadTableLabor();
+                                    selectAllLabor.setSelected(false);
+                                    return;
+                                } else {
+                                    if (approvedLabor) {
+                                        i = i + 1;
+                                    } else {
+                                        ShowMessageFX.Error(null, pxeModuleName, "Failed to approve labor.");
+                                        return;
+                                    }
+
+                                }
+                            }
+                            for (VSPTablePartList itemParts : selectedPartsItems) {
+                                String fsPartsRow = itemParts.getTblPartsRow();
+                                int fsRowIntParts = Integer.parseInt(fsPartsRow);
+                                boolean approvedParts = oTrans.vspAddOnsApproval(fsRowIntParts, false); // Handle SQL exception
+                                String fsPartsApprovedBy = itemParts.getTblindex18_Part();
+                                if (!fsPartsApprovedBy.isEmpty()) {
+                                    ShowMessageFX.Error(null, pxeModuleName, "Failed to approve parts, the item(s) already approved.");
+                                    loadTableParts();
+                                    selectAllParts.setSelected(false);
+                                    return;
+                                } else {
+                                    if (approvedParts) {
+                                        i = i + 1;
+                                    } else {
+                                        ShowMessageFX.Error(null, pxeModuleName, "Failed to approve parts.");
+                                        return;
+                                    }
+                                }
+                            }
+                            loadTableLabor();
+                            loadTableParts();
+                            ShowMessageFX.Information(null, pxeModuleName, i + " item(s) approved successfully.");
+                            selectAllParts.setSelected(false);
+                            selectAllLabor.setSelected(false);
+                            tblViewLabor.getItems().removeAll(selectedLaborItems);
+                            tblViewLabor.refresh();
+                            tblViewParts.getItems().removeAll(selectedPartsItems);
+                            tblViewParts.refresh();
+                        }
+                    }
+                    if (oTrans.OpenRecord(oTrans.getMaster(1).toString())) {
+                        loadTableLabor();
+                        loadTableParts();
                         tblViewLabor.refresh();
-                        tblViewParts.getItems().removeAll(selectedPartsItems);
                         tblViewParts.refresh();
                     }
-                }
-                break;
-
-            case "btnClose":
-                if (ShowMessageFX.OkayCancel(null, "Close Tab", "Are you sure you want to close this Tab?")) {
-                    if (unload != null) {
-                        unload.unloadForm(AnchorMain, oApp, pxeModuleName);
-                    } else {
-                        ShowMessageFX.Warning(null, "Warning", "Please notify the system administrator to configure the null value at the close button.");
+                    break;
+                case "btnClose":
+                    if (ShowMessageFX.OkayCancel(null, "Close Tab", "Are you sure you want to close this Tab?")) {
+                        if (unload != null) {
+                            unload.unloadForm(AnchorMain, oApp, pxeModuleName);
+                        } else {
+                            ShowMessageFX.Warning(null, "Warning", "Please notify the system administrator to configure the null value at the close button.");
+                        }
                     }
-                }
-                break;
-            default:
-                break;
+                    break;
+                default:
+                    break;
+            }
+            initButton(pnEditMode);
+        } catch (SQLException ex) {
+            Logger.getLogger(VSPAddOnsApprovalController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        initButton(pnEditMode);
 
     }
 
@@ -294,9 +326,16 @@ public class VSPAddOnsApprovalController implements Initializable, ScreenInterfa
             txtField72.setText(oTrans.getMaster(72).toString().toUpperCase());
             txtField73.setText(oTrans.getMaster(73).toString().toUpperCase());
             txtField74.setText(oTrans.getMaster(74).toString().toUpperCase());
+
             txtField13.setText(String.valueOf(decimalFormat.format(Double.parseDouble(String.valueOf(oTrans.getMaster(13))))));
             txtField14.setText(String.valueOf(decimalFormat.format(Double.parseDouble(String.valueOf(oTrans.getMaster(14))))));
-            txtField21.setText(String.valueOf(decimalFormat.format(Double.parseDouble(String.valueOf(oTrans.getMaster(21))))));
+
+            String slaborAmount = oTrans.getMaster(13).toString();
+            double nlabotAmounts = Double.parseDouble(slaborAmount);
+            String spartsAmount = oTrans.getMaster(14).toString();
+            double npartsAmounts = Double.parseDouble(spartsAmount);
+            double sum = nlabotAmounts + npartsAmounts;
+            txtField21.setText(String.valueOf(decimalFormat.format(Double.parseDouble(String.valueOf(sum)))));
 
             if (oTrans.getMaster(61).toString().contains("0")) {
                 lblVSPApprovalStatus.setText("Cancelled");
@@ -327,20 +366,16 @@ public class VSPAddOnsApprovalController implements Initializable, ScreenInterfa
                         cType = "CHARGE";
                         break;
                 }
-                if (oTrans.getVSPLaborDetail(lnCtr, "cAddtlxxx").toString().equals("1")) {
-                    bAdditional = true;
-                } else {
-                    bAdditional = false;
-                }
+                bAdditional = oTrans.getVSPLaborDetail(lnCtr, "cAddtlxxx").toString().equals("1");
                 String amountString = oTrans.getVSPLaborDetail(lnCtr, "nLaborAmt").toString();
                 // Convert the amount to a decimal value
                 double amount = Double.parseDouble(amountString);
                 String formattedAmount = decimalFormat.format(amount);
-
+                System.out.println("labor: " + oTrans.getVSPLaborDetail(lnCtr, "sApprovBy").toString());
                 laborData.add(new VSPTableLaborList(
                         String.valueOf(lnCtr), //ROW
-                        oTrans.getVSPLaborDetail(lnCtr, "sTransNox").toString(),
-                        oTrans.getVSPLaborDetail(lnCtr, "sLaborCde").toString(),
+                        oTrans.getVSPLaborDetail(lnCtr, "sTransNox").toString().toUpperCase(),
+                        oTrans.getVSPLaborDetail(lnCtr, "sLaborCde").toString().toUpperCase(),
                         oTrans.getVSPLaborDetail(lnCtr, "sLaborDsc").toString().toUpperCase(),
                         cType,
                         formattedAmount,
@@ -349,6 +384,8 @@ public class VSPAddOnsApprovalController implements Initializable, ScreenInterfa
                         "",
                         "",
                         oTrans.getVSPLaborDetail(lnCtr, "sDSNoxxxx").toString().toUpperCase(),
+                        oTrans.getVSPLaborDetail(lnCtr, "sApprovBy").toString().toUpperCase(),
+                        oTrans.getVSPLaborDetail(lnCtr, "sApproved").toString().toUpperCase(),
                         bAdditional
                 ));
                 bAdditional = false;
@@ -388,6 +425,7 @@ public class VSPAddOnsApprovalController implements Initializable, ScreenInterfa
         tblindex05_Labor.setCellValueFactory(new PropertyValueFactory<VSPTableLaborList, String>("tblindex05_Labor"));
         tblindex04_Labor.setCellValueFactory(new PropertyValueFactory<VSPTableLaborList, String>("tblindex04_Labor"));
         tblindex11_Labor.setCellValueFactory(new PropertyValueFactory<VSPTableLaborList, String>("tblindex11_Labor"));
+        tblindex14_Labor.setCellValueFactory(new PropertyValueFactory<VSPTableLaborList, String>("tblindex14_Labor"));
         tblindex08_Labor.setCellValueFactory(new PropertyValueFactory<>("addOrNot"));
 
     }
@@ -414,18 +452,22 @@ public class VSPAddOnsApprovalController implements Initializable, ScreenInterfa
                 int quant = Integer.parseInt(oTrans.getVSPPartsDetail(lnCtr, "nQuantity").toString());
                 double total = quant * amount;
                 String totalAmount = decimalFormat.format(total);
+
+                System.out.println("parts: " + oTrans.getVSPPartsDetail(lnCtr, "sApprovBy").toString());
                 partData.add(new VSPTablePartList(
                         String.valueOf(lnCtr), //ROW
-                        oTrans.getVSPPartsDetail(lnCtr, "sTransNox").toString(),
-                        oTrans.getVSPPartsDetail(lnCtr, "sStockIDx").toString(),
-                        oTrans.getVSPPartsDetail(lnCtr, "sBarCodex").toString(),
-                        partDesc,
+                        oTrans.getVSPPartsDetail(lnCtr, "sTransNox").toString().toUpperCase(),
+                        oTrans.getVSPPartsDetail(lnCtr, "sStockIDx").toString().toUpperCase(),
+                        oTrans.getVSPPartsDetail(lnCtr, "sBarCodex").toString().toUpperCase(),
+                        partDesc.toUpperCase(),
                         cType,
                         oTrans.getVSPPartsDetail(lnCtr, "nQuantity").toString(),
                         formattedAmount,
-                        oTrans.getVSPPartsDetail(lnCtr, "sDSNoxxxx").toString(),
+                        oTrans.getVSPPartsDetail(lnCtr, "sDSNoxxxx").toString().toUpperCase(),
+                        oTrans.getVSPPartsDetail(lnCtr, "sApprovBy").toString().toUpperCase(),
                         totalAmount,
-                        ""
+                        "",
+                        oTrans.getVSPPartsDetail(lnCtr, "sApproved").toString().toUpperCase()
                 ));
 
             }
@@ -466,21 +508,32 @@ public class VSPAddOnsApprovalController implements Initializable, ScreenInterfa
         tblindex06_Part.setCellValueFactory(new PropertyValueFactory<VSPTablePartList, String>("tblindex06_Part"));
         tblindex04_Part.setCellValueFactory(new PropertyValueFactory<VSPTablePartList, String>("tblindex04_Part"));
         tblindex11_Part.setCellValueFactory(new PropertyValueFactory<VSPTablePartList, String>("tblindex11_Part"));
+        tblindex20_Part.setCellValueFactory(new PropertyValueFactory<VSPTablePartList, String>("tblindex20_Part"));
+
         tblindexTotAmnt.setCellValueFactory(new PropertyValueFactory<VSPTablePartList, String>("tblindexTotAmnt"));
     }
 
     private void initButton(int fnValue) {
         btnApprove.setVisible(false);
         btnApprove.setManaged(false);
+        tblLaborSelect.setVisible(false);
+        tblPartsSelect.setVisible(false);
+        selectAllParts.setVisible(false);
+        selectAllLabor.setVisible(false);
         if (fnValue == EditMode.READY) {
             try {
                 if (((String) oTrans.getMaster(61)).equals("0")) {
                     btnApprove.setVisible(false);
                     btnApprove.setManaged(false);
-
+                    tblLaborSelect.setVisible(false);
+                    tblPartsSelect.setVisible(false);
                 } else {
                     btnApprove.setVisible(true);
                     btnApprove.setManaged(true);
+                    tblLaborSelect.setVisible(true);
+                    tblPartsSelect.setVisible(true);
+                    selectAllParts.setVisible(true);
+                    selectAllLabor.setVisible(true);
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(VSPAddOnsApprovalController.class.getName()).log(Level.SEVERE, null, ex);

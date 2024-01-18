@@ -129,9 +129,15 @@ public class VSPPartsDialogController implements Initializable, ScreenInterface 
                 comboBox8.setDisable(true);
             } else {
                 if (pbRequest) {
-                    txtField14_Part.setDisable(false);
-                } else {
-                    txtField14_Part.setDisable(true);
+                    try {
+                        if (!oTrans.getVSPPartsDetail(pnRow, "sApproved").toString().isEmpty()) {
+                            txtField14_Part.setDisable(false);
+                        } else {
+                            txtField14_Part.setDisable(true);
+                        }
+                    } catch (SQLException ex) {
+                        Logger.getLogger(VSPPartsDialogController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
             }
             if (!txtField14_Part.getText().isEmpty()) {

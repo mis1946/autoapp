@@ -27,6 +27,8 @@ public class VSPTableLaborList {
     private SimpleStringProperty tblindex12_Labor;
     private CheckBox addOrNot;
     private SimpleBooleanProperty tblindex08;
+    private SimpleBooleanProperty tblindex05;
+    private CheckBox FreeOrNot;
 
     VSPTableLaborList(String tblLaborRow,
             String tblindex01_Labor,
@@ -41,7 +43,8 @@ public class VSPTableLaborList {
             String tblindex11_Labor,
             String tblindex14_Labor,
             String tblindex12_Labor,
-            boolean tblindex08
+            boolean tblindex08,
+            boolean tblindex05
     ) {
         this.tblLaborRow = new SimpleStringProperty(tblLaborRow);
         this.select = new CheckBox();
@@ -61,6 +64,10 @@ public class VSPTableLaborList {
         this.tblindex08 = new SimpleBooleanProperty(tblindex08);
         this.addOrNot.setSelected(tblindex08);
         addOrNot.setDisable(true);
+        this.FreeOrNot = new CheckBox();
+        this.tblindex05 = new SimpleBooleanProperty(tblindex05);
+        this.FreeOrNot.setSelected(tblindex05);
+        FreeOrNot.setDisable(true);
     }
 
     public String getTblLaborRow() {
@@ -197,6 +204,26 @@ public class VSPTableLaborList {
 
     public BooleanProperty selectedProperty() {
         return tblindex08;
+    }
+
+    public CheckBox getFreeOrNot() {
+        return FreeOrNot;
+    }
+
+    public void setFreeOrNot(CheckBox FreeOrNot) {
+        this.FreeOrNot = FreeOrNot;
+    }
+
+    public boolean isTblindex05() {
+        return tblindex05.get();
+    }
+
+    public void setTblindex05(boolean tblindex05) {
+        this.tblindex05.set(tblindex05);
+    }
+
+    public BooleanProperty selectedProperty5() {
+        return tblindex05;
     }
 
     public SimpleStringProperty laborProperty() {

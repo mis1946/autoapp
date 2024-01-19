@@ -486,9 +486,9 @@ public class VehicleSalesApprovalController implements Initializable, ScreenInte
                                     ApprovedCount.setText("" + i);
                                 } else {
                                     // Handle approval failure
-                                    ShowMessageFX.Error(null, pxeModuleName, "Failed to approve reservation.");
                                     loadVhlApprovalTable();
                                     selectAllCheckBox.setSelected(false);
+                                    ShowMessageFX.Error(null, pxeModuleName, "Failed to approve reservation.");
                                     return;
                                 }
                             } catch (SQLException e) {
@@ -497,9 +497,9 @@ public class VehicleSalesApprovalController implements Initializable, ScreenInte
                             }
                         }
                         SelectedCount.setText("0");
-                        ShowMessageFX.Information(null, pxeModuleName, "Reservation approved successfully.");
                         loadVhlApprovalTable();
                         selectAllCheckBox.setSelected(false);
+                        ShowMessageFX.Information(null, pxeModuleName, "Reservation approved successfully.");
                         tblVhclApproval.getItems().removeAll(selectedItems);
                         tblVhclApproval.refresh();
                     }

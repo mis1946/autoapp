@@ -237,7 +237,8 @@ public class VSPPartsRequestController implements Initializable, ScreenInterface
                         oTrans.getVSPPartsDetail(lnCtr, "sApprovBy").toString().toUpperCase(),
                         "",
                         oTrans.getVSPPartsDetail(lnCtr, "sPartDesc").toString().toUpperCase(),
-                        oTrans.getVSPPartsDetail(lnCtr, "sApproved").toString().toUpperCase()
+                        oTrans.getVSPPartsDetail(lnCtr, "sApproved").toString().toUpperCase(),
+                        false
                 ));
 
             }

@@ -8,6 +8,7 @@ import com.sun.javafx.scene.control.skin.TableHeaderRow;
 import java.net.URL;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
+import java.util.Date;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,10 +31,10 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import org.rmj.appdriver.GRider;
+import org.rmj.appdriver.agentfx.CommonUtils;
 import org.rmj.appdriver.agentfx.ShowMessageFX;
 import org.rmj.appdriver.callback.MasterCallback;
 import org.rmj.appdriver.constants.EditMode;
-import org.rmj.auto.app.service.JobOrderFormController;
 import org.rmj.auto.app.views.ScreenInterface;
 import org.rmj.auto.app.views.unloadForm;
 import org.rmj.auto.sales.base.VehicleSalesProposalMaster;
@@ -143,6 +144,10 @@ public class VSPAddOnsApprovalController implements Initializable, ScreenInterfa
     private TableColumn<VSPTableLaborList, String> tblindex14_Labor;
     @FXML
     private TableColumn<VSPTablePartList, String> tblindex20_Part;
+    @FXML
+    private TextField txtField03;
+    @FXML
+    private TextField txtField02;
 
     /**
      * Initializes the controller class.
@@ -276,9 +281,9 @@ public class VSPAddOnsApprovalController implements Initializable, ScreenInterfa
                             }
                             loadTableLabor();
                             loadTableParts();
-                            ShowMessageFX.Information(null, pxeModuleName, i + " item(s) approved successfully.");
                             selectAllParts.setSelected(false);
                             selectAllLabor.setSelected(false);
+                            ShowMessageFX.Information(null, pxeModuleName, i + " item(s) approved successfully.");
                             tblViewLabor.getItems().removeAll(selectedLaborItems);
                             tblViewLabor.refresh();
                             tblViewParts.getItems().removeAll(selectedPartsItems);
@@ -317,6 +322,8 @@ public class VSPAddOnsApprovalController implements Initializable, ScreenInterfa
                 ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
                 return false;
             }
+            txtField03.setText((String) oTrans.getMaster(3));
+            txtField02.setText(CommonUtils.xsDateMedium((Date) oTrans.getMaster(2)));
             txtField68.setText(oTrans.getMaster(68).toString().toUpperCase());
             textArea69.setText(oTrans.getMaster(69).toString().toUpperCase());
             txtField97.setText(oTrans.getMaster(97).toString().toUpperCase());
@@ -356,14 +363,15 @@ public class VSPAddOnsApprovalController implements Initializable, ScreenInterfa
             /*Populate table*/
             laborData.clear();
             boolean bAdditional = false;
+            boolean fbPurchaseType = false;
             for (int lnCtr = 1; lnCtr <= oTrans.getVSPLaborCount(); lnCtr++) {
                 String cType = "";
                 switch (oTrans.getVSPLaborDetail(lnCtr, "sChrgeTyp").toString()) {
                     case "0":
-                        cType = "FREE OF CHARGE";
+                        fbPurchaseType = true;
                         break;
                     case "1":
-                        cType = "CHARGE";
+                        fbPurchaseType = false;
                         break;
                 }
                 bAdditional = oTrans.getVSPLaborDetail(lnCtr, "cAddtlxxx").toString().equals("1");
@@ -371,7 +379,6 @@ public class VSPAddOnsApprovalController implements Initializable, ScreenInterfa
                 // Convert the amount to a decimal value
                 double amount = Double.parseDouble(amountString);
                 String formattedAmount = decimalFormat.format(amount);
-                System.out.println("labor: " + oTrans.getVSPLaborDetail(lnCtr, "sApprovBy").toString());
                 laborData.add(new VSPTableLaborList(
                         String.valueOf(lnCtr), //ROW
                         oTrans.getVSPLaborDetail(lnCtr, "sTransNox").toString().toUpperCase(),
@@ -386,9 +393,11 @@ public class VSPAddOnsApprovalController implements Initializable, ScreenInterfa
                         oTrans.getVSPLaborDetail(lnCtr, "sDSNoxxxx").toString().toUpperCase(),
                         oTrans.getVSPLaborDetail(lnCtr, "sApprovBy").toString().toUpperCase(),
                         oTrans.getVSPLaborDetail(lnCtr, "sApproved").toString().toUpperCase(),
-                        bAdditional
+                        bAdditional,
+                        fbPurchaseType
                 ));
                 bAdditional = false;
+                fbPurchaseType = false;
             }
 
             tblViewLabor.setItems(laborData);
@@ -422,7 +431,7 @@ public class VSPAddOnsApprovalController implements Initializable, ScreenInterfa
             tblViewLabor.getItems().forEach(item -> item.getSelect().setSelected(newValue));
         });
         tblindex07_Labor.setCellValueFactory(new PropertyValueFactory<VSPTableLaborList, String>("tblindex07_Labor"));
-        tblindex05_Labor.setCellValueFactory(new PropertyValueFactory<VSPTableLaborList, String>("tblindex05_Labor"));
+        tblindex05_Labor.setCellValueFactory(new PropertyValueFactory<VSPTableLaborList, String>("FreeOrNot"));
         tblindex04_Labor.setCellValueFactory(new PropertyValueFactory<VSPTableLaborList, String>("tblindex04_Labor"));
         tblindex11_Labor.setCellValueFactory(new PropertyValueFactory<VSPTableLaborList, String>("tblindex11_Labor"));
         tblindex14_Labor.setCellValueFactory(new PropertyValueFactory<VSPTableLaborList, String>("tblindex14_Labor"));
@@ -435,14 +444,15 @@ public class VSPAddOnsApprovalController implements Initializable, ScreenInterfa
 
             /*Populate table*/
             partData.clear();
+            boolean fbPurchaseType = false;
             for (int lnCtr = 1; lnCtr <= oTrans.getVSPPartsCount(); lnCtr++) {
                 String cType = "";
                 switch (oTrans.getVSPPartsDetail(lnCtr, "sChrgeTyp").toString()) {
                     case "0":
-                        cType = "FREE OF CHARGE";
+                        fbPurchaseType = true;
                         break;
                     case "1":
-                        cType = "CHARGE";
+                        fbPurchaseType = false;
                         break;
                 }
                 String amountString = oTrans.getVSPPartsDetail(lnCtr, "nUnitPrce").toString();
@@ -453,7 +463,6 @@ public class VSPAddOnsApprovalController implements Initializable, ScreenInterfa
                 double total = quant * amount;
                 String totalAmount = decimalFormat.format(total);
 
-                System.out.println("parts: " + oTrans.getVSPPartsDetail(lnCtr, "sApprovBy").toString());
                 partData.add(new VSPTablePartList(
                         String.valueOf(lnCtr), //ROW
                         oTrans.getVSPPartsDetail(lnCtr, "sTransNox").toString().toUpperCase(),
@@ -467,8 +476,10 @@ public class VSPAddOnsApprovalController implements Initializable, ScreenInterfa
                         oTrans.getVSPPartsDetail(lnCtr, "sApprovBy").toString().toUpperCase(),
                         totalAmount,
                         "",
-                        oTrans.getVSPPartsDetail(lnCtr, "sApproved").toString().toUpperCase()
+                        oTrans.getVSPPartsDetail(lnCtr, "sApproved").toString().toUpperCase(),
+                        fbPurchaseType
                 ));
+                fbPurchaseType = false;
 
             }
 
@@ -504,7 +515,7 @@ public class VSPAddOnsApprovalController implements Initializable, ScreenInterfa
         });
         tblindex14_Part.setCellValueFactory(new PropertyValueFactory<VSPTablePartList, String>("tblindex14_Part"));
         tblindex09_Part.setCellValueFactory(new PropertyValueFactory<VSPTablePartList, String>("tblindex09_Part"));
-        tblindex08_Part.setCellValueFactory(new PropertyValueFactory<VSPTablePartList, String>("tblindex08_Part"));
+        tblindex08_Part.setCellValueFactory(new PropertyValueFactory<VSPTablePartList, String>("FreeOrNot"));
         tblindex06_Part.setCellValueFactory(new PropertyValueFactory<VSPTablePartList, String>("tblindex06_Part"));
         tblindex04_Part.setCellValueFactory(new PropertyValueFactory<VSPTablePartList, String>("tblindex04_Part"));
         tblindex11_Part.setCellValueFactory(new PropertyValueFactory<VSPTablePartList, String>("tblindex11_Part"));
@@ -544,6 +555,8 @@ public class VSPAddOnsApprovalController implements Initializable, ScreenInterfa
     private void clearFields() {
         laborData.clear();
         partData.clear();
+        txtField03.setText("");
+        txtField02.setText("");
         txtField68.setText("");
         textArea69.setText("");
         txtField97.setText("");

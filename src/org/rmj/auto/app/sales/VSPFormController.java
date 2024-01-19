@@ -2462,7 +2462,8 @@ public class VSPFormController implements Initializable, ScreenInterface {
                         oTrans.getVSPLaborDetail(lnCtr, "sDSNoxxxx").toString().toUpperCase(),
                         oTrans.getVSPLaborDetail(lnCtr, "sApprovBy").toString().toUpperCase(),
                         oTrans.getVSPLaborDetail(lnCtr, "sApproved").toString().toUpperCase(),
-                        bAdditional
+                        bAdditional,
+                        false
                 ));
                 bAdditional = false;
             }
@@ -2721,7 +2722,8 @@ public class VSPFormController implements Initializable, ScreenInterface {
                         oTrans.getVSPPartsDetail(lnCtr, "sApprovBy").toString().toUpperCase(),
                         totalAmount,
                         "",
-                        oTrans.getVSPPartsDetail(lnCtr, "sApproved").toString().toUpperCase()
+                        oTrans.getVSPPartsDetail(lnCtr, "sApproved").toString().toUpperCase(),
+                        false
                 ));
 
             }

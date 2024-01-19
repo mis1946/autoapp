@@ -139,6 +139,7 @@ public class VSPPartsDialogController implements Initializable, ScreenInterface 
                         Logger.getLogger(VSPPartsDialogController.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
+
             }
             if (!txtField14_Part.getText().isEmpty()) {
                 txtField09_Part.setDisable(true);
@@ -189,17 +190,23 @@ public class VSPPartsDialogController implements Initializable, ScreenInterface 
             try {
                 int selectedType = comboBox.getSelectionModel().getSelectedIndex(); // Retrieve the selected type
                 if (selectedType >= 0) {
-                    switch (fieldNumber) {
-                        case 8:
-                            if (selectedType == 0) {
-                                txtField04_Part.setText("0.00");
-                                oTrans.setVSPPartsDetail(pnRow, 5, Double.valueOf("0.00"));
-                                txtField04_Part.setDisable(true);
-                            } else {
-                                txtField04_Part.setDisable(false);
-                            }
-                            break;
+
+                    if (pbRequest) {
+                        txtField04_Part.setDisable(true);
+                    } else {
+                        switch (fieldNumber) {
+                            case 8:
+                                if (selectedType == 0) {
+                                    txtField04_Part.setText("0.00");
+                                    oTrans.setVSPPartsDetail(pnRow, 5, Double.valueOf("0.00"));
+                                    txtField04_Part.setDisable(true);
+                                } else {
+                                    txtField04_Part.setDisable(false);
+                                }
+                                break;
+                        }
                     }
+
                 }
 
             } catch (SQLException ex) {
@@ -255,7 +262,11 @@ public class VSPPartsDialogController implements Initializable, ScreenInterface 
                     break;
                 case "1":
                     selectedItem8 = "CHARGE";
-                    txtField04_Part.setDisable(false);
+                    if (pbRequest) {
+                        txtField04_Part.setDisable(true);
+                    } else {
+                        txtField04_Part.setDisable(false);
+                    }
                     break;
             }
             comboBox8.setValue(selectedItem8);

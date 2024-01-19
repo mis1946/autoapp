@@ -169,6 +169,7 @@ public class VSPAddOnsApprovalController implements Initializable, ScreenInterfa
         oTrans = new VehicleSalesProposalMaster(oApp, oApp.getBranchCode(), true); //Initialize VehicleSalesProposalMaster
         oTrans.setCallback(oListener);
         oTrans.setWithUI(true);
+        oTrans.setFormType(false);
 
         //Initialize buttons
         initCmdButton();

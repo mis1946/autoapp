@@ -4,6 +4,8 @@
  */
 package org.rmj.auto.app.sales;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.CheckBox;
 
@@ -23,6 +25,8 @@ public class VSPTablePartList {
     private SimpleStringProperty tblindexTotAmnt;
     private SimpleStringProperty tblindex17_Part;
     private SimpleStringProperty tblindex18_Part;
+    private SimpleBooleanProperty tblindex08;
+    private CheckBox FreeOrNot;
 
     VSPTablePartList(String tblPartsRow,
             String tblindex01_Part,
@@ -36,7 +40,8 @@ public class VSPTablePartList {
             String tblindex20_Part,
             String tblindexTotAmnt,
             String tblindex17_Part,
-            String tblindex18_Part
+            String tblindex18_Part,
+            boolean tblindex08
     ) {
         this.tblPartsRow = new SimpleStringProperty(tblPartsRow);
         this.select = new CheckBox();
@@ -52,6 +57,10 @@ public class VSPTablePartList {
         this.tblindexTotAmnt = new SimpleStringProperty(tblindexTotAmnt);
         this.tblindex17_Part = new SimpleStringProperty(tblindex17_Part);
         this.tblindex18_Part = new SimpleStringProperty(tblindex18_Part);
+        this.FreeOrNot = new CheckBox();
+        this.tblindex08 = new SimpleBooleanProperty(tblindex08);
+        this.FreeOrNot.setSelected(tblindex08);
+        FreeOrNot.setDisable(true);
     }
 
     public String getTblPartsRow() {
@@ -165,4 +174,25 @@ public class VSPTablePartList {
     public void setTblindex18_Part(String tblindex18_Part) {
         this.tblindex18_Part.set(tblindex18_Part);
     }
+
+    public boolean isTblindex08() {
+        return tblindex08.get();
+    }
+
+    public void setTblindex08(boolean tblindex08) {
+        this.tblindex08.set(tblindex08);
+    }
+
+    public BooleanProperty selectedProperty() {
+        return tblindex08;
+    }
+
+    public CheckBox getFreeOrNot() {
+        return FreeOrNot;
+    }
+
+    public void setFreeOrNot(CheckBox FreeOrNot) {
+        this.FreeOrNot = FreeOrNot;
+    }
+
 }

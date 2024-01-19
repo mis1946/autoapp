@@ -116,11 +116,6 @@ public class JobOrderVSPPartsDialogController implements Initializable, ScreenIn
                             String fsAmount = item.getTblindex04();
                             String fsType = item.getTblindexType();
                             String fsTotal = item.getTblindex16();
-
-//                            if (!fsDSCode.isEmpty() && !fsDSCode.equals(sTrans)) {
-//                                ShowMessageFX.Error(null, pxeModuleName, "VSP Parts " + fsDescript + " already exist in JO No. " + fsJONox + ". Insert Aborted. ");
-//                                return;
-//                            }
                             try {
                                 boolean fsDest = false;
                                 for (int lnCtr = 1; lnCtr <= oTrans.getJOPartsCount(); lnCtr++) {
@@ -144,6 +139,8 @@ public class JobOrderVSPPartsDialogController implements Initializable, ScreenIn
                                     }
                                     if (!oTrans.checkVSPJOParts(fsStockID, Integer.valueOf(fsQuantity), true, oTrans.getJOPartsCount())) {
                                         ShowMessageFX.Error(null, pxeModuleName, oTrans.getMessage());
+                                        loadVSPParts();
+                                        selectAllCheckBox.setSelected(false);
                                         oTrans.removeJOParts(oTrans.getJOPartsCount());
                                         return;
                                     }
@@ -157,6 +154,8 @@ public class JobOrderVSPPartsDialogController implements Initializable, ScreenIn
                             ShowMessageFX.Information(null, pxeModuleName, "Added VSP Parts successfully.");
                         } else {
                             ShowMessageFX.Error(null, pxeModuleName, "Failed to add vsp parts");
+                            loadVSPParts();
+                            selectAllCheckBox.setSelected(false);
                         }
                     }
                     CommonUtils.closeStage(btnAdd);

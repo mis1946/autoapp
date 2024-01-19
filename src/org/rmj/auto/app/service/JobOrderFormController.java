@@ -1187,16 +1187,15 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
             if (pnRow == 0) {
                 return;
             }
-
-            if (event.getClickCount() == 2) {
-                try {
-                    loadLaborAdditionalDialog(pnRow, false);
-
-                } catch (IOException ex) {
-                    Logger.getLogger(JobOrderFormController.class
-                            .getName()).log(Level.SEVERE, null, ex);
+            if (!pbisJobOrderSales) {
+                if (event.getClickCount() == 2) {
+                    try {
+                        loadLaborAdditionalDialog(pnRow, false);
+                    } catch (IOException ex) {
+                        Logger.getLogger(JobOrderFormController.class
+                                .getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
-
             }
 
         }

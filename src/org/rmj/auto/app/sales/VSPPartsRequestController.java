@@ -212,14 +212,14 @@ public class VSPPartsRequestController implements Initializable, ScreenInterface
         try {
             /*Populate table*/
             partData.clear();
+            boolean fbPurchaseType = false;
             for (int lnCtr = 1; lnCtr <= oTrans.getVSPPartsCount(); lnCtr++) {
-                String cType = "";
                 switch (oTrans.getVSPPartsDetail(lnCtr, "sChrgeTyp").toString()) {
                     case "0":
-                        cType = "FREE OF CHARGE";
+                        fbPurchaseType = true;
                         break;
                     case "1":
-                        cType = "CHARGE";
+                        fbPurchaseType = false;
                         break;
                 }
                 String partDesc = (String) oTrans.getVSPPartsDetail(lnCtr, "sDescript");
@@ -230,7 +230,7 @@ public class VSPPartsRequestController implements Initializable, ScreenInterface
                         oTrans.getVSPPartsDetail(lnCtr, "sStockIDx").toString().toUpperCase(),
                         oTrans.getVSPPartsDetail(lnCtr, "sBarCodex").toString().toUpperCase(),
                         partDesc.toUpperCase(),
-                        cType.toUpperCase(),
+                        oTrans.getVSPPartsDetail(lnCtr, "sChrgeTyp").toString(),
                         oTrans.getVSPPartsDetail(lnCtr, "nQuantity").toString(),
                         "",
                         oTrans.getVSPPartsDetail(lnCtr, "sDSNoxxxx").toString().toUpperCase(),
@@ -238,9 +238,9 @@ public class VSPPartsRequestController implements Initializable, ScreenInterface
                         "",
                         oTrans.getVSPPartsDetail(lnCtr, "sPartDesc").toString().toUpperCase(),
                         oTrans.getVSPPartsDetail(lnCtr, "sApproved").toString().toUpperCase(),
-                        false
+                        fbPurchaseType
                 ));
-
+                fbPurchaseType = false;
             }
             tblViewPartRequest.setItems(partData);
             initTableParts();
@@ -256,7 +256,7 @@ public class VSPPartsRequestController implements Initializable, ScreenInterface
         tblindex14_Part.setCellValueFactory(new PropertyValueFactory<VSPTablePartList, String>("tblindex14_Part"));
         tblindex17_Part.setCellValueFactory(new PropertyValueFactory<VSPTablePartList, String>("tblindex17_Part"));
         tblindex06_Part.setCellValueFactory(new PropertyValueFactory<VSPTablePartList, String>("tblindex06_Part"));
-        tblindex08_Part.setCellValueFactory(new PropertyValueFactory<VSPTablePartList, String>("tblindex08_Part"));
+        tblindex08_Part.setCellValueFactory(new PropertyValueFactory<VSPTablePartList, String>("FreeOrNot"));
         tblindex20_Part.setCellValueFactory(new PropertyValueFactory<VSPTablePartList, String>("tblindex20_Part"));
     }
 

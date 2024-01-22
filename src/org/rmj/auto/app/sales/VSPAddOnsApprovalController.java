@@ -366,7 +366,6 @@ public class VSPAddOnsApprovalController implements Initializable, ScreenInterfa
             boolean bAdditional = false;
             boolean fbPurchaseType = false;
             for (int lnCtr = 1; lnCtr <= oTrans.getVSPLaborCount(); lnCtr++) {
-                String cType = "";
                 switch (oTrans.getVSPLaborDetail(lnCtr, "sChrgeTyp").toString()) {
                     case "0":
                         fbPurchaseType = true;
@@ -385,7 +384,7 @@ public class VSPAddOnsApprovalController implements Initializable, ScreenInterfa
                         oTrans.getVSPLaborDetail(lnCtr, "sTransNox").toString().toUpperCase(),
                         oTrans.getVSPLaborDetail(lnCtr, "sLaborCde").toString().toUpperCase(),
                         oTrans.getVSPLaborDetail(lnCtr, "sLaborDsc").toString().toUpperCase(),
-                        cType,
+                        "",
                         formattedAmount,
                         "",
                         "",
@@ -447,7 +446,6 @@ public class VSPAddOnsApprovalController implements Initializable, ScreenInterfa
             partData.clear();
             boolean fbPurchaseType = false;
             for (int lnCtr = 1; lnCtr <= oTrans.getVSPPartsCount(); lnCtr++) {
-                String cType = "";
                 switch (oTrans.getVSPPartsDetail(lnCtr, "sChrgeTyp").toString()) {
                     case "0":
                         fbPurchaseType = true;
@@ -470,7 +468,7 @@ public class VSPAddOnsApprovalController implements Initializable, ScreenInterfa
                         oTrans.getVSPPartsDetail(lnCtr, "sStockIDx").toString().toUpperCase(),
                         oTrans.getVSPPartsDetail(lnCtr, "sBarCodex").toString().toUpperCase(),
                         partDesc.toUpperCase(),
-                        cType,
+                        "",
                         oTrans.getVSPPartsDetail(lnCtr, "nQuantity").toString(),
                         formattedAmount,
                         oTrans.getVSPPartsDetail(lnCtr, "sDSNoxxxx").toString().toUpperCase(),

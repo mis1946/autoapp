@@ -4,7 +4,10 @@
  */
 package org.rmj.auto.app.service;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.scene.control.CheckBox;
 
 /**
  *
@@ -20,6 +23,8 @@ public class JobOrderPartsTableList {
     private SimpleStringProperty tblindex06_Part;
     private SimpleStringProperty tblindex10_Part;
     private SimpleStringProperty tblindex15_Part;
+    private SimpleBooleanProperty tblindex11;
+    private CheckBox FreeOrNot;
 
     JobOrderPartsTableList(String tblPartsRow,
             String tblindex03_Part,
@@ -28,7 +33,8 @@ public class JobOrderPartsTableList {
             String tblindex11_Part,
             String tblindex06_Part,
             String tblindex10_Part,
-            String tblindex15_Part) {
+            String tblindex15_Part,
+            boolean tblindex11) {
 
         this.tblPartsRow = new SimpleStringProperty(tblPartsRow);
         this.tblindex03_Part = new SimpleStringProperty(tblindex03_Part);
@@ -38,6 +44,10 @@ public class JobOrderPartsTableList {
         this.tblindex06_Part = new SimpleStringProperty(tblindex06_Part);
         this.tblindex10_Part = new SimpleStringProperty(tblindex10_Part);
         this.tblindex15_Part = new SimpleStringProperty(tblindex15_Part);
+        this.FreeOrNot = new CheckBox();
+        this.tblindex11 = new SimpleBooleanProperty(tblindex11);
+        this.FreeOrNot.setSelected(tblindex11);
+        FreeOrNot.setDisable(true);
     }
 
     public String getTblPartsRow() {
@@ -102,6 +112,26 @@ public class JobOrderPartsTableList {
 
     public void setTblindexPart(String tblindex15_Part) {
         this.tblindex15_Part.set(tblindex15_Part);
+    }
+
+    public CheckBox getFreeOrNot() {
+        return FreeOrNot;
+    }
+
+    public void setFreeOrNot(CheckBox FreeOrNot) {
+        this.FreeOrNot = FreeOrNot;
+    }
+
+    public boolean isTblindex11() {
+        return tblindex11.get();
+    }
+
+    public void setTblindex11(boolean tblindex11) {
+        this.tblindex11.set(tblindex11);
+    }
+
+    public BooleanProperty selectedProperty() {
+        return tblindex11;
     }
 
 }

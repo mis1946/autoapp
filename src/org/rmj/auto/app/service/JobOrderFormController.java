@@ -228,7 +228,7 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
                 ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
             }
         } catch (SQLException ex) {
-            Logger.getLogger(VSPFormController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(JobOrderFormController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -258,9 +258,9 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
                 lblVSPorIntake.setText("Intake No.");
                 lblSEorSA.setText("Service Advisor");
             }
-            
+
             oTrans.setFormType(pbisJobOrderSales);
-            if(oTrans.loadState()){
+            if (oTrans.loadState()) {
                 try {
                     pnEditMode = oTrans.getEditMode();
                     loadJobOrderFields();
@@ -270,9 +270,9 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
                 } catch (SQLException ex) {
                     Logger.getLogger(JobOrderFormController.class.getName()).log(Level.SEVERE, null, ex);
                 }
-            }else {
-                if(oTrans.getMessage().isEmpty()){
-                }else{
+            } else {
+                if (oTrans.getMessage().isEmpty()) {
+                } else {
                     ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
                 }
             }
@@ -595,7 +595,7 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
 
                         }
                     } catch (SQLException ex) {
-                        Logger.getLogger(VSPFormController.class
+                        Logger.getLogger(JobOrderFormController.class
                                 .getName()).log(Level.SEVERE, null, ex);
                     }
                     break;
@@ -794,7 +794,7 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
                             loadJobOrderFields();
                             loadTableLabor();
                         } catch (SQLException ex) {
-                            Logger.getLogger(VSPFormController.class
+                            Logger.getLogger(JobOrderFormController.class
                                     .getName()).log(Level.SEVERE, null, ex);
                         }
                     }
@@ -815,7 +815,7 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
                             loadJobOrderFields();
                             loadTableParts();
                         } catch (SQLException ex) {
-                            Logger.getLogger(VSPFormController.class
+                            Logger.getLogger(JobOrderFormController.class
                                     .getName()).log(Level.SEVERE, null, ex);
                         }
                     }
@@ -949,10 +949,9 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
             textArea35.setText((String) oTrans.getMaster(35));
             textArea11.setText((String) oTrans.getMaster(11));
 
-            txtField19.setText(String.valueOf(decimalFormat.format(Double.parseDouble(String.valueOf(oTrans.getMaster(19))))));
-            txtField20.setText(String.valueOf(decimalFormat.format(Double.parseDouble(String.valueOf(oTrans.getMaster(20))))));
-            txtField21.setText(String.valueOf(decimalFormat.format(Double.parseDouble(String.valueOf(oTrans.getMaster(21))))));
-
+//            txtField19.setText(String.valueOf(decimalFormat.format(Double.parseDouble(String.valueOf(oTrans.getMaster(19))))));
+//            txtField20.setText(String.valueOf(decimalFormat.format(Double.parseDouble(String.valueOf(oTrans.getMaster(20))))));
+//            txtField21.setText(String.valueOf(decimalFormat.format(Double.parseDouble(String.valueOf(oTrans.getMaster(21))))));
         } catch (SQLException ex) {
             Logger.getLogger(JobOrderFormController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -1120,7 +1119,7 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
             System.exit(1);
 
         } catch (SQLException ex) {
-            Logger.getLogger(VSPFormController.class
+            Logger.getLogger(JobOrderFormController.class
                     .getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -1177,7 +1176,7 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
             System.exit(1);
 
         } catch (SQLException ex) {
-            Logger.getLogger(VSPFormController.class
+            Logger.getLogger(JobOrderFormController.class
                     .getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -1188,16 +1187,15 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
             if (pnRow == 0) {
                 return;
             }
-
-            if (event.getClickCount() == 2) {
-                try {
-                    loadLaborAdditionalDialog(pnRow, false);
-
-                } catch (IOException ex) {
-                    Logger.getLogger(JobOrderFormController.class
-                            .getName()).log(Level.SEVERE, null, ex);
+            if (!pbisJobOrderSales) {
+                if (event.getClickCount() == 2) {
+                    try {
+                        loadLaborAdditionalDialog(pnRow, false);
+                    } catch (IOException ex) {
+                        Logger.getLogger(JobOrderFormController.class
+                                .getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
-
             }
 
         }

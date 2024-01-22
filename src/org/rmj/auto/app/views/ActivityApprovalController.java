@@ -120,6 +120,15 @@ public class ActivityApprovalController implements Initializable, ScreenInterfac
     /**
      * Initializes the controller class.
      */
+    private Stage getStage() {
+        return (Stage) txtFieldSearch.getScene().getWindow();
+    }
+
+    @Override
+    public void setGRider(GRider foValue) {
+        oApp = foValue;
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         oTrans = new Activity(oApp, oApp.getBranchCode(), true); //Initialize ClientMaster
@@ -276,11 +285,6 @@ public class ActivityApprovalController implements Initializable, ScreenInterfac
 
             }
         });
-    }
-
-    @Override
-    public void setGRider(GRider foValue) {
-        oApp = foValue;
     }
 
     private void loadActApprovalTable() {
@@ -547,20 +551,20 @@ public class ActivityApprovalController implements Initializable, ScreenInterfac
                 } else {
                     int i = 0;
                     if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure you want to approve?")) {
-                        // Call the ApproveReservation() method here
                         for (ActivityApprovalTable item : selectedItems) {
                             String fsTransNox = item.getTblindex01(); // Assuming there is a method to retrieve the transaction number
                             boolean approved = oTrans.ApproveActivity(fsTransNox); // Handle SQL exception
                             if (approved) {
                                 i = i + 1;
-//                                    ApprovedCount.setText("" + i);
                             } else {
                                 // Handle approval failure
                                 ShowMessageFX.Error(null, pxeModuleName, "Failed to approve activity.");
+                                loadActApprovalTable();
+                                selectAllCheckBox.setSelected(false);
                             }
                         }
-//                        SelectedCount.setText("0");
                         loadActApprovalTable();
+                        selectAllCheckBox.setSelected(false);
                         ShowMessageFX.Information(null, pxeModuleName, "Activity approved successfully.");
                         tblViewActApproval.getItems().removeAll(selectedItems);
                         tblViewActApproval.refresh();
@@ -568,24 +572,15 @@ public class ActivityApprovalController implements Initializable, ScreenInterfac
                 }
                 break;
             case "btnRefresh": //btn for refresh
-                // Clear the combo box selection
+
                 comboType.getSelectionModel().clearSelection();
-                // Clear the text field
                 txtFieldSearch.clear();
-                // Clear the date picker values
                 fromDate.setValue(LocalDate.of(strToDate(CommonUtils.xsDateShort((Date) oApp.getServerDate())).getYear(), strToDate(CommonUtils.xsDateShort((Date) oApp.getServerDate())).getMonth(), 1));
                 toDate.setValue(strToDate(CommonUtils.xsDateShort((Date) oApp.getServerDate())));
-                // Set the table items back to the original data
                 loadActApprovalTable();
-//                SelectedCount.setText("0");
-//                ApprovedCount.setText("0");
                 selectAllCheckBox.setSelected(false);
                 break;
         }
-    }
-
-    private Stage getStage() {
-        return (Stage) txtFieldSearch.getScene().getWindow();
     }
 
 }

@@ -101,6 +101,8 @@ public class VSPPartsRequestController implements Initializable, ScreenInterface
     private TableColumn<VSPTablePartList, String> tblindex08_Part;
     @FXML
     private TableView<VSPTablePartList> tblViewPartRequest;
+    @FXML
+    private TableColumn<VSPTablePartList, String> tblindex20_Part;
 
     /**
      * Initializes the controller class.
@@ -155,6 +157,7 @@ public class VSPPartsRequestController implements Initializable, ScreenInterface
         oTrans = new VehicleSalesProposalMaster(oApp, oApp.getBranchCode(), true); //Initialize ClientMaster
         oTrans.setCallback(oListener);
         oTrans.setWithUI(true);
+        oTrans.setFormType(false);
         loadVSPFields();
         btnClose.setOnAction(this::cmdButton_Click);
         btnRefresh.setOnAction(this::cmdButton_Click);
@@ -223,16 +226,19 @@ public class VSPPartsRequestController implements Initializable, ScreenInterface
                 int quant = Integer.parseInt(oTrans.getVSPPartsDetail(lnCtr, "nQuantity").toString());
                 partData.add(new VSPTablePartList(
                         String.valueOf(lnCtr), //ROW
-                        oTrans.getVSPPartsDetail(lnCtr, "sTransNox").toString(),
-                        oTrans.getVSPPartsDetail(lnCtr, "sStockIDx").toString(),
-                        oTrans.getVSPPartsDetail(lnCtr, "sBarCodex").toString(),
+                        oTrans.getVSPPartsDetail(lnCtr, "sTransNox").toString().toUpperCase(),
+                        oTrans.getVSPPartsDetail(lnCtr, "sStockIDx").toString().toUpperCase(),
+                        oTrans.getVSPPartsDetail(lnCtr, "sBarCodex").toString().toUpperCase(),
                         partDesc.toUpperCase(),
                         cType.toUpperCase(),
                         oTrans.getVSPPartsDetail(lnCtr, "nQuantity").toString(),
                         "",
-                        oTrans.getVSPPartsDetail(lnCtr, "sDSNoxxxx").toString(),
+                        oTrans.getVSPPartsDetail(lnCtr, "sDSNoxxxx").toString().toUpperCase(),
+                        oTrans.getVSPPartsDetail(lnCtr, "sApprovBy").toString().toUpperCase(),
                         "",
-                        oTrans.getVSPPartsDetail(lnCtr, "sPartDesc").toString().toUpperCase()
+                        oTrans.getVSPPartsDetail(lnCtr, "sPartDesc").toString().toUpperCase(),
+                        oTrans.getVSPPartsDetail(lnCtr, "sApproved").toString().toUpperCase(),
+                        false
                 ));
 
             }
@@ -251,6 +257,7 @@ public class VSPPartsRequestController implements Initializable, ScreenInterface
         tblindex17_Part.setCellValueFactory(new PropertyValueFactory<VSPTablePartList, String>("tblindex17_Part"));
         tblindex06_Part.setCellValueFactory(new PropertyValueFactory<VSPTablePartList, String>("tblindex06_Part"));
         tblindex08_Part.setCellValueFactory(new PropertyValueFactory<VSPTablePartList, String>("tblindex08_Part"));
+        tblindex20_Part.setCellValueFactory(new PropertyValueFactory<VSPTablePartList, String>("tblindex20_Part"));
     }
 
     private void tblParts_Clicked(MouseEvent event) {

@@ -127,11 +127,12 @@ public class JobOrderVSPLaborDialogController implements Initializable, ScreenIn
                             String fsDescript = item.getTblindex07();
                             String fsType = item.getTblindexType();
                             String fsAmount = item.getTblindex04();
-
                             String fsJONox = item.getTblindex11();
 
                             if (!fsDSCode.isEmpty() && !fsDSCode.equals(sTrans)) {
                                 ShowMessageFX.Error(null, pxeModuleName, "VSP Labor " + fsDescript + " already exist in JO No. " + fsJONox + ". Insert Aborted. ");
+                                loadVSPLabor();
+                                selectAllCheckBox.setSelected(false);
                                 return;
                             }
                             try {
@@ -162,8 +163,12 @@ public class JobOrderVSPLaborDialogController implements Initializable, ScreenIn
                             ShowMessageFX.Information(null, pxeModuleName, "Added VSP Labor successfully.");
                         } else {
                             ShowMessageFX.Error(null, pxeModuleName, "Failed to add vsp labor");
+                            loadVSPLabor();
+                            selectAllCheckBox.setSelected(false);
+                            return;
                         }
                     }
+                    selectAllCheckBox.setSelected(false);
                     CommonUtils.closeStage(btnAdd);
                 }
                 break;

@@ -73,7 +73,7 @@
                                                                             <children>
                                                                                 <AnchorPane style="-fx-border-color: orange; -fx-border-radius: 5; -fx-background-color: white; -fx-background-radius: 5;" styleClass="unity-container">
                                                                                     <children>
-                                                                                        <Label style="-fx-background-color: White;" text=" Customer Information " AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="-10.0">
+                                                                                        <Label style="-fx-background-color: White; -fx-background-radius: 5;" text=" Customer Information " AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="-10.0">
                                                                                             <font>
                                                                                                 <Font name="Arial Bold" size="12.0" />
                                                                                             </font>
@@ -120,7 +120,7 @@
                                                                                 <AnchorPane maxWidth="-Infinity" minWidth="-Infinity" prefWidth="10.0" HBox.hgrow="NEVER" />
                                                                                 <AnchorPane layoutX="10.0" layoutY="10.0" style="-fx-border-color: orange; -fx-border-radius: 5; -fx-background-color: white; -fx-background-radius: 5;" styleClass="unity-container">
                                                                                     <children>
-                                                                                        <Label style="-fx-background-color: White;" text="Vehicle Information " AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="-10.0">
+                                                                                        <Label style="-fx-background-color: White; -fx-background-radius: 5;" text="Vehicle Information " AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="-10.0">
                                                                                             <font>
                                                                                                 <Font name="Arial Bold" size="12.0" />
                                                                                             </font>
@@ -137,7 +137,7 @@
                                                                                             </columnConstraints>
                                                                                             <rowConstraints>
                                                                                                 <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="10.0" vgrow="SOMETIMES" />
-                                                                                                <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="10.0" vgrow="SOMETIMES" />
+                                                                                                <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="15.0" vgrow="SOMETIMES" />
                                                                                                 <RowConstraints minHeight="-Infinity" prefHeight="40.0" />
                                                                                                 <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="3.0" vgrow="SOMETIMES" />
                                                                                                 <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -198,6 +198,7 @@
                                                                                         <TableColumn fx:id="tblindex17_Part" maxWidth="250.0" minWidth="250.0" prefWidth="250.0" text="Parts Description" />
                                                                                         <TableColumn fx:id="tblindex06_Part" maxWidth="35.0" minWidth="35.0" prefWidth="35.0" text="Qty" />
                                                                                         <TableColumn fx:id="tblindex08_Part" maxWidth="150.0" minWidth="150.0" prefWidth="150.0" text="Purchase Type" />
+                                                                                        <TableColumn fx:id="tblindex20_Part" editable="false" minWidth="100.0" prefWidth="300.0" resizable="false" sortable="false" text="Approved By" />
                                                                                     </columns>
                                                                                 </TableView>
                                                                             </children>

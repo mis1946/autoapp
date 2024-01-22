@@ -333,6 +333,10 @@ public class VSPFormController implements Initializable, ScreenInterface {
     private TableColumn<VSPTablePartList, String> tblindex04_Part;
     @FXML
     private TableColumn<VSPTablePartList, String> tblindexTotAmnt;
+    @FXML
+    private TableColumn<?, ?> tblindex14_Labor;
+    @FXML
+    private TableColumn<?, ?> tblindex20_Part;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -342,6 +346,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
         oTrans = new VehicleSalesProposalMaster(oApp, oApp.getBranchCode(), true); //Initialize VehicleSalesProposalMaster
         oTrans.setCallback(oListener);
         oTrans.setWithUI(true);
+        oTrans.setFormType(true);
 
         /*Set Capitalization Fields*/
         initCapitalizationFields();
@@ -395,30 +400,31 @@ public class VSPFormController implements Initializable, ScreenInterface {
         tblViewParts.setOnMouseClicked(this::tblParts_Clicked);
         date04.setOnAction(this::getDate);
         date04.setDayCellFactory(DateFormatCell);
-        
+
         if (!comboBox24.getSelectionModel().isSelected(0)) {
             comboBox25.getItems().remove("0");
         } else {
             comboBox25.getItems().add("0");
         }
-        
+
         pnEditMode = EditMode.UNKNOWN;
         initButton(pnEditMode);
-        
+
         Platform.runLater(() -> {
-            if(oTrans.loadState()){
+            if (oTrans.loadState()) {
                 pnEditMode = oTrans.getEditMode();
                 loadVSPField();
                 loadTableLabor();
                 loadTableParts();
                 initButton(pnEditMode);
-            }else {
-                if(oTrans.getMessage().isEmpty()){
-                }else{
+            } else {
+                if (oTrans.getMessage().isEmpty()) {
+                } else {
                     ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
                 }
             }
         });
+
     }
 
     private Stage getStage() {
@@ -2454,7 +2460,10 @@ public class VSPFormController implements Initializable, ScreenInterface {
                         "",
                         "",
                         oTrans.getVSPLaborDetail(lnCtr, "sDSNoxxxx").toString().toUpperCase(),
-                        bAdditional
+                        oTrans.getVSPLaborDetail(lnCtr, "sApprovBy").toString().toUpperCase(),
+                        oTrans.getVSPLaborDetail(lnCtr, "sApproved").toString().toUpperCase(),
+                        bAdditional,
+                        false
                 ));
                 bAdditional = false;
             }
@@ -2702,16 +2711,19 @@ public class VSPFormController implements Initializable, ScreenInterface {
                 String totalAmount = decimalFormat.format(total);
                 partData.add(new VSPTablePartList(
                         String.valueOf(lnCtr), //ROW
-                        oTrans.getVSPPartsDetail(lnCtr, "sTransNox").toString(),
-                        oTrans.getVSPPartsDetail(lnCtr, "sStockIDx").toString(),
-                        oTrans.getVSPPartsDetail(lnCtr, "sBarCodex").toString(),
-                        partDesc,
+                        oTrans.getVSPPartsDetail(lnCtr, "sTransNox").toString().toUpperCase(),
+                        oTrans.getVSPPartsDetail(lnCtr, "sStockIDx").toString().toUpperCase(),
+                        oTrans.getVSPPartsDetail(lnCtr, "sBarCodex").toString().toUpperCase(),
+                        partDesc.toUpperCase(),
                         cType,
                         oTrans.getVSPPartsDetail(lnCtr, "nQuantity").toString(),
                         formattedAmount,
-                        oTrans.getVSPPartsDetail(lnCtr, "sDSNoxxxx").toString(),
+                        oTrans.getVSPPartsDetail(lnCtr, "sDSNoxxxx").toString().toUpperCase(),
+                        oTrans.getVSPPartsDetail(lnCtr, "sApprovBy").toString().toUpperCase(),
                         totalAmount,
-                        ""
+                        "",
+                        oTrans.getVSPPartsDetail(lnCtr, "sApproved").toString().toUpperCase(),
+                        false
                 ));
 
             }
@@ -2738,7 +2750,9 @@ public class VSPFormController implements Initializable, ScreenInterface {
         tblindex06_Part.setCellValueFactory(new PropertyValueFactory<VSPTablePartList, String>("tblindex06_Part"));
         tblindex04_Part.setCellValueFactory(new PropertyValueFactory<VSPTablePartList, String>("tblindex04_Part"));
         tblindex11_Part.setCellValueFactory(new PropertyValueFactory<VSPTablePartList, String>("tblindex11_Part"));
+
         tblindexTotAmnt.setCellValueFactory(new PropertyValueFactory<VSPTablePartList, String>("tblindexTotAmnt"));
+
     }
 
     //TableView KeyPressed

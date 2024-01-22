@@ -24,10 +24,10 @@ import org.rmj.auto.parameters.CancellationMaster;
 /**
  * FXML Controller class
  *
- * @author Arsiela
- * Date Created: 05-20-2023
+ * @author Arsiela Date Created: 05-20-2023
  */
 public class CancelFormController implements Initializable {
+
     private GRider oApp;
     private MasterCallback oListener;
     private CancellationMaster oTrans;
@@ -37,7 +37,7 @@ public class CancelFormController implements Initializable {
     private String sTransNo;
     private String sSourceCD;
 
-    private final String pxeModuleName = "Cancellation Remarks";  
+    private final String pxeModuleName = "Cancellation Remarks";
     @FXML
     private Button btnCancel;
     @FXML
@@ -46,28 +46,28 @@ public class CancelFormController implements Initializable {
     private Label lblFormNo;
     @FXML
     private TextArea textArea01;
-    
+
     public void setGRider(GRider foValue) {
         oApp = foValue;
     }
-    
-    public void setsSourceNox(String fsValue){
-       sSourceNox = fsValue;
+
+    public void setsSourceNox(String fsValue) {
+        sSourceNox = fsValue;
     }
-    
-    public void setsSourceCD(String fsValue){
-       sSourceCD = fsValue;
+
+    public void setsSourceCD(String fsValue) {
+        sSourceCD = fsValue;
     }
-    
-    public void setTransNo(String fsValue){
-       sTransNo = fsValue;
+
+    public void setTransNo(String fsValue) {
+        sTransNo = fsValue;
     }
-    
-    public boolean setState(){
-       return state;
+
+    public boolean setState() {
+        return state;
     }
-    
-    private Stage getStage(){
+
+    private Stage getStage() {
         return (Stage) btnCancel.getScene().getWindow();
     }
 
@@ -77,48 +77,48 @@ public class CancelFormController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         oListener = (int fnIndex, Object foValue) -> {
-            System.out.println("Set Class Value "  + fnIndex + "-->" + foValue);
+            System.out.println("Set Class Value " + fnIndex + "-->" + foValue);
         };
 
         oTrans = new CancellationMaster(oApp, oApp.getBranchCode(), true); //Initialize ClientMaster
         oTrans.setCallback(oListener);
         oTrans.setWithUI(true);
-        
+
         lblFormNo.setText(sTransNo);
         setCapsLockBehavior(textArea01);
-        
+
         Pattern pattern;
-        pattern = Pattern.compile("^[a-zA-Z0-9 ]+$");
+        pattern = Pattern.compile("^[a-zA-Z0-9 ]*");
         textArea01.setTextFormatter(new InputTextFormatter(pattern));
-        
+
         btnCancel.setOnAction(this::cmdButton_Click);
         btnDCancel.setOnAction(this::cmdButton_Click);
-    }  
-    
-     private static void setCapsLockBehavior(TextArea textArea) {
-          textArea.textProperty().addListener((observable, oldValue, newValue) -> {
-               if (textArea.getText() != null) {
-                    textArea.setText(newValue.toUpperCase());
-               }
-          });
-     }
-    
+    }
+
+    private static void setCapsLockBehavior(TextArea textArea) {
+        textArea.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (textArea.getText() != null) {
+                textArea.setText(newValue.toUpperCase());
+            }
+        });
+    }
+
     private void cmdButton_Click(ActionEvent event) {
-        String lsButton = ((Button)event.getSource()).getId();
-        switch (lsButton){
+        String lsButton = ((Button) event.getSource()).getId();
+        switch (lsButton) {
             case "btnCancel":
                 if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure you want to cancel?")) {
                 } else {
                     return;
                 }
-                
-                if (textArea01.getText().length() < 20){
+
+                if (textArea01.getText().length() < 20) {
                     ShowMessageFX.Warning(null, pxeModuleName, "Please enter at least 20 characters.");
                     textArea01.requestFocus();
                     return;
                 }
-                
-                if (oTrans.CancelForm(sTransNo, textArea01.getText(), sSourceCD, sSourceNox)){
+
+                if (oTrans.CancelForm(sTransNo, textArea01.getText(), sSourceCD, sSourceNox)) {
                     state = true;
                 } else {
                     return;
@@ -128,13 +128,12 @@ public class CancelFormController implements Initializable {
             case "btnDCancel":
                 state = false;
                 CommonUtils.closeStage(btnDCancel);
-               break;
+                break;
 
             default:
                 ShowMessageFX.Warning(null, pxeModuleName, "Button with name " + lsButton + " not registered.");
                 break;
         }
     }
-     
-    
+
 }

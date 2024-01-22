@@ -70,13 +70,13 @@ import org.rmj.auto.app.sales.InquiryFormController;
 import org.rmj.auto.app.sales.SalesAgentFormController;
 import org.rmj.auto.app.sales.UnitDeliveryReceiptFormController;
 import org.rmj.auto.app.sales.UnitReceivingFormController;
+import org.rmj.auto.app.sales.VSPAddOnsApprovalController;
 import org.rmj.auto.app.sales.VSPFormController;
 import org.rmj.auto.app.sales.VSPPendingPartsRequestController;
 import org.rmj.auto.app.sales.VehicleEntryFormController;
 import org.rmj.auto.app.sales.VehicleSalesApprovalController;
 import org.rmj.auto.app.service.JobOrderFormController;
 import org.rmj.auto.app.views.ActivityFormController;
-import org.rmj.auto.json.FormStateManager;
 import org.rmj.auto.json.TabsStateManager;
 
 /**
@@ -189,6 +189,8 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
     private MenuItem mnuSalesPartsRequest;
     @FXML
     private MenuItem mnuServiceJobOrder;
+    @FXML
+    private MenuItem mnuAddOnsApproval;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -286,27 +288,27 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
         tabpane.setOnDragDone(event -> {
             event.consume();
         });
-        
+
         List<String> tabs = new ArrayList<>();
         tabs = TabsStateManager.loadCurrentTab();
-        if(tabs.size() > 0){
+        if (tabs.size() > 0) {
             if (ShowMessageFX.YesNo(null, "Automotive Application", "You want to restore unclosed tabs?") == true) {
                 for (String tabName : tabs) {
                     triggerMenu(tabName);
                 }
             } else {
-                for(String tabName : tabs){
+                for (String tabName : tabs) {
                     TabsStateManager.closeTab(tabName);
                 }
                 TabsStateManager.saveCurrentTab(new ArrayList<>());
                 return;
-            } 
+            }
         }
     }
-    
-    private void triggerMenu(String sFormName){
-        
-        switch(sFormName){
+
+    private void triggerMenu(String sFormName) {
+
+        switch (sFormName) {
             /*DIRECTORY*/
             case "Activity":
                 mnuActivity.fire();
@@ -333,7 +335,7 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
                 mnuVhclDesc.fire();
                 break;
 //            case "Unit Receiving":
-//                
+//
 //                break;
             case "Inquiry":
                 mnuInquiry.fire();
@@ -369,7 +371,7 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
 //                break;
 //            case "Parts Sales Invoice":
 //                mnuPartsSalesInv.fire();
-//                break;    
+//                break;
             case "Vehicle Sales Invoice":
                 mnuVhclSalesInv.fire();
                 break;
@@ -385,7 +387,7 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
                 mnuServiceJobOrder.fire();
                 break;
         }
-        
+
     }
 
     private int findTabIndex(String tabText) {
@@ -474,18 +476,18 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
                 }
 
             });
-            
+
             newTab.setOnSelectionChanged(event -> {
                 ObservableList<Tab> tabs = tabpane.getTabs();
                 for (Tab tab : tabs) {
-                     if (tab.getText().equals(newTab.getText())) {
-                            tabName.remove(newTab.getText());
-                            tabName.add(newTab.getText());
-                            // Save the list of tab IDs to the JSON file
-                            TabsStateManager.saveCurrentTab(tabName);
+                    if (tab.getText().equals(newTab.getText())) {
+                        tabName.remove(newTab.getText());
+                        tabName.add(newTab.getText());
+                        // Save the list of tab IDs to the JSON file
+                        TabsStateManager.saveCurrentTab(tabName);
                         break;
-                     }
-                }  
+                    }
+                }
 
             });
             return (TabPane) tabpane;
@@ -542,6 +544,9 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
                 return new UnitDeliveryReceiptFormController();
             case "VSPForm.fxml":
                 return new VSPFormController();
+            case "VSPAddOnsApproval.fxml":
+                return new VSPAddOnsApprovalController();
+
             /*PARTS*/
             case "ItemEntryForm.fxml":
                 return new ItemEntryFormController();
@@ -615,6 +620,8 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
                 return "Unit Delivery Receipt";
             case "VSPForm.fxml":
                 return "Vehicle Sales Proposal";
+            case "VSPAddOnsApproval.fxml":
+                return "VSP Add Ons Approval";
             /*ACCOUNTING*/
             case "BankEntryForm.fxml":
                 return "Bank";
@@ -644,6 +651,7 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
                 return null;
         }
     }
+
     //Load Main Screen if no tab remain
     public void Tabclose() {
         int tabsize = tabpane.getTabs().size();
@@ -796,6 +804,15 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
 //        if (checktabs(SetTabTitle(sformname)) == 1) {
 //            setScene2(loadAnimate(sformname));
 //        }
+    }
+
+    @FXML
+    private void mnuAddOnsApprovalClick(ActionEvent event) {
+        String sformname = "VSPAddOnsApproval.fxml";
+        //check tab
+        if (checktabs(SetTabTitle(sformname)) == 1) {
+            setScene2(loadAnimate(sformname));
+        }
     }
 
     /*VEHICLE DESCRIPTION AND PARAMETERS*/
@@ -1060,8 +1077,8 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
     public void logout(Stage stage) {
 
         if (ShowMessageFX.YesNo(null, "Exit", "Are you sure, do you want to close?") == true) {
-            if(tabName.size() > 0){
-                for(String tabsName : tabName){
+            if (tabName.size() > 0) {
+                for (String tabsName : tabName) {
                     TabsStateManager.closeTab(tabsName);
                 }
                 TabsStateManager.saveCurrentTab(new ArrayList<>());

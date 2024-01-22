@@ -963,7 +963,7 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
 
             /*Populate table*/
             laborData.clear();
-            //if (oTrans.loadJOLabor()) {
+            boolean fbPurchaseType = false;
             for (int lnCtr = 1; lnCtr <= oTrans.getJOLaborCount(); lnCtr++) {
                 DecimalFormat decimalFormat = new DecimalFormat("#,##0.00");
                 String amountString = oTrans.getJOLaborDetail(lnCtr, 6).toString();
@@ -971,22 +971,23 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
                 double amount = Double.parseDouble(amountString);
 
                 String formattedAmount = decimalFormat.format(amount);
-                String cType = "";
                 switch (oTrans.getJOLaborDetail(lnCtr, "sPayChrge").toString()) {
                     case "0":
-                        cType = "FREE OF CHARGE";
+                        fbPurchaseType = true;
                         break;
                     case "1":
-                        cType = "CHARGE";
+                        fbPurchaseType = false;
                         break;
                 }
                 laborData.add(new JobOrderLaborTableList(
                         String.valueOf(lnCtr), //ROW
                         oTrans.getJOLaborDetail(lnCtr, "sLaborCde").toString(),
                         oTrans.getJOLaborDetail(lnCtr, "sLaborDsc").toString().toUpperCase(),
-                        cType,
-                        formattedAmount
+                        oTrans.getJOLaborDetail(lnCtr, "sPayChrge").toString().toUpperCase(),
+                        formattedAmount,
+                        fbPurchaseType
                 ));
+                fbPurchaseType = false;
 
             }
             //}
@@ -1006,7 +1007,7 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
 
         tblLaborRow.setCellValueFactory(new PropertyValueFactory<JobOrderLaborTableList, String>("tblLaborRow"));
         tblindex10_Labor.setCellValueFactory(new PropertyValueFactory<JobOrderLaborTableList, String>("tblindex10_Labor"));
-        tblindex03_Labor.setCellValueFactory(new PropertyValueFactory<JobOrderLaborTableList, String>("tblindex03_Labor"));
+        tblindex03_Labor.setCellValueFactory(new PropertyValueFactory<JobOrderLaborTableList, String>("FreeOrNot"));
         tblindex06_Labor.setCellValueFactory(new PropertyValueFactory<JobOrderLaborTableList, String>("tblindex06_Labor"));
     }
 
@@ -1226,19 +1227,18 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
 
             /*Populate table*/
             partData.clear();
+            boolean fbPurchaseType = false;
             for (int lnCtr = 1; lnCtr <= oTrans.getJOPartsCount(); lnCtr++) {
                 DecimalFormat getFormat = new DecimalFormat("#,##0.00");
                 String amountString = oTrans.getJOPartsDetail(lnCtr, "nUnitPrce").toString();
                 double amount = Double.parseDouble(amountString);
-
                 String formattedAmount = getFormat.format(amount);
-                String cType = "";
                 switch (oTrans.getJOPartsDetail(lnCtr, "sPayChrge").toString()) {
                     case "0":
-                        cType = "FREE OF CHARGE";
+                        fbPurchaseType = true;
                         break;
                     case "1":
-                        cType = "CHARGE";
+                        fbPurchaseType = false;
                         break;
                 }
                 int quant = Integer.parseInt(oTrans.getJOPartsDetail(lnCtr, "nQtyEstmt").toString());
@@ -1249,13 +1249,14 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
                         oTrans.getJOPartsDetail(lnCtr, "sStockIDx").toString(),
                         oTrans.getJOPartsDetail(lnCtr, "sBarCodex").toString(),
                         oTrans.getJOPartsDetail(lnCtr, "sDescript").toString().toUpperCase(),
-                        cType,
+                        oTrans.getJOPartsDetail(lnCtr, "sPayChrge").toString().toUpperCase(),
                         oTrans.getJOPartsDetail(lnCtr, "nQtyEstmt").toString(),
                         formattedAmount,
-                        totalAmount
+                        totalAmount,
+                        fbPurchaseType
                 )
                 );
-
+                fbPurchaseType = false;
             }
             tblViewParts.setItems(partData);
             initTableParts();
@@ -1273,7 +1274,7 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
         tblPartsRow.setCellValueFactory(new PropertyValueFactory<JobOrderPartsTableList, String>("tblPartsRow"));
         tblindex14_Part.setCellValueFactory(new PropertyValueFactory<JobOrderPartsTableList, String>("tblindex14_Part"));
         tblindex04_Part.setCellValueFactory(new PropertyValueFactory<JobOrderPartsTableList, String>("tblindex04_Part"));
-        tblindex11_Part.setCellValueFactory(new PropertyValueFactory<JobOrderPartsTableList, String>("tblindex11_Part"));
+        tblindex11_Part.setCellValueFactory(new PropertyValueFactory<JobOrderPartsTableList, String>("FreeOrNot"));
         tblindex06_Part.setCellValueFactory(new PropertyValueFactory<JobOrderPartsTableList, String>("tblindex06_Part"));
         tblindex10_Part.setCellValueFactory(new PropertyValueFactory<JobOrderPartsTableList, String>("tblindex10_Part"));
         tblindex15_Part.setCellValueFactory(new PropertyValueFactory<JobOrderPartsTableList, String>("tblindex15_Part"));

@@ -194,11 +194,11 @@
                                                                                     <columns>
                                                                                         <TableColumn fx:id="tblRow" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" text="Row" />
                                                                                         <TableColumn fx:id="tblindex09_Part" maxWidth="250.0" minWidth="250.0" prefWidth="250.0" text="(Sales) Parts Description" />
-                                                                                        <TableColumn fx:id="tblindex14_Part" maxWidth="170.0" minWidth="170.0" prefWidth="170.0" text="Part Number" />
-                                                                                        <TableColumn fx:id="tblindex17_Part" maxWidth="250.0" minWidth="250.0" prefWidth="250.0" text="Parts Description" />
-                                                                                        <TableColumn fx:id="tblindex06_Part" maxWidth="35.0" minWidth="35.0" prefWidth="35.0" text="Qty" />
-                                                                                        <TableColumn fx:id="tblindex08_Part" maxWidth="150.0" minWidth="150.0" prefWidth="150.0" text="Purchase Type" />
-                                                                                        <TableColumn fx:id="tblindex20_Part" editable="false" minWidth="100.0" prefWidth="300.0" resizable="false" sortable="false" text="Approved By" />
+                                                                                        <TableColumn fx:id="tblindex14_Part" maxWidth="170.0" minWidth="100.0" prefWidth="150.0" text="Part Number" />
+                                                                                        <TableColumn fx:id="tblindex17_Part" maxWidth="250.0" minWidth="100.0" prefWidth="200.0" text="Parts Description" />
+                                                                                        <TableColumn fx:id="tblindex06_Part" maxWidth="50.0" minWidth="50.0" prefWidth="50.0" text="Qty" />
+                                                                                        <TableColumn fx:id="tblindex08_Part" maxWidth="150.0" minWidth="50.0" prefWidth="50.0" text="FOC" />
+                                                                                        <TableColumn fx:id="tblindex20_Part" editable="false" minWidth="100.0" prefWidth="200.0" resizable="false" sortable="false" text="Approved By" />
                                                                                     </columns>
                                                                                 </TableView>
                                                                             </children>

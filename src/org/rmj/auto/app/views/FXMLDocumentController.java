@@ -91,6 +91,7 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
     private String sSalesInvoiceType = "";
     private String sVehicleInfoType = "";
     private String sJobOrderType = "";
+    private String sSalesInfoType = "";
 
     // Variables to track the window movement
     private double xOffset = 0;
@@ -191,6 +192,8 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
     private MenuItem mnuServiceJobOrder;
     @FXML
     private MenuItem mnuAddOnsApproval;
+    @FXML
+    private MenuItem mnuSalesExecutive;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -313,9 +316,9 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
             case "Activity":
                 mnuActivity.fire();
                 break;
-//            case "Activity Approval":
-//                mnuActivityApproval.fire();
-//                break;
+            case "Activity Approval":
+                mnuActivityApproval.fire();
+                break;
             case "Customer":
                 mnuCustomerInfo.fire();
                 break;
@@ -328,9 +331,11 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
 //            case "Supplier":
 //                break;
             /*SALES*/
-//            case "Sales Agent":
-//                mnuSalesAgent.fire();
-//                break;
+            case "Sales Agent Information":
+                mnuSalesAgent.fire();
+            case "Sales Executive Information":
+                mnuSalesExecutive.fire();
+                break;
             case "Vehicle Description":
                 mnuVhclDesc.fire();
                 break;
@@ -340,14 +345,17 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
             case "Inquiry":
                 mnuInquiry.fire();
                 break;
-//            case "Vehicle Reservation Approval":
-//                mnuVhclRsrvApp.fire();
-//                break;
+            case "Vehicle Reservation Approval":
+                mnuVhclRsrvApp.fire();
+                break;
             case "Unit Delivery Receipt":
                 mnuUnitDeliveryReceipt.fire();
                 break;
             case "Vehicle Sales Proposal":
                 mnuVSPEntry.fire();
+                break;
+            case "VSP Add Ons Approval":
+                mnuAddOnsApproval.fire();
                 break;
             case "Sales Job Order Information":
                 mnuSalesJobOrder.fire();
@@ -357,21 +365,21 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
                 mnuBank.fire();
                 break;
             /*CASHIERING*/
-//            case "Acknowledgement Receipt":
-//                mnuAckReceipt.fire();
-//                break;
-//            case "Billing Statement":
-//                mnuBillingStmt.fire();
-//                break;
-//            case "Collection Receipt":
-//                mnuColReceipt.fire();
-//                break;
-//            case "Official Receipt":
-//                mnuOfcReceipt.fire();
-//                break;
-//            case "Parts Sales Invoice":
-//                mnuPartsSalesInv.fire();
-//                break;
+            case "Acknowledgement Receipt":
+                mnuAckReceipt.fire();
+                break;
+            case "Billing Statement":
+                mnuBillingStmt.fire();
+                break;
+            case "Collection Receipt":
+                mnuColReceipt.fire();
+                break;
+            case "Official Receipt":
+                mnuOfcReceipt.fire();
+                break;
+            case "Parts Sales Invoice":
+                mnuPartsSalesInv.fire();
+                break;
             case "Vehicle Sales Invoice":
                 mnuVhclSalesInv.fire();
                 break;
@@ -379,9 +387,9 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
             case "Item Information":
                 mnuItemEntry.fire();
                 break;
-//            case "Sales Parts Request":
-//                mnuSalesPartsRequest.fire();
-//                break;
+            case "Sales Parts Request":
+                mnuSalesPartsRequest.fire();
+                break;
             /*SERVICE*/
             case "Service Job Order Information":
                 mnuServiceJobOrder.fire();
@@ -605,7 +613,12 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
                 return "Supplier";
             /*SALES*/
             case "SalesAgentForm.fxml":
-                return "Sales Agent";
+                if (sSalesInfoType.isEmpty()) {
+                    ShowMessageFX.Warning(null, "Warning", "Notify System Admin to Configure Tab Title for " + menuaction);
+                    return null;
+                }
+                return sSalesInfoType;
+//                return "Sales Agent";
             case "VehicleDescriptionForm.fxml":
                 return "Vehicle Description";
             case "VehicleEntryForm.fxml":
@@ -729,6 +742,17 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
 
     @FXML
     private void mnuSalesAgentClick(ActionEvent event) {
+        sSalesInfoType = "Sales Agent Information";
+        String sformname = "SalesAgentForm.fxml";
+        //check tab
+        if (checktabs(SetTabTitle(sformname)) == 1) {
+            setScene2(loadAnimate(sformname));
+        }
+    }
+    
+    @FXML
+    private void mnuSalesExecutiveClick(ActionEvent event) {
+        sSalesInfoType = "Sales Executive Information";
         String sformname = "SalesAgentForm.fxml";
         //check tab
         if (checktabs(SetTabTitle(sformname)) == 1) {

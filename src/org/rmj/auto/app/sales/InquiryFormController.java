@@ -720,6 +720,15 @@ public class InquiryFormController implements Initializable, ScreenInterface {
                 loadCustomerInquiry();
                 loadTargetVehicle();
                 loadPromosOfferred();
+                if(pnEditMode == EditMode.UPDATE || pnEditMode == EditMode.READY){
+                    try {
+                        loadInquiryProcess((String) oTrans.getMaster(1));
+                    } catch (SQLException ex) {
+                        Logger.getLogger(InquiryFormController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                
+                initBtnProcess(pnEditMode);
                 initButton(pnEditMode);
             }else {
                 if(oTrans.getMessage().isEmpty()){
@@ -891,6 +900,7 @@ public class InquiryFormController implements Initializable, ScreenInterface {
                     }
                     break;
                 case "btnEdit":
+                    tabPaneMain.getSelectionModel().select(tabCustomerInquiry);
                     if (oTrans.UpdateRecord()) {
                         pnEditMode = oTrans.getEditMode();
                     } else {
@@ -1982,59 +1992,62 @@ public class InquiryFormController implements Initializable, ScreenInterface {
 
     //Populate Text Field Based on selected transaction in table
     private void getSelectedItem(String TransNo) {
-        try {
-            clearFields();
-            oldTransNo = TransNo;
-
-            if (oTrans.OpenRecord(TransNo)) {
-                tabPaneMain.getSelectionModel().select(tabCustomerInquiry);
-                pnEditMode = oTrans.getEditMode(); //inqlistdata
-                loadCustomerInquiry();
-                loadTargetVehicle();
-                loadPromosOfferred();
-
-                //Retrieve Requirements
-                oTransProcess.loadRequirements(TransNo);
-                if (oTransProcess.getInqReqCount() > 0) {
-                    cmbInqpr01.getSelectionModel().select(Integer.parseInt(oTransProcess.getInqReq(oTransProcess.getInqReqCount(), "cPayModex").toString())); //Inquiry Payment mode
-                    cmbInqpr02.getSelectionModel().select(Integer.parseInt(oTransProcess.getInqReq(oTransProcess.getInqReqCount(), "cCustGrpx").toString())); //Inquiry Customer Type
-                    iInqPayMode = Integer.parseInt(oTransProcess.getInqReq(oTransProcess.getInqReqCount(), "cPayModex").toString());
-                } else {
-                    cmbInqpr01.setValue(null);
-                    cmbInqpr02.setValue(null);
-                }
-                //Load Table Requirements
-                loadInquiryRequirements();
-                //Retrieve Reservation
-                String[] sSourceNo = {TransNo};
-                oTransProcess.loadReservation(sSourceNo, true);
-                //Load Table Reservation
-                loadInquiryAdvances();
-
-                //Load Table Bank Application
-                oTransBankApp.loadBankApplication(TransNo, true);
-                loadBankApplication();
-
-                //Load Table Follow Up History
-                oTransFollowUp.loadFollowUp(TransNo, true);
-                loadFollowUp();
-
-                sClientID = (String) oTrans.getMaster(7);
-                sSourceNox = TransNo;
-
-                initBtnProcess(pnEditMode);
-                initButton(pnEditMode);
-
-                initInquiryRequirements();
-                oldPnRow = pagecounter;
-            }
-
-        } catch (SQLException e) {
-            ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
+        clearFields();
+        oldTransNo = TransNo;
+        if (oTrans.OpenRecord(TransNo)) {
+            tabPaneMain.getSelectionModel().select(tabCustomerInquiry);
+            pnEditMode = oTrans.getEditMode(); //inqlistdata
+            loadCustomerInquiry();
+            loadTargetVehicle();
+            loadPromosOfferred();
+            
+            loadInquiryProcess(TransNo);
+            sSourceNox = TransNo;
+            
+            initBtnProcess(pnEditMode);
+            initButton(pnEditMode);
+            
+            initInquiryRequirements();
+            oldPnRow = pagecounter;
         }
 
     }
 
+    private void loadInquiryProcess(String TransNo){
+        try {
+            //Retrieve Requirements
+            oTransProcess.loadRequirements(TransNo);
+            if (oTransProcess.getInqReqCount() > 0) {
+                cmbInqpr01.getSelectionModel().select(Integer.parseInt(oTransProcess.getInqReq(oTransProcess.getInqReqCount(), "cPayModex").toString())); //Inquiry Payment mode
+                cmbInqpr02.getSelectionModel().select(Integer.parseInt(oTransProcess.getInqReq(oTransProcess.getInqReqCount(), "cCustGrpx").toString())); //Inquiry Customer Type
+                iInqPayMode = Integer.parseInt(oTransProcess.getInqReq(oTransProcess.getInqReqCount(), "cPayModex").toString());
+            } else {
+                cmbInqpr01.setValue(null);
+                cmbInqpr02.setValue(null);
+            }
+            //Load Table Requirements
+            loadInquiryRequirements();
+            //Retrieve Reservation
+            String[] sSourceNo = {TransNo};
+            oTransProcess.loadReservation(sSourceNo, true);
+            //Load Table Reservation
+            loadInquiryAdvances();
+            
+            //Load Table Bank Application
+            oTransBankApp.loadBankApplication(TransNo, true);
+            loadBankApplication();
+            
+            //Load Table Follow Up History
+            oTransFollowUp.loadFollowUp(TransNo, true);
+            loadFollowUp();
+            
+            sClientID = (String) oTrans.getMaster(7);
+        } catch (SQLException ex) {
+            Logger.getLogger(InquiryFormController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    
+    }
+    
     //Load Customer Inquiry Data
     public void loadCustomerInquiry() {
         try {

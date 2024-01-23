@@ -15,6 +15,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
@@ -109,7 +111,16 @@ public class VehicleSalesInvoicePrintController implements Initializable {
             case "btnPrint":
                 try {
                 if (JasperPrintManager.printReport(jasperPrint, true)) {
-                    ShowMessageFX.Information(null, pxeModuleName, "Printed Successfully");
+                    if (oTrans.UpdateRecord()) {
+                        oTrans.setMaster(14, "1");
+                        if (oTrans.SaveRecord()) {
+                            ShowMessageFX.Information(null, pxeModuleName, "Printed Successfully");
+                        } else {
+                            ShowMessageFX.Warning(null, pxeModuleName, oTrans.getMessage());
+                        }
+                    } else {
+                        ShowMessageFX.Warning(null, pxeModuleName, oTrans.getMessage());
+                    }
                     CommonUtils.closeStage(btnClose);
                 } else {
                     ShowMessageFX.Warning(null, pxeModuleName, "Print Aborted");
@@ -117,8 +128,11 @@ public class VehicleSalesInvoicePrintController implements Initializable {
             } catch (JRException ex) {
 
                 ShowMessageFX.Warning(null, pxeModuleName, "Print Aborted");
+            } catch (SQLException ex) {
+                Logger.getLogger(VehicleSalesInvoicePrintController.class.getName()).log(Level.SEVERE, null, ex);
             }
             break;
+
             default:
                 ShowMessageFX.Warning(null, pxeModuleName, "Button with name " + lsButton + " not registered.");
                 break;

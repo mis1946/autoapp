@@ -111,7 +111,16 @@ public class UnitDeliveryReceiptPrintController implements Initializable {
             case "btnPrint":
                 try {
                 if (JasperPrintManager.printReport(jasperPrint, true)) {
-                    ShowMessageFX.Information(null, pxeModuleName, "Printed Successfully");
+                    if (oTrans.UpdateRecord()) {
+                        oTrans.setMaster(13, "1");
+                        if (oTrans.SaveRecord()) {
+                            ShowMessageFX.Information(null, pxeModuleName, "Printed Successfully");
+                        } else {
+                            ShowMessageFX.Warning(null, pxeModuleName, oTrans.getMessage());
+                        }
+                    } else {
+                        ShowMessageFX.Warning(null, pxeModuleName, oTrans.getMessage());
+                    }
                     CommonUtils.closeStage(btnClose);
                 } else {
                     ShowMessageFX.Warning(null, pxeModuleName, "Print Aborted");
@@ -119,8 +128,11 @@ public class UnitDeliveryReceiptPrintController implements Initializable {
             } catch (JRException ex) {
 
                 ShowMessageFX.Warning(null, pxeModuleName, "Print Aborted");
+            } catch (SQLException ex) {
+                Logger.getLogger(UnitDeliveryReceiptPrintController.class.getName()).log(Level.SEVERE, null, ex);
             }
             break;
+
             default:
                 ShowMessageFX.Warning(null, pxeModuleName, "Button with name " + lsButton + " not registered.");
                 break;

@@ -334,9 +334,9 @@ public class VSPFormController implements Initializable, ScreenInterface {
     @FXML
     private TableColumn<VSPTablePartList, String> tblindexTotAmnt;
     @FXML
-    private TableColumn<?, ?> tblindex14_Labor;
+    private TableColumn<VSPTableLaborList, String> tblindex14_Labor;
     @FXML
-    private TableColumn<?, ?> tblindex20_Part;
+    private TableColumn<VSPTablePartList, String> tblindex20_Part;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -2427,14 +2427,14 @@ public class VSPFormController implements Initializable, ScreenInterface {
             /*Populate table*/
             laborData.clear();
             boolean bAdditional = false;
+            boolean fbPurchaseType = false;
             for (int lnCtr = 1; lnCtr <= oTrans.getVSPLaborCount(); lnCtr++) {
-                String cType = "";
                 switch (oTrans.getVSPLaborDetail(lnCtr, "sChrgeTyp").toString()) {
                     case "0":
-                        cType = "FREE OF CHARGE";
+                        fbPurchaseType = true;
                         break;
                     case "1":
-                        cType = "CHARGE";
+                        fbPurchaseType = false;
                         break;
                 }
                 if (oTrans.getVSPLaborDetail(lnCtr, "cAddtlxxx").toString().equals("1")) {
@@ -2453,7 +2453,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
                         oTrans.getVSPLaborDetail(lnCtr, "sTransNox").toString(),
                         oTrans.getVSPLaborDetail(lnCtr, "sLaborCde").toString(),
                         oTrans.getVSPLaborDetail(lnCtr, "sLaborDsc").toString().toUpperCase(),
-                        cType,
+                        "",
                         formattedAmount,
                         "",
                         "",
@@ -2463,9 +2463,10 @@ public class VSPFormController implements Initializable, ScreenInterface {
                         oTrans.getVSPLaborDetail(lnCtr, "sApprovBy").toString().toUpperCase(),
                         oTrans.getVSPLaborDetail(lnCtr, "sApproved").toString().toUpperCase(),
                         bAdditional,
-                        false
+                        fbPurchaseType
                 ));
                 bAdditional = false;
+                fbPurchaseType = false;
             }
 
             tblViewLabor.setItems(laborData);
@@ -2484,11 +2485,11 @@ public class VSPFormController implements Initializable, ScreenInterface {
 
         tblLaborRow.setCellValueFactory(new PropertyValueFactory<VSPTableLaborList, String>("tblLaborRow"));
         tblindex07_Labor.setCellValueFactory(new PropertyValueFactory<VSPTableLaborList, String>("tblindex07_Labor"));
-        tblindex05_Labor.setCellValueFactory(new PropertyValueFactory<VSPTableLaborList, String>("tblindex05_Labor"));
+        tblindex05_Labor.setCellValueFactory(new PropertyValueFactory<VSPTableLaborList, String>("FreeOrNot"));
         tblindex04_Labor.setCellValueFactory(new PropertyValueFactory<VSPTableLaborList, String>("tblindex04_Labor"));
         tblindex11_Labor.setCellValueFactory(new PropertyValueFactory<VSPTableLaborList, String>("tblindex11_Labor"));
         tblindex08_Labor.setCellValueFactory(new PropertyValueFactory<>("addOrNot"));
-
+        tblindex14_Labor.setCellValueFactory(new PropertyValueFactory<VSPTableLaborList, String>("tblindex14_Labor"));
     }
 
     private void tblLabor_Clicked(MouseEvent event) {
@@ -2691,15 +2692,15 @@ public class VSPFormController implements Initializable, ScreenInterface {
 
             /*Populate table*/
             partData.clear();
+            boolean fbPurchaseType = false;
             for (int lnCtr = 1; lnCtr <= oTrans.getVSPPartsCount(); lnCtr++) {
                 DecimalFormat decimalFormat = new DecimalFormat("#,##0.00");
-                String cType = "";
                 switch (oTrans.getVSPPartsDetail(lnCtr, "sChrgeTyp").toString()) {
                     case "0":
-                        cType = "FREE OF CHARGE";
+                        fbPurchaseType = true;
                         break;
                     case "1":
-                        cType = "CHARGE";
+                        fbPurchaseType = false;
                         break;
                 }
                 String amountString = oTrans.getVSPPartsDetail(lnCtr, "nUnitPrce").toString();
@@ -2715,7 +2716,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
                         oTrans.getVSPPartsDetail(lnCtr, "sStockIDx").toString().toUpperCase(),
                         oTrans.getVSPPartsDetail(lnCtr, "sBarCodex").toString().toUpperCase(),
                         partDesc.toUpperCase(),
-                        cType,
+                        "",
                         oTrans.getVSPPartsDetail(lnCtr, "nQuantity").toString(),
                         formattedAmount,
                         oTrans.getVSPPartsDetail(lnCtr, "sDSNoxxxx").toString().toUpperCase(),
@@ -2723,9 +2724,9 @@ public class VSPFormController implements Initializable, ScreenInterface {
                         totalAmount,
                         "",
                         oTrans.getVSPPartsDetail(lnCtr, "sApproved").toString().toUpperCase(),
-                        false
+                        fbPurchaseType
                 ));
-
+                fbPurchaseType = false;
             }
 
             tblViewParts.setItems(partData);
@@ -2746,13 +2747,12 @@ public class VSPFormController implements Initializable, ScreenInterface {
         tblPartsRow.setCellValueFactory(new PropertyValueFactory<VSPTablePartList, String>("tblPartsRow"));
         tblindex14_Part.setCellValueFactory(new PropertyValueFactory<VSPTablePartList, String>("tblindex14_Part"));
         tblindex09_Part.setCellValueFactory(new PropertyValueFactory<VSPTablePartList, String>("tblindex09_Part"));
-        tblindex08_Part.setCellValueFactory(new PropertyValueFactory<VSPTablePartList, String>("tblindex08_Part"));
+        tblindex08_Part.setCellValueFactory(new PropertyValueFactory<VSPTablePartList, String>("FreeOrNot"));
         tblindex06_Part.setCellValueFactory(new PropertyValueFactory<VSPTablePartList, String>("tblindex06_Part"));
         tblindex04_Part.setCellValueFactory(new PropertyValueFactory<VSPTablePartList, String>("tblindex04_Part"));
         tblindex11_Part.setCellValueFactory(new PropertyValueFactory<VSPTablePartList, String>("tblindex11_Part"));
-
         tblindexTotAmnt.setCellValueFactory(new PropertyValueFactory<VSPTablePartList, String>("tblindexTotAmnt"));
-
+        tblindex20_Part.setCellValueFactory(new PropertyValueFactory<VSPTablePartList, String>("tblindex20_Part"));
     }
 
     //TableView KeyPressed

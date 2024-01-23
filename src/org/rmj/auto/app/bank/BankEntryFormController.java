@@ -28,7 +28,6 @@ import javafx.scene.control.Pagination;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TextFormatter;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import static javafx.scene.input.KeyCode.DOWN;
@@ -85,8 +84,6 @@ public class BankEntryFormController implements Initializable, ScreenInterface {
     @FXML
     private TableColumn<BankEntryTableList, String> tblindex02; //sBankName
     @FXML
-    private TableColumn<BankEntryTableList, String> tblindex03; //sBankCode
-    @FXML
     private TableColumn<BankEntryTableList, String> tblindex17; //sBankBrch
     @FXML
     private TableColumn<BankEntryTableList, String> tblindex16; //sTownProv
@@ -100,8 +97,6 @@ public class BankEntryFormController implements Initializable, ScreenInterface {
     private Button btnClose;
     @FXML
     private TextField txtField02; //sBankName
-    @FXML
-    private TextField txtField03; //sBankCode
     @FXML
     private TextField txtField04; //sContactP
     @FXML
@@ -122,6 +117,15 @@ public class BankEntryFormController implements Initializable, ScreenInterface {
     private TextField textSeek02; //for search
     @FXML
     private Button btnCancel;
+
+    private Stage getStage() {
+        return (Stage) txtField02.getScene().getWindow();
+    }
+
+    @Override
+    public void setGRider(GRider foValue) {
+        oApp = foValue;
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -168,32 +172,22 @@ public class BankEntryFormController implements Initializable, ScreenInterface {
         pagination.setPageFactory(this::createPage);
         pnEditMode = EditMode.UNKNOWN;
         initButton(pnEditMode);
-        
+
         Platform.runLater(() -> {
-            if(oTrans.loadState()){
+            if (oTrans.loadState()) {
                 pnEditMode = oTrans.getEditMode();
                 loadBankEntryField();
                 initButton(pnEditMode);
-            }else {
-                if(oTrans.getMessage().isEmpty()){
-                }else{
+            } else {
+                if (oTrans.getMessage().isEmpty()) {
+                } else {
                     ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
                 }
             }
         });
     }
 
-    private Stage getStage() {
-        return (Stage) txtField02.getScene().getWindow();
-    }
-
-    @Override
-    public void setGRider(GRider foValue) {
-        oApp = foValue;
-    }
-
     private void initSetCapsLockField() {
-        setCapsLockBehavior(txtField03);
         setCapsLockBehavior(txtField02);
         setCapsLockBehavior(txtField17);
         setCapsLockBehavior(txtField05);
@@ -215,7 +209,6 @@ public class BankEntryFormController implements Initializable, ScreenInterface {
 
     private void initTxtFieldFocus() {
         txtField02.focusedProperty().addListener(txtField_Focus); // sBankName
-//          txtField03.focusedProperty().addListener(txtField_Focus); // sBankAdv
         txtField17.focusedProperty().addListener(txtField_Focus); // sBankBrch
         txtField05.focusedProperty().addListener(txtField_Focus); // sAddressx
         txtField18.focusedProperty().addListener(txtField_Focus); // sTownName
@@ -310,11 +303,6 @@ public class BankEntryFormController implements Initializable, ScreenInterface {
                         txtField02.requestFocus();
                         return;
                     }
-//                         if (txtField03.getText().trim().equals("")) {
-//                              ShowMessageFX.Warning(getStage(), "Please enter a value for Bank Addev.","Warning", null);
-//                              txtField03.requestFocus();
-//                              return;
-//                         }
                     if (txtField17.getText().trim().equals("")) {
                         ShowMessageFX.Warning(getStage(), "Please enter a valid value for Branch", "Warning", null);
                         txtField17.requestFocus();
@@ -424,7 +412,6 @@ public class BankEntryFormController implements Initializable, ScreenInterface {
 
         tblindexRow.setCellValueFactory(new PropertyValueFactory<>("tblindexRow"));  //Row
         tblindex02.setCellValueFactory(new PropertyValueFactory<>("tblindex02")); // sBankName
-        tblindex03.setCellValueFactory(new PropertyValueFactory<>("tblindex03")); // sBankCode
         tblindex17.setCellValueFactory(new PropertyValueFactory<>("tblindex17")); // sBankBrch
         tblindex16.setCellValueFactory(new PropertyValueFactory<>("tblindex16")); // sTownProv
 
@@ -550,7 +537,6 @@ public class BankEntryFormController implements Initializable, ScreenInterface {
     private void loadBankEntryField() {
         try {
             txtField02.setText((String) oTrans.getMaster("sBankName"));// sBankName
-            txtField03.setText((String) oTrans.getMaster("sBankCode"));// sBankAdv
             txtField17.setText((String) oTrans.getMaster("sBankBrch"));// sBankBrch
             txtField05.setText((String) oTrans.getMaster("sAddressx"));// sAddressx
             txtField18.setText((String) oTrans.getMaster("sTownName"));// sTownName
@@ -567,7 +553,6 @@ public class BankEntryFormController implements Initializable, ScreenInterface {
     private void initTxtFieldKeyPressed() {
 
         txtField02.setOnKeyPressed(this::txtField_KeyPressed); // sBankName
-        txtField03.setOnKeyPressed(this::txtField_KeyPressed); // sBankAdv
         txtField17.setOnKeyPressed(this::txtField_KeyPressed); // sBankBrch
         txtField05.setOnKeyPressed(this::txtField_KeyPressed); // sAddressx
         txtField18.setOnKeyPressed(this::txtField_KeyPressed);// sTownName
@@ -631,7 +616,6 @@ public class BankEntryFormController implements Initializable, ScreenInterface {
 
         /*Bank Entry*/
         txtField02.setDisable(!lbShow); // sBankNamexx
-//        txtField03.setDisable(true); // sBankAdv
         txtField17.setDisable(!lbShow); // sBranchx
         txtField05.setDisable(!lbShow); // sBarangayx
         txtField18.setDisable(!(lbShow && !txtField15.getText().isEmpty()));
@@ -661,7 +645,6 @@ public class BankEntryFormController implements Initializable, ScreenInterface {
 
     private void initAddRequiredField() {
         txtFieldAnimation.addRequiredFieldListener(txtField02);
-        txtFieldAnimation.addRequiredFieldListener(txtField03);
         txtFieldAnimation.addRequiredFieldListener(txtField17);
         txtFieldAnimation.addRequiredFieldListener(txtField05);
         txtFieldAnimation.addRequiredFieldListener(txtField18);
@@ -674,7 +657,6 @@ public class BankEntryFormController implements Initializable, ScreenInterface {
         /*clear tables*/
         removeRequired();
         txtField02.setText(""); // sBankName
-        txtField03.setText("");  // sBankAdv
         txtField17.setText("");  // sBankBrch
         txtField05.setText("");  // sAddressx
         txtField18.setText("");  // sTownName
@@ -687,7 +669,6 @@ public class BankEntryFormController implements Initializable, ScreenInterface {
 
     private void removeRequired() {
         txtFieldAnimation.removeShakeAnimation(txtField02, txtFieldAnimation.shakeTextField(txtField02), "required-field");
-        txtFieldAnimation.removeShakeAnimation(txtField03, txtFieldAnimation.shakeTextField(txtField03), "required-field");
         txtFieldAnimation.removeShakeAnimation(txtField17, txtFieldAnimation.shakeTextField(txtField17), "required-field");
         txtFieldAnimation.removeShakeAnimation(txtField05, txtFieldAnimation.shakeTextField(txtField05), "required-field");
         txtFieldAnimation.removeShakeAnimation(txtField18, txtFieldAnimation.shakeTextField(txtField18), "required-field");

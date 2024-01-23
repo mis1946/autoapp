@@ -29,7 +29,7 @@
                         <GridPane>
                           <columnConstraints>
                             <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="75.0" />
-                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="300.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="370.0" />
                               <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="75.0" />
                           </columnConstraints>
                           <rowConstraints>
@@ -37,12 +37,12 @@
                               <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
                           </rowConstraints>
                            <children>
-                              <Label alignment="CENTER" prefHeight="17.0" prefWidth="300.0" text="Please specify Reason for Cancelling this form" textFill="#5b5b5b" GridPane.columnIndex="1">
+                              <Label alignment="CENTER" prefHeight="17.0" prefWidth="370.0" text="Please specify Reason for Cancelling / Deactivating Entry" textFill="#5b5b5b" GridPane.columnIndex="1">
                                  <font>
                                     <Font name="Arial Bold" size="12.0" />
                                  </font>
                               </Label>
-                              <Label fx:id="lblFormNo" alignment="CENTER" prefHeight="20.0" prefWidth="300.0" text="VSP10101012023-0001" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                              <Label fx:id="lblFormNo" alignment="CENTER" prefHeight="20.0" prefWidth="370.0" text="VSP10101012023-0001" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                  <font>
                                     <Font name="Arial Bold" size="14.0" />
                                  </font>
@@ -61,7 +61,7 @@
                         <GridPane>
                           <columnConstraints>
                             <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="10.0" />
-                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="420.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="480.0" />
                               <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="10.0" />
                           </columnConstraints>
                           <rowConstraints>
@@ -72,7 +72,7 @@
                           </rowConstraints>
                            <children>
                               <TextArea fx:id="textArea01" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                              <Label alignment="CENTER" prefWidth="420.0" text="Minimum of 20 characters; Accepts alpha-numeric characters only." textFill="#515151" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                              <Label alignment="CENTER" prefWidth="480.0" text="Minimum of 20 characters; Accepts alpha-numeric characters only." textFill="#515151" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                            </children>
                         </GridPane>
                      </children>
@@ -81,7 +81,7 @@
                <bottom>
                   <AnchorPane style="-fx-background-color: #515151;">
                      <children>
-                        <Button fx:id="btnCancel" contentDisplay="TOP" layoutX="10.0" layoutY="5.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="200.0" text="Cancel this Transaction" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="5.0">
+                        <Button fx:id="btnCancel" contentDisplay="TOP" layoutX="10.0" layoutY="5.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="200.0" text="Cancel / Deactivate" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="5.0">
                            <effect>
                               <Blend />
                            </effect>
@@ -89,7 +89,7 @@
                               <FontAwesomeIconView glyphName="BAN" size="20" />
                            </graphic>
                         </Button>
-                        <Button fx:id="btnDCancel" contentDisplay="TOP" layoutX="416.0" layoutY="5.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="200.0" text="Do Not Cancel this Transaction" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="5.0">
+                        <Button fx:id="btnDCancel" contentDisplay="TOP" layoutX="416.0" layoutY="5.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="200.0" text="Do Not Cancel / Deactivate" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="5.0">
                            <effect>
                               <Blend />
                            </effect>

@@ -37,7 +37,7 @@ public class CancelFormController implements Initializable {
     private String sTransNo;
     private String sSourceCD;
 
-    private final String pxeModuleName = "Cancellation Remarks";
+    private final String pxeModuleName = "Cancellation / Deactivation Remarks";
     @FXML
     private Button btnCancel;
     @FXML
@@ -107,7 +107,7 @@ public class CancelFormController implements Initializable {
         String lsButton = ((Button) event.getSource()).getId();
         switch (lsButton) {
             case "btnCancel":
-                if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure you want to cancel?")) {
+                if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure you want to cancel/deactivate?")) {
                 } else {
                     return;
                 }

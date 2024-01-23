@@ -57,6 +57,7 @@ import org.rmj.appdriver.constants.EditMode;
 import org.rmj.auto.app.bank.BankEntryFormController;
 import org.rmj.auto.app.cashiering.InvoiceFormController;
 import org.rmj.auto.app.cashiering.VehicleSalesInvoiceFormController;
+import org.rmj.auto.app.insurance.InsuranceInformationController;
 import org.rmj.auto.app.parts.BinEntryParamController;
 import org.rmj.auto.app.parts.BrandEntryParamController;
 import org.rmj.auto.app.parts.CategoryEntryParamController;
@@ -194,6 +195,10 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
     private MenuItem mnuAddOnsApproval;
     @FXML
     private MenuItem mnuSalesExecutive;
+    @FXML
+    private Menu menusales1;
+    @FXML
+    private MenuItem mnuInsurInfo;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -394,6 +399,10 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
             case "Service Job Order Information":
                 mnuServiceJobOrder.fire();
                 break;
+            /*SERVICE*/
+            case "Insurance Information":
+                mnuInsurInfo.fire();
+                break;
         }
 
     }
@@ -585,6 +594,9 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
             /*SERVICE*/
             case "JobOrderForm.fxml":
                 return new JobOrderFormController();
+            /*SERVICE*/
+            case "InsuranceInformation.fxml":
+                return new InsuranceInformationController();
 
             default:
                 ShowMessageFX.Warning(null, "Warning", "Notify System Admin to Configure Screen Interface for " + fsValue);
@@ -659,6 +671,8 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
                     return null;
                 }
                 return sJobOrderType;
+            case "InsuranceInformation.fxml":
+                return "Insurance Information";
             default:
                 ShowMessageFX.Warning(null, "Warning", "Notify System Admin to Configure Tab Title for " + menuaction);
                 return null;
@@ -749,7 +763,7 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
             setScene2(loadAnimate(sformname));
         }
     }
-    
+
     @FXML
     private void mnuSalesExecutiveClick(ActionEvent event) {
         sSalesInfoType = "Sales Executive Information";
@@ -1048,6 +1062,16 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
     private void mnuJobOrderClick(ActionEvent event) {
         sJobOrderType = "Service Job Order Information";
         String sformname = "JobOrderForm.fxml";
+        //check tab
+        if (checktabs(SetTabTitle(sformname)) == 1) {
+            setScene2(loadAnimate(sformname));
+        }
+    }
+
+    /*Service*/
+    @FXML
+    private void mnuInsurInfoClick(ActionEvent event) {
+        String sformname = "InsuranceInformation.fxml";
         //check tab
         if (checktabs(SetTabTitle(sformname)) == 1) {
             setScene2(loadAnimate(sformname));

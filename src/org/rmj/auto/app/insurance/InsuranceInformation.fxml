@@ -53,20 +53,21 @@
                                                     <children>
                                                         <GridPane prefHeight="30.0" prefWidth="279.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="0.0">
                                                             <columnConstraints>
-                                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="120.0" />
+                                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="180.0" />
                                                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="410.6666259765625" minWidth="-Infinity" prefWidth="189.33331298828125" />
+                                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="410.6666259765625" minWidth="10.0" prefWidth="50.0" />
                                                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="533.3333435058594" minWidth="-Infinity" prefWidth="530.6666870117188" />
                                                             </columnConstraints>
                                                             <rowConstraints>
                                                                 <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                                             </rowConstraints>
                                                             <children>
-                                                                <Label text="INSURANCE NAME">
+                                                                <Label prefHeight="15.0" prefWidth="204.0" text="INSURANCE COMPANY NAME">
                                                                     <font>
                                                                         <Font name="Arial Bold" size="12.0" />
                                                                     </font>
                                                                 </Label>
-                                                                <TextField fx:id="textSeek03" prefHeight="22.0" prefWidth="272.0" promptText="Search:" GridPane.columnIndex="1">
+                                                                <TextField fx:id="textSeek03" prefHeight="22.0" prefWidth="272.0" promptText="Search:" GridPane.columnIndex="1" GridPane.columnSpan="2">
                                                                     <tooltip>
                                                                         <Tooltip text="Enter your search bank name here." />
                                                                     </tooltip>
@@ -89,7 +90,7 @@
                                                         <TableView fx:id="tblViewInsurance" layoutX="4.0" layoutY="4.0" prefWidth="550.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="3.0" AnchorPane.rightAnchor="3.0" AnchorPane.topAnchor="3.0">
                                                             <columns>
                                                                 <TableColumn fx:id="tblindexRow" prefWidth="35.0" text="Row" />
-                                                                <TableColumn fx:id="tblindex03" maxWidth="297.0" minWidth="100.0" prefWidth="200.0" resizable="false" text="Insurance Name" />
+                                                                <TableColumn fx:id="tblindex03" maxWidth="297.0" minWidth="100.0" prefWidth="200.0" resizable="false" text="Insurance Company Name" />
                                                                 <TableColumn fx:id="tblindex04" minWidth="-Infinity" prefWidth="195.0" text="Branch" />
                                                                 <TableColumn fx:id="tblindex18" minWidth="100.0" prefWidth="200.0" text="Address" />
                                                             </columns>
@@ -164,7 +165,7 @@
                                                                                     <children>
                                                                                         <AnchorPane style="-fx-background-color: #515151; -fx-background-radius: 5;">
                                                                                             <children>
-                                                                                                <Label text="INSURANCE INFORMATION" textFill="WHITE" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+                                                                                                <Label text="Insurance Information" textFill="WHITE" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
                                                                                                     <font>
                                                                                                         <Font name="Arial" size="18.0" />
                                                                                                     </font>
@@ -181,7 +182,7 @@
                                                                                                         <GridPane hgap="3.0" prefHeight="389.0" prefWidth="462.0" vgap="5.0">
                                                                                                             <columnConstraints>
                                                                                                                 <ColumnConstraints maxWidth="-Infinity" minWidth="-Infinity" prefWidth="30.0" />
-                                                                                                                <ColumnConstraints maxWidth="154.0" minWidth="-Infinity" prefWidth="143.0" />
+                                                                                                                <ColumnConstraints maxWidth="-Infinity" minWidth="-Infinity" prefWidth="150.0" />
                                                                                                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="65.0" minWidth="-Infinity" prefWidth="27.0" />
                                                                                                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="50.0" />
                                                                                                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="100.0" />
@@ -205,7 +206,7 @@
                                                                                                                 <RowConstraints maxHeight="41.0" minHeight="10.0" prefHeight="37.0" vgrow="SOMETIMES" />
                                                                                                             </rowConstraints>
                                                                                                             <children>
-                                                                                                                <Label text="Insurance Name" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                                                                                                <Label text="Insurance Company Name" GridPane.columnIndex="1" GridPane.rowIndex="2">
                                                                                                                     <font>
                                                                                                                         <Font name="Arial Bold" size="11.5" />
                                                                                                                     </font>
@@ -221,7 +222,7 @@
                                                                                                                 <Label id="LabelDesc" stylesheets="@../css/FrameStyle.css" text="Zip Code" GridPane.columnIndex="1" GridPane.rowIndex="8" />
                                                                                                                 <TextField fx:id="txtField03" GridPane.columnIndex="2" GridPane.columnSpan="4" GridPane.rowIndex="2">
                                                                                                                     <tooltip>
-                                                                                                                        <Tooltip text="Please fill in the Bank Name." />
+                                                                                                                        <Tooltip text="Please fill in the Insurance Name." />
                                                                                                                     </tooltip>
                                                                                                                 </TextField>
                                                                                                                 <TextField fx:id="txtField04" GridPane.columnIndex="2" GridPane.columnSpan="4" GridPane.rowIndex="3">
@@ -267,7 +268,7 @@
                                                                                                                         <Tooltip text="Please fill in the Fax No." />
                                                                                                                     </tooltip>
                                                                                                                 </TextField>
-                                                                                                                <Label alignment="CENTER_RIGHT" prefHeight="14.0" prefWidth="96.0" text="*" textFill="#fb0000" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                                                                                                <Label alignment="CENTER_RIGHT" prefHeight="14.0" prefWidth="151.0" text="*" textFill="#fb0000" GridPane.columnIndex="1" GridPane.rowIndex="2">
                                                                                                                     <font>
                                                                                                                         <Font name="Arial Bold" size="11.5" />
                                                                                                                     </font>
@@ -292,7 +293,7 @@
                                                                                                                         <Font name="Arial Bold" size="11.5" />
                                                                                                                     </font>
                                                                                                                 </Label>
-                                                                                                                <ComboBox fx:id="comboBox02" prefHeight="24.0" prefWidth="185.0" GridPane.columnIndex="2" GridPane.columnSpan="3" GridPane.rowIndex="1" />
+                                                                                                                <ComboBox fx:id="comboBox02" prefHeight="24.0" prefWidth="270.0" GridPane.columnIndex="2" GridPane.columnSpan="4" GridPane.rowIndex="1" />
                                                                                                                 <Label id="LabelDesc" stylesheets="@../css/FrameStyle.css" text="Company Type" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                                                                                                     <font>
                                                                                                                         <Font name="System Bold" size="12.0" />

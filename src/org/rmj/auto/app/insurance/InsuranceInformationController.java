@@ -11,6 +11,7 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
+import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyBooleanPropertyBase;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -57,7 +58,7 @@ public class InsuranceInformationController implements Initializable, ScreenInte
     private GRider oApp;
     private InsuranceInformation oTrans;
     unloadForm unload = new unloadForm(); //Object for closing form
-    private final String pxeModuleName = "Insurance Information"; //Form Title
+    private final String pxeModuleName = "Insurance"; //Form Title
     private MasterCallback oListener;
     TextFieldAnimationUtil txtFieldAnimation = new TextFieldAnimationUtil();
     private int pnEditMode;//Modifying fields
@@ -70,7 +71,7 @@ public class InsuranceInformationController implements Initializable, ScreenInte
     private final ObservableList<InsuranceTableList> insuranceData = FXCollections.observableArrayList();
     private FilteredList<InsuranceTableList> filteredData;
     private static final int ROWS_PER_PAGE = 50;
-    ObservableList<String> cInsurType = FXCollections.observableArrayList("NON IN HOUSE", "IN HOUSE (DIRECT)", "SUB-IN HOUSE(ACCREDITED)");
+    ObservableList<String> cInsurType = FXCollections.observableArrayList("NON IN HOUSE", "IN HOUSE (DIRECT)", "SUB-IN HOUSE (ACCREDITED)");
     @FXML
     private AnchorPane AnchorMain;
     @FXML
@@ -155,7 +156,9 @@ public class InsuranceInformationController implements Initializable, ScreenInte
 
         /*Clear Fields*/
         clearFields();
+
         comboBox02.setItems(cInsurType);
+
         Pattern pattern = Pattern.compile("[\\d\\p{Punct}]*");
         txtField10.setTextFormatter(new InputTextFormatter(pattern)); //sTelNoxxx
         txtField11.setTextFormatter(new InputTextFormatter(pattern)); //sFaxNoxxx
@@ -173,18 +176,18 @@ public class InsuranceInformationController implements Initializable, ScreenInte
         pnEditMode = EditMode.UNKNOWN;
         initButton(pnEditMode);
 
-        //        Platform.runLater(() -> {
-        //            if (oTrans.loadState()) {
-        //                pnEditMode = oTrans.getEditMode();
-        //                loadBankEntryField();
-        //                initButton(pnEditMode);
-        //            } else {
-        //                if (oTrans.getMessage().isEmpty()) {
-        //                } else {
-        //                    ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
-        //                }
-        //            }
-        //        });
+        Platform.runLater(() -> {
+            if (oTrans.loadState()) {
+                pnEditMode = oTrans.getEditMode();
+                loadInsuranceField();
+                initButton(pnEditMode);
+            } else {
+                if (oTrans.getMessage().isEmpty()) {
+                } else {
+                    ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                }
+            }
+        });
     }
 
     private void loadInsuranceField() {
@@ -199,15 +202,16 @@ public class InsuranceInformationController implements Initializable, ScreenInte
                     selectedItem02 = "IN HOUSE (DIRECT)";
                     break;
                 case "2":
-                    selectedItem02 = "SUB-IN HOUSE(ACCREDITED)";
+                    selectedItem02 = "SUB-IN HOUSE (ACCREDITED)";
+                    break;
 
             }
             comboBox02.setValue(selectedItem02);
             txtField03.setText((String) oTrans.getMaster("sInsurNme"));
             txtField04.setText((String) oTrans.getMaster("sBranchxx"));
             txtField07.setText((String) oTrans.getMaster("sAddressx"));
-            txtField17.setText((String) oTrans.getMaster("sTownName"));
-            txtField19.setText((String) oTrans.getMaster("sProvName"));
+            txtField17.setText((String) oTrans.getMaster("sProvName"));
+            txtField19.setText((String) oTrans.getMaster("sTownName"));
             txtField06.setText((String) oTrans.getMaster("sContactP"));
             txtField09.setText((String) oTrans.getMaster("sZippCode"));
             txtField11.setText((String) oTrans.getMaster("sFaxNoxxx"));
@@ -327,6 +331,10 @@ public class InsuranceInformationController implements Initializable, ScreenInte
             case "btnSave":
                 //Validate before saving
                 if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure, do you want to save?") == true) {
+                    if (comboBox02.getSelectionModel().isEmpty()) {
+                        ShowMessageFX.Warning(getStage(), "Please choose a value for Company Type", "Warning", null);
+                        return;
+                    }
                     if (txtField03.getText().trim().equals("")) {
                         ShowMessageFX.Warning(getStage(), "Please enter a value for Insurance Name.", "Warning", null);
                         txtField03.requestFocus();
@@ -409,13 +417,14 @@ public class InsuranceInformationController implements Initializable, ScreenInte
             /*Populate table*/
             insuranceData.clear();
             if (oTrans.loadList()) {
-                for (lnCtr = 1; lnCtr <= oTrans.getDetailCount(); lnCtr++) {
+                for (int lnCtr = 1; lnCtr <= oTrans.getDetailCount(); lnCtr++) {
+                    System.out.println("data count: " + oTrans.getDetailCount());
                     insuranceData.add(new InsuranceTableList(
                             String.valueOf(lnCtr), //ROW
                             oTrans.getDetail(lnCtr, "sInsurIDx").toString(),
-                            oTrans.getDetail(lnCtr, "sInsurNme").toString().toUpperCase(),
-                            oTrans.getDetail(lnCtr, "sBranchxx").toString().toUpperCase(),
-                            oTrans.getDetail(lnCtr, "sTownProv").toString().toUpperCase()
+                            oTrans.getDetail(lnCtr, "sInsurNme").toString(),
+                            oTrans.getDetail(lnCtr, "sBranchxx").toString(),
+                            oTrans.getDetail(lnCtr, "sTownProv").toString()
                     ));
                 }
                 initInsuranceTable();
@@ -555,7 +564,6 @@ public class InsuranceInformationController implements Initializable, ScreenInte
     }
 
     private void initTxtFieldKeyPressed() {
-
         txtField03.setOnKeyPressed(this::txtField_KeyPressed);
         txtField04.setOnKeyPressed(this::txtField_KeyPressed);
         txtField07.setOnKeyPressed(this::txtField_KeyPressed);
@@ -585,10 +593,10 @@ public class InsuranceInformationController implements Initializable, ScreenInte
                         break;
                     case 17: // sProvName
                         if (oTrans.searchProvince(txtField.getText(), false)) {
-                            txtField17.setDisable(false);
+                            txtField19.setDisable(false);
                             txtField09.setDisable(false);
                             loadInsuranceField();
-                            txtField17.clear();
+                            txtField19.clear();
                             txtField09.clear();
                         } else {
                             txtField17.clear();
@@ -610,7 +618,6 @@ public class InsuranceInformationController implements Initializable, ScreenInte
     }
 
     private void initSetComboBoxtoInsuranceMaster() {
-
         handleComboBoxSelectionInsuranceMaster(comboBox02, 2);
 
     }
@@ -637,6 +644,7 @@ public class InsuranceInformationController implements Initializable, ScreenInte
         pnRow = 0;
         boolean lbShow = (fnValue == EditMode.ADDNEW || fnValue == EditMode.UPDATE);
 
+        comboBox02.setDisable(!lbShow);
         txtField03.setDisable(!lbShow);
         txtField04.setDisable(!lbShow);
         txtField07.setDisable(!lbShow);
@@ -678,6 +686,7 @@ public class InsuranceInformationController implements Initializable, ScreenInte
         pnRow = 0;
         /*clear tables*/
         removeRequired();
+        comboBox02.setValue(null);
         txtField03.setText("");
         txtField04.setText("");
         txtField07.setText("");

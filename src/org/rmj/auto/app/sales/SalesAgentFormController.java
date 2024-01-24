@@ -52,7 +52,6 @@ import org.rmj.auto.app.views.ScreenInterface;
 import org.rmj.auto.app.views.TextFieldAnimationUtil;
 import org.rmj.auto.app.views.unloadForm;
 import org.rmj.auto.sales.base.SalesAgentExecutiveMaster;
-import org.rmj.auto.sales.base.SalesAgentInfo;
 
 /**
  * FXML Controller class
@@ -63,7 +62,6 @@ public class SalesAgentFormController implements Initializable, ScreenInterface 
     private GRider oApp;
     private MasterCallback oListener;
     private SalesAgentExecutiveMaster oTrans;
-    //private SalesAgentInfo oTrans;
 
     unloadForm unload = new unloadForm(); //Used in Close Button
     TextFieldAnimationUtil txtFieldAnimation = new TextFieldAnimationUtil();

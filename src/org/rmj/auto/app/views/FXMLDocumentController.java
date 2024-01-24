@@ -399,8 +399,8 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
             case "Service Job Order Information":
                 mnuServiceJobOrder.fire();
                 break;
-            /*SERVICE*/
-            case "Insurance Information":
+            /*INSURANCE*/
+            case "Insurance":
                 mnuInsurInfo.fire();
                 break;
         }
@@ -672,7 +672,7 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
                 }
                 return sJobOrderType;
             case "InsuranceInformation.fxml":
-                return "Insurance Information";
+                return "Insurance";
             default:
                 ShowMessageFX.Warning(null, "Warning", "Notify System Admin to Configure Tab Title for " + menuaction);
                 return null;

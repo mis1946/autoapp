@@ -336,9 +336,9 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
 //            case "Supplier":
 //                break;
             /*SALES*/
-            case "Sales Agent Information":
+            case "Sales Agent":
                 mnuSalesAgent.fire();
-            case "Sales Executive Information":
+            case "Sales Executive":
                 mnuSalesExecutive.fire();
                 break;
             case "Vehicle Description":
@@ -362,7 +362,7 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
             case "VSP Add Ons Approval":
                 mnuAddOnsApproval.fire();
                 break;
-            case "Sales Job Order Information":
+            case "Sales Job Order":
                 mnuSalesJobOrder.fire();
                 break;
             /*ACCOUNTING*/
@@ -396,7 +396,7 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
                 mnuSalesPartsRequest.fire();
                 break;
             /*SERVICE*/
-            case "Service Job Order Information":
+            case "Service Job Order":
                 mnuServiceJobOrder.fire();
                 break;
             /*INSURANCE*/
@@ -746,7 +746,7 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
     /*SALES*/
     @FXML
     private void mnuSalesJobOrderClick(ActionEvent event) {
-        sJobOrderType = "Sales Job Order Information";
+        sJobOrderType = "Sales Job Order";
         String sformname = "JobOrderForm.fxml";
         //check tab
         if (checktabs(SetTabTitle(sformname)) == 1) {
@@ -756,7 +756,7 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
 
     @FXML
     private void mnuSalesAgentClick(ActionEvent event) {
-        sSalesInfoType = "Sales Agent Information";
+        sSalesInfoType = "Sales Agent";
         String sformname = "SalesAgentForm.fxml";
         //check tab
         if (checktabs(SetTabTitle(sformname)) == 1) {
@@ -766,7 +766,7 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
 
     @FXML
     private void mnuSalesExecutiveClick(ActionEvent event) {
-        sSalesInfoType = "Sales Executive Information";
+        sSalesInfoType = "Sales Executive";
         String sformname = "SalesAgentForm.fxml";
         //check tab
         if (checktabs(SetTabTitle(sformname)) == 1) {
@@ -1060,7 +1060,7 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
     /*Service*/
     @FXML
     private void mnuJobOrderClick(ActionEvent event) {
-        sJobOrderType = "Service Job Order Information";
+        sJobOrderType = "Service Job Order";
         String sformname = "JobOrderForm.fxml";
         //check tab
         if (checktabs(SetTabTitle(sformname)) == 1) {

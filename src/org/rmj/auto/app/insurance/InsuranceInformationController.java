@@ -158,10 +158,9 @@ public class InsuranceInformationController implements Initializable, ScreenInte
         clearFields();
 
         comboBox02.setItems(cInsurType);
-
-        Pattern pattern = Pattern.compile("[\\d\\p{Punct}]*");
-        txtField10.setTextFormatter(new InputTextFormatter(pattern)); //sTelNoxxx
-        txtField11.setTextFormatter(new InputTextFormatter(pattern)); //sFaxNoxxx
+        Pattern numberOnlyPattern = Pattern.compile("[0-9,+-]*");
+        txtField10.setTextFormatter(new InputTextFormatter(numberOnlyPattern)); //sTelNoxxx
+        txtField11.setTextFormatter(new InputTextFormatter(numberOnlyPattern)); //sFaxNoxxx
 
         txtField17.textProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue.isEmpty()) {

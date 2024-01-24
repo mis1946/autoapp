@@ -150,7 +150,7 @@
                                                         </Menu>
                                                         <Menu fx:id="menusales1" mnemonicParsing="false" text="Insurance">
                                                             <items>
-                                                                <MenuItem fx:id="mnuInsurInfo" mnemonicParsing="false" onAction="#mnuInsurInfoClick" text="Insurance Information" />
+                                                                <MenuItem fx:id="mnuInsurInfo" mnemonicParsing="false" onAction="#mnuInsurInfoClick" text="Insurance" />
                                                             </items>
                                                         </Menu>
                                                         <Menu mnemonicParsing="false" text="Cashiering">

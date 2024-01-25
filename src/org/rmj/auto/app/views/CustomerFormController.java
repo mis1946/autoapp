@@ -1759,12 +1759,20 @@ public class CustomerFormController implements Initializable, ScreenInterface {
     /*LOAD CLIENT INFORMATION*/
     private void loadClientMaster() {
         try {
+            // Get the current event handler
+            EventHandler<ActionEvent> eventHandler = comboBox18.getOnAction();
+            // Remove the event handler to prevent it from triggering
+            comboBox18.setOnAction(null);
+            // Set the value without triggering the event
+            comboBox18.getSelectionModel().select(Integer.parseInt((String) oTrans.getMaster(18)));
+            // Add the event handler back
+            comboBox18.setOnAction(eventHandler);
+            
             txtField01.setText((String) oTrans.getMaster(1));
             txtField13.setText((String) oTrans.getMaster(13));
             txtField14.setText((String) oTrans.getMaster(14));
             textArea15.setText((String) oTrans.getMaster(15));
-            comboBox18.getSelectionModel().select(Integer.parseInt((String) oTrans.getMaster(18)));
-
+            
             if (comboBox18.getSelectionModel().getSelectedIndex() == 0) {
                 txtField02.setText((String) oTrans.getMaster(2));
                 txtField03.setText((String) oTrans.getMaster(3));

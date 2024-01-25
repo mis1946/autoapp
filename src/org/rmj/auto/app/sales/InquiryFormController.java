@@ -458,6 +458,10 @@ public class InquiryFormController implements Initializable, ScreenInterface {
         });
 
         cmbType012.setOnAction(event -> {
+            if(pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE ){
+            } else {
+                return;
+            }
             try {
                 txtField13.setDisable(true); //online store
                 txtField09.setDisable(true); //ref agent
@@ -2051,6 +2055,16 @@ public class InquiryFormController implements Initializable, ScreenInterface {
     //Load Customer Inquiry Data
     public void loadCustomerInquiry() {
         try {
+            
+            // Get the current event handler
+            EventHandler<ActionEvent> eventHandler = cmbType012.getOnAction();
+            // Remove the event handler to prevent it from triggering
+            cmbType012.setOnAction(null);
+            // Set the value without triggering the event
+            cmbType012.getSelectionModel().select(Integer.parseInt(oTrans.getMaster(12).toString())); //Inquiry Type
+            // Add the event handler back
+            cmbType012.setOnAction(eventHandler);
+                    
             txtField03.setText(CommonUtils.xsDateMedium((Date) oTrans.getMaster(3)));  //Inquiry Date
             txtField07.setText((String) oTrans.getMaster(29)); //Custmer Name ***
             if (((String) oTrans.getMaster(39)).equals("1")) {
@@ -2064,7 +2078,6 @@ public class InquiryFormController implements Initializable, ScreenInterface {
             //txtField33.setText((String) oTrans.getMaster(33)); //Client Address
             textArea33.setText((String) oTrans.getMaster(33)); //Client Address
             txtField31.setText((String) oTrans.getMaster(31)); //Social Media
-            cmbType012.getSelectionModel().select(Integer.parseInt(oTrans.getMaster(12).toString())); //Inquiry Type
             txtField13.setText((String) oTrans.getMaster(36)); //Web Inquiry
             txtField10.setValue(strToDate(CommonUtils.xsDateShort((Date) oTrans.getMaster(10)))); //Target Release Date
             txtField09.setText((String) oTrans.getMaster(35)); //Agent ID

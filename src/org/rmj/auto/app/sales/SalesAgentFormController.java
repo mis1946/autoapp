@@ -154,7 +154,7 @@ public class SalesAgentFormController implements Initializable, ScreenInterface 
     @FXML
     private FontAwesomeIconView ActIconNm;
     @FXML
-    private TableColumn<?, ?> refIndex08;
+    private TableColumn refIndex08;
     @FXML
     private Label txtLabel08;
     @FXML
@@ -205,7 +205,7 @@ public class SalesAgentFormController implements Initializable, ScreenInterface 
             loadAgentListTable();
             pagination.setPageFactory(this::createPage);
         });
-        
+        initListTable();
         initTransactionTable();
         
         btnDisapprove.setVisible(false);

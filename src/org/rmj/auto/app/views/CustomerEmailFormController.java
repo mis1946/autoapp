@@ -182,7 +182,13 @@ public class CustomerEmailFormController implements Initializable, ScreenInterfa
                     }
                 }
             }
-
+            
+            //User cannot set primary that is inactive
+            if(radiobtn05EmaY.isSelected() && radiobtn06EmaN.isSelected()){
+                ShowMessageFX.Warning(getStage(), "Please note that you cannot set primary email that is inactive.", "Warning", pxeModuleName);
+                return false;
+            }
+            
             //Validate Before adding to tables
             if (txtField03EmAd.getText().isEmpty() || txtField03EmAd.getText().trim().equals("")) {
                 ShowMessageFX.Warning(getStage(), "Invalid Email. Insert to table Aborted!", "Warning", null);

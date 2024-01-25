@@ -236,7 +236,19 @@ public class CustomerContactFormController implements Initializable, ScreenInter
                     }
                 }
             }
-
+            
+            if(radiobtn11CntY.isSelected() && radiobtn14CntN.isSelected()){
+                ShowMessageFX.Warning(getStage(), "Please note that you cannot set primary contact that is inactive.", "Warning", pxeModuleName);
+                return false;
+            }
+            
+            if (comboBox04Cont.getSelectionModel().getSelectedIndex() == 0){
+                if (CommonUtils.classifyNetwork(txtField03Cont.getText()).isEmpty()){
+                   ShowMessageFX.Warning(getStage(),  "Prefix not registered " + txtField03Cont.getText(), "Warning", pxeModuleName);
+                   return false;
+               }   
+            }
+            
             //Validate Before adding to tables
             if (txtField03Cont.getText().isEmpty() || txtField03Cont.getText().trim().equals("")) {
                 ShowMessageFX.Warning(getStage(), "Invalid Mobile. Insert to table Aborted!", "Warning", null);

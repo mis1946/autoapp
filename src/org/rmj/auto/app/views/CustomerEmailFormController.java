@@ -182,7 +182,8 @@ public class CustomerEmailFormController implements Initializable, ScreenInterfa
                     }
                 }
             }
-
+            
+            //User cannot set primary that is inactive
             if(radiobtn05EmaY.isSelected() && radiobtn06EmaN.isSelected()){
                 ShowMessageFX.Warning(getStage(), "Please note that you cannot set primary email that is inactive.", "Warning", pxeModuleName);
                 return false;

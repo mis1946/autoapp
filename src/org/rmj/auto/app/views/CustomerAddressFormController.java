@@ -255,7 +255,12 @@ public class CustomerAddressFormController implements Initializable, ScreenInter
                     }
                 }
             }
-
+            
+            if(checkBox14Addr.isSelected() && radiobtn18AddN.isSelected()){
+                ShowMessageFX.Warning(getStage(), "Please note that you cannot set primary address that is inactive.", "Warning", pxeModuleName);
+                return false;
+            }
+            
             //Validate Before adding to tables
             if (( //txtField03Addr.getText().isEmpty() ||
                     txtField04Addr.getText().isEmpty() || txtField07Addr.getText().isEmpty() || txtField05Addr.getText().isEmpty() || txtField06Addr.getText().isEmpty())

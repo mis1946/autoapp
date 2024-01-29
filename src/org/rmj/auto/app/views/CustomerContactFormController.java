@@ -205,7 +205,6 @@ public class CustomerContactFormController implements Initializable, ScreenInter
                 case "btnAdd":
                     if (settoClass()) {
                         if (lsButton.equals("btnAdd")) {
-                            oTransMobile.addMobile();
                         }
                         CommonUtils.closeStage(btnClose);
                     } else {
@@ -213,6 +212,9 @@ public class CustomerContactFormController implements Initializable, ScreenInter
                     }
                     break;
                 case "btnClose":
+                    if(pbState){
+                        oTransMobile.removeMobile(pnRow);
+                    }
                     CommonUtils.closeStage(btnClose);
                     break;
 

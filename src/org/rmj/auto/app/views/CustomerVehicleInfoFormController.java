@@ -585,6 +585,8 @@ public class CustomerVehicleInfoFormController implements Initializable, ScreenI
                             } else {
                                 ShowMessageFX.Warning(getStage(), oTransVehicle.getMessage(), "Warning", null);
                                 txtField24V.setText("");
+                                txtField24V.requestFocus();
+                                return;
                             }
                             loadClientVehicleInfo();
                             break;
@@ -599,6 +601,8 @@ public class CustomerVehicleInfoFormController implements Initializable, ScreenI
                             } else {
                                 ShowMessageFX.Warning(getStage(), oTransVehicle.getMessage(), "Warning", null);
                                 txtField26V.setText("");
+                                txtField26V.requestFocus();
+                                return;
                             }
                             loadClientVehicleInfo();
                             break;
@@ -619,6 +623,8 @@ public class CustomerVehicleInfoFormController implements Initializable, ScreenI
                             } else {
                                 ShowMessageFX.Warning(getStage(), oTransVehicle.getMessage(), "Warning", null);
                                 txtField28V.setText("");
+                                txtField28V.requestFocus();
+                                return;
                             }
                             loadClientVehicleInfo();
                             break;
@@ -645,6 +651,8 @@ public class CustomerVehicleInfoFormController implements Initializable, ScreenI
                             } else {
                                 ShowMessageFX.Warning(getStage(), oTransVehicle.getMessage(), "Warning", null);
                                 txtField31V.setText("");
+                                txtField31V.requestFocus();
+                                return;
                             }
                             loadClientVehicleInfo();
                             break;
@@ -677,6 +685,8 @@ public class CustomerVehicleInfoFormController implements Initializable, ScreenI
                             } else {
                                 ShowMessageFX.Warning(getStage(), oTransVehicle.getMessage(), "Warning", null);
                                 txtField30V.setText("");
+                                txtField30V.requestFocus();
+                                return;
                             }
                             loadClientVehicleInfo();
                             break;
@@ -717,7 +727,8 @@ public class CustomerVehicleInfoFormController implements Initializable, ScreenI
                                 ShowMessageFX.Warning(getStage(), oTransVehicle.getMessage(), "Warning", null);
                                 txtField32V.setText("");
                                 txtField21V.setValue(LocalDate.of(1900, Month.JANUARY, 1));
-
+                                txtField32V.requestFocus();
+                                return;
                             }
                             loadClientVehicleInfo();
                             break;
@@ -726,6 +737,8 @@ public class CustomerVehicleInfoFormController implements Initializable, ScreenI
                                 loadClientVehicleInfo();
                             } else {
                                 ShowMessageFX.Warning(getStage(), oTransVehicle.getMessage(), "Warning", null);
+                                txtField09V.requestFocus();
+                                return;
                             }
                             break;
                         case 22:
@@ -733,6 +746,8 @@ public class CustomerVehicleInfoFormController implements Initializable, ScreenI
                                 loadClientVehicleInfo();
                             } else {
                                 ShowMessageFX.Warning(getStage(), oTransVehicle.getMessage(), "Warning", null);
+                                txtField22V.requestFocus();
+                                return;
                             }
                             break;
                         case 35:
@@ -740,6 +755,8 @@ public class CustomerVehicleInfoFormController implements Initializable, ScreenI
                                 loadClientVehicleInfo();
                             } else {
                                 ShowMessageFX.Warning(getStage(), oTransVehicle.getMessage(), "Warning", null);
+                                txtField35V.requestFocus();
+                                return;
                             }
                             break;
                         case 36:
@@ -747,6 +764,8 @@ public class CustomerVehicleInfoFormController implements Initializable, ScreenI
                                 loadClientVehicleInfo();
                             } else {
                                 ShowMessageFX.Warning(getStage(), oTransVehicle.getMessage(), "Warning", null);
+                                txtField36V.requestFocus();
+                                return;
                             }
                     }
             }

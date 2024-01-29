@@ -151,7 +151,6 @@ public class CustomerEmailFormController implements Initializable, ScreenInterfa
                 case "btnAdd":
                     if (settoClass()) {
                         if (lsButton.equals("btnAdd")) {
-                            oTransEmail.addEmail();
                         }
                         CommonUtils.closeStage(btnClose);
                     } else {
@@ -159,6 +158,9 @@ public class CustomerEmailFormController implements Initializable, ScreenInterfa
                     }
                     break;
                 case "btnClose":
+                    if(pbState){
+                        oTransEmail.removeEmail(pnRow);
+                    }
                     CommonUtils.closeStage(btnClose);
                     break;
 

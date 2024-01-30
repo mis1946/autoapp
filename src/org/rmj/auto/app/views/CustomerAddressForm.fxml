@@ -23,7 +23,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane id="AnchorPane" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" >
    <children>
       <StackPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -102,52 +102,73 @@
                                     <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="23.0" vgrow="SOMETIMES" />
                                     <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="23.0" vgrow="SOMETIMES" />
                                     <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="23.0" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="23.0" vgrow="SOMETIMES" />
                                  </rowConstraints>
                                  <children>
                                     <Label id="LabelDesc" stylesheets="@../css/FrameStyle.css" text="House No." GridPane.columnIndex="1" GridPane.columnSpan="2" />
-                                    <Label id="LabelDesc" stylesheets="@../css/FrameStyle.css" text="Town" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                                    <Label id="LabelDesc" stylesheets="@../css/FrameStyle.css" text="Barangay" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                    <Label id="LabelDesc" stylesheets="@../css/FrameStyle.css" text="Town" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                    <Label id="LabelDesc" stylesheets="@../css/FrameStyle.css" text="Barangay" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                                     <TextField fx:id="txtField03Addr" GridPane.columnIndex="2" GridPane.columnSpan="2">
                                        <tooltip>
                                           <Tooltip text="Please Fill in the House Number" />
                                        </tooltip>
                                     </TextField>
                                     <TextField fx:id="txtField04Addr" GridPane.columnIndex="2" GridPane.columnSpan="9" GridPane.rowIndex="1" />
-                                    <TextField fx:id="txtField05Addr" promptText="Search: F3" GridPane.columnIndex="2" GridPane.columnSpan="9" GridPane.rowIndex="2">
+                                    <TextField fx:id="txtField23Addr" promptText="Search: F3" GridPane.columnIndex="2" GridPane.columnSpan="9" GridPane.rowIndex="2">
                                        <tooltip>
-                                          <Tooltip text="Please choose Town" />
+                                          <Tooltip text="Please choose Province">
+                                             <font>
+                                                <Font name="Arial" size="12.0" />
+                                             </font>
+                                          </Tooltip>
+                                       </tooltip></TextField>
+                                    <TextField fx:id="txtField05Addr" disable="true" promptText="Search: F3" GridPane.columnIndex="2" GridPane.columnSpan="9" GridPane.rowIndex="3">
+                                       <tooltip>
+                                          <Tooltip text="Please choose Town">
+                                             <font>
+                                                <Font name="Arial" size="12.0" />
+                                             </font></Tooltip>
                                        </tooltip>
                                     </TextField>
-                                    <TextField fx:id="txtField06Addr" disable="true" promptText="Search: F3" GridPane.columnIndex="2" GridPane.columnSpan="6" GridPane.rowIndex="3">
+                                    <TextField fx:id="txtField06Addr" disable="true" promptText="Search: F3" GridPane.columnIndex="2" GridPane.columnSpan="6" GridPane.rowIndex="4">
                                        <tooltip>
-                                          <Tooltip text="Please choose Barangay" />
+                                          <Tooltip text="Please choose Barangay">
+                                             <font>
+                                                <Font name="Arial" size="12.0" />
+                                             </font></Tooltip>
                                        </tooltip>
                                     </TextField>
-                                    <Label id="LabelDesc" stylesheets="@../css/FrameStyle.css" text="ZIP Code" GridPane.columnIndex="9" GridPane.rowIndex="3" />
-                                    <TextField fx:id="txtField07Addr" GridPane.columnIndex="10" GridPane.rowIndex="3" />
-                                    <Label id="LabelDesc" stylesheets="@../css/FrameStyle.css" text="Active" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                                    <RadioButton fx:id="radiobtn18AddY" mnemonicParsing="false" text="Yes" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="4">
+                                    <Label id="LabelDesc" stylesheets="@../css/FrameStyle.css" text="ZIP Code" GridPane.columnIndex="9" GridPane.rowIndex="4" />
+                                    <TextField fx:id="txtField07Addr" GridPane.columnIndex="10" GridPane.rowIndex="4" />
+                                    <Label id="LabelDesc" stylesheets="@../css/FrameStyle.css" text="Active" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                                    <RadioButton fx:id="radiobtn18AddY" mnemonicParsing="false" text="Yes" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="5">
                                        <toggleGroup>
                                           <ToggleGroup fx:id="add_active" />
                                        </toggleGroup>
                                     </RadioButton>
-                                    <RadioButton fx:id="radiobtn18AddN" mnemonicParsing="false" text="No" toggleGroup="$add_active" GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.rowIndex="4" />
+                                    <RadioButton fx:id="radiobtn18AddN" mnemonicParsing="false" text="No" toggleGroup="$add_active" GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.rowIndex="5" />
                                     <Label id="LabelDesc" layoutX="18.0" layoutY="23.0" stylesheets="@../css/FrameStyle.css" text="Street Name" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                     <Label alignment="BOTTOM_RIGHT" prefHeight="16.0" prefWidth="72.0" text="*" textFill="#fb0000" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                        <font>
                                           <Font name="Arial" size="12.0" />
                                        </font>
                                     </Label>
-                                    <Label alignment="BOTTOM_RIGHT" layoutX="15.0" layoutY="14.0" prefHeight="16.0" prefWidth="37.0" text="*" textFill="#fb0000" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                    <Label alignment="BOTTOM_RIGHT" layoutX="15.0" layoutY="14.0" prefHeight="16.0" prefWidth="37.0" text="*" textFill="#fb0000" GridPane.columnIndex="1" GridPane.rowIndex="3">
                                        <font>
                                           <Font name="Arial" size="12.0" />
                                        </font>
                                     </Label>
-                                    <Label alignment="BOTTOM_RIGHT" layoutX="15.0" layoutY="66.0" prefHeight="16.0" prefWidth="59.0" text="*" textFill="#fb0000" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                                    <Label alignment="BOTTOM_RIGHT" layoutX="15.0" layoutY="66.0" prefHeight="16.0" prefWidth="59.0" text="*" textFill="#fb0000" GridPane.columnIndex="1" GridPane.rowIndex="4">
                                        <font>
                                           <Font name="Arial" size="12.0" />
                                        </font>
                                     </Label>
+                                    <Label alignment="BOTTOM_RIGHT" prefHeight="16.0" prefWidth="52.0" text="*" textFill="#fb0000" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                       <font>
+                                          <Font name="Arial" size="12.0" />
+                                       </font>
+                                    </Label>
+                                    <Label id="LabelDesc" text="Province" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                                  </children>
                               </GridPane>
                               <GridPane vgap="3.0">

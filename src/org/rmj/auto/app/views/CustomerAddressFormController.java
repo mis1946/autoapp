@@ -48,6 +48,7 @@ public class CustomerAddressFormController implements Initializable, ScreenInter
     private final String pxeModuleName = "Customer Address";
     private int pnRow = 0;
     private boolean pbState = true;
+    private String psOrigProv = "";
     private String psOrigTown = "";
     private String psOrigBrgy = "";
     TextFieldAnimationUtil txtFieldAnimation = new TextFieldAnimationUtil();
@@ -84,6 +85,8 @@ public class CustomerAddressFormController implements Initializable, ScreenInter
     private TextArea textArea11Addr;
     @FXML
     private Button btnAdd;
+    @FXML
+    private TextField txtField23Addr;
 
     public void setObject(ClientAddress foObject) {
         oTransAddress = foObject;
@@ -96,7 +99,11 @@ public class CustomerAddressFormController implements Initializable, ScreenInter
     public void setState(boolean fbValue) {
         pbState = fbValue;
     }
-
+    
+    public void setOrigProv(String fsValue) {
+        psOrigProv = fsValue;
+    }
+    
     public void setOrigTown(String fsValue) {
         psOrigTown = fsValue;
     }
@@ -104,7 +111,7 @@ public class CustomerAddressFormController implements Initializable, ScreenInter
     public void setOrigBrgy(String fsValue) {
         psOrigBrgy = fsValue;
     }
-
+    
     private Stage getStage() {
         return (Stage) btnClose.getScene().getWindow();
     }
@@ -136,16 +143,18 @@ public class CustomerAddressFormController implements Initializable, ScreenInter
         setCapsLockBehavior(txtField05Addr);
         setCapsLockBehavior(txtField06Addr);
         setCapsLockBehavior(txtField07Addr);
+        setCapsLockBehavior(txtField23Addr);
         setCapsLockBehavior(textArea11Addr);
         txtField03Addr.setOnKeyPressed(this::txtField_KeyPressed); //House No
         txtField04Addr.setOnKeyPressed(this::txtField_KeyPressed); //Street / Address
         txtField05Addr.setOnKeyPressed(this::txtField_KeyPressed); // Town
         txtField06Addr.setOnKeyPressed(this::txtField_KeyPressed); // Brgy
-        txtField07Addr.setOnKeyPressed(this::txtField_KeyPressed); //Zip code
+        txtField07Addr.setOnKeyPressed(this::txtField_KeyPressed); // Zip code
+        txtField23Addr.setOnKeyPressed(this::txtField_KeyPressed); // Province
         textArea11Addr.setOnKeyPressed(this::txtArea_KeyPressed); // Address Remarks
 
         /*Check box Clicked Event*/
- /*client_address*/
+        /*client_address*/
         checkBox14Addr.setOnAction(this::cmdCheckBox_Click);
         checkBox17Addr.setOnAction(this::cmdCheckBox_Click);
         checkBox12Addr.setOnAction(this::cmdCheckBox_Click);
@@ -155,6 +164,32 @@ public class CustomerAddressFormController implements Initializable, ScreenInter
         btnClose.setOnAction(this::cmdButton_Click);
         btnAdd.setOnAction(this::cmdButton_Click);
         btnEdit.setOnAction(this::cmdButton_Click);
+        
+        txtField23Addr.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.isEmpty()) {
+                try {
+                    txtField23Addr.clear(); // Province
+                    txtField05Addr.clear(); // Town
+                    txtField07Addr.clear(); //Zip code
+                    txtField06Addr.clear(); // Brgy
+                    txtField05Addr.setDisable(true);// Town
+                    txtField06Addr.setDisable(true);// Brgy
+
+                    oTransAddress.setAddressTable(pnRow, 26, ""); //province id
+                    oTransAddress.setAddressTable(pnRow, 27, ""); //province
+                    oTransAddress.setAddressTable(pnRow, 5, ""); //town id
+                    oTransAddress.setAddressTable(pnRow, 25, ""); //town
+                    oTransAddress.setAddressTable(pnRow, 7, ""); //zip
+                    oTransAddress.setAddressTable(pnRow, 6, ""); //brgy id
+                    oTransAddress.setAddressTable(pnRow, 24, ""); //brgy
+
+                    txtField05Addr.getStyleClass().remove("required-field");
+                    txtField06Addr.getStyleClass().remove("required-field");
+                } catch (SQLException ex) {
+                    Logger.getLogger(CustomerAddressFormController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
 
         txtField05Addr.textProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue.isEmpty()) {
@@ -171,6 +206,17 @@ public class CustomerAddressFormController implements Initializable, ScreenInter
                     oTransAddress.setAddressTable(pnRow, 24, ""); //brgy
 
                     txtField06Addr.getStyleClass().remove("required-field");
+                } catch (SQLException ex) {
+                    Logger.getLogger(CustomerAddressFormController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+        
+        txtField06Addr.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.isEmpty()) {
+                try {
+                    oTransAddress.setAddressTable(pnRow, 6, ""); //brgy id
+                    oTransAddress.setAddressTable(pnRow, 24, ""); //brgy
                 } catch (SQLException ex) {
                     Logger.getLogger(CustomerAddressFormController.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -219,7 +265,6 @@ public class CustomerAddressFormController implements Initializable, ScreenInter
                 case "btnAdd":
                     if (settoClass()) {
                         if (lsButton.equals("btnAdd")) {
-                            oTransAddress.addAddress();
                         }
                         CommonUtils.closeStage(btnClose);
                     } else {
@@ -227,8 +272,14 @@ public class CustomerAddressFormController implements Initializable, ScreenInter
                     }
                     break;
                 case "btnClose":
-                    if (oTransAddress.searchTown(pnRow, psOrigTown, true)) {
-                        if (oTransAddress.searchBarangay(pnRow, psOrigBrgy, true)) {
+                    if(pbState){
+                        oTransAddress.removeAddress(pnRow);
+                    } else {
+                        if((oTransAddress.searchProvince(pnRow, psOrigProv, true))){
+                            if (oTransAddress.searchTown(pnRow, psOrigTown, true)) {
+                                if (oTransAddress.searchBarangay(pnRow, psOrigBrgy, true)) {
+                                }
+                            }
                         }
                     }
 
@@ -284,12 +335,23 @@ public class CustomerAddressFormController implements Initializable, ScreenInter
             if (!txtField03Addr.getText().isEmpty()) {
                 sHouseNox = txtField03Addr.getText();
             }
+            
+            if(((String) oTransAddress.getAddress(pnRow,"sTownIDxx")).isEmpty()){
+                ShowMessageFX.Warning(getStage(), "Please select Town. Insert to table Aborted!", "Warning", null);
+                return false;
+            }
+            
+            if(((String) oTransAddress.getAddress(pnRow,"sBrgyIDxx")).isEmpty()){
+                ShowMessageFX.Warning(getStage(), "Please select Barangay. Insert to table Aborted!", "Warning", null);
+                return false;
+            }
+            
             oTransAddress.setAddressTable(pnRow, 3, sHouseNox);
             oTransAddress.setAddressTable(pnRow, 4, txtField04Addr.getText());
             oTransAddress.setAddressTable(pnRow, 7, txtField07Addr.getText());
             oTransAddress.setAddressTable(pnRow, 11, textArea11Addr.getText());
-            oTransAddress.setAddressTable(pnRow, 25, txtField05Addr.getText());
-            oTransAddress.setAddressTable(pnRow, 24, txtField06Addr.getText());
+//            oTransAddress.setAddressTable(pnRow, 25, txtField05Addr.getText());
+//            oTransAddress.setAddressTable(pnRow, 24, txtField06Addr.getText());
 
             if (checkBox12Addr.isSelected()) {
                 oTransAddress.setAddressTable(pnRow, 12, 1);
@@ -328,10 +390,24 @@ public class CustomerAddressFormController implements Initializable, ScreenInter
         try {
             txtField03Addr.setText((String) oTransAddress.getAddress(pnRow, "sHouseNox"));
             txtField04Addr.setText((String) oTransAddress.getAddress(pnRow, "sAddressx"));
+            txtField23Addr.setText((String) oTransAddress.getAddress(pnRow, "sProvName"));
             txtField05Addr.setText((String) oTransAddress.getAddress(pnRow, "sTownName"));
             txtField06Addr.setText((String) oTransAddress.getAddress(pnRow, "sBrgyName"));
             txtField07Addr.setText((String) oTransAddress.getAddress(pnRow, "sZippCode"));
             textArea11Addr.setText((String) oTransAddress.getAddress(pnRow, "sRemarksx"));
+            
+            if(!((String) oTransAddress.getAddress(pnRow, "sProvIDxx")).isEmpty()){
+                txtField05Addr.setDisable(false);
+            } else { 
+                txtField05Addr.setDisable(true);
+            }
+            
+            if(!((String) oTransAddress.getAddress(pnRow, "sTownIDxx")).isEmpty()){
+                txtField06Addr.setDisable(false);
+            } else { 
+                txtField06Addr.setDisable(true);
+            }
+            
             if (oTransAddress.getAddress(pnRow, "cRecdStat").toString().equals("1")) {
                 radiobtn18AddY.setSelected(true);
                 radiobtn18AddN.setSelected(false);
@@ -398,33 +474,42 @@ public class CustomerAddressFormController implements Initializable, ScreenInter
                 case TAB:
                 case ENTER:
                     switch (txtFieldID) {
+                        case "txtField23Addr":  //Search by Province Address
+                            if (oTransAddress.searchProvince(pnRow, txtField23Addr.getText(), false)) {
+                                txtField23Addr.setText((String) oTransAddress.getAddress(pnRow, "sProvName"));
+                                txtField05Addr.setDisable(false);
+                            } else {
+                                txtField23Addr.clear(); // Province
+                                txtField05Addr.setDisable(true);
+                                ShowMessageFX.Warning(getStage(), oTransAddress.getMessage(), "Warning", null);
+                            }
+                            txtField05Addr.getStyleClass().remove("required-field");
+                            txtField06Addr.getStyleClass().remove("required-field");
+                            txtField06Addr.clear(); // Brgy
+                            txtField05Addr.clear(); // Town
+                            txtField07Addr.clear(); //Zip code
+                            break;
                         case "txtField05Addr":  //Search by Town Address
                             if (oTransAddress.searchTown(pnRow, txtField05Addr.getText(), false)) {
                                 txtField05Addr.setText((String) oTransAddress.getAddress(pnRow, "sTownName"));
                                 txtField07Addr.setText((String) oTransAddress.getAddress(pnRow, "sZippCode"));
                                 txtField06Addr.setDisable(false);
                             } else {
-                                oTransAddress.setAddressTable(pnRow, 5, ""); //town id
-                                oTransAddress.setAddressTable(pnRow, 25, ""); //town
-                                oTransAddress.setAddressTable(pnRow, 7, ""); //zip
-
                                 txtField05Addr.clear(); // Town
                                 txtField07Addr.clear(); //Zip code
                                 txtField06Addr.setDisable(true);
                                 ShowMessageFX.Warning(getStage(), oTransAddress.getMessage(), "Warning", null);
                             }
                             txtField06Addr.getStyleClass().remove("required-field");
-                            oTransAddress.setAddressTable(pnRow, 6, ""); //brgy id
-                            oTransAddress.setAddressTable(pnRow, 24, ""); //brgy
                             txtField06Addr.clear(); // Brgy
                             break;
 
                         case "txtField06Addr":  //Search by Brgy Address
                             if (oTransAddress.searchBarangay(pnRow, txtField06Addr.getText(), false)) {
                                 txtField06Addr.setText((String) oTransAddress.getAddress(pnRow, "sBrgyName"));
-
                             } else {
                                 ShowMessageFX.Warning(getStage(), oTransAddress.getMessage(), "Warning", null);
+                                txtField06Addr.clear(); // Brgy    
                             }
                             break;
                     }

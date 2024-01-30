@@ -183,7 +183,6 @@ public class CustomerSocialMediaFormController implements Initializable, ScreenI
                 case "btnAdd":
                     if (settoClass()){
                         if (lsButton.equals("btnAdd")){
-                            oTransSocMed.addSocMed();
                         }
                         CommonUtils.closeStage(btnClose);
                     } else {
@@ -191,6 +190,9 @@ public class CustomerSocialMediaFormController implements Initializable, ScreenI
                     }
                     break;
                 case "btnClose":
+                    if(pbState){
+                        oTransSocMed.removeSocMed(pnRow);
+                    }
                     CommonUtils.closeStage(btnClose);
                     break;
 

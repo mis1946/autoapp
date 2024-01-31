@@ -11,8 +11,10 @@ import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -70,6 +72,7 @@ import org.rmj.auto.app.views.CancelForm;
 import org.rmj.auto.app.views.ScreenInterface;
 import org.rmj.auto.app.views.TextFieldAnimationUtil;
 import org.rmj.auto.app.views.unloadForm;
+import org.rmj.auto.json.TabsStateManager;
 import org.rmj.auto.sales.base.InquiryBankApplication;
 import org.rmj.auto.sales.base.InquiryFollowUp;
 import org.rmj.auto.sales.base.InquiryMaster;
@@ -1131,7 +1134,7 @@ public class InquiryFormController implements Initializable, ScreenInterface {
                 case "btnBankAppNew":
 
                     if (oTransBankApp.NewRecord()) {
-                        oTransBankApp.setTransNox(sSourceNox);
+                        oTransBankApp.setTransNox((String) oTrans.getMaster(1)); //sSourceNox
                         //Open window
                         loadBankApplicationWindow("", iInqPayMode, oTransBankApp.getEditMode());
                     } else {
@@ -1287,6 +1290,7 @@ public class InquiryFormController implements Initializable, ScreenInterface {
     /*OPEN WINDOW FOR VEHICLE SALES PROPOSAL*/
     private void loadVSPWindow() {
         try {
+            String sFormName = "Vehicle Sales Proposal";
             FXMLLoader fxmlLoader = new FXMLLoader();
             fxmlLoader.setLocation(getClass().getResource("VSPForm.fxml"));
             VSPFormController loControl = new VSPFormController();
@@ -1305,24 +1309,19 @@ public class InquiryFormController implements Initializable, ScreenInterface {
                 TabPane tabpane = (TabPane) tabContentParent;
 
                 for (Tab tab : tabpane.getTabs()) {
-                    if (tab.getText().equals("Vehicle Sales Proposal")) {
-//                        if (ShowMessageFX.OkayCancel(null, pxeModuleName, "You have unsaved data on Vehicle Sales Proposal Form. Are you sure you want to convert this inquiry for a new vsp record?") == true) {
-//                        } else {
-//                            return;
-//                        }
-
+                    if (tab.getText().equals(sFormName)) {
                         if (ShowMessageFX.OkayCancel(null, pxeModuleName, "You have opened Vehicle Sales Proposal Form. Are you sure you want to convert this inquiry for a new vsp record?") == true) {
                         } else {
                             return;
                         }
                         tabpane.getSelectionModel().select(tab);
-                        unload.unloadForm(AnchorMain, oApp, "Vehicle Sales Proposal");
+                        unload.unloadForm(AnchorMain, oApp, sFormName);
                         loadVSPWindow();
                         return;
                     }
                 }
 
-                Tab newTab = new Tab("Vehicle Sales Proposal", parent);
+                Tab newTab = new Tab(sFormName, parent);
                 newTab.setStyle("-fx-font-weight: bold; -fx-pref-width: 180; -fx-font-size: 10.5px; -fx-font-family: arial;");
 
                 tabpane.getTabs().add(newTab);
@@ -1330,7 +1329,7 @@ public class InquiryFormController implements Initializable, ScreenInterface {
                 newTab.setOnCloseRequest(event -> {
                     if (ShowMessageFX.YesNo(null, "Close Tab", "Are you sure, do you want to close tab?") == true) {
                         if (unload != null) {
-                            unload.unloadForm(otherAnchorPane, oApp, "Vehicle Sales Proposal");
+                            unload.unloadForm(otherAnchorPane, oApp, sFormName);
                         } else {
                             ShowMessageFX.Warning(getStage(), "Please notify the system administrator to configure the null value at the close button.", "Warning", pxeModuleName);
                         }
@@ -1340,6 +1339,14 @@ public class InquiryFormController implements Initializable, ScreenInterface {
                     }
 
                 });
+                
+                List<String> tabName = new ArrayList<>();
+                tabName = TabsStateManager.loadCurrentTab();
+                tabName.remove(sFormName);
+                tabName.add(sFormName);
+                // Save the list of tab IDs to the JSON file
+                TabsStateManager.saveCurrentTab(tabName);
+                
             }
 
         } catch (IOException e) {
@@ -1546,7 +1553,7 @@ public class InquiryFormController implements Initializable, ScreenInterface {
             stage.setTitle("");
             stage.showAndWait();
 
-            oTransBankApp.loadBankApplication(sSourceNox, true);
+            oTransBankApp.loadBankApplication((String) oTrans.getMaster(1), true);
             loadBankApplication();
 
         } catch (IOException e) {

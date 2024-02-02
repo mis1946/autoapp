@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
@@ -32,6 +33,7 @@ import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
@@ -65,6 +67,7 @@ import org.rmj.auto.app.parts.InvTypeEntryParamController;
 import org.rmj.auto.app.parts.InventoryLocationParamController;
 import org.rmj.auto.app.parts.ItemEntryFormController;
 import org.rmj.auto.app.parts.MeasurementEntryParamController;
+import org.rmj.auto.app.parts.PartsRequisitionFormController;
 import org.rmj.auto.app.parts.SectionEntryParamController;
 import org.rmj.auto.app.parts.WareHouseEntryParamController;
 import org.rmj.auto.app.sales.InquiryFormController;
@@ -199,6 +202,8 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
     private Menu menusales1;
     @FXML
     private MenuItem mnuInsurInfo;
+    @FXML
+    private MenuItem mnuPartsRequisition;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -314,6 +319,75 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
         }
     }
 
+    private ContextMenu createContextMenu(TabPane tabPane, Tab tab) {
+        ContextMenu contextMenu = new ContextMenu();
+
+        // Create a menu item for closing the specific tab
+        MenuItem closeTabItem = new MenuItem("Close Tab");
+        MenuItem closeOtherTabsItem = new MenuItem("Close Other Tabs");
+        MenuItem closeAllTabsItem = new MenuItem("Close All Tabs");
+
+        closeTabItem.setOnAction(event -> closeSelectTabs(tabPane, tab));
+        closeOtherTabsItem.setOnAction(event -> closeOtherTabs(tabPane, tab, tab));
+        closeAllTabsItem.setOnAction(event -> closeAllTabs(tabPane));
+
+        // Add the menu item to the context menu
+        contextMenu.getItems().add(closeTabItem);
+        contextMenu.getItems().add(closeOtherTabsItem);
+        contextMenu.getItems().add(closeAllTabsItem);
+
+        // Set the context menu for the tab
+        tab.setContextMenu(contextMenu);
+        return contextMenu;
+    }
+
+    private void closeSelectTabs(TabPane tabPane, Tab tab) {
+        if (ShowMessageFX.YesNo(null, "Close Tab", "Are you sure, do you want to close tab?") == true) {
+            Tabclose();
+            tabName.remove(tab.getText());
+            TabsStateManager.saveCurrentTab(tabName);
+            TabsStateManager.closeTab(tab.getText());
+            tabPane.getTabs().remove(tab);
+        }
+
+    }
+
+    private void closeOtherTabs(TabPane tabPane, Tab currentTab, Tab t) {
+        if (ShowMessageFX.YesNo(null, "Close Other Tab", "Are you sure, do you want to close other tab?") == true) {
+
+            Tabclose();
+            tabName.removeIf(tab -> tab != currentTab.getText());
+
+            // Save the updated list of tab names to the JSON file
+            TabsStateManager.saveCurrentTab(tabName);
+
+            // Close all tabs using your TabsStateManager
+            for (Tab tab : tabPane.getTabs()) {
+                if (tab != currentTab) {
+                    String formName = tab.getText();
+                    TabsStateManager.closeTab(formName);
+                }
+            }
+            tabPane.getTabs().removeIf(tab -> tab != currentTab);
+        }
+    }
+
+    private void closeAllTabs(TabPane tabPane) {
+        if (ShowMessageFX.YesNo(null, "Close All Tabs", "Are you sure, do you want to close all tabs?") == true) {
+            tabName.clear();
+            TabsStateManager.saveCurrentTab(tabName);
+
+            // Close all tabs using your TabsStateManager
+            for (Tab tab : tabPane.getTabs()) {
+                String formName = tab.getText();
+                TabsStateManager.closeTab(formName);
+            }
+            setScene(loadAnimateAnchor("FXMLMainScreen.fxml"));
+            tabPane.getTabs().clear();
+
+        }
+    }
+
     private void triggerMenu(String sFormName) {
 
         switch (sFormName) {
@@ -392,6 +466,9 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
             case "Item Information":
                 mnuItemEntry.fire();
                 break;
+//            case "Parts Requisition":
+//                mnuPartsRequisition.fire();
+//                break;
             case "Sales Parts Request":
                 mnuSalesPartsRequest.fire();
                 break;
@@ -459,6 +536,9 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
     /*LOAD ANIMATE FOR TABPANE*/
     public TabPane loadAnimate(String fsFormName) {
         //set fxml controller class
+        if (tabpane.getTabs().size() == 0) {
+            tabpane = new TabPane();
+        }
         ScreenInterface fxObj = getController(fsFormName);
         fxObj.setGRider(oApp);
 
@@ -470,7 +550,11 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
         Tab newTab = new Tab(SetTabTitle(fsFormName));
         newTab.setStyle("-fx-font-weight: bold; -fx-pref-width: 180; -fx-font-size: 10.5px; -fx-font-family: arial;");
         //tabIds.add(fsFormName);
+        newTab.setContent(new javafx.scene.control.Label("Content of Tab " + fsFormName));
+        newTab.setContextMenu(createContextMenu(tabpane, newTab));
+        // Attach a context menu to each tab
         tabName.add(SetTabTitle(fsFormName));
+
         // Save the list of tab IDs to the JSON file
         TabsStateManager.saveCurrentTab(tabName);
         try {
@@ -567,6 +651,8 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
             /*PARTS*/
             case "ItemEntryForm.fxml":
                 return new ItemEntryFormController();
+            case "PartsRequisitionForm.fxml":
+                return new PartsRequisitionFormController();
             case "VSPPendingPartsRequest.fxml":
                 return new VSPPendingPartsRequestController();
 
@@ -662,6 +748,8 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
             /*PARTS*/
             case "ItemEntryForm.fxml":
                 return "Item Information";
+            case "PartsRequisitionForm.fxml":
+                return "Parts Requisition";
             case "VSPPendingPartsRequest.fxml":
                 return "Sales Parts Request";
             /**/
@@ -994,6 +1082,15 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
     @FXML
     private void mnuItemEntryClicked(ActionEvent event) {
         String sformname = "ItemEntryForm.fxml";
+        //check tab
+        if (checktabs(SetTabTitle(sformname)) == 1) {
+            setScene2(loadAnimate(sformname));
+        }
+    }
+
+    @FXML
+    private void mnuPartsRequisitionClicked(ActionEvent event) {
+        String sformname = "PartsRequisitionForm.fxml";
         //check tab
         if (checktabs(SetTabTitle(sformname)) == 1) {
             setScene2(loadAnimate(sformname));

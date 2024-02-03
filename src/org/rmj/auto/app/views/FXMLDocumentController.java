@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -67,7 +68,6 @@ import org.rmj.auto.app.parts.InvTypeEntryParamController;
 import org.rmj.auto.app.parts.InventoryLocationParamController;
 import org.rmj.auto.app.parts.ItemEntryFormController;
 import org.rmj.auto.app.parts.MeasurementEntryParamController;
-import org.rmj.auto.app.parts.PartsRequisitionFormController;
 import org.rmj.auto.app.parts.SectionEntryParamController;
 import org.rmj.auto.app.parts.WareHouseEntryParamController;
 import org.rmj.auto.app.sales.InquiryFormController;
@@ -202,8 +202,6 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
     private Menu menusales1;
     @FXML
     private MenuItem mnuInsurInfo;
-    @FXML
-    private MenuItem mnuPartsRequisition;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -410,7 +408,7 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
 //            case "Supplier":
 //                break;
             /*SALES*/
-            case "Sales Agent":
+            case "Referral Agent":
                 mnuSalesAgent.fire();
             case "Sales Executive":
                 mnuSalesExecutive.fire();
@@ -651,8 +649,8 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
             /*PARTS*/
             case "ItemEntryForm.fxml":
                 return new ItemEntryFormController();
-            case "PartsRequisitionForm.fxml":
-                return new PartsRequisitionFormController();
+//            case "PartsRequisitionForm.fxml":
+//                return new PartsRequisitionFormController();
             case "VSPPendingPartsRequest.fxml":
                 return new VSPPendingPartsRequestController();
 
@@ -719,8 +717,8 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
 //                return "Sales Agent";
             case "VehicleDescriptionForm.fxml":
                 return "Vehicle Description";
-            case "VehicleEntryForm.fxml":
-                return "Vehicle Information";
+//            case "VehicleEntryForm.fxml":
+//                return "Vehicle Information";
             case "UnitReceivingForm.fxml":
                 return "Unit Receiving";
             case "InquiryForm.fxml":
@@ -844,7 +842,7 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
 
     @FXML
     private void mnuSalesAgentClick(ActionEvent event) {
-        sSalesInfoType = "Sales Agent";
+        sSalesInfoType = "Referral Agent";
         String sformname = "SalesAgentForm.fxml";
         //check tab
         if (checktabs(SetTabTitle(sformname)) == 1) {
@@ -1088,7 +1086,6 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
         }
     }
 
-    @FXML
     private void mnuPartsRequisitionClicked(ActionEvent event) {
         String sformname = "PartsRequisitionForm.fxml";
         //check tab
@@ -1218,13 +1215,21 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
         logout(stage);
     }
     //close whole application
-
     public void logout(Stage stage) {
 
         if (ShowMessageFX.YesNo(null, "Exit", "Are you sure, do you want to close?") == true) {
-            if (tabName.size() > 0) {
-                for (String tabsName : tabName) {
-                    TabsStateManager.closeTab(tabsName);
+//            if (tabName.size() > 0) {
+//                for (String tabsName : tabName) {
+//                    TabsStateManager.closeTab(tabsName);
+//                }
+//                TabsStateManager.saveCurrentTab(new ArrayList<>());
+//            }
+            
+            List<String> tabsName = new ArrayList<>();
+            tabsName = TabsStateManager.loadCurrentTab();
+            if (tabsName.size() > 0) {
+                for (String sTabName : tabsName) {
+                    TabsStateManager.closeTab(sTabName);
                 }
                 TabsStateManager.saveCurrentTab(new ArrayList<>());
             }

@@ -548,11 +548,14 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
                     oTrans.setFormType(pbisJobOrderSales);
                     if (oTrans.SaveRecord()) {
                         ShowMessageFX.Information(getStage(), "Transaction save successfully.", pxeModuleName, null);
-                        loadJobOrderFields();
-                        loadTableLabor();
-                        loadTableParts();
-                        pnEditMode = EditMode.READY;
-                        initButton(pnEditMode);
+                        if(oTrans.OpenRecord((String) oTrans.getMaster(1))){
+                            loadJobOrderFields();
+                            loadTableLabor();
+                            loadTableParts();
+                            pnEditMode = EditMode.READY;
+                        } else {
+                            ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", "Error while opening " + pxeModuleName + ".");
+                        }
                     } else {
                         ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", "Error while saving " + pxeModuleName + ".");
                     }
@@ -584,7 +587,6 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
                             loadTableParts();
                             switchToTab(mainTab, ImTabPane);
                             pnEditMode = EditMode.READY;
-                            initButton(pnEditMode);
                         } else {
                             ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
                             clearFields();
@@ -592,7 +594,6 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
                             partData.clear();
                             switchToTab(mainTab, ImTabPane);
                             pnEditMode = EditMode.UNKNOWN;
-
                         }
                     } catch (SQLException ex) {
                         Logger.getLogger(JobOrderFormController.class
@@ -614,6 +615,7 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
                     String fsValueCancelJo = oTrans.getMaster(1).toString();
                     if (cancelform.loadCancelWindow(oApp, fsValueCancelJo, oTrans.getMaster(3).toString(), "JO")) {
                         if (oTrans.CancelJO()) {
+                            ShowMessageFX.Warning(getStage(), "Job Order Successfully Cancelled.", "Warning", null);
                             loadJobOrderFields();
                             pnEditMode = EditMode.READY;
                             if (oTrans.OpenRecord(fsValueCancelJo)) {

@@ -11,29 +11,24 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
@@ -47,16 +42,11 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import org.rmj.appdriver.GRider;
 import org.rmj.appdriver.SQLUtil;
-import org.rmj.appdriver.agentfx.CommonUtils;
 import org.rmj.appdriver.agentfx.ShowMessageFX;
-import org.rmj.appdriver.agentfx.callback.IFXML;
-import org.rmj.appdriver.constants.EditMode;
 import org.rmj.auto.app.bank.BankEntryFormController;
 import org.rmj.auto.app.cashiering.InvoiceFormController;
 import org.rmj.auto.app.cashiering.VehicleSalesInvoiceFormController;
@@ -227,7 +217,28 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
         }
         /*USER ACCESS*/
         initMenu();
+        
+        setTabPane();
 
+        List<String> tabs = new ArrayList<>();
+        tabs = TabsStateManager.loadCurrentTab();
+        if (tabs.size() > 0) {
+            if (ShowMessageFX.YesNo(null, "Automotive Application", "You want to restore unclosed tabs?") == true) {
+                for (String tabName : tabs) {
+                    triggerMenu(tabName);
+                }
+            } else {
+                for (String tabName : tabs) {
+                    TabsStateManager.closeTab(tabName);
+                }
+                TabsStateManager.saveCurrentTab(new ArrayList<>());
+                return;
+            }
+        }
+    }
+
+    public void setTabPane(){
+        
         // set up the drag and drop listeners on the tab pane
         tabpane.setOnDragDetected(event -> {
             Dragboard db = tabpane.startDragAndDrop(TransferMode.MOVE);
@@ -299,24 +310,9 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
         tabpane.setOnDragDone(event -> {
             event.consume();
         });
-
-        List<String> tabs = new ArrayList<>();
-        tabs = TabsStateManager.loadCurrentTab();
-        if (tabs.size() > 0) {
-            if (ShowMessageFX.YesNo(null, "Automotive Application", "You want to restore unclosed tabs?") == true) {
-                for (String tabName : tabs) {
-                    triggerMenu(tabName);
-                }
-            } else {
-                for (String tabName : tabs) {
-                    TabsStateManager.closeTab(tabName);
-                }
-                TabsStateManager.saveCurrentTab(new ArrayList<>());
-                return;
-            }
-        }
+    
     }
-
+    
     private ContextMenu createContextMenu(TabPane tabPane, Tab tab) {
         ContextMenu contextMenu = new ContextMenu();
 
@@ -537,6 +533,9 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
         if (tabpane.getTabs().size() == 0) {
             tabpane = new TabPane();
         }
+
+        setTabPane();
+        
         ScreenInterface fxObj = getController(fsFormName);
         fxObj.setGRider(oApp);
 

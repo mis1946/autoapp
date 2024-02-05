@@ -476,7 +476,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                     loadClientMaster();
 
                 } catch (SQLException ex) {
-                    Logger.getLogger(CustomerInformationFormController.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(CustomerFormController.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
 
@@ -489,7 +489,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                         oTrans.setMaster(7, String.valueOf(comboBox07.getSelectionModel().getSelectedIndex()));
                     }
                 } catch (SQLException ex) {
-                    Logger.getLogger(CustomerInformationFormController.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(CustomerFormController.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });
@@ -500,7 +500,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                         oTrans.setMaster(8, String.valueOf(comboBox08.getSelectionModel().getSelectedIndex()));
                     }
                 } catch (SQLException ex) {
-                    Logger.getLogger(CustomerInformationFormController.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(CustomerFormController.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });
@@ -519,7 +519,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                         oTrans.setMaster(9, String.valueOf(comboBox09.getSelectionModel().getSelectedIndex()));
                     } 
                 } catch (SQLException ex) {
-                    Logger.getLogger(CustomerInformationFormController.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(CustomerFormController.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });
@@ -532,7 +532,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                             oTrans.setMaster(12, "");
                             oTrans.setMaster(25, "");
                         } catch (SQLException ex) {
-                            Logger.getLogger(CustomerInformationFormController.class.getName()).log(Level.SEVERE, null, ex);
+                            Logger.getLogger(CustomerFormController.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     }
                 }
@@ -547,7 +547,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                             oTrans.setMaster(27, "");
                             oTrans.setMaster(28, "");
                         } catch (SQLException ex) {
-                            Logger.getLogger(CustomerInformationFormController.class.getName()).log(Level.SEVERE, null, ex);
+                            Logger.getLogger(CustomerFormController.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     }
                 }
@@ -562,7 +562,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                             oTrans.setMaster(10, "");
                             oTrans.setMaster(24, "");
                         } catch (SQLException ex) {
-                            Logger.getLogger(CustomerInformationFormController.class.getName()).log(Level.SEVERE, null, ex);
+                            Logger.getLogger(CustomerFormController.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     }
                 }
@@ -1231,7 +1231,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                             String.valueOf(lnCtr), //ROW
                             sPrimary,
                             oTrans.oTransAddress.getAddress(lnCtr, "sHouseNox").toString(), //HOUSE NUMBER
-                            sAddress.toUpperCase(),
+                            sAddress.trim().toUpperCase(),
                             oTrans.oTransAddress.getAddress(lnCtr, "sZippCode").toString(),
                             sCurrent,
                             sProvincial,
@@ -1548,7 +1548,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                 txtField.selectAll();
             }
         } catch (SQLException ex) {
-            Logger.getLogger(CustomerInformationFormController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CustomerFormController.class.getName()).log(Level.SEVERE, null, ex);
         }
     };
 

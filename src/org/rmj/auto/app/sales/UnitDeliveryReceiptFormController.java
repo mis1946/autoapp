@@ -316,8 +316,12 @@ public class UnitDeliveryReceiptFormController implements Initializable, ScreenI
             //Proceed to saving record
             if (oTrans.SaveRecord()) {
                 ShowMessageFX.Information(getStage(), "Transaction save successfully.", pxeModuleName, null);
-                loadCustomerField();
-                pnEditMode = EditMode.READY;
+                if(oTrans.OpenRecord((String) oTrans.getMaster(1))){
+                    loadCustomerField();
+                    pnEditMode = EditMode.READY;
+                } else {
+                    ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", "Error while opening Unit Delivery Receipt Information");
+                }
             } else {
                 ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", "Error while saving Unit Delivery Receipt Information");
             }

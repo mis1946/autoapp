@@ -14,7 +14,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -67,6 +69,7 @@ import org.rmj.auto.app.views.InputTextFormatter;
 import org.rmj.auto.app.views.ScreenInterface;
 import org.rmj.auto.app.views.TextFieldAnimationUtil;
 import org.rmj.auto.app.views.unloadForm;
+import org.rmj.auto.json.TabsStateManager;
 import org.rmj.auto.sales.base.InquiryFollowUp;
 import org.rmj.auto.sales.base.VehicleSalesProposalMaster;
 
@@ -1284,11 +1287,13 @@ public class VSPFormController implements Initializable, ScreenInterface {
             }
             if (oTrans.SaveRecord()) {
                 ShowMessageFX.Information(getStage(), "Transaction save successfully.", pxeModuleName, null);
-                loadVSPField();
-                pnEditMode = EditMode.READY;
-                initButton(pnEditMode);
-                loadTableLabor();
-                loadTableParts();
+                if(oTrans.OpenRecord((String) oTrans.getMaster(1))){
+                    loadVSPField();
+                    pnEditMode = EditMode.READY;
+                    initButton(pnEditMode);
+                    loadTableLabor();
+                    loadTableParts();
+                }
             } else {
                 ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", "Error while saving " + pxeModuleName + ".");
             }
@@ -3413,6 +3418,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
     /*OPEN WINDOW FOR */
     private void loadJobOrderWindow() {
         try {
+            String sFormName = "Sales Job Order";
             FXMLLoader fxmlLoader = new FXMLLoader();
 
             JobOrderFormController loControl = new JobOrderFormController();
@@ -3432,7 +3438,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
                 TabPane tabpane = (TabPane) tabContentParent;
 
                 for (Tab tab : tabpane.getTabs()) {
-                    if (tab.getText().equals("Sales Job Order Information")) {
+                    if (tab.getText().equals(sFormName)) {
 //                        if (ShowMessageFX.OkayCancel(null, pxeModuleName, "You have unsaved data on Sales Job Order Information. Are you sure you want to convert this inquiry for a new vsp record?") == true) {
 //                        } else {
 //                            return;
@@ -3443,13 +3449,13 @@ public class VSPFormController implements Initializable, ScreenInterface {
                             return;
                         }
                         tabpane.getSelectionModel().select(tab);
-                        unload.unloadForm(AnchorMain, oApp, "Sales Job Order Information");
+                        unload.unloadForm(AnchorMain, oApp, sFormName);
                         loadJobOrderWindow();
                         return;
                     }
                 }
 
-                Tab newTab = new Tab("Sales Job Order Information", parent);
+                Tab newTab = new Tab(sFormName, parent);
                 newTab.setStyle("-fx-font-weight: bold; -fx-pref-width: 180; -fx-font-size: 10.5px; -fx-font-family: arial;");
 
                 tabpane.getTabs().add(newTab);
@@ -3457,7 +3463,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
                 newTab.setOnCloseRequest(event -> {
                     if (ShowMessageFX.YesNo(null, "Close Tab", "Are you sure, do you want to close tab?") == true) {
                         if (unload != null) {
-                            unload.unloadForm(otherAnchorPane, oApp, "Sales Job Order Information");
+                            unload.unloadForm(otherAnchorPane, oApp, sFormName);
                         } else {
                             ShowMessageFX.Warning(getStage(), "Please notify the system administrator to configure the null value at the close button.", "Warning", pxeModuleName);
                         }
@@ -3467,6 +3473,13 @@ public class VSPFormController implements Initializable, ScreenInterface {
                     }
 
                 });
+                
+                List<String> tabName = new ArrayList<>();
+                tabName = TabsStateManager.loadCurrentTab();
+                tabName.remove(sFormName);
+                tabName.add(sFormName);
+                // Save the list of tab IDs to the JSON file
+                TabsStateManager.saveCurrentTab(tabName);
             }
 
         } catch (IOException e) {

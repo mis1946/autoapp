@@ -163,40 +163,36 @@ public class InquiryBankApplicationFormController implements Initializable {
     }
 
     private void cmdButton_Click(ActionEvent event) {
-        try {
-            String lsButton = ((Button)event.getSource()).getId();
-            switch (lsButton){
-                case "btnClose":
-                    CommonUtils.closeStage(btnClose);
+        String lsButton = ((Button)event.getSource()).getId();
+        switch (lsButton){
+            case "btnClose":
+                CommonUtils.closeStage(btnClose);
                 break;
-                case "btnSave":
-                    if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure you want to save?")) {
+            case "btnSave":
+                if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure you want to save?")) {
+                } else {
+                    return;
+                }
+                if (setSelection()){
+                    // oTransBankApp.setPayMode(pnInqPayMode);
+                    //oTransBankApp.setTransNox((String) oTransBankApp.getBankApp( 5));
+                    if(oTransBankApp.SaveRecord()){
+                        ShowMessageFX.Information(null, pxeModuleName, "Bank Application save sucessfully.");
                     } else {
+                        ShowMessageFX.Warning(null, pxeModuleName, oTransBankApp.getMessage());
                         return;
                     }
-                    if (setSelection()){
-                        // oTransBankApp.setPayMode(pnInqPayMode);
-                        oTransBankApp.setTransNox((String) oTransBankApp.getBankApp( 5));
-                        if(oTransBankApp.SaveRecord()){
-                            ShowMessageFX.Information(null, pxeModuleName, "Bank Application save sucessfully.");
-                        } else {
-                            ShowMessageFX.Warning(null, pxeModuleName, oTransBankApp.getMessage());
-                            return;
-                        }
-                    } else {
-                        return;
-                    }
-                    CommonUtils.closeStage(btnSave);
+                } else {
+                    return;
+                }
+                CommonUtils.closeStage(btnSave);
                 break;
-                default:
-                    ShowMessageFX.Warning(null, pxeModuleName, "Button with name " + lsButton + " not registered.");
-                    break;
-
-            }
-        initbutton(pnEditMode);
-        } catch (SQLException ex) {
-            Logger.getLogger(InquiryBankApplicationFormController.class.getName()).log(Level.SEVERE, null, ex);
+            default:
+                ShowMessageFX.Warning(null, pxeModuleName, "Button with name " + lsButton + " not registered.");
+                break;
+                
         }
+        initbutton(pnEditMode);
     }    
     
 //    private void cmdButton_Click(ActionEvent event) {

@@ -12,7 +12,9 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -59,6 +61,7 @@ import org.rmj.appdriver.agentfx.ShowMessageFX;
 import org.rmj.appdriver.callback.MasterCallback;
 import org.rmj.appdriver.constants.EditMode;
 import org.rmj.auto.clients.base.ClientVehicleInfo;
+import org.rmj.auto.json.TabsStateManager;
 
 /**
  * FXML Controller class
@@ -1015,6 +1018,7 @@ public class CustomerVehicleInfoFormController implements Initializable, ScreenI
     /*OPEN WINDOW FOR VEHICLE DESCRIPTION ENTRY*/
     private void loadVehicleDescriptionWindow() {
         try {
+            String sFormName = "Vehicle Description";
             FXMLLoader fxmlLoader = new FXMLLoader();
             fxmlLoader.setLocation(getClass().getResource("VehicleDescriptionForm.fxml"));
             VehicleDescriptionFormController loControl = new VehicleDescriptionFormController();
@@ -1032,13 +1036,13 @@ public class CustomerVehicleInfoFormController implements Initializable, ScreenI
                 TabPane tabpane = (TabPane) tabContentParent;
 
                 for (Tab tab : tabpane.getTabs()) {
-                    if (tab.getText().equals("Vehicle Description")) {
+                    if (tab.getText().equals(sFormName)) {
                         tabpane.getSelectionModel().select(tab);
                         return;
                     }
                 }
 
-                Tab newTab = new Tab("Vehicle Description", parent);
+                Tab newTab = new Tab(sFormName, parent);
                 //newTab.setStyle("-fx-font-weight: bold; -fx-pref-width: 180; -fx-font-size: 11px;");
                 newTab.setStyle("-fx-font-weight: bold; -fx-pref-width: 180; -fx-font-size: 10.5px; -fx-font-family: arial;");
 
@@ -1047,7 +1051,7 @@ public class CustomerVehicleInfoFormController implements Initializable, ScreenI
                 newTab.setOnCloseRequest(event -> {
                     if (ShowMessageFX.YesNo(null, "Close Tab", "Are you sure, do you want to close tab?") == true) {
                         if (unload != null) {
-                            unload.unloadForm(otherAnchorPane, oApp, "Vehicle Description");
+                            unload.unloadForm(otherAnchorPane, oApp, sFormName);
                         } else {
                             ShowMessageFX.Warning(getStage(), "Please notify the system administrator to configure the null value at the close button.", "Warning", pxeModuleName);
                         }
@@ -1055,8 +1059,14 @@ public class CustomerVehicleInfoFormController implements Initializable, ScreenI
                         // Cancel the close request
                         event.consume();
                     }
-
                 });
+                
+                List<String> tabName = new ArrayList<>();
+                tabName = TabsStateManager.loadCurrentTab();
+                tabName.remove(sFormName);
+                tabName.add(sFormName);
+                // Save the list of tab IDs to the JSON file
+                TabsStateManager.saveCurrentTab(tabName);
             }
         } catch (IOException e) {
             e.printStackTrace();

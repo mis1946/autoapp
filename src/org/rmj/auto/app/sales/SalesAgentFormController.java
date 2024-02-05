@@ -66,7 +66,7 @@ public class SalesAgentFormController implements Initializable, ScreenInterface 
     unloadForm unload = new unloadForm(); //Used in Close Button
     TextFieldAnimationUtil txtFieldAnimation = new TextFieldAnimationUtil();
 
-    private String pxeModuleName = "Sales Agent Information"; //Form Title
+    private String pxeModuleName = "Referral Agent"; //Form Title
     private int pnEditMode;//Modifying fields
     private int pnRow = -1;
     private int oldPnRow = -1;
@@ -398,6 +398,11 @@ public class SalesAgentFormController implements Initializable, ScreenInterface 
                         }
                     }
                     
+                    if(txtField06.getText().isEmpty()){
+                        ShowMessageFX.Warning(getStage(), sName + " cannot be Empty.", "Warning", null);
+                        return;
+                    }
+                    
                     if (oTrans.SaveRecord()) {
                        ShowMessageFX.Information(getStage(), "Transaction "+lsState+" successfully.", pxeModuleName, null);
                        loadAgentListTable();
@@ -639,7 +644,7 @@ public class SalesAgentFormController implements Initializable, ScreenInterface 
             refIndex08.setText("Sales Executive Name");
         } else {
             refIndex08.setCellValueFactory(new PropertyValueFactory<>("tblindex08"));
-            refIndex08.setText("Sales Agent Name");
+            refIndex08.setText("Referral Agent Name");
         }
         
         tblTransaction.widthProperty().addListener((ObservableValue<? extends Number> source, Number oldWidth, Number newWidth) -> {

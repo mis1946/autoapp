@@ -148,11 +148,6 @@
                                     </RadioButton>
                                     <RadioButton fx:id="radiobtn18AddN" mnemonicParsing="false" text="No" toggleGroup="$add_active" GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.rowIndex="5" />
                                     <Label id="LabelDesc" layoutX="18.0" layoutY="23.0" stylesheets="@../css/FrameStyle.css" text="Street Name" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                    <Label alignment="BOTTOM_RIGHT" prefHeight="16.0" prefWidth="72.0" text="*" textFill="#fb0000" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                                       <font>
-                                          <Font name="Arial" size="12.0" />
-                                       </font>
-                                    </Label>
                                     <Label alignment="BOTTOM_RIGHT" layoutX="15.0" layoutY="14.0" prefHeight="16.0" prefWidth="37.0" text="*" textFill="#fb0000" GridPane.columnIndex="1" GridPane.rowIndex="3">
                                        <font>
                                           <Font name="Arial" size="12.0" />

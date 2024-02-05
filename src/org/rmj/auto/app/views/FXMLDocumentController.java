@@ -17,22 +17,18 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
@@ -46,16 +42,11 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import org.rmj.appdriver.GRider;
 import org.rmj.appdriver.SQLUtil;
-import org.rmj.appdriver.agentfx.CommonUtils;
 import org.rmj.appdriver.agentfx.ShowMessageFX;
-import org.rmj.appdriver.agentfx.callback.IFXML;
-import org.rmj.appdriver.constants.EditMode;
 import org.rmj.auto.app.bank.BankEntryFormController;
 import org.rmj.auto.app.cashiering.InvoiceFormController;
 import org.rmj.auto.app.cashiering.VehicleSalesInvoiceFormController;
@@ -67,7 +58,6 @@ import org.rmj.auto.app.parts.InvTypeEntryParamController;
 import org.rmj.auto.app.parts.InventoryLocationParamController;
 import org.rmj.auto.app.parts.ItemEntryFormController;
 import org.rmj.auto.app.parts.MeasurementEntryParamController;
-import org.rmj.auto.app.parts.PartsRequisitionFormController;
 import org.rmj.auto.app.parts.SectionEntryParamController;
 import org.rmj.auto.app.parts.WareHouseEntryParamController;
 import org.rmj.auto.app.sales.InquiryFormController;
@@ -202,8 +192,6 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
     private Menu menusales1;
     @FXML
     private MenuItem mnuInsurInfo;
-    @FXML
-    private MenuItem mnuPartsRequisition;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -229,7 +217,28 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
         }
         /*USER ACCESS*/
         initMenu();
+        
+        setTabPane();
 
+        List<String> tabs = new ArrayList<>();
+        tabs = TabsStateManager.loadCurrentTab();
+        if (tabs.size() > 0) {
+            if (ShowMessageFX.YesNo(null, "Automotive Application", "You want to restore unclosed tabs?") == true) {
+                for (String tabName : tabs) {
+                    triggerMenu(tabName);
+                }
+            } else {
+                for (String tabName : tabs) {
+                    TabsStateManager.closeTab(tabName);
+                }
+                TabsStateManager.saveCurrentTab(new ArrayList<>());
+                return;
+            }
+        }
+    }
+
+    public void setTabPane(){
+        
         // set up the drag and drop listeners on the tab pane
         tabpane.setOnDragDetected(event -> {
             Dragboard db = tabpane.startDragAndDrop(TransferMode.MOVE);
@@ -301,24 +310,9 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
         tabpane.setOnDragDone(event -> {
             event.consume();
         });
-
-        List<String> tabs = new ArrayList<>();
-        tabs = TabsStateManager.loadCurrentTab();
-        if (tabs.size() > 0) {
-            if (ShowMessageFX.YesNo(null, "Automotive Application", "You want to restore unclosed tabs?") == true) {
-                for (String tabName : tabs) {
-                    triggerMenu(tabName);
-                }
-            } else {
-                for (String tabName : tabs) {
-                    TabsStateManager.closeTab(tabName);
-                }
-                TabsStateManager.saveCurrentTab(new ArrayList<>());
-                return;
-            }
-        }
+    
     }
-
+    
     private ContextMenu createContextMenu(TabPane tabPane, Tab tab) {
         ContextMenu contextMenu = new ContextMenu();
 
@@ -410,7 +404,7 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
 //            case "Supplier":
 //                break;
             /*SALES*/
-            case "Sales Agent":
+            case "Referral Agent":
                 mnuSalesAgent.fire();
             case "Sales Executive":
                 mnuSalesExecutive.fire();
@@ -539,6 +533,9 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
         if (tabpane.getTabs().size() == 0) {
             tabpane = new TabPane();
         }
+
+        setTabPane();
+        
         ScreenInterface fxObj = getController(fsFormName);
         fxObj.setGRider(oApp);
 
@@ -651,8 +648,8 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
             /*PARTS*/
             case "ItemEntryForm.fxml":
                 return new ItemEntryFormController();
-            case "PartsRequisitionForm.fxml":
-                return new PartsRequisitionFormController();
+//            case "PartsRequisitionForm.fxml":
+//                return new PartsRequisitionFormController();
             case "VSPPendingPartsRequest.fxml":
                 return new VSPPendingPartsRequestController();
 
@@ -719,8 +716,8 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
 //                return "Sales Agent";
             case "VehicleDescriptionForm.fxml":
                 return "Vehicle Description";
-            case "VehicleEntryForm.fxml":
-                return "Vehicle Information";
+//            case "VehicleEntryForm.fxml":
+//                return "Vehicle Information";
             case "UnitReceivingForm.fxml":
                 return "Unit Receiving";
             case "InquiryForm.fxml":
@@ -844,7 +841,7 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
 
     @FXML
     private void mnuSalesAgentClick(ActionEvent event) {
-        sSalesInfoType = "Sales Agent";
+        sSalesInfoType = "Referral Agent";
         String sformname = "SalesAgentForm.fxml";
         //check tab
         if (checktabs(SetTabTitle(sformname)) == 1) {
@@ -1088,7 +1085,6 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
         }
     }
 
-    @FXML
     private void mnuPartsRequisitionClicked(ActionEvent event) {
         String sformname = "PartsRequisitionForm.fxml";
         //check tab
@@ -1218,13 +1214,21 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
         logout(stage);
     }
     //close whole application
-
     public void logout(Stage stage) {
 
         if (ShowMessageFX.YesNo(null, "Exit", "Are you sure, do you want to close?") == true) {
-            if (tabName.size() > 0) {
-                for (String tabsName : tabName) {
-                    TabsStateManager.closeTab(tabsName);
+//            if (tabName.size() > 0) {
+//                for (String tabsName : tabName) {
+//                    TabsStateManager.closeTab(tabsName);
+//                }
+//                TabsStateManager.saveCurrentTab(new ArrayList<>());
+//            }
+            
+            List<String> tabsName = new ArrayList<>();
+            tabsName = TabsStateManager.loadCurrentTab();
+            if (tabsName.size() > 0) {
+                for (String sTabName : tabsName) {
+                    TabsStateManager.closeTab(sTabName);
                 }
                 TabsStateManager.saveCurrentTab(new ArrayList<>());
             }

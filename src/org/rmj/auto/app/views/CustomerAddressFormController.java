@@ -126,7 +126,6 @@ public class CustomerAddressFormController implements Initializable, ScreenInter
         };
 
         //addRequiredFieldListener(txtField03Addr);
-        txtFieldAnimation.addRequiredFieldListener(txtField04Addr);
         txtFieldAnimation.addRequiredFieldListener(txtField05Addr);
         txtFieldAnimation.addRequiredFieldListener(txtField06Addr);
 
@@ -314,9 +313,11 @@ public class CustomerAddressFormController implements Initializable, ScreenInter
             
             //Validate Before adding to tables
             if (( //txtField03Addr.getText().isEmpty() ||
-                    txtField04Addr.getText().isEmpty() || txtField07Addr.getText().isEmpty() || txtField05Addr.getText().isEmpty() || txtField06Addr.getText().isEmpty())
+                    //txtField04Addr.getText().isEmpty() || 
+                    txtField07Addr.getText().isEmpty() || txtField05Addr.getText().isEmpty() || txtField06Addr.getText().isEmpty())
                     || //txtField03Addr.getText().trim().equals("") ||
-                    txtField04Addr.getText().trim().equals("") || txtField07Addr.getText().trim().equals("") || txtField05Addr.getText().trim().equals("") || txtField06Addr.getText().trim().equals("")) {
+                    //txtField04Addr.getText().trim().equals("") || 
+                    txtField07Addr.getText().trim().equals("") || txtField05Addr.getText().trim().equals("") || txtField06Addr.getText().trim().equals("")) {
                 ShowMessageFX.Warning(getStage(), "Invalid Address. Insert to table Aborted!", "Warning", null);
                 return false;
             }

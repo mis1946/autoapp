@@ -21,52 +21,52 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.rmj.appdriver.GRider;
 
-
 /**
  *
  * @author xurpas
  */
 public class Autoapp extends Application {
-     public final static String pxeMainFormTitle = "Integrated Automotive System";
-     public final static String pxeMainForm = "FXMLDocument.fxml";
-     public final static String pxeStageIcon = "org/rmj/auto/app/images/icon.png";
-     public static GRider oApp;
-    
+
+    public final static String pxeMainFormTitle = "Integrated Automotive System";
+    public final static String pxeMainForm = "FXMLDocument.fxml";
+    public final static String pxeStageIcon = "org/rmj/auto/app/images/logo.png";
+    public static GRider oApp;
+
     @Override
     public void start(Stage stage) throws Exception {
-     /*
+        /*
         Parent root = FXMLLoader.load(getClass().getResource("FXMLDocument.fxml"));
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
-     */
-     
-          FXMLLoader view = new FXMLLoader();
-          view.setLocation(getClass().getResource(pxeMainForm));
+         */
 
-          FXMLDocumentController controller = new FXMLDocumentController();
-          controller.setGRider(oApp);
+        FXMLLoader view = new FXMLLoader();
+        view.setLocation(getClass().getResource(pxeMainForm));
 
-          view.setController(controller);        
-          Parent parent = view.load();
-          Scene scene = new Scene(parent);
-          
-          //get the screen size
-          Screen screen = Screen.getPrimary();
-          Rectangle2D bounds = screen.getVisualBounds();
+        FXMLDocumentController controller = new FXMLDocumentController();
+        controller.setGRider(oApp);
 
-          stage.setScene(scene);
-          stage.initStyle(StageStyle.UNDECORATED);
-          stage.getIcons().add(new Image(pxeStageIcon));
-          stage.setTitle(pxeMainFormTitle);
+        view.setController(controller);
+        Parent parent = view.load();
+        Scene scene = new Scene(parent);
 
-          // set stage as maximized but not full screen
-          stage.setX(bounds.getMinX());
-          stage.setY(bounds.getMinY());
-          stage.setWidth(bounds.getWidth());
-          stage.setHeight(bounds.getHeight());
-          stage.centerOnScreen();
-          stage.show();
+        //get the screen size
+        Screen screen = Screen.getPrimary();
+        Rectangle2D bounds = screen.getVisualBounds();
+
+        stage.setScene(scene);
+        stage.initStyle(StageStyle.UNDECORATED);
+        stage.getIcons().add(new Image(pxeStageIcon));
+        stage.setTitle(pxeMainFormTitle);
+
+        // set stage as maximized but not full screen
+        stage.setX(bounds.getMinX());
+        stage.setY(bounds.getMinY());
+        stage.setWidth(bounds.getWidth());
+        stage.setHeight(bounds.getHeight());
+        stage.centerOnScreen();
+        stage.show();
     }
 
     /**
@@ -75,9 +75,9 @@ public class Autoapp extends Application {
     public static void main(String[] args) {
         launch(args);
     }
-    
-     public void setGRider(GRider foValue){
-         oApp = foValue;
-     }
-    
+
+    public void setGRider(GRider foValue) {
+        oApp = foValue;
+    }
+
 }

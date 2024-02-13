@@ -244,8 +244,8 @@
                                                                                                             </tooltip>
                                                                                                         </TextField>
                                                                                                         <TextField fx:id="txtField04" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                                                                                                        <TextField fx:id="txtField06" prefColumnCount="8" GridPane.columnIndex="4" />
                                                                                                         <TextField fx:id="txtField05" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="3" />
+                                                                                                        <TextField fx:id="txtField06" prefColumnCount="8" GridPane.columnIndex="4" />
                                                                                                         <Label id="LabelDesc" stylesheets="@../css/FrameStyle.css" text="Citizenship" GridPane.columnIndex="9" GridPane.columnSpan="2" />
                                                                                                         <Label id="LabelDesc" stylesheets="@../css/FrameStyle.css" text="Birth Date" GridPane.columnIndex="6" GridPane.columnSpan="2" GridPane.rowIndex="2" />
                                                                                                         <Label id="LabelDesc" stylesheets="@../css/FrameStyle.css" text="Birth Place" GridPane.columnIndex="9" GridPane.columnSpan="2" GridPane.rowIndex="2" />

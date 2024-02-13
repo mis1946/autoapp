@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.Month;
+import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.ResourceBundle;
@@ -72,7 +73,6 @@ import org.rmj.auto.clients.base.ClientAddress;
 import org.rmj.auto.clients.base.ClientMaster;
 import org.rmj.auto.clients.base.ClientMobile;
 import org.rmj.auto.clients.base.ClientEMail;
-import org.rmj.auto.clients.base.ClientInformation;
 import org.rmj.auto.clients.base.ClientSocMed;
 import org.rmj.auto.clients.base.ClientVehicleInfo;
 
@@ -82,6 +82,7 @@ import org.rmj.auto.clients.base.ClientVehicleInfo;
  * @author Arsiela DATE CREATED 03-01-2023
  */
 public class CustomerFormController implements Initializable, ScreenInterface {
+
     private GRider oApp;
     private ClientMaster oTrans;
     private MasterCallback oListener;
@@ -95,7 +96,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
     private int pnRow = -1;
     private int lnCtr;
     private int iTabIndex = 0; //Set tab index
-    
+
     /*populate tables Address, Mobile, Email and Social Media*/
     private ObservableList<CustomerTableAddress> addressdata = FXCollections.observableArrayList();
     private ObservableList<CustomerTableMobile> mobiledata = FXCollections.observableArrayList();
@@ -105,13 +106,13 @@ public class CustomerFormController implements Initializable, ScreenInterface {
     /*populate tables for customer vehicle info and vehicle history*/
     private ObservableList<CustomerTableVehicleInfo> vhclinfodata = FXCollections.observableArrayList();
     private ObservableList<CustomerTableVehicleInfo> coownvhclinfodata = FXCollections.observableArrayList();
-    
+
     /*populate comboxes client_master*/
     ObservableList<String> cCvlStat = FXCollections.observableArrayList("SINGLE", "MARRIED", "DIVORCED", "SEPARATED", "WIDOWED");
     ObservableList<String> cGender = FXCollections.observableArrayList("MALE", "FEMALE");
     ObservableList<String> cCusttype = FXCollections.observableArrayList("CLIENT", "COMPANY");
     ObservableList<String> cTitle = FXCollections.observableArrayList("MR.", "MISS", "MRS.");
-    
+
     @FXML
     private AnchorPane AnchorMain;
     @FXML
@@ -297,20 +298,20 @@ public class CustomerFormController implements Initializable, ScreenInterface {
         oListener = (int fnIndex, Object foValue) -> {
             System.out.println("Set Class Value " + fnIndex + "-->" + foValue);
         };
-        
+
         oTrans = new ClientMaster(oApp, oApp.getBranchCode(), true);
         oTrans.setCallback(oListener);
         oTrans.setWithUI(true);
-        
+
         initAddress();
         initContact();
         initEmail();
         initSocialMedia();
         initVehicleInfo();
         initCoVehicleInfo();
-        
+
         cmbFieldAction();
-        
+
         setCapsLockBehavior(txtField01);
         setCapsLockBehavior(txtField02);
         setCapsLockBehavior(txtField03);
@@ -330,7 +331,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
         txtFieldAnimation.addRequiredFieldListener(txtField16);
         txtFieldAnimation.addRequiredFieldListener(txtField02);
         txtFieldAnimation.addRequiredFieldListener(txtField03);
-        
+
         /*Set Focus to set Value to Class*/
         txtField01.focusedProperty().addListener(txtField_Focus);
         txtField02.focusedProperty().addListener(txtField_Focus);
@@ -378,7 +379,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
         txtField16.setOnKeyPressed(this::txtField_KeyPressed);
         textArea15.setOnKeyPressed(this::txtField_KeyPressed);
         textArea15.setOnKeyPressed(this::txtArea_KeyPressed);
-        
+
         //Button Click Event
         btnTabAdd.setOnAction(this::cmdButton_Click);
         btnTabRem.setOnAction(this::cmdButton_Click);
@@ -388,14 +389,14 @@ public class CustomerFormController implements Initializable, ScreenInterface {
         btnClose.setOnAction(this::cmdButton_Click);
         btnBrowse.setOnAction(this::cmdButton_Click);
         btnCancel.setOnAction(this::cmdButton_Click);
-        
+
         /*Clear Fields*/
         clearFields();
         pnEditMode = EditMode.UNKNOWN;
         initButton(pnEditMode);
-        
+
         Platform.runLater(() -> {
-            if(oTrans.loadState()){
+            if (oTrans.loadState()) {
                 pnEditMode = oTrans.getEditMode();
                 loadClientMaster();
                 loadAddress();
@@ -406,13 +407,13 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                 loadCoOwnVehicleInfoTable();
                 initButton(pnEditMode);
             } else {
-                if(oTrans.getMessage().isEmpty()){
-                }else{
+                if (oTrans.getMessage().isEmpty()) {
+                } else {
                     ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
                 }
             }
         });
-    }    
+    }
 
     private static void setCapsLockBehavior(TextField textField) {
         textField.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -434,12 +435,12 @@ public class CustomerFormController implements Initializable, ScreenInterface {
     public void setGRider(GRider foValue) {
         oApp = foValue;
     }
-    
+
     private Stage getStage() {
         return (Stage) txtField01.getScene().getWindow();
     }
-    
-    private void cmbFieldAction(){
+
+    private void cmbFieldAction() {
         //Update Class master
         comboBox18.setOnAction(e -> {
             if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
@@ -485,7 +486,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
         comboBox07.setOnAction(e -> {
             if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
                 try {
-                    if(comboBox07.getSelectionModel().getSelectedIndex() >= 0){
+                    if (comboBox07.getSelectionModel().getSelectedIndex() >= 0) {
                         oTrans.setMaster(7, String.valueOf(comboBox07.getSelectionModel().getSelectedIndex()));
                     }
                 } catch (SQLException ex) {
@@ -496,7 +497,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
         comboBox08.setOnAction(e -> {
             if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
                 try {
-                    if(comboBox08.getSelectionModel().getSelectedIndex() >= 0){
+                    if (comboBox08.getSelectionModel().getSelectedIndex() >= 0) {
                         oTrans.setMaster(8, String.valueOf(comboBox08.getSelectionModel().getSelectedIndex()));
                     }
                 } catch (SQLException ex) {
@@ -515,9 +516,9 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                     } else {
                         txtField25.setDisable(false);
                     }
-                    if(comboBox09.getSelectionModel().getSelectedIndex() >= 0){
+                    if (comboBox09.getSelectionModel().getSelectedIndex() >= 0) {
                         oTrans.setMaster(9, String.valueOf(comboBox09.getSelectionModel().getSelectedIndex()));
-                    } 
+                    }
                 } catch (SQLException ex) {
                     Logger.getLogger(CustomerFormController.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -525,7 +526,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
         });
 
         txtField12.textProperty().addListener((observable, oldValue, newValue) -> {
-            if(newValue != null){
+            if (newValue != null) {
                 if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
                     if (newValue.isEmpty()) {
                         try {
@@ -540,7 +541,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
         });
 
         txtField25.textProperty().addListener((observable, oldValue, newValue) -> {
-            if(newValue != null){
+            if (newValue != null) {
                 if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
                     if (newValue.isEmpty()) {
                         try {
@@ -556,7 +557,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
 
         txtField10.textProperty().addListener((observable, oldValue, newValue) -> {
             if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
-                if(newValue != null){
+                if (newValue != null) {
                     if (newValue.isEmpty()) {
                         try {
                             oTrans.setMaster(10, "");
@@ -577,8 +578,9 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                 btnTabRem.setVisible(false);
             }
         });
+
     }
-    
+
     /*BUTTON CLICKED*/
     private void cmdButton_Click(ActionEvent event) {
         String lsButton = ((Button) event.getSource()).getId();
@@ -612,42 +614,54 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                     } else {
                         ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
                     }
-                    
+
                     break;
                 case "btnSave": //save client info
                     //Do not Allow to save CLIENT Info if there's no Address / Mobile
-                    if (pnEditMode == EditMode.ADDNEW) {
-                        if (oTrans.oTransAddress.getItemCount() <= 0) {
-                            ShowMessageFX.Warning(getStage(), "Please Add atleast 1 Address.", "Warning", pxeModuleName);
-                            return;
-                        } 
-                        if (oTrans.oTransMobile.getItemCount() <= 0) {
-                            ShowMessageFX.Warning(getStage(), "Please Add atleast 1 Contact Number.", "Warning", pxeModuleName);
+                    if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure, do you want to save?") == true) {
+                        LocalDate selectedDate = txtField11.getValue();
+                        LocalDate currentDate = LocalDate.now();
+                        Period age = Period.between(selectedDate, currentDate);
+                        if (age.getYears() < 18) {
+                            ShowMessageFX.Warning(getStage(), "Less than 18 years old is not allowed", "Warning", null);
+                            txtField11.requestFocus();
                             return;
                         }
-                    }
-                    //Do not Allow to save CLIENT Info if there's no Primary Address / Mobile
-                    for (lnCtr = 1; lnCtr <= oTrans.oTransAddress.getItemCount(); lnCtr++) {
-                        if (oTrans.oTransAddress.getAddress(lnCtr, "cPrimaryx").toString().equals("1")) {
-                            iCntp = iCntp + 1;
+                        if (pnEditMode == EditMode.ADDNEW) {
+                            if (oTrans.oTransAddress.getItemCount() <= 0) {
+                                ShowMessageFX.Warning(getStage(), "Please Add atleast 1 Address.", "Warning", pxeModuleName);
+                                return;
+                            }
+                            if (oTrans.oTransMobile.getItemCount() <= 0) {
+                                ShowMessageFX.Warning(getStage(), "Please Add atleast 1 Contact Number.", "Warning", pxeModuleName);
+                                return;
+                            }
                         }
-                    }
-                    if (iCntp <= 0) {
-                        ShowMessageFX.Warning(getStage(), "Please Add Primary Address.", "Warning", pxeModuleName);
+                        //Do not Allow to save CLIENT Info if there's no Primary Address / Mobile
+                        for (lnCtr = 1; lnCtr <= oTrans.oTransAddress.getItemCount(); lnCtr++) {
+                            if (oTrans.oTransAddress.getAddress(lnCtr, "cPrimaryx").toString().equals("1")) {
+                                iCntp = iCntp + 1;
+                            }
+                        }
+                        if (iCntp <= 0) {
+                            ShowMessageFX.Warning(getStage(), "Please Add Primary Address.", "Warning", pxeModuleName);
+                            return;
+                        }
+
+                        iCntp = 0;
+                        for (lnCtr = 1; lnCtr <= oTrans.oTransMobile.getItemCount(); lnCtr++) {
+                            if (oTrans.oTransMobile.getMobile(lnCtr, "cPrimaryx").toString().equals("1")) {
+                                iCntp = iCntp + 1;
+                            }
+                        }
+                        if (iCntp <= 0) {
+                            ShowMessageFX.Warning(getStage(), "Please Add Primary Contact Number.", "Warning", pxeModuleName);
+                            return;
+                        }
+
+                    } else {
                         return;
                     }
-
-                    iCntp = 0;
-                    for (lnCtr = 1; lnCtr <= oTrans.oTransMobile.getItemCount(); lnCtr++) {
-                        if (oTrans.oTransMobile.getMobile(lnCtr, "cPrimaryx").toString().equals("1")) {
-                            iCntp = iCntp + 1;
-                        }
-                    }
-                    if (iCntp <= 0) {
-                        ShowMessageFX.Warning(getStage(), "Please Add Primary Contact Number.", "Warning", pxeModuleName);
-                        return;
-                    }
-
                     //Proceed Saving
                     if (setSelection()) {
                         if (oTrans.SaveRecord()) {
@@ -678,6 +692,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                         pnEditMode = EditMode.UNKNOWN;
                     }
                     break;
+
                 case "btnClose": //close tab
                     if (ShowMessageFX.OkayCancel(null, "Close Tab", "Are you sure you want to close this Tab?") == true) {
                         if (unload != null) {
@@ -685,10 +700,8 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                         } else {
                             ShowMessageFX.Warning(getStage(), "Please notify the system administrator to configure the null value at the close button.", "Warning", pxeModuleName);
                         }
-                        break;
-                    } else {
-                        return;
                     }
+                    break;
                 case "btnCancel":
                     if (ShowMessageFX.OkayCancel(getStage(), "Are you sure you want to cancel?", pxeModuleName, null) == true) {
                         removeRequired();
@@ -790,7 +803,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                             return;
                         }
                     }
-                    
+
                     removeRequired();
                     clearFields();
                     addressdata.clear();
@@ -799,7 +812,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                     socialmediadata.clear();
                     vhclinfodata.clear();
                     coownvhclinfodata.clear();
-                    
+
                     if (!txtField26.getText().isEmpty() && !txtField26.getText().trim().equals("")) {
                         byClientID = false;
                         txtValue = txtField26.getText();
@@ -834,7 +847,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
             ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
         }
     }
-    
+
     /*Set ComboBox Value to Master Class*/
     @SuppressWarnings("ResultOfMethodCallIgnored")
     private boolean setSelection() {
@@ -901,6 +914,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
             loControl.setOrigProv((String) oTrans.oTransAddress.getAddress(fnRow, 26));
             loControl.setOrigTown((String) oTrans.oTransAddress.getAddress(fnRow, 5));
             loControl.setOrigBrgy((String) oTrans.oTransAddress.getAddress(fnRow, 6));
+            loControl.setClientID((String) oTrans.getMaster(1));
             fxmlLoader.setController(loControl);
 
             //load the main interface
@@ -934,8 +948,10 @@ public class CustomerFormController implements Initializable, ScreenInterface {
             e.printStackTrace();
             ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
             System.exit(1);
+
         } catch (SQLException ex) {
-            Logger.getLogger(CustomerFormController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CustomerFormController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -1097,7 +1113,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
             System.exit(1);
         }
     }
-    
+
     /*LOAD CLIENT INFORMATION*/
     private void loadClientMaster() {
         try {
@@ -1106,12 +1122,12 @@ public class CustomerFormController implements Initializable, ScreenInterface {
             comboBox18.setOnAction(null);
             comboBox18.getSelectionModel().select(Integer.parseInt((String) oTrans.getMaster(18)));
             comboBox18.setOnAction(eventHandler);
-            
+
             txtField01.setText((String) oTrans.getMaster(1));
             txtField13.setText((String) oTrans.getMaster(13));
             txtField14.setText((String) oTrans.getMaster(14));
             textArea15.setText((String) oTrans.getMaster(15));
-            
+
             if (comboBox18.getSelectionModel().getSelectedIndex() == 0) {
                 txtField02.setText((String) oTrans.getMaster(2));
                 txtField03.setText((String) oTrans.getMaster(3));
@@ -1137,7 +1153,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
             ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
         }
     }
-    
+
     private void loadVehicleInfoTable() {
         try {
             vhclinfodata.clear();
@@ -1197,7 +1213,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
             addressdata.clear();
             /*Set Values to Class Address Master*/
             for (lnCtr = 1; lnCtr <= oTrans.oTransAddress.getItemCount(); lnCtr++) {
-                sAddress = oTrans.oTransAddress.getAddress(lnCtr, "sAddressx").toString() + " " + oTrans.oTransAddress.getAddress(lnCtr, "sBrgyName").toString() + " " + oTrans.oTransAddress.getAddress(lnCtr, "sTownName").toString()+ ", " + oTrans.oTransAddress.getAddress(lnCtr, "sProvName").toString();
+                sAddress = oTrans.oTransAddress.getAddress(lnCtr, "sAddressx").toString() + " " + oTrans.oTransAddress.getAddress(lnCtr, "sBrgyName").toString() + " " + oTrans.oTransAddress.getAddress(lnCtr, "sTownName").toString() + ", " + oTrans.oTransAddress.getAddress(lnCtr, "sProvName").toString();
 
                 if (oTrans.oTransAddress.getAddress(lnCtr, "cPrimaryx").toString().equals("1")) {
                     sPrimary = "Y";
@@ -1509,7 +1525,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
 
         tblViewCoVhclInfo.setItems(coownvhclinfodata);
     }
-    
+
     /*Set TextField Value to Master Class*/
     final ChangeListener<? super Boolean> txtField_Focus = (o, ov, nv) -> {
         try {
@@ -1546,9 +1562,11 @@ public class CustomerFormController implements Initializable, ScreenInterface {
 
             } else {
                 txtField.selectAll();
+
             }
         } catch (SQLException ex) {
-            Logger.getLogger(CustomerFormController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CustomerFormController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     };
 
@@ -1578,7 +1596,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
             System.exit(1);
         }
     };
-    
+
     /*Convert Date to String*/
     private LocalDate strToDate(String val) {
         DateTimeFormatter date_formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -1591,11 +1609,13 @@ public class CustomerFormController implements Initializable, ScreenInterface {
         try {
             /*CLIENT INFORMATION*/
             oTrans.setMaster(11, SQLUtil.toDate(String.valueOf(txtField11.getValue()), SQLUtil.FORMAT_SHORT_DATE));
+
         } catch (SQLException ex) {
-            Logger.getLogger(CustomerFormController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CustomerFormController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     /*TRIGGER FOCUS*/
     private void txtArea_KeyPressed(KeyEvent event) {
         if (event.getCode() == ENTER || event.getCode() == DOWN) {
@@ -1635,7 +1655,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                                     return;
                                 }
                             }
-                            
+
                             clearFields();
                             addressdata.clear();
                             mobiledata.clear();
@@ -1659,13 +1679,14 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                                 pnEditMode = EditMode.UNKNOWN;
                                 clearFields();
                             }
-                            
+
                             initButton(pnEditMode);
                             break;
                         case "txtField10": //Citizenship
                             if (oTrans.searchCitizenship(txtField10.getText())) {
                             } else {
                                 ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                                return;
                             }
 
                             loadClientMaster();
@@ -1675,6 +1696,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                             if (oTrans.searchBirthplace(txtField12.getText())) {
                             } else {
                                 ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                                return;
                             }
 
                             loadClientMaster();
@@ -1684,8 +1706,9 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                             if (oTrans.searchSpouse(txtField25.getText())) {
                             } else {
                                 ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
+                                return;
                             }
-                            
+
                             loadClientMaster();
                             break;
                     }
@@ -1695,7 +1718,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
         } catch (SQLException e) {
             ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
         }
-        
+
         switch (event.getCode()) {
             case ENTER:
             case DOWN:
@@ -1705,7 +1728,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                 CommonUtils.SetPreviousFocus(txtField);
         }
     }
-    
+
     private void comboChange() {
         switch (comboBox18.getSelectionModel().getSelectedIndex()) {
             case 0:
@@ -1733,7 +1756,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
 
         cmdCLIENTType(true);
     }
-    
+
     /*Enabling / Disabling Fields*/
     private void initButton(int fnValue) {
         pnRow = 0;
@@ -1767,7 +1790,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
         } else {
             txtField25.setDisable(!lbShow);
         }
-        
+
         btnAdd.setVisible(!lbShow);
         btnAdd.setManaged(!lbShow);
         btnCancel.setVisible(lbShow);
@@ -1776,7 +1799,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
         btnSave.setManaged(lbShow);
         btnTabAdd.setVisible(lbShow);
         btnTabRem.setVisible(false);
-        
+
         btnEdit.setVisible(false);
         btnEdit.setManaged(false);
         if (fnValue == EditMode.READY) { //show edit if user clicked save / browse
@@ -1785,7 +1808,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
         }
 
         if (fnValue == EditMode.UPDATE || fnValue == EditMode.READY) {
-            comboBox18.setDisable(true); 
+            comboBox18.setDisable(true);
         }
     }
 
@@ -1800,7 +1823,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                     bCust = false;
                     break;
             }
-            
+
             txtField16.setDisable(bCust); //company name
             txtField02.setDisable(!bCust); //last name
             txtField03.setDisable(!bCust); //first name
@@ -1816,7 +1839,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
             txtField25.setDisable(!bCust); // Spouse
         }
     }
-    
+
     /*Clear Fields*/
     private void clearFields() {
         pnRow = 0;
@@ -1827,7 +1850,8 @@ public class CustomerFormController implements Initializable, ScreenInterface {
         socialmediadata.clear();
 
         removeRequired();
-
+        txtField01.clear();
+        txtField26.clear();
         /*CLIENT Master*/
         txtField02.clear(); //last name
         txtField03.clear(); //first name
@@ -1856,7 +1880,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
         txtFieldAnimation.removeShakeAnimation(txtField03, txtFieldAnimation.shakeTextField(txtField03), "required-field");
 
     }
-    
+
     @FXML
     private void tblAddress_Clicked(MouseEvent event) {
         try {
@@ -1871,12 +1895,11 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                     loadAddress();
                 }
 
-                if (oTrans.oTransAddress.getAddress(pnRow, "sAddrssID").toString().isEmpty()) {
+                if (oTrans.oTransAddress.getAddress(pnRow, "sEntryByx").toString().isEmpty()) { //sAddrssID
                     btnTabRem.setVisible(true);
                 } else {
                     btnTabRem.setVisible(false);
                 }
-
                 tblAddress.setOnKeyReleased((KeyEvent t) -> {
                     KeyCode key = t.getCode();
                     switch (key) {
@@ -1905,14 +1928,18 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                             btnTabRem.setVisible(true);
                         } else {
                             btnTabRem.setVisible(false);
+
                         }
                     } catch (SQLException ex) {
-                        Logger.getLogger(CustomerFormController.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(CustomerFormController.class
+                                .getName()).log(Level.SEVERE, null, ex);
                     }
                 });
+
             }
         } catch (SQLException ex) {
-            Logger.getLogger(CustomerFormController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CustomerFormController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -1963,14 +1990,18 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                             btnTabRem.setVisible(true);
                         } else {
                             btnTabRem.setVisible(false);
+
                         }
                     } catch (SQLException ex) {
-                        Logger.getLogger(CustomerFormController.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(CustomerFormController.class
+                                .getName()).log(Level.SEVERE, null, ex);
                     }
                 });
+
             }
         } catch (SQLException ex) {
-            Logger.getLogger(CustomerFormController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CustomerFormController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -2020,14 +2051,18 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                             btnTabRem.setVisible(true);
                         } else {
                             btnTabRem.setVisible(false);
+
                         }
                     } catch (SQLException ex) {
-                        Logger.getLogger(CustomerFormController.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(CustomerFormController.class
+                                .getName()).log(Level.SEVERE, null, ex);
                     }
                 });
+
             }
         } catch (SQLException ex) {
-            Logger.getLogger(CustomerFormController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CustomerFormController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -2077,23 +2112,25 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                             btnTabRem.setVisible(true);
                         } else {
                             btnTabRem.setVisible(false);
+
                         }
                     } catch (SQLException ex) {
-                        Logger.getLogger(CustomerFormController.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(CustomerFormController.class
+                                .getName()).log(Level.SEVERE, null, ex);
                     }
                 });
+
             }
         } catch (SQLException ex) {
-            Logger.getLogger(CustomerFormController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CustomerFormController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     @FXML
     private void tblViewVhclInfo_Clicked(MouseEvent event) {
     }
-    
-    
-    
+
 //
 //    private GRider oApp;
 //    private ClientMaster oTrans;
@@ -2582,7 +2619,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
 //                    }
 //                    if(comboBox09.getSelectionModel().getSelectedIndex() >= 0){
 //                        oTrans.setMaster(9, String.valueOf(comboBox09.getSelectionModel().getSelectedIndex()));
-//                    } 
+//                    }
 //                } catch (SQLException ex) {
 //                    Logger.getLogger(CustomerFormController.class.getName()).log(Level.SEVERE, null, ex);
 //                }
@@ -2643,7 +2680,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
 //                //clearContactInfo();
 //            }
 //        });
-//       
+//
 //        /*Clear Fields*/
 //        clearFields();
 //        pnEditMode = EditMode.UNKNOWN;
@@ -2651,7 +2688,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
 //
 //        /*CUSTOMER VEHICLE INFORMATION*/
 //        custVehicleInfo();
-//        
+//
 //        Platform.runLater(() -> {
 //            if(oTrans.loadState()){
 //                pnEditMode = oTrans.getEditMode();
@@ -3785,12 +3822,12 @@ public class CustomerFormController implements Initializable, ScreenInterface {
 //            comboBox18.getSelectionModel().select(Integer.parseInt((String) oTrans.getMaster(18)));
 //            // Add the event handler back
 //            comboBox18.setOnAction(eventHandler);
-//            
+//
 //            txtField01.setText((String) oTrans.getMaster(1));
 //            txtField13.setText((String) oTrans.getMaster(13));
 //            txtField14.setText((String) oTrans.getMaster(14));
 //            textArea15.setText((String) oTrans.getMaster(15));
-//            
+//
 //            if (comboBox18.getSelectionModel().getSelectedIndex() == 0) {
 //                txtField02.setText((String) oTrans.getMaster(2));
 //                txtField03.setText((String) oTrans.getMaster(3));

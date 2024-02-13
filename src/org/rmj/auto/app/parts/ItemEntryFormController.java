@@ -83,7 +83,7 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
     private MasterCallback oListener;
     private ItemEntry oTrans;
     private int pnEditMode;
-    private final String pxeModuleName = "Item Entry";
+    private final String pxeModuleName = "Item Information";
     TextFieldAnimationUtil txtFieldAnimation = new TextFieldAnimationUtil();
     unloadForm unload = new unloadForm(); //Used in Close Button
     private String oldTransNo = "";
@@ -508,17 +508,14 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
                 break;
 
             case "btnClose":
-                if (ShowMessageFX.OkayCancel(null, "Close Tab", "Are you sure you want to close this Tab?") == true) {
+                if (ShowMessageFX.OkayCancel(null, "Close Tab", "Are you sure you want to close this Tab?")) {
                     if (unload != null) {
                         unload.unloadForm(AnchorMain, oApp, pxeModuleName);
                     } else {
-                        ShowMessageFX.Warning(getStage(), "Please notify the system administrator to configure the null value at the close button.", "Warning", pxeModuleName);
+                        ShowMessageFX.Warning(null, "Warning", "Please notify the system administrator to configure the null value at the close button.");
                     }
-                    break;
-                } else {
-                    return;
                 }
-
+                break;
             default:
                 ShowMessageFX.Warning(null, pxeModuleName, "Button with name " + lsButton + " not registered.");
                 break;

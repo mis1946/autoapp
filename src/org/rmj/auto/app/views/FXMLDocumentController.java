@@ -217,7 +217,7 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
         }
         /*USER ACCESS*/
         initMenu();
-        
+
         setTabPane();
 
         List<String> tabs = new ArrayList<>();
@@ -237,8 +237,7 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
         }
     }
 
-    public void setTabPane(){
-        
+    public void setTabPane() {
         // set up the drag and drop listeners on the tab pane
         tabpane.setOnDragDetected(event -> {
             Dragboard db = tabpane.startDragAndDrop(TransferMode.MOVE);
@@ -310,9 +309,9 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
         tabpane.setOnDragDone(event -> {
             event.consume();
         });
-    
+
     }
-    
+
     private ContextMenu createContextMenu(TabPane tabPane, Tab tab) {
         ContextMenu contextMenu = new ContextMenu();
 
@@ -376,8 +375,8 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
                 String formName = tab.getText();
                 TabsStateManager.closeTab(formName);
             }
-            setScene(loadAnimateAnchor("FXMLMainScreen.fxml"));
             tabPane.getTabs().clear();
+            setScene(loadAnimateAnchor("FXMLMainScreen.fxml"));
 
         }
     }
@@ -535,7 +534,7 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
         }
 
         setTabPane();
-        
+
         ScreenInterface fxObj = getController(fsFormName);
         fxObj.setGRider(oApp);
 
@@ -1213,6 +1212,7 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
         event.consume();
         logout(stage);
     }
+
     //close whole application
     public void logout(Stage stage) {
 
@@ -1223,7 +1223,7 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
 //                }
 //                TabsStateManager.saveCurrentTab(new ArrayList<>());
 //            }
-            
+
             List<String> tabsName = new ArrayList<>();
             tabsName = TabsStateManager.loadCurrentTab();
             if (tabsName.size() > 0) {

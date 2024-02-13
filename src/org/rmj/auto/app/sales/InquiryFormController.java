@@ -431,7 +431,7 @@ public class InquiryFormController implements Initializable, ScreenInterface {
         pagination.setPageFactory(this::createPage);
 
         /*CUSTOMER INQUIRY*/
- /*populate combobox*/
+        /*populate combobox*/
         comboBox24.setItems(cInqStatus); //Inquiry Status
         cmbType012.setItems(cInquiryType); //Inquiry Type
         //("WALK-IN", "WEB INQUIRY", "PHONE-IN", "REFERRAL", "SALES CALL", "EVENT", "SERVICE", "OFFICE ACCOUNT", "CAREMITTANCE", "DATABASE", "UIO"); //Inquiry Type values
@@ -455,6 +455,20 @@ public class InquiryFormController implements Initializable, ScreenInterface {
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(InquiryFormController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
+        
+         txtField04.textProperty().addListener((observable, oldValue, newValue) -> {
+            if(pnEditMode == EditMode.ADDNEW){
+                if (newValue != null && !newValue.isEmpty()) {
+                } else {
+                    try {
+                        oTrans.setMaster("sEmployID", ""); 
+                        oTrans.setMaster("sSalesExe", "");
+                    } catch (SQLException ex) {
+                        Logger.getLogger(InquiryFormController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
             }
         });
 

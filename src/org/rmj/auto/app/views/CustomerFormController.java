@@ -721,27 +721,24 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                             oTrans.oTransAddress.addAddress();
                             loadAddressForm(oTrans.oTransAddress.getItemCount(), true);
                             loadAddress();
-                            oTrans.saveState(oTrans.toJSONString());
                             break;
                         case 1: //Mobile
                             oTrans.oTransMobile.addMobile();
                             loadMobileForm(oTrans.oTransMobile.getItemCount(), true);
                             loadContact();
-                            oTrans.saveState(oTrans.toJSONString());
                             break;
                         case 2: //Email
                             oTrans.oTransEmail.addEmail();
                             loadEmailForm(oTrans.oTransEmail.getItemCount(), true);
                             loadEmail();
-                            oTrans.saveState(oTrans.toJSONString());
                             break;
                         case 3:
                             oTrans.oTransSocMed.addSocMed();
                             loadSocialMediaForm(oTrans.oTransSocMed.getItemCount(), true);
                             loadSocialMedia();
-                            oTrans.saveState(oTrans.toJSONString());
                             break;
                     }
+                    oTrans.saveState(oTrans.toJSONString());
                     break;
                 case "btnTabRem":
                     if (pnRow == 0) {
@@ -757,7 +754,6 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                             oTrans.oTransAddress.removeAddress(pnRow);
                             pnRow = 0;
                             loadAddress();
-                            oTrans.saveState(oTrans.toJSONString());
                             break;
                         case 1://Mobile
                             if (ShowMessageFX.OkayCancel(null, "Confirmation", "Are you sure you want to remove this Client Mobile?") == true) {
@@ -767,7 +763,6 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                             oTrans.oTransMobile.removeMobile(pnRow);
                             pnRow = 0;
                             loadContact();
-                            oTrans.saveState(oTrans.toJSONString());
                             break;
                         case 2://Email
                             if (ShowMessageFX.OkayCancel(null, "Confirmation", "Are you sure you want to remove this  Client Email?") == true) {
@@ -777,7 +772,6 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                             oTrans.oTransEmail.removeEmail(pnRow);
                             pnRow = 0;
                             loadEmail();
-                            oTrans.saveState(oTrans.toJSONString());
                             break;
                         case 3://Social Media
                             if (ShowMessageFX.OkayCancel(null, "Confirmation", "Are you sure you want to remove this  Client Social Media?") == true) {
@@ -787,10 +781,9 @@ public class CustomerFormController implements Initializable, ScreenInterface {
                             oTrans.oTransSocMed.removeSocMed(pnRow);
                             pnRow = 0;
                             loadSocialMedia();
-                            oTrans.saveState(oTrans.toJSONString());
                             break;
                     }
-
+                    oTrans.saveState(oTrans.toJSONString());
                     btnTabRem.setVisible(false);
                     break;
 

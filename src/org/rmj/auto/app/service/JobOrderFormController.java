@@ -58,6 +58,7 @@ import org.rmj.appdriver.callback.MasterCallback;
 import org.rmj.appdriver.constants.EditMode;
 import org.rmj.auto.app.sales.VSPFormController;
 import org.rmj.auto.app.views.CancelForm;
+import org.rmj.auto.app.views.FXMLDocumentController;
 import org.rmj.auto.app.views.InputTextFormatter;
 import org.rmj.auto.app.views.ScreenInterface;
 import org.rmj.auto.app.views.TextFieldAnimationUtil;
@@ -548,7 +549,7 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
                     oTrans.setFormType(pbisJobOrderSales);
                     if (oTrans.SaveRecord()) {
                         ShowMessageFX.Information(getStage(), "Transaction save successfully.", pxeModuleName, null);
-                        if(oTrans.OpenRecord((String) oTrans.getMaster(1))){
+                        if (oTrans.OpenRecord((String) oTrans.getMaster(1))) {
                             loadJobOrderFields();
                             loadTableLabor();
                             loadTableParts();
@@ -1365,6 +1366,7 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
     private void initButton(int fnValue) {
         boolean lbShow = (fnValue == EditMode.ADDNEW || fnValue == EditMode.UPDATE);
 
+        btnAdd.setVisible(!lbShow);
         btnAdd.setManaged(!lbShow);
         btnEdit.setVisible(false);
         btnEdit.setManaged(false);

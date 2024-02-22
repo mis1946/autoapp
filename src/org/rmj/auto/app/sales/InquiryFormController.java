@@ -69,6 +69,7 @@ import org.rmj.appdriver.agentfx.ShowMessageFX;
 import org.rmj.appdriver.callback.MasterCallback;
 import org.rmj.appdriver.constants.EditMode;
 import org.rmj.auto.app.views.CancelForm;
+import org.rmj.auto.app.views.FXMLDocumentController;
 import org.rmj.auto.app.views.ScreenInterface;
 import org.rmj.auto.app.views.TextFieldAnimationUtil;
 import org.rmj.auto.app.views.unloadForm;
@@ -265,7 +266,7 @@ public class InquiryFormController implements Initializable, ScreenInterface {
     private RadioButton rdbtnPro05;
     @FXML
     private ComboBox comboBox24; //Inquiry status
-
+    private FXMLDocumentController fdController = new FXMLDocumentController();
 
     /*INQUIRY PROCESS*/
     //Populate table
@@ -431,7 +432,7 @@ public class InquiryFormController implements Initializable, ScreenInterface {
         pagination.setPageFactory(this::createPage);
 
         /*CUSTOMER INQUIRY*/
-        /*populate combobox*/
+ /*populate combobox*/
         comboBox24.setItems(cInqStatus); //Inquiry Status
         cmbType012.setItems(cInquiryType); //Inquiry Type
         //("WALK-IN", "WEB INQUIRY", "PHONE-IN", "REFERRAL", "SALES CALL", "EVENT", "SERVICE", "OFFICE ACCOUNT", "CAREMITTANCE", "DATABASE", "UIO"); //Inquiry Type values
@@ -457,13 +458,13 @@ public class InquiryFormController implements Initializable, ScreenInterface {
                 Logger.getLogger(InquiryFormController.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
-        
-         txtField04.textProperty().addListener((observable, oldValue, newValue) -> {
-            if(pnEditMode == EditMode.ADDNEW){
+
+        txtField04.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (pnEditMode == EditMode.ADDNEW) {
                 if (newValue != null && !newValue.isEmpty()) {
                 } else {
                     try {
-                        oTrans.setMaster("sEmployID", ""); 
+                        oTrans.setMaster("sEmployID", "");
                         oTrans.setMaster("sSalesExe", "");
                     } catch (SQLException ex) {
                         Logger.getLogger(InquiryFormController.class.getName()).log(Level.SEVERE, null, ex);
@@ -1337,7 +1338,7 @@ public class InquiryFormController implements Initializable, ScreenInterface {
 
                 Tab newTab = new Tab(sFormName, parent);
                 newTab.setStyle("-fx-font-weight: bold; -fx-pref-width: 180; -fx-font-size: 10.5px; -fx-font-family: arial;");
-
+                newTab.setContextMenu(fdController.createContextMenu(tabpane, newTab, oApp));
                 tabpane.getTabs().add(newTab);
                 tabpane.getSelectionModel().select(newTab);
                 newTab.setOnCloseRequest(event -> {

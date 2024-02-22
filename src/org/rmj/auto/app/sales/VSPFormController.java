@@ -3464,12 +3464,12 @@ public class VSPFormController implements Initializable, ScreenInterface {
 
                 for (Tab tab : tabpane.getTabs()) {
                     if (tab.getText().equals(sFormName)) {
-                        if (ShowMessageFX.OkayCancel(null, pxeModuleName, "You have unsaved data on Sales Job Order Information. Are you sure you want to convert this vsp for a new sales job order record?") == true) {
+                        if (ShowMessageFX.OkayCancel(null, pxeModuleName, "You have unsaved data on Sales Job Order Information. Are you sure you want to create this vsp for a new sales job order record?") == true) {
                         } else {
                             return;
                         }
 
-                        if (ShowMessageFX.OkayCancel(null, pxeModuleName, "You have opened Sales Job Order Information Form. Are you sure you want to convert this inquiry for a new sales job order record?") == true) {
+                        if (ShowMessageFX.OkayCancel(null, pxeModuleName, "You have opened Sales Job Order Information Form. Are you sure you want to create this vsp for a new sales job order record?") == true) {
                         } else {
                             return;
                         }

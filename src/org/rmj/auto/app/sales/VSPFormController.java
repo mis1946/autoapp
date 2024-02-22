@@ -65,6 +65,8 @@ import org.rmj.appdriver.agentfx.ShowMessageFX;
 import org.rmj.appdriver.callback.MasterCallback;
 import org.rmj.appdriver.constants.EditMode;
 import org.rmj.auto.app.service.JobOrderFormController;
+import org.rmj.auto.app.service.JobOrderVSPLaborList;
+import org.rmj.auto.app.views.FXMLDocumentController;
 import org.rmj.auto.app.views.InputTextFormatter;
 import org.rmj.auto.app.views.ScreenInterface;
 import org.rmj.auto.app.views.TextFieldAnimationUtil;
@@ -340,6 +342,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
     private TableColumn<VSPTableLaborList, String> tblindex14_Labor;
     @FXML
     private TableColumn<VSPTablePartList, String> tblindex20_Part;
+    private FXMLDocumentController fdController = new FXMLDocumentController();
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -1287,7 +1290,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
             }
             if (oTrans.SaveRecord()) {
                 ShowMessageFX.Information(getStage(), "Transaction save successfully.", pxeModuleName, null);
-                if(oTrans.OpenRecord((String) oTrans.getMaster(1))){
+                if (oTrans.OpenRecord((String) oTrans.getMaster(1))) {
                     loadVSPField();
                     pnEditMode = EditMode.READY;
                     initButton(pnEditMode);
@@ -3243,8 +3246,30 @@ public class VSPFormController implements Initializable, ScreenInterface {
         chckBoxUndercoat.setDisable(!lbShow);
         chckBoxTint.setDisable(!lbShow);
         btnAdditionalLabor.setDisable(!lbShow);
+        try {
+            btnJobOrderAdd.setDisable(fnValue == EditMode.ADDNEW || lblVSPStatus.getText().equals("Cancelled"));
 
-        btnJobOrderAdd.setDisable(fnValue == EditMode.ADDNEW ? true : false);
+            if (pnEditMode == EditMode.READY || pnEditMode == EditMode.READY) {
+                if (!((String) oTrans.getMaster("sSerialID")).isEmpty()) {
+                    if (!lblVSPStatus.getText().equals("Cancelled")) {
+                        if (oTrans.getVSPLaborCount() != 0 || oTrans.getVSPPartsCount() != 0) {
+                            boolean isLaborApproved = tblViewLabor.getItems().stream().anyMatch(item -> !item.getTblindex14_Labor().isEmpty());
+                            boolean isPartsApproved = tblViewParts.getItems().stream().anyMatch(item -> !item.getTblindex20_Part().isEmpty());
+
+                            btnJobOrderAdd.setDisable(!(isLaborApproved || isPartsApproved));
+                        } else {
+                            btnJobOrderAdd.setDisable(true);
+                        }
+
+                    }
+                } else {
+                    btnJobOrderAdd.setDisable(true);
+                }
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(VSPFormController.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
         if (fnValue == EditMode.READY) {
             if (lblVSPStatus.getText().equals("Cancelled")) {
@@ -3439,10 +3464,10 @@ public class VSPFormController implements Initializable, ScreenInterface {
 
                 for (Tab tab : tabpane.getTabs()) {
                     if (tab.getText().equals(sFormName)) {
-//                        if (ShowMessageFX.OkayCancel(null, pxeModuleName, "You have unsaved data on Sales Job Order Information. Are you sure you want to convert this inquiry for a new vsp record?") == true) {
-//                        } else {
-//                            return;
-//                        }
+                        if (ShowMessageFX.OkayCancel(null, pxeModuleName, "You have unsaved data on Sales Job Order Information. Are you sure you want to convert this vsp for a new sales job order record?") == true) {
+                        } else {
+                            return;
+                        }
 
                         if (ShowMessageFX.OkayCancel(null, pxeModuleName, "You have opened Sales Job Order Information Form. Are you sure you want to convert this inquiry for a new sales job order record?") == true) {
                         } else {
@@ -3457,7 +3482,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
 
                 Tab newTab = new Tab(sFormName, parent);
                 newTab.setStyle("-fx-font-weight: bold; -fx-pref-width: 180; -fx-font-size: 10.5px; -fx-font-family: arial;");
-
+                newTab.setContextMenu(fdController.createContextMenu(tabpane, newTab, oApp));
                 tabpane.getTabs().add(newTab);
                 tabpane.getSelectionModel().select(newTab);
                 newTab.setOnCloseRequest(event -> {
@@ -3473,7 +3498,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
                     }
 
                 });
-                
+
                 List<String> tabName = new ArrayList<>();
                 tabName = TabsStateManager.loadCurrentTab();
                 tabName.remove(sFormName);

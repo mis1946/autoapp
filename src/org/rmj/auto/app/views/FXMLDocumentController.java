@@ -12,6 +12,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -21,6 +22,7 @@ import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.beans.binding.Bindings;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -312,31 +314,31 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
 
     }
 
-    private ContextMenu createContextMenu(TabPane tabPane, Tab tab) {
+    public ContextMenu createContextMenu(TabPane tabPane, Tab tab, GRider oApp) {
         ContextMenu contextMenu = new ContextMenu();
 
-        // Create a menu item for closing the specific tab
         MenuItem closeTabItem = new MenuItem("Close Tab");
         MenuItem closeOtherTabsItem = new MenuItem("Close Other Tabs");
         MenuItem closeAllTabsItem = new MenuItem("Close All Tabs");
 
         closeTabItem.setOnAction(event -> closeSelectTabs(tabPane, tab));
-        closeOtherTabsItem.setOnAction(event -> closeOtherTabs(tabPane, tab, tab));
-        closeAllTabsItem.setOnAction(event -> closeAllTabs(tabPane));
+        closeOtherTabsItem.setOnAction(event -> closeOtherTabs(tabPane, tab));
+        closeAllTabsItem.setOnAction(event -> closeAllTabs(tabPane, oApp));
 
-        // Add the menu item to the context menu
         contextMenu.getItems().add(closeTabItem);
         contextMenu.getItems().add(closeOtherTabsItem);
         contextMenu.getItems().add(closeAllTabsItem);
 
-        // Set the context menu for the tab
         tab.setContextMenu(contextMenu);
+
+        closeOtherTabsItem.visibleProperty().bind(Bindings.size(tabPane.getTabs()).greaterThan(1));
+
         return contextMenu;
     }
 
     private void closeSelectTabs(TabPane tabPane, Tab tab) {
         if (ShowMessageFX.YesNo(null, "Close Tab", "Are you sure, do you want to close tab?") == true) {
-            Tabclose();
+            Tabclose(tabPane);
             tabName.remove(tab.getText());
             TabsStateManager.saveCurrentTab(tabName);
             TabsStateManager.closeTab(tab.getText());
@@ -345,38 +347,33 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
 
     }
 
-    private void closeOtherTabs(TabPane tabPane, Tab currentTab, Tab t) {
+    private void closeOtherTabs(TabPane tabPane, Tab currentTab) {
         if (ShowMessageFX.YesNo(null, "Close Other Tab", "Are you sure, do you want to close other tab?") == true) {
-
-            Tabclose();
-            tabName.removeIf(tab -> tab != currentTab.getText());
-
-            // Save the updated list of tab names to the JSON file
-            TabsStateManager.saveCurrentTab(tabName);
-
-            // Close all tabs using your TabsStateManager
-            for (Tab tab : tabPane.getTabs()) {
-                if (tab != currentTab) {
-                    String formName = tab.getText();
-                    TabsStateManager.closeTab(formName);
-                }
-            }
             tabPane.getTabs().removeIf(tab -> tab != currentTab);
+            List<String> currentTabNameList = Collections.singletonList(currentTab.getText());
+            tabName.retainAll(currentTabNameList);
+            TabsStateManager.saveCurrentTab(tabName);
+            for (Tab tab : tabPane.getTabs()) {
+                String formName = tab.getText();
+                TabsStateManager.closeTab(formName);
+            }
         }
     }
 
-    private void closeAllTabs(TabPane tabPane) {
+    private void closeAllTabs(TabPane tabPane, GRider oApp) {
         if (ShowMessageFX.YesNo(null, "Close All Tabs", "Are you sure, do you want to close all tabs?") == true) {
             tabName.clear();
             TabsStateManager.saveCurrentTab(tabName);
-
             // Close all tabs using your TabsStateManager
             for (Tab tab : tabPane.getTabs()) {
                 String formName = tab.getText();
                 TabsStateManager.closeTab(formName);
             }
             tabPane.getTabs().clear();
-            setScene(loadAnimateAnchor("FXMLMainScreen.fxml"));
+            unloadForm unload = new unloadForm();
+            StackPane myBox = (StackPane) tabpane.getParent();
+            myBox.getChildren().clear();
+            myBox.getChildren().add(unload.getScene("FXMLMainScreen.fxml", oApp));
 
         }
     }
@@ -547,7 +544,7 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
         newTab.setStyle("-fx-font-weight: bold; -fx-pref-width: 180; -fx-font-size: 10.5px; -fx-font-family: arial;");
         //tabIds.add(fsFormName);
         newTab.setContent(new javafx.scene.control.Label("Content of Tab " + fsFormName));
-        newTab.setContextMenu(createContextMenu(tabpane, newTab));
+        newTab.setContextMenu(createContextMenu(tabpane, newTab, oApp));
         // Attach a context menu to each tab
         tabName.add(SetTabTitle(fsFormName));
 
@@ -765,6 +762,14 @@ public class FXMLDocumentController implements Initializable, ScreenInterface {
 
     //Load Main Screen if no tab remain
     public void Tabclose() {
+        int tabsize = tabpane.getTabs().size();
+        if (tabsize == 1) {
+            setScene(loadAnimateAnchor("FXMLMainScreen.fxml"));
+        }
+    }
+    //Load Main Screen if no tab remain
+
+    public void Tabclose(TabPane tabpane) {
         int tabsize = tabpane.getTabs().size();
         if (tabsize == 1) {
             setScene(loadAnimateAnchor("FXMLMainScreen.fxml"));

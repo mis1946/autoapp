@@ -1016,7 +1016,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
                     }
                     break;
                 case "btnJobOrderAdd":
-                    if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure you want to convert this VSP for a new sales job order record?") == true) {
+                    if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure you want to create this VSP for a new sales job order record?") == true) {
                     } else {
                         return;
                     }

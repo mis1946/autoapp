@@ -536,6 +536,8 @@ public class CustomerVehicleInfoFormController implements Initializable, ScreenI
                 case "btnTransfer":
                     if (oTransVehicle.UpdateRecord()) {
                         loadTransferOwnershipWindow();
+                    } else {
+                        ShowMessageFX.Information(getStage(), oTransVehicle.getMessage(), "Client Vehicle Information", null);
                     }
                     break;
 
@@ -1159,6 +1161,7 @@ public class CustomerVehicleInfoFormController implements Initializable, ScreenI
             VehicleNewOwnerFormController loControl = new VehicleNewOwnerFormController();
             loControl.setGRider(oApp);
             loControl.setObject(oTransVehicle);
+            loControl.setOwnerName((String) oTransVehicle.getMaster(35));
             fxmlLoader.setController(loControl);
 
             //load the main interface
@@ -1203,6 +1206,8 @@ public class CustomerVehicleInfoFormController implements Initializable, ScreenI
             e.printStackTrace();
             ShowMessageFX.Warning(getStage(), e.getMessage(), "Warning", null);
             System.exit(1);
+        } catch (SQLException ex) {
+            Logger.getLogger(CustomerVehicleInfoFormController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

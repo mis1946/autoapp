@@ -39,6 +39,8 @@ public class VehicleNewOwnerFormController implements Initializable {
     private GRider oApp;
     private ClientVehicleInfo oTransVehicle;
     
+    private String psPrevOwner = "";
+    
     @FXML
     private Button btnSave;
     @FXML
@@ -59,6 +61,8 @@ public class VehicleNewOwnerFormController implements Initializable {
     private Button btnGenerate;
     @FXML
     private TextField txtField35V_2;
+    @FXML
+    private TextField txtField35V_3;
     /**
      * Initializes the controller class.
      */
@@ -72,9 +76,9 @@ public class VehicleNewOwnerFormController implements Initializable {
         oTransVehicle = foObject;
     } 
     
-//    public String setOwnerID(String fsValue){
-//        return 
-//    }
+    public void setOwnerName(String fsValue){
+        psPrevOwner = fsValue;
+    }
     
     private Stage getStage() {
         return (Stage) btnSave.getScene().getWindow();
@@ -84,6 +88,11 @@ public class VehicleNewOwnerFormController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         txtField35V.setOnKeyPressed(this::txtField_KeyPressed);
         //textArea34V.setOnKeyPressed(this::txtArea_KeyPressed);
+        
+        setCapsLockBehavior(txtField35V);
+        setCapsLockBehavior(textArea37V);
+        setCapsLockBehavior(txtField35V_3);
+        setCapsLockBehavior(txtField35V_2);
         
         txtField35V.textProperty().addListener((observable, oldValue, newValue) -> { 
             try {
@@ -100,6 +109,25 @@ public class VehicleNewOwnerFormController implements Initializable {
             }
         });
         
+        radioOpt1.selectedProperty().addListener((observable, oldValue, newValue) -> { 
+            if(radioOpt1.isSelected()){
+                txtField35V.setDisable(false);
+            }
+        });
+        
+        radioOpt2.selectedProperty().addListener((observable, oldValue, newValue) -> { 
+            if(radioOpt2.isSelected()){
+                txtField35V.setDisable(false);
+            }
+        });
+        
+        radioOpt3.selectedProperty().addListener((observable, oldValue, newValue) -> { 
+            if(radioOpt3.isSelected()){
+                txtField35V.setDisable(false);
+            }
+        });
+        
+        txtField35V.setDisable(true);
         //Button SetOnAction using cmdButton_Click() method
         btnGenerate.setOnAction(this::cmdButton_Click);
         btnGenerate.setDisable(true);
@@ -108,12 +136,29 @@ public class VehicleNewOwnerFormController implements Initializable {
         btnSave.setDisable(true);
     }   
     
+    private static void setCapsLockBehavior(TextField textField) {
+        textField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (textField.getText() != null) {
+                textField.setText(newValue.toUpperCase());
+            }
+        });
+    }
+
+    private static void setCapsLockBehavior(TextArea textArea) {
+        textArea.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (textArea.getText() != null) {
+                textArea.setText(newValue.toUpperCase());
+            }
+        });
+    }
+    
     private void cmdButton_Click(ActionEvent event) {
         try {
             String lsButton = ((Button) event.getSource()).getId();
             switch (lsButton) {
                 case "btnGenerate":
                     txtField35V_2.setText((String) oTransVehicle.getMaster(35));
+                    txtField35V_3.setText(psPrevOwner);
                     btnSave.setDisable(false);
                     break;
                 case "btnSave":
@@ -122,7 +167,6 @@ public class VehicleNewOwnerFormController implements Initializable {
                         CommonUtils.closeStage(btnClose);
                     } else {
                         ShowMessageFX.Warning(getStage(), oTransVehicle.getMessage(), "Warning", null);
-                        return;
                     }
                     break;
                 case "btnClose":
@@ -142,7 +186,6 @@ public class VehicleNewOwnerFormController implements Initializable {
     private void txtField_KeyPressed(KeyEvent event) {
         TextField txtField = (TextField) event.getSource();
         int lnIndex = Integer.parseInt(((TextField) event.getSource()).getId().substring(8, 10));
-        String txtFieldID = ((TextField) event.getSource()).getId();
         try {
             switch (event.getCode()) {
                 case F3:

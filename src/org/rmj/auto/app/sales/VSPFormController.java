@@ -13,8 +13,10 @@ import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -349,7 +351,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
         oListener = (int fnIndex, Object foValue) -> {
             System.out.println("Set Class Value " + fnIndex + "-->" + foValue);
         };
-        oTrans = new VehicleSalesProposalMaster(oApp, oApp.getBranchCode(), true); //Initialize VehicleSalesProposalMaster
+        oTrans = new VehicleSalesProposalMaster(oApp, oApp.getBranchCode(), false); //Initialize VehicleSalesProposalMaster
         oTrans.setCallback(oListener);
         oTrans.setWithUI(true);
         oTrans.setFormType(true);
@@ -530,29 +532,12 @@ public class VSPFormController implements Initializable, ScreenInterface {
 
     private void initCapitalizationFields() {
         /*TextField*/
-        setTextFieldCapital(txtField03);
-        setTextFieldCapital(txtField02);
-        setTextFieldCapital(txtField78);
-        setTextFieldCapital(txtField84);
-        setTextFieldCapital(txtField75);
-        setTextFieldCapital(txtField82);
-        setTextFieldCapital(txtField81);
-        setTextFieldCapital(txtField77);
-        setTextFieldCapital(txtField68);
-        setTextFieldCapital(txtField97);
-        setTextFieldCapital(txtField28);
-        setTextFieldCapital(txtField48);
-        setTextFieldCapital(txtField71);
-        setTextFieldCapital(txtField72);
-        setTextFieldCapital(txtField73);
-        setTextFieldCapital(txtField74);
-        setTextFieldCapital(txtField76);
-        setTextFieldCapital(txtField04_Finance);
-
-        setTextFieldCapital(txtField26);
-        setTextFieldCapital(txtField27);
-        setTextFieldCapital(txtField11);
-
+        List<TextField> txtField = Arrays.asList(txtField03, txtField02, txtField78, txtField84,
+                txtField75, txtField82, txtField81, txtField77, txtField68, txtField97, txtField28,
+                txtField48, txtField71, txtField72, txtField73, txtField74, txtField76, txtField04_Finance,
+                txtField26, txtField27, txtField11
+        );
+        txtField.forEach(tf -> setTextFieldCapital(tf));
         /*TextArea*/
         setTextAreaCapital(textArea70);
         setTextAreaCapital(textArea09);
@@ -601,18 +586,18 @@ public class VSPFormController implements Initializable, ScreenInterface {
                                 oTrans.setMaster(fieldNumber, String.valueOf(selectedType));
                                 try {
                                     if (selectedType == 0) {
-                                        oTrans.setMaster(38, Double.valueOf("0.00"));
+                                        oTrans.setMaster(38, 0.00);
                                         txtField38.setText("0.00");
-                                        oTrans.setMaster(10, Double.valueOf("0.00"));
+                                        oTrans.setMaster(10, 0.00);
                                         clearVSPFieldsFinance();
                                         oTrans.clearVSPFinance();
                                     } else {
                                         if (Double.parseDouble(txtField38.getText().replace(",", "")) <= 0.00) {
-                                            oTrans.setMaster(29, Double.valueOf("0.00"));
-                                            oTrans.setMaster(30, Double.valueOf("0.00"));
-                                            oTrans.setMaster(31, Double.valueOf("0.00"));
-                                            oTrans.setMaster(28, Double.valueOf("0.00"));
-                                            oTrans.setMaster(32, Double.valueOf("0.00"));
+                                            oTrans.setMaster(29, 0.00);
+                                            oTrans.setMaster(30, 0.00);
+                                            oTrans.setMaster(31, 0.00);
+                                            oTrans.setMaster(28, 0.00);
+                                            oTrans.setMaster(32, 0.00);
                                         }
 
                                         oTrans.AddVSPFinance();
@@ -698,7 +683,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
             if (Double.parseDouble(newValue.replace(",", "")) <= 0.00) {
                 textField.setText("0.00");
                 if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
-                    oTrans.setMaster(masterIndex, Double.valueOf("0.00"));
+                    oTrans.setMaster(masterIndex, 0.00);
                 }
                 textField.setDisable(true);
             } else {
@@ -897,17 +882,11 @@ public class VSPFormController implements Initializable, ScreenInterface {
 
     /* Initialize CmdButton */
     private void initCmdButton() {
-        btnAdd.setOnAction(this::cmdButton_Click);
-        btnEdit.setOnAction(this::cmdButton_Click);
-        btnSave.setOnAction(this::cmdButton_Click);
-        btnCancel.setOnAction(this::cmdButton_Click);
-        btnClose.setOnAction(this::cmdButton_Click);
-        btnBrowse.setOnAction(this::cmdButton_Click);
-        btnPrint.setOnAction(this::cmdButton_Click);
-        btnAdditionalLabor.setOnAction(this::cmdButton_Click);
-        btnAddParts.setOnAction(this::cmdButton_Click);
-        btnCancelVSP.setOnAction(this::cmdButton_Click);
-        btnJobOrderAdd.setOnAction(this::cmdButton_Click);
+        Button[] buttons = {btnAdd, btnEdit, btnSave, btnCancel, btnClose, btnBrowse,
+            btnPrint, btnAdditionalLabor, btnAddParts, btnCancelVSP,
+            btnJobOrderAdd};
+        Arrays.stream(buttons)
+                .forEach(button -> button.setOnAction(this::cmdButton_Click));
     }
 
     private void initcheckBoxes() {
@@ -918,12 +897,12 @@ public class VSPFormController implements Initializable, ScreenInterface {
                     txtField29.setDisable(false);
                     txtField30.setDisable(false);
                 } else {
-                    oTrans.setMaster(29, Double.valueOf(0.00));
-                    oTrans.setMaster(42, Double.valueOf(0.00));
-                    oTrans.setMaster(43, Double.valueOf(0.00));
-                    oTrans.setMaster(30, Double.valueOf(0.00));
-                    oTrans.setMaster(44, Double.valueOf(0.00));
-                    oTrans.setMaster(45, Double.valueOf(0.00));
+                    oTrans.setMaster(29, 0.00);
+                    oTrans.setMaster(42, 0.00);
+                    oTrans.setMaster(43, 0.00);
+                    oTrans.setMaster(30, 0.00);
+                    oTrans.setMaster(44, 0.00);
+                    oTrans.setMaster(45, 0.00);
                     txtField29.setDisable(true);
                     txtField30.setDisable(true);
                     oTrans.setMaster(55, "0");
@@ -1363,48 +1342,13 @@ public class VSPFormController implements Initializable, ScreenInterface {
     }
 
     private void initTextKeyPressed() {
-        txtSeek03.setOnKeyPressed(this::txtField_KeyPressed);
-        txtField03.setOnKeyPressed(this::txtField_KeyPressed);
-        txtField77.setOnKeyPressed(this::txtField_KeyPressed);
-        txtField68.setOnKeyPressed(this::txtField_KeyPressed);
-        txtField97.setOnKeyPressed(this::txtField_KeyPressed);
-        txtField71.setOnKeyPressed(this::txtField_KeyPressed);
-        txtField72.setOnKeyPressed(this::txtField_KeyPressed);
-        txtField48.setOnKeyPressed(this::txtField_KeyPressed);
-
-        txtField08.setOnKeyPressed(this::txtField_KeyPressed);
-        txtField38.setOnKeyPressed(this::txtField_KeyPressed);
-        txtField06_Finance.setOnKeyPressed(this::txtField_KeyPressed);
-
-        txtField07_Finance.setOnKeyPressed(this::txtField_KeyPressed);
-        txtField13_Finance.setOnKeyPressed(this::txtField_KeyPressed);
-        txtField08_Finance.setOnKeyPressed(this::txtField_KeyPressed);
-        txtField28.setOnKeyPressed(this::txtField_KeyPressed);
-        txtField31.setOnKeyPressed(this::txtField_KeyPressed);
-        txtField32.setOnKeyPressed(this::txtField_KeyPressed);
-        txtField42.setOnKeyPressed(this::txtField_KeyPressed);
-        txtField43.setOnKeyPressed(this::txtField_KeyPressed);
-        txtField44.setOnKeyPressed(this::txtField_KeyPressed);
-
-        txtField45.setOnKeyPressed(this::txtField_KeyPressed);
-        txtField46.setOnKeyPressed(this::txtField_KeyPressed);
-        txtField47.setOnKeyPressed(this::txtField_KeyPressed);
-
-        txtField10.setOnKeyPressed(this::txtField_KeyPressed);
-        txtField16.setOnKeyPressed(this::txtField_KeyPressed);
-        txtField17.setOnKeyPressed(this::txtField_KeyPressed);
-        txtField18.setOnKeyPressed(this::txtField_KeyPressed);
-        txtField19.setOnKeyPressed(this::txtField_KeyPressed);
-        txtField12.setOnKeyPressed(this::txtField_KeyPressed);
-        txtField11.setOnKeyPressed(this::txtField_KeyPressed);
-
-        txtField04_Finance.setOnKeyPressed(this::txtField_KeyPressed);
-        txtField14_Finance.setOnKeyPressed(this::txtField_KeyPressed);
-        txtField26.setOnKeyPressed(this::txtField_KeyPressed);
-        txtField27.setOnKeyPressed(this::txtField_KeyPressed);
-        txtField29.setOnKeyPressed(this::txtField_KeyPressed);
-        txtField30.setOnKeyPressed(this::txtField_KeyPressed);
-
+        List<TextField> txtField = Arrays.asList(txtSeek03, txtField03, txtField77, txtField68, txtField97,
+                txtField71, txtField72, txtField48, txtField08, txtField38, txtField06_Finance, txtField07_Finance,
+                txtField13_Finance, txtField08_Finance, txtField28, txtField31, txtField32, txtField42, txtField43,
+                txtField44, txtField45, txtField46, txtField47, txtField10, txtField16, txtField17, txtField18,
+                txtField19, txtField12, txtField11, txtField04_Finance, txtField14_Finance, txtField26, txtField27,
+                txtField29, txtField30);
+        txtField.forEach(tf -> tf.setOnKeyPressed(event -> txtField_KeyPressed(event)));
     }
 
     private void txtField_KeyPressed(KeyEvent event) {
@@ -1557,40 +1501,20 @@ public class VSPFormController implements Initializable, ScreenInterface {
     }
 
     private void initTextFieldFocus() {
-        txtField77.focusedProperty().addListener(txtField_Focus);
-        txtField68.focusedProperty().addListener(txtField_Focus);
-        txtField97.focusedProperty().addListener(txtField_Focus);
-        txtField71.focusedProperty().addListener(txtField_Focus);
-        txtField72.focusedProperty().addListener(txtField_Focus);
-        txtField38.focusedProperty().addListener(txtField_Focus);
-        txtField08.focusedProperty().addListener(txtField_Focus);
-        txtField29.focusedProperty().addListener(txtField_Focus);
-        txtField43.focusedProperty().addListener(txtField_Focus);
-        txtField42.focusedProperty().addListener(txtField_Focus);
-        txtField30.focusedProperty().addListener(txtField_Focus);
-        txtField44.focusedProperty().addListener(txtField_Focus);
-        txtField45.focusedProperty().addListener(txtField_Focus);
-        txtField32.focusedProperty().addListener(txtField_Focus);
-        txtField28.focusedProperty().addListener(txtField_Focus);
-        txtField46.focusedProperty().addListener(txtField_Focus);
-        txtField47.focusedProperty().addListener(txtField_Focus);
-        txtField48.focusedProperty().addListener(txtField_Focus);
-        txtField10.focusedProperty().addListener(txtField_Focus);
-        txtField31.focusedProperty().addListener(txtField_Focus);
-        txtField11.focusedProperty().addListener(txtField_Focus);
-        txtField12.focusedProperty().addListener(txtField_Focus);
-        txtField16.focusedProperty().addListener(txtField_Focus);
-        txtField17.focusedProperty().addListener(txtField_Focus);
-        txtField18.focusedProperty().addListener(txtField_Focus);
-        txtField19.focusedProperty().addListener(txtField_Focus);
+        List<TextField> txtField = Arrays.asList(txtField77, txtField68, txtField97, txtField71, txtField72, txtField38, txtField08,
+                txtField29, txtField43, txtField42, txtField30, txtField44, txtField45, txtField32, txtField28,
+                txtField46, txtField47, txtField48, txtField10, txtField31, txtField11, txtField12,
+                txtField16, txtField17, txtField18, txtField19);
 
-        textArea09.focusedProperty().addListener(txtArea_Focus);
+        txtField.forEach(tf -> tf.focusedProperty().addListener(txtField_Focus));
+
         txtField04_Finance.focusedProperty().addListener(txtFieldFinance_Focus);
         txtField14_Finance.focusedProperty().addListener(txtFieldFinance_Focus);
         txtField06_Finance.focusedProperty().addListener(txtFieldFinance_Focus);
         txtField07_Finance.focusedProperty().addListener(txtFieldFinance_Focus);
         txtField08_Finance.focusedProperty().addListener(txtFieldFinance_Focus);
         txtField13_Finance.focusedProperty().addListener(txtFieldFinance_Focus);
+        textArea09.focusedProperty().addListener(txtArea_Focus);
 
     }
     final ChangeListener<? super Boolean> txtField_Focus = (o, ov, nv) -> {
@@ -1841,11 +1765,11 @@ public class VSPFormController implements Initializable, ScreenInterface {
                                     case 4:
                                         oTrans.setVSPFinance(3, "");
                                         oTrans.setVSPFinance(4, "");
-                                        oTrans.setVSPFinance(13, Double.valueOf("0.00"));
-                                        oTrans.setVSPFinance(8, Double.valueOf("0.00"));
-                                        oTrans.setVSPFinance(7, Double.valueOf("0.00"));
-                                        oTrans.setVSPFinance(6, "0");
-                                        oTrans.setVSPFinance(14, Double.valueOf("0.00"));
+                                        oTrans.setVSPFinance(13, 0.00);
+                                        oTrans.setVSPFinance(8, 0.00);
+                                        oTrans.setVSPFinance(7, 0.00);
+                                        oTrans.setVSPFinance(6, 0);
+                                        oTrans.setVSPFinance(14, 0.00);
                                 }
                             }
                             if (!loadVSPField()) {
@@ -2061,40 +1985,13 @@ public class VSPFormController implements Initializable, ScreenInterface {
 
     private void initNumberFormatterFields() {
         Pattern numberOnlyPattern = Pattern.compile("[0-9,.]*");
+        List<TextField> txtField = Arrays.asList(txtField08, txtField38, txtField14_Finance, txtField06_Finance, txtField07_Finance,
+                txtField082_Finance, txtField13_Finance, txtField05_Finance, txtField09_Finance, txtField08_Finance,
+                txtField12_Finance, txtField10_Finance, txtField10, txtField16, txtField17, txtField18, txtField19,
+                txtField13, txtField14, txtField12, txtField29, txtField32, txtField30, txtField28, txtField31,
+                txtField42, txtField43, txtField44, txtField45, txtField46, txtField47);
+        txtField.forEach(tf -> tf.setTextFormatter(new InputTextFormatter(numberOnlyPattern)));
 
-        txtField08.setTextFormatter(new InputTextFormatter(numberOnlyPattern));
-        txtField38.setTextFormatter(new InputTextFormatter(numberOnlyPattern));
-        txtField14_Finance.setTextFormatter(new InputTextFormatter(numberOnlyPattern));
-        txtField06_Finance.setTextFormatter(new InputTextFormatter(numberOnlyPattern));
-        txtField07_Finance.setTextFormatter(new InputTextFormatter(numberOnlyPattern));
-        txtField082_Finance.setTextFormatter(new InputTextFormatter(numberOnlyPattern));
-        txtField13_Finance.setTextFormatter(new InputTextFormatter(numberOnlyPattern));
-        txtField05_Finance.setTextFormatter(new InputTextFormatter(numberOnlyPattern));
-        txtField09_Finance.setTextFormatter(new InputTextFormatter(numberOnlyPattern));
-        txtField08_Finance.setTextFormatter(new InputTextFormatter(numberOnlyPattern));
-        txtField12_Finance.setTextFormatter(new InputTextFormatter(numberOnlyPattern));
-        txtField10_Finance.setTextFormatter(new InputTextFormatter(numberOnlyPattern));
-        txtField10.setTextFormatter(new InputTextFormatter(numberOnlyPattern));
-        txtField16.setTextFormatter(new InputTextFormatter(numberOnlyPattern));
-        txtField17.setTextFormatter(new InputTextFormatter(numberOnlyPattern));
-        txtField18.setTextFormatter(new InputTextFormatter(numberOnlyPattern));
-        txtField19.setTextFormatter(new InputTextFormatter(numberOnlyPattern));
-        txtField13.setTextFormatter(new InputTextFormatter(numberOnlyPattern));
-        txtField14.setTextFormatter(new InputTextFormatter(numberOnlyPattern));
-        txtField12.setTextFormatter(new InputTextFormatter(numberOnlyPattern));
-        txtField29.setTextFormatter(new InputTextFormatter(numberOnlyPattern));
-        txtField32.setTextFormatter(new InputTextFormatter(numberOnlyPattern));
-        txtField30.setTextFormatter(new InputTextFormatter(numberOnlyPattern));
-        txtField28.setTextFormatter(new InputTextFormatter(numberOnlyPattern));
-        txtField31.setTextFormatter(new InputTextFormatter(numberOnlyPattern));
-
-        txtField42.setTextFormatter(new InputTextFormatter(numberOnlyPattern));
-        txtField43.setTextFormatter(new InputTextFormatter(numberOnlyPattern));
-        txtField44.setTextFormatter(new InputTextFormatter(numberOnlyPattern));
-        txtField45.setTextFormatter(new InputTextFormatter(numberOnlyPattern));
-        txtField46.setTextFormatter(new InputTextFormatter(numberOnlyPattern));
-        txtField47.setTextFormatter(new InputTextFormatter(numberOnlyPattern));
-//        txtField48.setTextFormatter(new InputTextFormatter(numberOnlyPattern));
     }
     private Callback<DatePicker, DateCell> DateFormatCell = (final DatePicker param) -> new DateCell() {
         @Override
@@ -3045,7 +2942,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
                 txtField31.setDisable(true); // bundle
                  {
                     try {
-                        oTrans.setMaster(31, Double.valueOf("0.00"));
+                        oTrans.setMaster(31, 0.00);
 
                     } catch (SQLException ex) {
                         Logger.getLogger(VSPFormController.class
@@ -3059,7 +2956,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
                 txtField32.setDisable(true); // cash
                  {
                     try {
-                        oTrans.setMaster(32, Double.valueOf("0.00"));
+                        oTrans.setMaster(32, 0.00);
 
                     } catch (SQLException ex) {
                         Logger.getLogger(VSPFormController.class
@@ -3076,7 +2973,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
                 txtField26.setDisable(true);
                  {
                     try {
-                        oTrans.setMaster(16, Double.valueOf("0.00"));
+                        oTrans.setMaster(16, 0.00);
                         oTrans.setMaster(26, "");
                         oTrans.setMaster(85, "");
 
@@ -3091,7 +2988,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
                 txtField16.setDisable(true);
                 txtField26.setDisable(!lbShow);
                 try {
-                    oTrans.setMaster(16, Double.valueOf("0.00"));
+                    oTrans.setMaster(16, 0.00);
 
                 } catch (SQLException ex) {
                     Logger.getLogger(VSPFormController.class
@@ -3108,7 +3005,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
                 txtField16.setDisable(true);
                 txtField26.setDisable(true);
                 try {
-                    oTrans.setMaster(16, Double.valueOf("0.00"));
+                    oTrans.setMaster(16, 0.00);
                     oTrans.setMaster(26, "");
                     txtField16.setText("0.00");
                     txtField26.setText("");
@@ -3128,7 +3025,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
                 txtField18.setDisable(true);
                  {
                     try {
-                        oTrans.setMaster(18, Double.valueOf("0.00"));
+                        oTrans.setMaster(18, 0.00);
 
                     } catch (SQLException ex) {
                         Logger.getLogger(VSPFormController.class
@@ -3160,7 +3057,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
                 comboBox25.setDisable(true);
                  {
                     try {
-                        oTrans.setMaster(17, Double.valueOf("0.00"));
+                        oTrans.setMaster(17, 0.00);
                         oTrans.setMaster(27, "");
                         oTrans.setMaster(86, "");
                         oTrans.setMaster(24, "0");
@@ -3179,7 +3076,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
 
                  {
                     try {
-                        oTrans.setMaster(17, Double.valueOf("0.00"));
+                        oTrans.setMaster(17, 0.00);
                         oTrans.setMaster(24, "1");
 
                     } catch (SQLException ex) {
@@ -3198,7 +3095,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
 
                  {
                     try {
-                        oTrans.setMaster(17, Double.valueOf("0.00"));
+                        oTrans.setMaster(17, 0.00);
                         oTrans.setMaster(27, "");
                         oTrans.setMaster(86, "");
                         txtField17.setText("0.00");
@@ -3228,7 +3125,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
                 txtField19.setDisable(true);
                  {
                     try {
-                        oTrans.setMaster(19, Double.valueOf("0.00"));
+                        oTrans.setMaster(19, 0.00);
 
                     } catch (SQLException ex) {
                         Logger.getLogger(VSPFormController.class
@@ -3264,11 +3161,13 @@ public class VSPFormController implements Initializable, ScreenInterface {
                     }
                 } else {
                     btnJobOrderAdd.setDisable(true);
+
                 }
             }
 
         } catch (SQLException ex) {
-            Logger.getLogger(VSPFormController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(VSPFormController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
 
         if (fnValue == EditMode.READY) {
@@ -3416,7 +3315,7 @@ public class VSPFormController implements Initializable, ScreenInterface {
                     case 38://downpayment
                         switch (oTrans.getMaster(34).toString()) {
                             case "1": //BANK PURCHASE ORDER
-                                oTrans.setMaster(lnCtr, Double.valueOf("0.00"));
+                                oTrans.setMaster(lnCtr, 0.00);
                                 break;
                         }
                         break;

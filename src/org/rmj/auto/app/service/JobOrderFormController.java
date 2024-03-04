@@ -239,7 +239,7 @@ public class JobOrderFormController implements Initializable, ScreenInterface {
             System.out.println("Set Class Value " + fnIndex + "-->" + foValue);
         };
 
-        oTrans = new JobOrderMaster(oApp, oApp.getBranchCode(), true); //Initialize JobOrderMaster
+        oTrans = new JobOrderMaster(oApp, oApp.getBranchCode(), false); //Initialize JobOrderMaster
         oTrans.setCallback(oListener);
         oTrans.setWithUI(true);
         /*Set Capitalization Fields*/

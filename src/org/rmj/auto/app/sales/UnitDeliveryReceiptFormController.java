@@ -146,7 +146,7 @@ public class UnitDeliveryReceiptFormController implements Initializable, ScreenI
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
 
-        oTrans = new VehicleDeliveryReceipt(oApp, oApp.getBranchCode(), true);
+        oTrans = new VehicleDeliveryReceipt(oApp, oApp.getBranchCode(), false);
         oTrans.setCallback(oListener);
         oTrans.setWithUI(true);
 
@@ -172,15 +172,15 @@ public class UnitDeliveryReceiptFormController implements Initializable, ScreenI
         comboBox32.setItems(cFormItems);
         pnEditMode = EditMode.UNKNOWN;
         initButton(pnEditMode);
-        
+
         Platform.runLater(() -> {
-            if(oTrans.loadState()){
+            if (oTrans.loadState()) {
                 pnEditMode = oTrans.getEditMode();
                 loadCustomerField();
                 initButton(pnEditMode);
-            }else {
-                if(oTrans.getMessage().isEmpty()){
-                }else{
+            } else {
+                if (oTrans.getMessage().isEmpty()) {
+                } else {
                     ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
                 }
             }
@@ -316,7 +316,7 @@ public class UnitDeliveryReceiptFormController implements Initializable, ScreenI
             //Proceed to saving record
             if (oTrans.SaveRecord()) {
                 ShowMessageFX.Information(getStage(), "Transaction save successfully.", pxeModuleName, null);
-                if(oTrans.OpenRecord((String) oTrans.getMaster(1))){
+                if (oTrans.OpenRecord((String) oTrans.getMaster(1))) {
                     loadCustomerField();
                     pnEditMode = EditMode.READY;
                 } else {

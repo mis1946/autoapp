@@ -411,7 +411,7 @@ public class InquiryFormController implements Initializable, ScreenInterface {
             System.out.println("Set Class Value " + fnIndex + "-->" + foValue);
         };
 
-        oTrans = new InquiryMaster(oApp, oApp.getBranchCode(), true); //Initialize ClientMaster
+        oTrans = new InquiryMaster(oApp, oApp.getBranchCode(), false); //Initialize ClientMaster
         oTrans.setCallback(oListener);
         oTrans.setWithUI(true);
         initTargetVehicle();
@@ -613,7 +613,7 @@ public class InquiryFormController implements Initializable, ScreenInterface {
         btnPromosRemove.setOnAction(this::cmdButton_Click);
 
         /*INQUIRY PROCESS*/
-        oTransProcess = new InquiryProcess(oApp, oApp.getBranchCode(), true);
+        oTransProcess = new InquiryProcess(oApp, oApp.getBranchCode(), false);
         oTransProcess.setCallback(oListener);
         oTransProcess.setWithUI(true);
         initInquiryAdvances();
@@ -1115,8 +1115,8 @@ public class InquiryFormController implements Initializable, ScreenInterface {
                     }
 
                     if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Are you sure, do you want to save?") == true) {
-                        oTransProcess.setClientID(sClientID);
-                        oTransProcess.setTransNox(sSourceNox);
+                        oTransProcess.setClientID((String) oTrans.getMaster(7)); //sClientID
+                        oTransProcess.setTransNox((String) oTrans.getMaster(1)); //sSourceNox
                         if (oTransProcess.SaveRecord()) {
                             ShowMessageFX.Information(getStage(), "Transaction save successfully.", pxeModuleName, null);
                             loadInquiryListTable();

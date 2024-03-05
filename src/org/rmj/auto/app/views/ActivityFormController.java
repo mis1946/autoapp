@@ -467,6 +467,12 @@ public class ActivityFormController implements Initializable, ScreenInterface {
                                 return;
                             }
                         }
+                        if (!txtField28.getText().trim().equals("")) {
+                            if (tblViewCity.getItems().size() <= 0) {
+                                ShowMessageFX.Warning(getStage(), "Please add Town/City.", "Warning", null);
+                                return;
+                            }
+                        }
                         if (textArea09.getText().trim().equals("")) {
                             ShowMessageFX.Warning(getStage(), "Please enter a value for Establishment.", "Warning", null);
                             textArea09.requestFocus();

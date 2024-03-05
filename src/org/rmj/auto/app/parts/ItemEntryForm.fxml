@@ -418,10 +418,10 @@
                                                                                                                         </Button>
                                                                                                                         <TableView fx:id="tblSupersede" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="5" GridPane.rowIndex="2">
                                                                                                                             <columns>
-                                                                                                                                <TableColumn fx:id="tblindex01_sups" prefWidth="24.0" sortable="false" />
-                                                                                                                                <TableColumn fx:id="tblindex02_sups" prefWidth="30.0" sortable="false" />
-                                                                                                                                <TableColumn fx:id="tblindex03_sups" minWidth="-Infinity" prefWidth="200.0" sortable="false" text="Part Number" />
-                                                                                                                                <TableColumn fx:id="tblindex04_sups" minWidth="-Infinity" prefWidth="250.0" sortable="false" text="Description" />
+                                                                                                                                <TableColumn fx:id="tblindex01_sups" editable="false" prefWidth="24.0" resizable="false" sortable="false" />
+                                                                                                                                <TableColumn fx:id="tblindex02_sups" editable="false" prefWidth="30.0" resizable="false" sortable="false" />
+                                                                                                                                <TableColumn fx:id="tblindex03_sups" editable="false" minWidth="-Infinity" prefWidth="200.0" resizable="false" sortable="false" text="Part Number" />
+                                                                                                                                <TableColumn fx:id="tblindex04_sups" editable="false" minWidth="-Infinity" prefWidth="250.0" resizable="false" sortable="false" text="Description" />
                                                                                                                             </columns>
                                                                                                                         </TableView>
                                                                                                                     </children>
@@ -454,15 +454,15 @@
                                                                                                                         </AnchorPane>
                                                                                                                         <TableView fx:id="tblModelView" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="6" GridPane.rowIndex="2">
                                                                                                                             <columns>
-                                                                                                                                <TableColumn fx:id="tblindexModelRow" prefWidth="40.0" sortable="false" text="Row" />
+                                                                                                                                <TableColumn fx:id="tblindexModelRow" editable="false" prefWidth="40.0" resizable="false" sortable="false" text="Row" />
                                                                                                                                 <TableColumn fx:id="tblModelSelect" prefWidth="27.0" sortable="false">
                                                                                                                                     <graphic>
                                                                                                                                         <CheckBox fx:id="selectAllModelCheckBox" mnemonicParsing="false" prefHeight="18.0" prefWidth="6.0" />
                                                                                                                                     </graphic>
                                                                                                                                 </TableColumn>
-                                                                                                                                <TableColumn fx:id="tblIndex06_mdl" minWidth="-Infinity" prefWidth="130.0" sortable="false" text="Make" />
-                                                                                                                                <TableColumn fx:id="tblIndex07_mdl" minWidth="-Infinity" prefWidth="130.0" sortable="false" text="Model" />
-                                                                                                                                <TableColumn fx:id="tblIndex03_yr" minWidth="-Infinity" prefWidth="130.0" sortable="false" text="Year" />
+                                                                                                                                <TableColumn fx:id="tblIndex06_mdl" editable="false" minWidth="-Infinity" prefWidth="130.0" resizable="false" sortable="false" text="Make" />
+                                                                                                                                <TableColumn fx:id="tblIndex07_mdl" editable="false" minWidth="-Infinity" prefWidth="130.0" resizable="false" sortable="false" text="Model" />
+                                                                                                                                <TableColumn fx:id="tblIndex03_yr" editable="false" minWidth="-Infinity" prefWidth="130.0" resizable="false" sortable="false" text="Year" />
                                                                                                                             </columns>
                                                                                                                         </TableView>
                                                                                                                         <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="2.0" GridPane.columnIndex="4" GridPane.columnSpan="3">

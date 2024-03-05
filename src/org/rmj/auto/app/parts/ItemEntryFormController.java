@@ -1529,6 +1529,7 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
         btnSave.setVisible(lbShow);
         btnSave.setManaged(lbShow);
         tblModelSelect.setVisible(lbShow);
+
         if (fnValue == EditMode.READY) {
             btnEdit.setVisible(true);
             btnEdit.setManaged(true);

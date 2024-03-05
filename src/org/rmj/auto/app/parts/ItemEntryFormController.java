@@ -288,7 +288,6 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
                 header.setReordering(false);
             });
         });
-
     }
 
     private void initButtonClick() {
@@ -402,7 +401,7 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
                 }
                 break;
             case "btnLoadPhoto":
-                try {
+            try {
                 if (!oTrans.getMaster(26).toString().isEmpty()) {
                     loadPhotoWindow();
                 } else {

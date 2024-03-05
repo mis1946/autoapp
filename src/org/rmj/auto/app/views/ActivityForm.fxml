@@ -33,14 +33,14 @@
             <children>
                 <BorderPane>
                     <top>
-                        <AnchorPane prefHeight="0.0" style="-fx-background-color: #515151; -fx-background-radius: 5;" BorderPane.alignment="CENTER">
+                        <AnchorPane prefHeight="25.0" style="-fx-background-color: #515151; -fx-background-radius: 5;" BorderPane.alignment="CENTER">
                             <children>
-                                <Separator layoutY="20.0" prefHeight="5.0" prefWidth="1302.0" style="-fx-background-color: orange;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
-                                <Label alignment="CENTER" contentDisplay="CENTER" layoutY="1.0" prefHeight="30.0" prefWidth="1302.0" text="ACTIVITY INFORMATION" textAlignment="CENTER" textFill="WHITE" AnchorPane.bottomAnchor="4.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="1.0">
+                                <Label alignment="CENTER" contentDisplay="CENTER" layoutY="1.0" prefHeight="30.0" prefWidth="1302.0" text="ACTIVITY INFORMATION" textAlignment="CENTER" textFill="WHITE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                     <font>
                                         <Font name="Arial Bold" size="13.0" />
                                     </font>
                                 </Label>
+                                <Separator style="-fx-background-color: orange;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
                             </children>
                         </AnchorPane>
                     </top>
@@ -164,7 +164,7 @@
                     <center>
                         <AnchorPane BorderPane.alignment="CENTER">
                             <children>
-                                <BorderPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                <BorderPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="3.0">
                                     <center>
                                         <AnchorPane BorderPane.alignment="CENTER">
                                             <children>

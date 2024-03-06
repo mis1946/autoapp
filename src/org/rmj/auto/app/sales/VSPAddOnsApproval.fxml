@@ -55,7 +55,7 @@
                                         <FontAwesomeIconView glyphName="POWER_OFF" size="20" />
                                     </graphic>
                                 </Button>
-                                <HBox spacing="1.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="5.0">
+                                <HBox spacing="1.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0">
                                     <children>
                                         <Button fx:id="btnApprove" contentDisplay="TOP" mnemonicParsing="false" prefHeight="50.0" prefWidth="70.0" text="Approve">
                                             <effect>

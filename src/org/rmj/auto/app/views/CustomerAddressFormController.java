@@ -530,7 +530,9 @@ public class CustomerAddressFormController implements Initializable, ScreenInter
                             } else {
                                 txtField23Addr.clear(); // Province
                                 txtField05Addr.setDisable(true);
+                                txtField23Addr.focusedProperty();
                                 ShowMessageFX.Warning(getStage(), oTransAddress.getMessage(), "Warning", null);
+                                return;
                             }
                             txtField05Addr.getStyleClass().remove("required-field");
                             txtField06Addr.getStyleClass().remove("required-field");
@@ -547,7 +549,9 @@ public class CustomerAddressFormController implements Initializable, ScreenInter
                                 txtField05Addr.clear(); // Town
                                 txtField07Addr.clear(); //Zip code
                                 txtField06Addr.setDisable(true);
+                                txtField05Addr.focusedProperty();
                                 ShowMessageFX.Warning(getStage(), oTransAddress.getMessage(), "Warning", null);
+                                return;
                             }
                             txtField06Addr.getStyleClass().remove("required-field");
                             txtField06Addr.clear(); // Brgy
@@ -559,6 +563,8 @@ public class CustomerAddressFormController implements Initializable, ScreenInter
                             } else {
                                 ShowMessageFX.Warning(getStage(), oTransAddress.getMessage(), "Warning", null);
                                 txtField06Addr.clear(); // Brgy
+                                txtField06Addr.focusedProperty();
+                                return;
                             }
                             break;
                     }

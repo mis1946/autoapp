@@ -33,21 +33,21 @@
             <children>
                 <BorderPane>
                     <top>
-                        <AnchorPane prefHeight="0.0" style="-fx-background-color: #515151; -fx-background-radius: 5;" BorderPane.alignment="CENTER">
+                        <AnchorPane prefHeight="25.0" style="-fx-background-color: #515151; -fx-background-radius: 5;" BorderPane.alignment="CENTER">
                             <children>
-                                <Separator layoutY="20.0" prefHeight="5.0" prefWidth="1302.0" style="-fx-background-color: orange;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
-                                <Label alignment="CENTER" contentDisplay="CENTER" layoutY="1.0" prefHeight="30.0" prefWidth="1302.0" text="ACTIVITY INFORMATION" textAlignment="CENTER" textFill="WHITE" AnchorPane.bottomAnchor="4.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="1.0">
+                                <Label alignment="CENTER" contentDisplay="CENTER" layoutY="1.0" prefHeight="30.0" prefWidth="1302.0" text="ACTIVITY INFORMATION" textAlignment="CENTER" textFill="WHITE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                     <font>
                                         <Font name="Arial Bold" size="13.0" />
                                     </font>
                                 </Label>
+                                <Separator style="-fx-background-color: orange;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
                             </children>
                         </AnchorPane>
                     </top>
                     <bottom>
-                        <AnchorPane prefHeight="60.0" prefWidth="600.0" style="-fx-background-color: #515151; -fx-background-radius: 5;" BorderPane.alignment="CENTER">
+                        <AnchorPane prefHeight="50.0" style="-fx-background-color: #515151; -fx-background-radius: 5;" BorderPane.alignment="CENTER">
                             <children>
-                                <HBox spacing="2.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0">
+                                <HBox spacing="1.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0">
                                     <children>
                                         <Button fx:id="btnAdd" contentDisplay="TOP" mnemonicParsing="false" prefHeight="50.0" prefWidth="70.0" text="Add">
                                             <effect>
@@ -78,7 +78,7 @@
                                                 <Blend />
                                             </effect>
                                             <graphic>
-                                                <FontAwesomeIconView glyphName="FOLDER_OPEN" size="19" />
+                                                <FontAwesomeIconView glyphName="FOLDER_OPEN" size="20" />
                                             </graphic>
                                         </Button>
                                         <Button fx:id="btnActivityHistory" contentDisplay="TOP" mnemonicParsing="false" prefHeight="50.0" prefWidth="97.0" text="Activity History">
@@ -164,13 +164,13 @@
                     <center>
                         <AnchorPane BorderPane.alignment="CENTER">
                             <children>
-                                <BorderPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                <BorderPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="3.0">
                                     <center>
                                         <AnchorPane BorderPane.alignment="CENTER">
                                             <children>
                                                 <TabPane fx:id="tabPane" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                     <tabs>
-                                                        <Tab style="-fx-font-weight: bold; -fx-font-family: arial; -fx-pref-width: 100;" text="Activity Info">
+                                                        <Tab fx:id="MainTab" style="-fx-font-weight: bold; -fx-font-family: arial; -fx-pref-width: 100;" text="Activity Info">
                                                             <content>
                                                                 <BorderPane maxWidth="1.7976931348623157E308" prefHeight="608.0" prefWidth="1201.0" style="-fx-border-radius: 5;">
                                                                     <center>
@@ -627,7 +627,7 @@
                                                                 </BorderPane>
                                                             </content>
                                                         </Tab>
-                                                        <Tab style="-fx-font-weight: bold; -fx-font-family: arial; -fx-pref-width: 100;" text="Details">
+                                                        <Tab fx:id="DetailsTab" style="-fx-font-weight: bold; -fx-font-family: arial; -fx-pref-width: 100;" text="Details">
                                                             <content>
                                                                 <BorderPane prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: orange; -fx-border-radius: 5;">
                                                                     <center>
@@ -740,7 +740,7 @@
                                     <top>
                                         <AnchorPane prefHeight="26.0" prefWidth="1108.0" style="-fx-background-color: #F88222;" BorderPane.alignment="CENTER">
                                             <children>
-                                                <GridPane>
+                                                <GridPane visible="false">
                                                     <columnConstraints>
                                                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="133.0" minWidth="16.999998092651367" prefWidth="25.0" />
                                                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="217.0" minWidth="86.33333587646484" prefWidth="95.66666412353516" />

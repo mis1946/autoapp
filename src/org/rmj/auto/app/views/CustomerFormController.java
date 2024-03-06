@@ -299,7 +299,7 @@ public class CustomerFormController implements Initializable, ScreenInterface {
             System.out.println("Set Class Value " + fnIndex + "-->" + foValue);
         };
 
-        oTrans = new ClientMaster(oApp, oApp.getBranchCode(), true);
+        oTrans = new ClientMaster(oApp, oApp.getBranchCode(), false);
         oTrans.setCallback(oListener);
         oTrans.setWithUI(true);
 

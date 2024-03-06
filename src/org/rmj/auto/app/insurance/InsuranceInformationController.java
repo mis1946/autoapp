@@ -136,7 +136,7 @@ public class InsuranceInformationController implements Initializable, ScreenInte
             System.out.println("Set Class Value " + fnIndex + "-->" + foValue);
         };
 
-        oTrans = new InsuranceInformation(oApp, oApp.getBranchCode(), true);
+        oTrans = new InsuranceInformation(oApp, oApp.getBranchCode(), false);
         oTrans.setCallback(oListener);
         oTrans.setWithUI(true);
         //initialize set capslock

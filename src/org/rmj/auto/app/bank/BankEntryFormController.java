@@ -135,7 +135,7 @@ public class BankEntryFormController implements Initializable, ScreenInterface {
             System.out.println("Set Class Value " + fnIndex + "-->" + foValue);
         };
 
-        oTrans = new BankInformation(oApp, oApp.getBranchCode(), true); //Initialize ClientMaster
+        oTrans = new BankInformation(oApp, oApp.getBranchCode(), false); //Initialize ClientMaster
         oTrans.setCallback(oListener);
         oTrans.setWithUI(true);
 

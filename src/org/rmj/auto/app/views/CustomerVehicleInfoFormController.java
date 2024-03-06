@@ -227,16 +227,16 @@ public class CustomerVehicleInfoFormController implements Initializable, ScreenI
             } else {
                 pbisVhclSales = false;
             }
-            
+
             oTransVehicle.setFormType(pbisVhclSales);
-            if(oTransVehicle.loadState()){
+            if (oTransVehicle.loadState()) {
                 pnEditMode = oTransVehicle.getEditMode();
                 loadClientVehicleInfo();
                 loadVehicleHtryTable();
                 initVhclInfoButton(pnEditMode);
-            }else {
-                if(oTransVehicle.getMessage().isEmpty()){
-                }else{
+            } else {
+                if (oTransVehicle.getMessage().isEmpty()) {
+                } else {
                     ShowMessageFX.Warning(getStage(), oTransVehicle.getMessage(), "Warning", null);
                 }
             }
@@ -460,6 +460,7 @@ public class CustomerVehicleInfoFormController implements Initializable, ScreenI
                         bBtnVhclAvl = true;
                     } else {
                         ShowMessageFX.Warning(getStage(), oTransVehicle.getMessage(), "Warning", null);
+
                     }
                     break;
 
@@ -586,7 +587,7 @@ public class CustomerVehicleInfoFormController implements Initializable, ScreenI
                 case ENTER:
                     switch (lnIndex) {
                         case 24: //MAKE
-                            if (oTransVehicle.searchVehicleMake(txtField24V.getText())) {
+                            if (oTransVehicle.searchVehicleMake(txtField.getText())) {
                             } else {
                                 ShowMessageFX.Warning(getStage(), oTransVehicle.getMessage(), "Warning", null);
                                 txtField24V.setText("");
@@ -1062,7 +1063,7 @@ public class CustomerVehicleInfoFormController implements Initializable, ScreenI
                         event.consume();
                     }
                 });
-                
+
                 List<String> tabName = new ArrayList<>();
                 tabName = TabsStateManager.loadCurrentTab();
                 tabName.remove(sFormName);

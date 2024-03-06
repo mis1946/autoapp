@@ -166,7 +166,7 @@ public class VehicleSalesInvoiceFormController implements Initializable, ScreenI
             System.out.println("Set Class Value " + fnIndex + "-->" + foValue);
         };
 
-        oTrans = new UnitSalesInvoice(oApp, oApp.getBranchCode(), true); //Initialize ClientMaster
+        oTrans = new UnitSalesInvoice(oApp, oApp.getBranchCode(), false); //Initialize ClientMaster
         oTrans.setCallback(oListener);
         oTrans.setWithUI(true);
 
@@ -214,7 +214,7 @@ public class VehicleSalesInvoiceFormController implements Initializable, ScreenI
         txtField03.setDayCellFactory(callB);
         pnEditMode = EditMode.UNKNOWN;
         initButton(pnEditMode);
-        
+
         Platform.runLater(() -> {
             if (oTrans.loadState()) {
                 pnEditMode = oTrans.getEditMode();
@@ -227,7 +227,7 @@ public class VehicleSalesInvoiceFormController implements Initializable, ScreenI
                 }
             }
         });
-        
+
     }
 
     private void initButton_Cick() {
@@ -478,7 +478,7 @@ public class VehicleSalesInvoiceFormController implements Initializable, ScreenI
             cmbType032.getSelectionModel().select(Integer.parseInt(oTrans.getMaster(32).toString())); // Customer Type
             // Add the event handler back
             cmbType032.setOnAction(eventHandler);
-            
+
             txtField03.setValue(strToDate(CommonUtils.xsDateShort((Date) oTrans.getMaster(3))));//dTransact
             txtField05.setText((String) oTrans.getMaster(5));//sReferNox
             txtField06.setText((String) oTrans.getMaster(6)); //sSourceNo
@@ -494,7 +494,7 @@ public class VehicleSalesInvoiceFormController implements Initializable, ScreenI
             String sDescrpt = ((String) oTrans.getMaster(18)).replaceAll(sRegex, " ");
             textArea18.setText(sDescrpt); //sDescript
             txtField23.setText(sColor); //sColorDsc
-          //  cmbType032.getSelectionModel().select(Integer.parseInt(oTrans.getMaster(32).toString())); //Customer Type
+            //  cmbType032.getSelectionModel().select(Integer.parseInt(oTrans.getMaster(32).toString())); //Customer Type
 
             textArea34.setText((String) oTrans.getMaster(34)); //Remarks
             txtField33.setText((String) oTrans.getMaster(33)); //Tin

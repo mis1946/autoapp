@@ -223,7 +223,7 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
             System.out.println("Set Class Value " + fnIndex + "-->" + foValue);
         };
 
-        oTrans = new ItemEntry(oApp, oApp.getBranchCode(), true); //Initialize ClientMaster
+        oTrans = new ItemEntry(oApp, oApp.getBranchCode(), false); //Initialize ClientMaster
         oTrans.setCallback(oListener);
         oTrans.setWithUI(true);
         loadItemList();
@@ -275,6 +275,18 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
                     ShowMessageFX.Warning(getStage(), oTrans.getMessage(), "Warning", null);
                 }
             }
+        });
+        tblSupersede.widthProperty().addListener((ObservableValue<? extends Number> source, Number oldWidth, Number newWidth) -> {
+            TableHeaderRow header = (TableHeaderRow) tblSupersede.lookup("TableHeaderRow");
+            header.reorderingProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+                header.setReordering(false);
+            });
+        });
+        tblModelView.widthProperty().addListener((ObservableValue<? extends Number> source, Number oldWidth, Number newWidth) -> {
+            TableHeaderRow header = (TableHeaderRow) tblModelView.lookup("TableHeaderRow");
+            header.reorderingProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+                header.setReordering(false);
+            });
         });
     }
 
@@ -389,7 +401,7 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
                 }
                 break;
             case "btnLoadPhoto":
-                try {
+            try {
                 if (!oTrans.getMaster(26).toString().isEmpty()) {
                     loadPhotoWindow();
                 } else {
@@ -1517,6 +1529,7 @@ public class ItemEntryFormController implements Initializable, ScreenInterface {
         btnSave.setVisible(lbShow);
         btnSave.setManaged(lbShow);
         tblModelSelect.setVisible(lbShow);
+
         if (fnValue == EditMode.READY) {
             btnEdit.setVisible(true);
             btnEdit.setManaged(true);
